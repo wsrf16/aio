@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="logRootPath">logs/log4j2</Property>
+        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] {%p} %l %m%n</Property>
+        <Property name="logMgrPattern">%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %m%n</Property>
+        <Property name="fileName">${logRootPath}/rolling.log</Property>
+        <Property name="filePattern">${logRootPath}/bak/rolling-%d{yyyyMMdd_HHmmss}-%i.log.gz</Property>
+    </Properties>
+    <Appenders>
+        <Console name="CONSOLE_APPENDER" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>${logMgrPattern}</Pattern>
+            </PatternLayout>
+        </Console>
+        <Console name="LOGMGR_APPENDER" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>LOGMGR_APPENDER</Pattern>
+            </PatternLayout>
+        </Console>
+        <File name="FILE_APPENDER" fileName="${logRootPath}/once.log" append="false">
+            <!--<PatternLayout pattern="${logPattern}" />-->
+            <!-- 或 -->
+            <PatternLayout>
+                <Pattern>${logPattern}</Pattern>
+            </PatternLayout>
+        </File>
+        <RollingFile name="ROLLING_FILE_APPENDER"
+                     fileName="${fileName}"
+                     filePattern="${filePattern}">
+            <PatternLayout>
+                <Pattern>${logPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 通过Cron表达式切分 -->
+                <CronTriggeringPolicy schedule="0 0 2 * * ?" evaluateOnStartup="true"/>
+                <!-- 通过文件大小切分 -->
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="LOGMGR_FILE_APPENDER"
+                     fileName="${fileName}"
+                     filePattern="${filePattern}">
+            <PatternLayout>
+                <Pattern>${logMgrPattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 通过Cron表达式切分 -->
+                <CronTriggeringPolicy schedule="0 0 2 * * ?" evaluateOnStartup="true"/>
+                <!-- 通过文件大小切分 -->
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <!--<Socket name="SOCKET_APPENDER" host="localhost" port="5000" protocol="TCP">     &lt;!&ndash; protocol可省略 &ndash;&gt;-->
+            <!--<JsonLayout properties="true"/>-->
+            <!--<SerializedLayout/>-->
+        <!--</Socket>-->
+        <!--<JDBC name="JDBC_APPENDER" tableName="SYSLOG">-->
+            <!--<ConnectionFactory class="com.amayadream.webchat.listener.PoolManager" method="getConnection"/>-->
+            <!--&lt;!&ndash;<Column name="ID" pattern=""/>&ndash;&gt;-->
+            <!--<Column name="CLASS" pattern="%C"/>-->
+            <!--<Column name="FUNCTION" pattern="%M"/>-->
+            <!--<Column name="MESSAGE" pattern="%m"/>-->
+            <!--<Column name="LEVEL" pattern="%level"/>-->
+            <!--<Column name="TIME" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}"/>-->
+        <!--</JDBC>-->
+        <Async name="ASYNC_APPENDER">
+            <AppenderRef ref="FILE_APPENDER"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <!--<Logger name="org.apache.log4j.xml" level="debug">-->
+            <!--<AppenderRef ref="SOCKET_APPENDER"/>-->
+            <!--<AppenderRef ref="ASYNC_APPENDER"/>-->
+        <!--</Logger>-->
+        <!-- 将业务dao接口填写进去，并用控制台输出即可 -->
+        <!-- mapper？？？dao？？？ -->
+        <!--<Logger name="com.xxx.freemarker.dao" level="DEBUG" additivity="false">-->
+            <!--<appender-ref ref="consolePrint"/>-->
+        <!--</Logger>-->
+        <Root level="info">
+            <AppenderRef ref="CONSOLE_APPENDER"/>
+            <!--<AppenderRef ref="FILE_APPENDER"/>-->
+            <!--<AppenderRef ref="ROLLING_FILE_APPENDER"/>-->
+            <AppenderRef ref="LOGMGR_FILE_APPENDER"/>
+        </Root>
+    </Loggers>
+</Configuration>

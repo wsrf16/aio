@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    main:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://47.104.190.82:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 123456
+
+  rabbitmq:
+    main:
+      host: 10.4.8.7
+      port: 5672
+      username: yixincapital
+      password: yixincapital
+      binding-list:
+        - type: direct
+          routing-key: application-log-queue
+          queue: application-log-queue
+          exchange: application-log-exchange
+
+  redis:
+    host: 10.4.9.4
+    port: 6379
+    password: Yixin4redis
+
+  log:
+    rabbitmq:
+      enable: true
+      host: 10.4.8.7
+      port: 5672
+      username: yixincapital
+      password: yixincapital
+      virtual-host: /yx_mq
+      es-index: @profiles.active@_@project.build.logName@_log
+      publisher-confirms: true
+      publisher-returns: true
+      binding-list:
+      - type: direct
+        routing-key: application-log-queue
+        queue: application-log-queue
+        exchange: application-log-exchange
+    kafka:
+      enable: true
+      esIndex: uat_crm_b2_core_log
+      topic: basic_application_log
+      producer:
+#        bootstrap-servers: 172.28.3.165:9092,172.28.3.166:9092,172.28.3.167:9092
+        bootstrap-servers: 10.4.8.31:9092
+      properties:
+        linger.ms: 1000
+        max.block.ms: 1000
+        request.timeout.ms: 1000
+        transaction.timeout.ms: 1000
+#        compression.type: gzip
+        acks: 1
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: ${spring.cloud.client.ipAddress}:${server.port}
+    lease-expiration-duration-in-seconds: 60        # default value
+    lease-renewal-interval-in-seconds: 30           # default value
+  client:
+    service-url:
+      defaultZone: http://10.4.3.48:7777/eureka, http://10.4.3.45:7777/eureka, http://10.4.3.39:7777/eureka
+    register-with-eureka: true
+
+

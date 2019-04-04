@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper标签要指定namespace属性，不然会报错，且mapper开发时设置为Mapper接口的全限定名-->
+<mapper namespace="com.york.portable.park.parkdb.dao.master.mapper.BookMapper">
+    <select id="getAll" resultType="com.york.portable.park.parkdb.dao.master.model.Book">
+        SELECT * FROM book_store
+    </select>
+    <select id="get" parameterType="java.lang.Integer" resultType="com.york.portable.park.parkdb.dao.master.model.Book">
+        SELECT * FROM book_store WHERE id=#{id}
+    </select>
+</mapper>

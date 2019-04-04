@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: application-name
+
+  profiles:
+    active:
+      @profiles.active@
+
+  boot:
+    enableautoconfiguration: true
+
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+
+swagger:
+  enable: true
+  api-info:
+    title: 对外接口在线文档
+    description: 淘车是由腾讯、京东等行业重量级企业共同投资。提供二手车交易、金融产品、租赁、保险、保养、轻维修、延保等一站式综合服务，实现线上浏览下单，线下实地体验，旨在为中国二手车消费者提供高效、专业、透明、放心的一站式交易服务平台。
+    terms-of-service-url: www.taoche.com
+    license: Apache 2.0
+    licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+    version: 1.1
+    contact:
+      name: 淘车
+      url: www.taoche.com
+      email: yu.zhao@taoche.com
+
+business:
+  taskMigrate:
+    cron: 1 0 1 1 * ?
+#    cron: 0 0 1 1 * ?
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+

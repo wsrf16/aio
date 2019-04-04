@@ -1,0 +1,189 @@
+package com.york.portable.swiss.sugar;
+
+import com.york.portable.swiss.global.Constant;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by York on 2017/11/23.
+ */
+public class DateTimeUtils {
+    public static class CalendarUtils {
+        public static Date getFirstDayOfMonth(Calendar calendar) {
+            return getFirstDayOf(calendar, Calendar.DAY_OF_MONTH);
+        }
+
+        public static Date getLastDayOfMonth(Calendar calendar) {
+            return getLastDayOf(calendar, Calendar.DAY_OF_MONTH);
+        }
+
+        public static Date getFirstDayOfYear(Calendar calendar) {
+            return getFirstDayOf(calendar, Calendar.DAY_OF_YEAR);
+        }
+
+        public static Date getLastDayOfYear(Calendar calendar) {
+            return getLastDayOf(calendar, Calendar.DAY_OF_YEAR);
+        }
+
+        public static Date getFirstDayOfWeek(Calendar calendar) {
+            return getFirstDayOf(calendar, Calendar.DAY_OF_WEEK);
+        }
+
+        public static Date getLastDayOfWeek(Calendar calendar) {
+            return getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
+        }
+
+
+
+        public static Date add(Calendar calendar, int field, int amount) {
+            calendar.add(field, amount);
+            return calendar.getTime();
+        }
+
+        public static Date getFirstDayOf(Calendar calendar, int field) {
+            calendar.set(field, calendar.getActualMinimum(field));
+            Date date = calendar.getTime();
+            return date;
+        }
+
+        public static Date getLastDayOf(Calendar calendar, int field) {
+            calendar.set(field, calendar.getActualMaximum(field));
+            Date date = calendar.getTime();
+            return date;
+        }
+    }
+
+
+
+    public static class Format {
+        public static final String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        public static final String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
+        public static final String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
+        public static final String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";
+        public static final String FORMAT_TIGHT_SHORT = "yyyyMMdd";
+
+        /**
+         * 从String转换为Date
+         *
+         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param text   "1987-06-05T44:33:22.111+0800"
+         * @return Date
+         * @throws ParseException
+         */
+        public static Date convertString2Date(String format, String text) throws ParseException {
+            Date date = new SimpleDateFormat(format).parse(text);
+            return date;
+        }
+
+        /**
+         * 从Date转换为String
+         *
+         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param date
+         * @return String "1987-06-05T44:33:22.111+0800"
+         * @throws ParseException
+         */
+        public static String convertDate2String(String format, Date date) {
+            String text = new SimpleDateFormat(format).format(date);
+            return text;
+        }
+
+        /**
+         * 返回"yyyyMMddHHmmssSSSZ"格式的时间
+         *
+         * @return
+         */
+        public static String getDateTimeSerialize() {
+            String serialize = convertDate2String(FORMAT_TIGHT_LONG, new Date());
+            return serialize;
+        }
+    }
+
+    public static class UnixTime {
+        /**
+         * 获取Unix时间（1970年至今经过了多少秒）
+         *
+         * @return long
+         */
+        public static long nowUnix() {
+            long time = System.currentTimeMillis();
+            long nowTimeStamp = time / 1000;
+            return nowTimeStamp;
+        }
+
+        /**
+         * 获取当前时区
+         *
+         * @return
+         */
+        public static long getCurrentZone() {
+            long zone = java.util.Calendar.getInstance().getTimeZone().getRawOffset() / Constant.TimeUnit.Hour;
+            return zone;
+        }
+
+        /**
+         * 将Unix时间戳转换为本地DateTime类型时间
+         *
+         * @param unix double 型数字
+         * @return 本地DateTime
+         */
+        public static LocalDateTime convertUnix2DateTime(long unix) {
+            LocalDateTime time = getUTCEpochTime().plusHours(getCurrentZone()).plusSeconds(unix);
+            return time;
+        }
+
+        /**
+         * 将本地DateTime时间格式转换为Unix时间戳格式
+         *
+         * @param time 本地时间
+         * @return long
+         */
+        public static long convertDateTime2Unix(LocalDateTime time) {
+            return time.toEpochSecond(ZoneOffset.of("+8"));
+        }
+
+        /**
+         * 将Unix时间戳转换为UTC时间
+         *
+         * @param unix long 型数字
+         * @return 本地DateTime
+         */
+        public static LocalDateTime convertUnix2UTC(long unix) {
+            LocalDateTime time = getUTCEpochTime().plusSeconds(unix);
+            return time;
+        }
+
+        /**
+         * 将UTC时间格式转换为Unix时间戳格式
+         *
+         * @param time UTC时间
+         * @return long
+         */
+        public static long convertUTC2Unix(LocalDateTime time) {
+            return Duration.between(getUTCEpochTime(), time).toMillis() / 1000;
+        }
+
+        /**
+         * 取得1970年01月01日00时00分00秒
+         *
+         * @return
+         */
+        public static LocalDateTime getUTCEpochTime() {
+            return LocalDateTime.of(EpochTime.YEAR, EpochTime.MONTH, EpochTime.DAY_OF_MONTH, EpochTime.HOUR, EpochTime.MINUTE, EpochTime.SECOND);
+        }
+
+        static class EpochTime {
+            public static final int YEAR = 1970;
+            public static final int MONTH = 1;
+            public static final int DAY_OF_MONTH = 1;
+            public static final int HOUR = 0;
+            public static final int MINUTE = 0;
+            public static final int SECOND = 0;
+        }
+    }
+}
+

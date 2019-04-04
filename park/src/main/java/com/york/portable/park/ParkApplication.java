@@ -1,15 +1,11 @@
 package com.york.portable.park;
 
-import com.york.portable.park.other.AutowiredOrderTest;
 import org.apache.commons.lang3.StringUtils;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
 import java.util.Arrays;
@@ -33,7 +29,7 @@ public class ParkApplication {
         //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
         beanNames = beanNames;
 
-        Arrays.stream(activeProfiles).anyMatch(c -> Arrays.asList("development", "test", "default").contains(c));
+        Arrays.stream(activeProfiles).anyMatch(c -> Arrays.asList("dev", "test", "default").contains(c));
     }
 
 //    @Bean(initMethod = "destroy", destroyMethod = "init")

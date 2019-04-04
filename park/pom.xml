@@ -209,12 +209,12 @@
 
     <profiles>
         <profile>
-            <id>development</id>
+            <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <profiles.active>development</profiles.active>
+                <profiles.active>dev</profiles.active>
             </properties>
         </profile>
         <profile>
@@ -230,15 +230,15 @@
             </properties>
         </profile>
         <profile>
-            <id>production</id>
+            <id>prod</id>
             <properties>
-                <profiles.active>production</profiles.active>
+                <profiles.active>prod</profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>production-docker</id>
+            <id>prod-docker</id>
             <properties>
-                <profiles.active>production-docker</profiles.active>
+                <profiles.active>prod-docker</profiles.active>
             </properties>
         </profile>
     </profiles>

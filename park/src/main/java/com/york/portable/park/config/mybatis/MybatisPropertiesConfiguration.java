@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class MybatisPropertiesConfiguration {
-    @Bean
+    @Bean("masterMybatisProperties")
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.master")
     public MybatisProperties masterMybatisProperties() {
         return new MybatisProperties();
     }
 
-    @Bean
+    @Bean("slaveMybatisProperties")
     @ConfigurationProperties(prefix = "spring.datasource.slave")
     public MybatisProperties slaveMybatisProperties() {
         return new MybatisProperties();

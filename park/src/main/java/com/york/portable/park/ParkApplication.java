@@ -29,7 +29,7 @@ public class ParkApplication {
         //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
         beanNames = beanNames;
 
-        Arrays.stream(activeProfiles).anyMatch(c -> Arrays.asList("dev", "test", "default").contains(c));
+        Arrays.stream(activeProfiles).anyMatch(c -> Arrays.asList("development", "test", "default").contains(c));
     }
 
 //    @Bean(initMethod = "destroy", destroyMethod = "init")

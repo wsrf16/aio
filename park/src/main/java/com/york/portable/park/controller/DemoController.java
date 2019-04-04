@@ -1,0 +1,103 @@
+package com.york.portable.park.controller;
+
+//import com.york.portable.park.common.log.InjectedBaseLogger;
+import com.york.portable.park.common.log.LoggerHubFactory;
+import com.york.portable.swiss.assist.cache.RedisLock;
+import com.york.portable.swiss.hamlet.model.ResponseEntity;
+import com.york.portable.swiss.sugar.DateTimeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Date;
+
+@RestController
+@RequestMapping("demo")
+public class DemoController {// extends InjectedBaseLogger {
+    @GetMapping("loganno")
+    public String loganno() {
+        LoggerHubFactory.newInstance().build(this.getClass()).d("debug");
+        return "ok";
+    }
+
+    @Autowired
+    RedisLock redisLock;
+
+//    @GetMapping("foo")
+//    public ResponseEntity foo() {
+//        logger.info("log1", "some information");
+//        slf4jHubFactory.build(this.getClass()).info("log2", "some information");
+//        return ResponseEntity.build(BizStatusEnum.VERIFICATION.getCode(), "foo接口未进行授权");
+//    }
+
+    @Autowired
+    AmqpTemplate amqpTemplate;
+    @GetMapping("mqsend")
+    public void mqsend() {
+        amqpTemplate.convertAndSend("tc.exchange","", "aaaaaaaaaaaaa");
+        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
+
+    }
+
+    @GetMapping("date")
+    public Date date() {
+        return new Date();
+    }
+
+    @GetMapping("ok")
+    public ResponseEntity<String> ok() {
+        return ResponseEntity.success("oookkk");
+    }
+
+//    @GetMapping("log")
+//    public String log() {
+//        String msg = MessageFormat.format("现在的时间是{0}", DateTimeUtils.UnixTime.convertUnix2DateTime(DateTimeUtils.UnixTime.nowUnix()));
+//        logger.info("log", msg);
+//        return msg;
+//    }
+
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+
+    @GetMapping("mq")
+    public String mq() {
+        String msg = MessageFormat.format("现在的时间是{0}", DateTimeUtils.UnixTime.convertUnix2DateTime(DateTimeUtils.UnixTime.nowUnix()));
+        rabbitTemplate.convertAndSend("application-log-queue", msg);
+        return msg;
+    }
+
+    @GetMapping("lock")
+    public String lock() {
+        String identify;
+
+        identify = redisLock.lock("robot");
+        redisLock.releaseLock("robot", identify);
+
+        identify = redisLock.acquireLock("robot", 10000L, 10000L);
+        redisLock.releaseLock("robot", identify);
+
+        return MessageFormat.format("lock : {0}", identify);
+    }
+
+
+
+    @PostMapping("/upload2data")
+    @ResponseBody
+    public String uploadapp(@RequestParam("file") MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        int location = StringUtils.lastIndexOf(fileName, "-");
+        String proj = fileName.substring(0, location);
+//        String env = fileName.substring(location + 1).replace(".tar.gz", "");
+
+        String target = MessageFormat.format("/data1/service/{0}/{1}" , proj , fileName);
+//        String cmd = MessageFormat.format("/data1/service/{0}/qpublish.sh {1}" , proj , env);
+        file.transferTo(new File(target));
+        return target;
+    }
+
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>swiss-log</contextName>
+    <property name="LOG_HOME" value="logs"/>
+    <property name="LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}/log.%d{yyyy-MM-dd}.log"/>
+    <property name="COLOUR_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%contextName[%thread]) %highlight(%-5level) %green(%logger{100}) %L - %msg %n"/>
+    <property name="NORMAL_PATTERN"
+              value="%date{yyyy-MM-dd HH:mm:ss} %contextName[%thread] %-5level %logger{100} %L - %msg%n"/>
+
+    <appender name="STD_OUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${COLOUR_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <appender name="ROLE_FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILENAME_PATTERN}</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${NORMAL_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STD_OUT"/>
+        <!--<appender-ref ref="ROLE_FILE_LOG"/>-->
+    </root>
+
+    <!--<logger name="com.taoche.baseservice.fiv.db.main.dao" level="debug" />-->
+</configuration>

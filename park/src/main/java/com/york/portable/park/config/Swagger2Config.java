@@ -34,7 +34,7 @@ public class Swagger2Config {
 
     @Bean
     @ConditionalOnClass(ApiInfo.class)
-    @ConditionalOnProperty(prefix = "swagger", name = "enable", havingValue = "true")
+    @ConditionalOnProperty(prefix = "swagger.api-info", name = "title")
     @ConfigurationProperties(prefix = "swagger")
     public Swagger2Properties swagger2Properties() {
         return Swagger2Properties.build(DemoController.class.getPackage().getName(), responseMessageList());

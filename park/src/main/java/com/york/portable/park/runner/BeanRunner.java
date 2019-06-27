@@ -1,11 +1,11 @@
 package com.york.portable.park.runner;
 
 //import com.york.portable.park.common.log.InjectedBaseLogger;
-import com.york.portable.park.common.log.LoggerHubFactory;
-import com.york.portable.park.parkdb.dao.master.mapper.BookMapper;
-import com.york.portable.park.parkdb.dao.master.model.Book;
-import com.york.portable.park.schedule.Schedule;
 import com.york.portable.swiss.assist.log.hub.LoggerHub;
+import com.york.portable.park.common.log.CustomLoggerHubFactory;
+import com.york.portable.park.parkdb.dao.master.mapper.BookMapper;
+import com.york.portable.park.schedule.Schedule;
+import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
 import com.york.portable.swiss.sugar.DateTimeUtils;
 import com.york.portable.swiss.sugar.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,19 @@ public class BeanRunner implements ApplicationRunner {
     @Autowired
     Schedule schedule;
 
+//    Object o = SpringContextUtil.getBean("logKafkaProperties");
+    static LoggerHub staticLogger = CustomLoggerHubFactory.newInstance().build(BeanRunner.class);
+
+    LoggerHub dynamicLogger;
+
+    public BeanRunner(CustomLoggerHubFactory customLoggerHubFactory) {
+        dynamicLogger = customLoggerHubFactory.build(this.getClass());
+    }
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        dynamicLogger.i("beanrunner.java", "ttttttt");
+        staticLogger.i("beanrunner.java", "ttttttt");
 //        List<Book> bookList = bookMapper.getAll();
 
         Calendar calendar = Calendar.getInstance();
@@ -60,13 +70,8 @@ public class BeanRunner implements ApplicationRunner {
 //        mq();
     }
 
-//    @Bean
-    public String fff(String param) {
-        return "";
-    }
-
     private void logCase1(){
-        LoggerHub logger = LoggerHubFactory.newInstance().build("随便写哒");
+        LoggerHubImp logger = CustomLoggerHubFactory.newInstance().build("随便写哒");
         logger.i("abcdefghijklmnopqrstuvwxyz1介个是kafka");
         System.out.println("日志执行完成~~~~~~~~~~~~~");
     }
@@ -74,7 +79,7 @@ public class BeanRunner implements ApplicationRunner {
 
 
     private void logCase2() {
-        LoggerHub logger = LoggerHubFactory.newInstance().buildAsync(getClass().getTypeName());
+        LoggerHubImp logger = CustomLoggerHubFactory.newInstance().buildAsync(getClass().getTypeName());
         logger.i("abcdefghijklmnopqrstuvwxyz11111111");
         logger.i("abcdefghijklmnopqrstuvwxyz22222222222");
     }

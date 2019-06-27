@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PropertyExtra {
-    public static Map<String, Object> getPropertyNameValues(Object bean) {
+    public static Map<String, Object> getPropertyNameValue(Object bean) {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
         Map<String, Object> map = Arrays.stream(PropertyUtils.getPropertyDescriptors(bean.getClass()))
                 .filter(c -> !c.getName().equals("class"))
@@ -19,7 +19,7 @@ public class PropertyExtra {
         return map;
     }
 
-    public static Map<String, Class> getPropertyNameTypesByBean(Object bean) {
+    public static Map<String, Class> getPropertyNameClass(Object bean) {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
         Map<String, Class> map = Arrays.stream(PropertyUtils.getPropertyDescriptors(bean.getClass()))
                 .filter(c -> !c.getName().equals("class"))
@@ -27,23 +27,19 @@ public class PropertyExtra {
         return map;
     }
 
-    public static Map<String, Object> getPropertyNameValues(Class clazz) throws IllegalAccessException, InstantiationException {
+    public static Map<String, Object> getPropertyNameValue(Class clazz) throws IllegalAccessException, InstantiationException {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
 //        new PropertyDescriptor("id", Person.class);
         Object bean = clazz.newInstance();
-        Map<String, Object> map = Arrays.stream(PropertyUtils.getPropertyDescriptors(clazz))
-                .filter(c -> !c.getName().equals("class"))
-                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+        Map<String, Object> map = getPropertyNameValue(bean);
         return map;
     }
 
-    public static Map<String, Class> getPropertyNameTypesByClass(Class clazz) throws IllegalAccessException, InstantiationException {
+    public static Map<String, Class> getPropertyNameClass(Class clazz) throws IllegalAccessException, InstantiationException {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
 //        new PropertyDescriptor("id", Person.class);
         Object bean = clazz.newInstance();
-        Map<String, Class> map = Arrays.stream(PropertyUtils.getPropertyDescriptors(clazz))
-                .filter(c -> !c.getName().equals("class"))
-                .collect(Collectors.toMap(c -> c.getName(), c -> c.getPropertyType()));
+        Map<String, Class> map = getPropertyNameClass(bean);
         return map;
     }
 

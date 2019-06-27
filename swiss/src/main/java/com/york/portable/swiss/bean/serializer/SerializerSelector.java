@@ -20,37 +20,36 @@ public class SerializerSelector implements ISerializerSelector {
 
     public SerializerSelector(SerializerEnum serializerType) {
         this();
-        setCurrentSerializer(serializerType);
+        setSerializer(serializerType);
     }
 
-    private SerializerEnum currentSerializerType;
+    private SerializerEnum serializerType;
 
-    Map<SerializerEnum, Function<Object, String>> classicSerializers;
+    Map<SerializerEnum, Function<Object, String>> classicSerializers = new HashMap<>();
 
 
-    public SerializerEnum getCurrentSerializerType() {
-        return currentSerializerType;
+//    public SerializerEnum getCurrentSerializerType() {
+//        return serializerType;
+//    }
+
+//    public void setCurrentSerializerType(SerializerEnum serializerType) {
+//        this.serializerType = serializerType;
+//    }
+
+    public Map.Entry<SerializerEnum, Function<Object, String>> getSerializer() {
+        return serializerType == null ? null : classicSerializers.entrySet().stream().filter(c -> c.getKey() == serializerType).findFirst().orElse(null);
     }
 
-    public void setCurrentSerializerType(SerializerEnum currentSerializerType) {
-        this.currentSerializerType = currentSerializerType;
+    public final synchronized void setSerializer(SerializerEnum serializerType) {
+        this.serializerType = serializerType;
     }
 
-    public Function<Object, String> getCurrentSerializer() {
-        return classicSerializers.get(currentSerializerType);
-    }
-
-    public final Function<Object, String> setCurrentSerializer(SerializerEnum serializerType) {
-        this.currentSerializerType = serializerType;
-        return classicSerializers.get(serializerType);
-    }
-
-    public final void setSerializer(SerializerEnum serializerType, Function<Object, String> function) {
+    public final void putSerializer(SerializerEnum serializerType, Function<Object, String> function) {
         classicSerializers.put(serializerType, function);
     }
 
-    private void inital() {
-        classicSerializers = new HashMap<>();
+    private final void inital() {
+//        classicSerializers = new HashMap<>();
         classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON, bean -> JacksonUtil.obj2Json(bean));
         classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON, bean -> JacksonUtil.obj2ShortJson(bean));
         classicSerializers.put(SerializerEnum.SERIALIZE_JACKXML, bean -> XmlUtil.obj2Xml(bean));
@@ -65,25 +64,24 @@ public class SerializerSelector implements ISerializerSelector {
 //        classicSerializers.put(SerializerEnum.DESERIALIZE_CUSTOM, null);
     }
 
-    public <T> String serialize(T t) {
-        Function<Object, String> serializer;
-        if (getCurrentSerializerType() == null && existJackson()) {
-            serializer = setCurrentSerializer(SerializerEnum.SERIALIZE_JACKSON);
-        }
-        else if (getCurrentSerializerType() == null && existGson()){
-            serializer = setCurrentSerializer(SerializerEnum.SERIALIZE_GSON);
+    public synchronized <T> String serialize(T t) {
+        if (getSerializer() == null && existJackson()) {
+            setSerializer(SerializerEnum.SERIALIZE_JACKSON);
+        } else if (getSerializer() == null && existGson()) {
+            setSerializer(SerializerEnum.SERIALIZE_GSON);
         } else {
-            serializer = setCurrentSerializer(currentSerializerType);
+            if (serializerType == null)
+                throw new NullPointerException(serializerType.getClass().getTypeName());
+            else
+                setSerializer(serializerType);
         }
-
+        Function<Object, String> serializer = getSerializer().getValue();
         String ret = serializer.apply(t);
         return ret;
     }
 
 
-
-
-    private static boolean existJackson() {
+    private final static boolean existJackson() {
 //        return ClassUtils.load("com.fasterxml.jackson.databind.JsonSerializer");
         try {
             return ClassUtils.exist("com.fasterxml.jackson.databind.JsonSerializer") &&
@@ -94,7 +92,7 @@ public class SerializerSelector implements ISerializerSelector {
         }
     }
 
-    private static boolean existGson() {
+    private final static boolean existGson() {
 //        return ClassUtils.load("com.google.gson.Gson");
         try {
             return ClassUtils.exist("com.google.gson.Gson");

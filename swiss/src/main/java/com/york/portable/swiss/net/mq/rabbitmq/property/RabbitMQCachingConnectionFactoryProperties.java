@@ -1,8 +1,10 @@
 package com.york.portable.swiss.net.mq.rabbitmq.property;
 
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -25,6 +27,8 @@ public class RabbitMQCachingConnectionFactoryProperties extends CachingConnectio
         return instance;
     }
 
+    RabbitTemplate rabbitTemplate;
+
     public RabbitMQCachingConnectionFactoryProperties() {
         validProperties();
         instance = this;
@@ -39,7 +43,6 @@ public class RabbitMQCachingConnectionFactoryProperties extends CachingConnectio
             throw new IllegalArgumentException(MessageFormat.format("spring.log.rabbitmq.{0} is null in {1}", "username", "application.properties"));
     }
 
-    RabbitTemplate rabbitTemplate;
     public RabbitTemplate buildRabbitTemplate() {
         if (rabbitTemplate == null) {
             synchronized (this) {
@@ -63,6 +66,13 @@ public class RabbitMQCachingConnectionFactoryProperties extends CachingConnectio
             }
         }
         return rabbitTemplate;
+    }
+
+    public SimpleRabbitListenerContainerFactory buildSimpleRabbitListenerContainerFactory(SimpleRabbitListenerContainerFactoryConfigurer containerFactoryConfigurer) {
+        SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
+        // 把 ConnectionFactory 注入 SimpleRabbitListenerContainerFactory
+        containerFactoryConfigurer.configure(containerFactory, this);
+        return containerFactory;
     }
 
 

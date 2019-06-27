@@ -1,6 +1,6 @@
 package com.york.portable.swiss.sandbox;
 
-import com.york.portable.swiss.assist.log.hub.LoggerHub;
+import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
 //import com.york.portable.swiss.assist.log.hub.factory.baselogger.classic.ConsoleBaseLogger;
 import com.york.portable.swiss.bean.SingletonProvider;
 import com.york.portable.swiss.bean.serializer.SerializerEnum;
@@ -9,20 +9,20 @@ import com.york.portable.swiss.bean.serializer.json.JacksonUtil;
 import com.york.portable.swiss.assist.cache.CacheRoom;
 import com.york.portable.swiss.ciphering.TotalEncrypt;
 //import com.york.portable.swiss.db.SqlSpeller;
-//import com.york.portable.hamlet.model.ResponseEntity;
+//import com.york.portable.hamlet.model.ResponseWrapper;
 import com.york.portable.swiss.net.http.HttpSwift;
 import com.york.portable.swiss.sandbox.a中文.AA;
 import com.york.portable.swiss.sandbox.a中文.BB;
 import com.york.portable.swiss.sugar.*;
-import com.york.portable.swiss.assist.log.classic.Slf4jLogger;
+import com.york.portable.swiss.assist.log.classic.impl.slf4j.Slf4jLogger;
 import com.york.portable.swiss.resource.ClassLoaderUtils;
 import com.york.portable.swiss.resource.ClassUtils;
 import com.york.portable.swiss.resource.StreamClassLoader;
 import com.york.portable.swiss.resource.PackageUtils;
 import com.york.portable.swiss.resource.ResourceUtils;
 import com.york.portable.swiss.assist.document.method.PropertiesMapping;
-import com.york.portable.swiss.assist.log.classic.ConsoleLogger;
-import com.york.portable.swiss.assist.log.classic.FileLogger;
+import com.york.portable.swiss.assist.log.classic.impl.console.ConsoleLogger;
+import com.york.portable.swiss.assist.log.classic.impl.file.FileLogger;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
@@ -147,9 +147,9 @@ class Sample {
 //            }
             {
                 ConsoleLogger consoleLogger = ConsoleLogger.build("custom");
-//                consoleLogger.getSerializer().setCurrentSerializer(SerializerEnum.JACKXML);
+//                consoleLogger.getSerializer().setSerializer(SerializerEnum.JACKXML);
                 consoleLogger.d("this is console.");
-//                ResponseEntity s = null;
+//                ResponseWrapper s = null;
 //                try {
 //                    String sss = s.toString();
 //                    int ss = s.getStatusCode();
@@ -162,7 +162,7 @@ class Sample {
 //                return;
             }
             {
-                LoggerHub loggerSet = LoggerHub.build(ConsoleLogger.build(LoggerSample.class), FileLogger.build(LoggerSample.class));
+                LoggerHubImp loggerSet = LoggerHubImp.build(ConsoleLogger.build(LoggerSample.class), FileLogger.build(LoggerSample.class));
                 loggerSet.addRegister(Slf4jLogger.build(LoggerSample.class));
                 loggerSet.d("this is loggerhub.");
             }
@@ -194,7 +194,7 @@ class Sample {
             //logger2.openSingleIPPrefix();
             logger2.d("aaaa");
 
-            LoggerHub hub = new LoggerHub();
+            LoggerHubImp hub = new LoggerHubImp();
             hub.addRegister(logger1);
             hub.addRegister(logger2);
             Map<String, String> map = new HashMap<String, String>();
@@ -554,7 +554,7 @@ class Sample {
             String url = "http://www.baidu.com";
             HttpHost httpProxy = new HttpHost("127.0.0.1", 8888, "http");
             RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
-            HttpSwift.getSerializer().setCurrentSerializer(SerializerEnum.SERIALIZE_JACKXML);
+            HttpSwift.getSerializer().setSerializer(SerializerEnum.SERIALIZE_JACKXML);
             StringEntity entity = HttpSwift.buildJsonObjectEntity(people, "utf-8");
             Header[] headers = newHeaders("sign");
 

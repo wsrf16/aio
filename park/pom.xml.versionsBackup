@@ -33,7 +33,7 @@
         <assembly-plugin-assembly.descriptor>${project.basedir}/src/main/assembly/assembly.xml</assembly-plugin-assembly.descriptor>
 
 
-        <!--<argsInject>-javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.7.3.jar -Dpinpoint.applicationName=${project.build.finalName} -Dpinpoint.agentId=$ip_addr</argsInject>-->
+        <!--<args_app>-javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.7.3.jar -Dpinpoint.applicationName=${project.build.finalName} -Dpinpoint.agentId=$ip_addr</args_app>-->
     </properties>
 
     <dependencies>

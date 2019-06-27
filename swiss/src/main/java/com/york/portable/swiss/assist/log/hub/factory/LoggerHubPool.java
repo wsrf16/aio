@@ -1,6 +1,6 @@
 package com.york.portable.swiss.assist.log.hub.factory;
 
-import com.york.portable.swiss.assist.log.hub.LoggerHub;
+import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -10,37 +10,11 @@ public class LoggerHubPool {
 
     private static LoggerHubPool instance = new LoggerHubPool();
 
-    private HashMap<String, LoggerHub> loggerHubMap = new HashMap<>();
-
-    public static ILoggerHubFactory loggerHubBuilder;
-
-    private LoggerHubPool() {
-    }
-
-    public synchronized static LoggerHubPool newInstance(ILoggerHubFactory loggerHubBuilder) {
-        if (LoggerHubPool.loggerHubBuilder == null)
-            LoggerHubPool.loggerHubBuilder = loggerHubBuilder;
-        return instance;
-    }
-
-    private static String getClassNameFromException(Exception e) {
-        String className = e.getStackTrace().length > 0 ? e.getStackTrace()[0].getClassName() : StringUtils.EMPTY;
-        return className;
-    }
-
-    private static LoggerHub buildLoggerHubFromClassName(String className) {
-        LoggerHub loggerHub = StringUtils.isEmpty(className) ? null : loggerHubBuilder.build(className);
-        return loggerHub;
-    }
-
-    public LoggerHub putByExceptionIfAbsent(Exception e) {
-        String className = getClassNameFromException(e);
-        LoggerHub loggerHub = putIfAbsent(className);
-        return loggerHub;
-    }
-
-    public LoggerHub putIfAbsent(String className) {
-        LoggerHub loggerHub;
+    private HashMap<String, LoggerHubImp> loggerHubMap = new HashMap<>();
+    public LoggerHubImp putIfAbsent(String className) {
+        LoggerHubImp loggerHub;
+//        loggerHub= loggerHubMap.containsKey(className) ?
+//                loggerHubMap.get(className) : loggerHubMap.putIfAbsent(className, buildLoggerHubFromClassName(className));
         if (loggerHubMap.containsKey(className))
             loggerHub = loggerHubMap.get(className);
         else {
@@ -50,25 +24,55 @@ public class LoggerHubPool {
         return loggerHub;
     }
 
-    private LoggerHub getLoggerHubExisted(Exception e) {
-        String className = getClassNameFromException(e);
-        LoggerHub loggerHub = getLoggerHubExisted(className);
+    public LoggerHubFactory loggerHubBuilder;
+
+    private LoggerHubPool() {
+    }
+
+    public synchronized static LoggerHubPool newInstance(LoggerHubFactory loggerHubBuilder) {
+        if (instance.loggerHubBuilder == null)
+            instance.loggerHubBuilder = loggerHubBuilder;
+        return instance;
+    }
+
+    private static String getClassNameFromException(Exception e) {
+        String className = e.getStackTrace().length > 0 ? e.getStackTrace()[0].getClassName() : StringUtils.EMPTY;
+        return className;
+    }
+
+    private LoggerHubImp buildLoggerHubFromClassName(String className) {
+        // async
+        LoggerHubImp loggerHub = StringUtils.isBlank(className) ? null : loggerHubBuilder.buildAsync(className);
         return loggerHub;
     }
 
-    private LoggerHub getLoggerHubExisted(String className) {
-        LoggerHub loggerHub = this.loggerHubMap.get(className);
+    public LoggerHubImp putByExceptionIfAbsent(Exception e) {
+        String className = getClassNameFromException(e);
+        LoggerHubImp loggerHub = putIfAbsent(className);
         return loggerHub;
     }
 
-    private boolean existLoggerHub(Exception e) {
-        String className = getClassNameFromException(e);
-        boolean exist = existLoggerHub(className);
-        return exist;
-    }
 
-    private boolean existLoggerHub(String className) {
-        boolean exist = this.loggerHubMap.containsKey(className);
-        return exist;
-    }
+
+//    private LoggerHubImp getLoggerHubExisted(Exception e) {
+//        String className = getClassNameFromException(e);
+//        LoggerHubImp loggerHub = getLoggerHubExisted(className);
+//        return loggerHub;
+//    }
+
+//    private LoggerHubImp getLoggerHubExisted(String className) {
+//        LoggerHubImp loggerHub = loggerHubMap.get(className);
+//        return loggerHub;
+//    }
+
+//    private boolean existLoggerHub(Exception e) {
+//        String className = getClassNameFromException(e);
+//        boolean exist = existLoggerHub(className);
+//        return exist;
+//    }
+
+//    private boolean existLoggerHub(String className) {
+//        boolean exist = this.loggerHubMap.containsKey(className);
+//        return exist;
+//    }
 }

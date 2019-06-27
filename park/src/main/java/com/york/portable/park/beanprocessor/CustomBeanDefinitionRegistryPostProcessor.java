@@ -8,6 +8,9 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ClassUtils;
+
+import java.beans.Introspector;
 
 @Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
@@ -25,13 +28,13 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
 //            System.out.println(name + " bean properties: " + bd.getPropertyValues().toString());
         }
 
-        //创建BeanDefinitionBuilder
+        // 创建BeanDefinitionBuilder
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(UserInfoEntity.class);
-        //设置属性值
+        // 设置属性值
         builder.addPropertyValue("name","list_test");
-        //设置可通过@Autowire注解引用
+        // 设置可通过@Autowire注解引用
         builder.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);
-        //注册到BeanDefinitionRegistry
+        // 注册到BeanDefinitionRegistry
         registry.registerBeanDefinition("userInfoEntity", builder.getBeanDefinition());
     }
 
@@ -47,8 +50,11 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
 
-            BeanDefinition bd = beanFactory.getBeanDefinition(name);
-//            System.out.println(name + " bean properties: " + bd.getPropertyValues().toString());
+            BeanDefinition definition = beanFactory.getBeanDefinition(name);
+//            String shortClassName = ClassUtils.getShortName(definition.getBeanClassName());
+//            String beanName = Introspector.decapitalize(shortClassName);
+
+//            System.out.println(name + " bean properties: " + definition.getPropertyValues().toString());
         }
     }
 }

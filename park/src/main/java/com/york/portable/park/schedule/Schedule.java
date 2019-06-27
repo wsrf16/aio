@@ -1,6 +1,5 @@
 package com.york.portable.park.schedule;
 
-import com.york.portable.park.schedule.job.migrate.MigrateJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -10,15 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class Schedule {
     @Value("${business.taskMigrate.cron}")
-    private String migrateCron;
+    private String cron;
 
     @Autowired
-    MigrateJob migrateJob;
+    Runnable job;
 
     @Autowired
-    ThreadPoolTaskScheduler migrateThreadPoolTaskScheduler;
+    ThreadPoolTaskScheduler scheduler;
 
     public void process() {
-        migrateThreadPoolTaskScheduler.schedule(migrateJob, new CronTrigger(migrateCron));
+        scheduler.schedule(job, new CronTrigger(cron));
     }
 }

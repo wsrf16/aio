@@ -20,9 +20,18 @@ if [ -f "./${proj_filename}" ];then
   cd /data1/services/${proj}/
   mkdir ./bak/${now}
   cp ./${proj_filename} ./bak/${now}/
+else
+  echo "${proj_filename} is not exist."
+  # exit 0
 fi
 # wget -N ${ftp_url}/${proj_filename}
 rz -y
+if [[ $? -eq 0 ]]; then
+  echo upload succeed.
+else
+  echo upload failed!
+  exit 0
+fi
 rm -rf /data1/services/${proj}/lib
 tar -zxvf ./${proj_filename}
 # wget -N ${ftp_url}/publish.sh

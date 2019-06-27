@@ -3,5 +3,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.york.portable.swiss.autoconfigure.LoggerHubAutoConfiguration,\
   com.york.portable.swiss.autoconfigure.RedisAutoConfiguration,\
   com.york.portable.swiss.autoconfigure.Swagger2AutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.SwissElasticsearchAutoConfiguration\
+  com.york.portable.swiss.autoconfigure.SwissElasticsearchAutoConfiguration,\
+  com.york.portable.swiss.autoconfigure.MailUtilsAutoConfiguration,\
+  com.york.portable.swiss.autoconfigure.RestTemplateAutoConfiguration\
   

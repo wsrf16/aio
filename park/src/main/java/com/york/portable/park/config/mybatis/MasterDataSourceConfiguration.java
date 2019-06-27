@@ -20,7 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = {"com.york.portable.park.parkdb.dao.master.mapper"})
+@MapperScan(basePackages = {"com.york.portable.park.parkdb.dao.master.mapper"}, sqlSessionTemplateRef = "masterSQLSessionTemplate")
 public class MasterDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     public MasterDataSourceConfiguration(@Qualifier("masterMybatisProperties") MybatisProperties properties) {
@@ -38,6 +38,7 @@ public class MasterDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     @ConditionalOnBean(name = "masterDataSource")
     @Bean("masterSQLSessionFactory")
+    @Primary
     @ConditionalOnMissingBean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         return super.sqlSessionFactory();
@@ -45,6 +46,7 @@ public class MasterDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     @ConditionalOnBean(name = "masterSQLSessionFactory")
     @Bean("masterSQLSessionTemplate")
+    @Primary
     @ConditionalOnMissingBean
     public SqlSessionTemplate sqlSessionTemplate() throws Exception {
         return super.sqlSessionTemplate();
@@ -52,6 +54,7 @@ public class MasterDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     @ConditionalOnBean(name = "masterDataSource")
     @Bean("masterPlatformTransactionManager")
+    @Primary
     public PlatformTransactionManager platformTransactionManager() {
         return super.platformTransactionManager();
     }

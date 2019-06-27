@@ -68,7 +68,7 @@
 
         <!--Dockerfile-->
         <fileSet>
-            <directory>${project.basedir}/src/main/docker</directory>
+            <directory>${project.basedir}/docker</directory>
             <outputDirectory>docker</outputDirectory>
             <includes>
                 <include>**/*</include>

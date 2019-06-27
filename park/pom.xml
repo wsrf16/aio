@@ -30,29 +30,31 @@
         <java.version>1.8</java.version>
         <swagger.version>2.9.2</swagger.version>
         <springfox-staticdocs.version>2.6.1</springfox-staticdocs.version>
-        <assertj-swagger.version>0.8.1</assertj-swagger.version>
-        <swagger2markup.version>1.3.1</swagger2markup.version>
+        <!--<assertj-swagger.version>0.8.1</assertj-swagger.version>-->
+        <swagger2markup.version>1.3.3</swagger2markup.version>
         <mysql.version>8.0.11</mysql.version>
         <tk.mybatis.version>1.1.3</tk.mybatis.version>
+        <shiro.version>1.4.0</shiro.version>
 
-        <swagger2markup.input.directory>${project.build.directory}/swagger</swagger2markup.input.directory>
-        <swagger2markup.swaggerInput>${swagger2markup.input.directory}/swagger.json</swagger2markup.swaggerInput>
-        <swagger2markup.output.generated.directory>${project.build.directory}/asciidoc/generated</swagger2markup.output.generated.directory>
-        <asciidoctor.input.generated.directory>${swagger2markup.output.generated.directory}</asciidoctor.input.generated.directory>
-        <asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
-        <asciidoctor.output.snippet.directory>${project.build.directory}/asciidoc/snippets</asciidoctor.output.snippet.directory>
-        <asciidoctor.output.html.directory>${project.build.directory}/asciidoc/html</asciidoctor.output.html.directory>
-        <asciidoctor.output.pdf.directory>${project.build.directory}/asciidoc/pdf</asciidoctor.output.pdf.directory>
+        <!-- swagger2markup -->
+        <swagger2markup.directory.output.generated>${project.build.directory}/asciidoc/generated</swagger2markup.directory.output.generated>
+        <swagger2markup.swaggerOutput>${project.build.directory}/swagger/swagger.json</swagger2markup.swaggerOutput>
+        <asciidoctor.directory.input>${project.basedir}/src/docs/asciidoc</asciidoctor.directory.input>
+        <asciidoctor.directory.input.generated>${swagger2markup.directory.output.generated}</asciidoctor.directory.input.generated>
+        <asciidoctor.directory.output.snippet>${project.build.directory}/asciidoc/snippets</asciidoctor.directory.output.snippet>
+        <asciidoctor.directory.output.html>${project.build.directory}/asciidoc/html</asciidoctor.directory.output.html>
+        <asciidoctor.directory.output.pdf>${project.build.directory}/asciidoc/pdf</asciidoctor.directory.output.pdf>
 
         <project-build-finalName>park</project-build-finalName>
         <!--<project.build.finalName>${project.artifactId}${project.version}</project.build.finalName>-->
         <project.build.logName>park</project.build.logName>
-
-        <directory.profile>src/main/profiles/${profiles.active}</directory.profile>
+        <project.deploy.appPath>/data1/services/${project.build.finalName}</project.deploy.appPath>
+        <directory.profile>src/main/profiles</directory.profile>
+        <directory.profile.active>src/main/profiles/${profiles.active}</directory.profile.active>
         <assembly-plugin-assembly.descriptor>${project.basedir}/src/main/assembly/assembly.xml</assembly-plugin-assembly.descriptor>
 
 
-        <!--<argsInject>-javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.7.3.jar -Dpinpoint.applicationName=${project.build.finalName} -Dpinpoint.agentId=$ip_addr</argsInject>-->
+        <!--<args_app>-javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.7.3.jar -Dpinpoint.applicationName=${project.build.finalName} -Dpinpoint.agentId=$ip_addr</args_app>-->
     </properties>
 
     <dependencies>
@@ -62,16 +64,16 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter</artifactId>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.springframework.boot</groupId>-->
+                    <!--<artifactId>spring-boot-starter-logging</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -153,13 +155,6 @@
             <version>${swagger.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-            <optional>true</optional>
-        </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
@@ -167,11 +162,73 @@
             <version>${swagger.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>io.springfox</groupId>-->
+            <!--<artifactId>springfox-swagger-ui</artifactId>-->
+            <!--<version>${swagger.version}</version>-->
+            <!--<optional>true</optional>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>io.springfox</groupId>-->
+            <!--<artifactId>springfox-staticdocs</artifactId>-->
+            <!--<version>${springfox-staticdocs.version}</version>-->
+            <!--<exclusions>-->
+                <!--&lt;!&ndash;<exclusion>&ndash;&gt;-->
+                <!--&lt;!&ndash;<groupId>commons-collections</groupId>&ndash;&gt;-->
+                <!--&lt;!&ndash;<artifactId>commons-collections</artifactId>&ndash;&gt;-->
+                <!--&lt;!&ndash;</exclusion>&ndash;&gt;-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-staticdocs</artifactId>
-            <version>${springfox-staticdocs.version}</version>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup</artifactId>
+            <version>${swagger2markup.version}</version>
+            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/nl.jworks.markdown_to_asciidoc/markdown_to_asciidoc -->
+        <!--<dependency>-->
+            <!--<groupId>nl.jworks.markdown_to_asciidoc</groupId>-->
+            <!--<artifactId>markdown_to_asciidoc</artifactId>-->
+            <!--<version>1.1</version>-->
+            <!--<optional>true</optional>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/ch.netzwerg/paleo-core &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>ch.netzwerg</groupId>-->
+            <!--<artifactId>paleo-core</artifactId>-->
+            <!--<version>0.13.2</version>-->
+            <!--<optional>true</optional>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.pegdown/pegdown &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.pegdown</groupId>-->
+            <!--<artifactId>pegdown</artifactId>-->
+            <!--<version>1.5.0</version>-->
+            <!--<optional>true</optional>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj -->
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+
+
+
+
+
+
+
         <!--<dependency>-->
             <!--<groupId>org.springframework.restdocs</groupId>-->
             <!--<artifactId>spring-restdocs-mockmvc</artifactId>-->
@@ -203,7 +260,41 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis.spring.boot</groupId>
+                    <artifactId>mybatis-spring-boot-starter</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.shiro</groupId>-->
+            <!--<artifactId>shiro-core</artifactId>-->
+            <!--<version>1.4.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-cas</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.pac4j/pac4j-core -->
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-core</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.35.0</version>
         </dependency>
     </dependencies>
 
@@ -272,14 +363,14 @@
             <!--</resource>-->
 
             <resource>
-                <directory>src/main/profiles</directory>
+                <directory>${directory.profile}</directory>
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>**/*</exclude>
                 </excludes>
             </resource>
             <resource>
-                <directory>${directory.profile}</directory>
+                <directory>${directory.profile.active}</directory>
                 <targetPath>conf/</targetPath>
                 <filtering>true</filtering>
                 <includes>
@@ -287,7 +378,7 @@
                 </includes>
             </resource>
             <resource>
-                <directory>${directory.profile}</directory>
+                <directory>${directory.profile.active}</directory>
                 <targetPath>${project.build.outputDirectory}</targetPath>
                 <filtering>true</filtering>
                 <includes>
@@ -301,6 +392,14 @@
                     <exclude>**/*</exclude>
                 </excludes>
             </resource>
+            <resource>
+                <directory>${project.basedir}/docker</directory>
+                <targetPath>${project.build.outputDirectory}/docker</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
         </resources>
 
         <plugins>
@@ -311,6 +410,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <!-- 如果设为true，通过swagger生成api离线文档，需先执行Test，再mvn test -->
                     <skip>true</skip>
                 </configuration>
             </plugin>
@@ -323,8 +423,13 @@
                     <!--<skipAfterFailureCount>1</skipAfterFailureCount>-->
                     <!--<rerunFailingTestsCount>1</rerunFailingTestsCount>-->
                     <systemPropertyVariables>
-                        <test.swagger2markup.input.directory>${swagger2markup.input.directory}</test.swagger2markup.input.directory>
-                        <test.asciidoctor.output.snippet.directory>${asciidoctor.output.snippet.directory}</test.asciidoctor.output.snippet.directory>
+                        <test.swagger2markup.swaggerOutput>${swagger2markup.swaggerOutput}</test.swagger2markup.swaggerOutput>
+                        <!--<test.asciidoctor.directory.output.snippet>${asciidoctor.directory.output.snippet}</test.asciidoctor.directory.output.snippet>-->
+                        <test.asciidoctor.directory.input>${asciidoctor.directory.input}</test.asciidoctor.directory.input>
+                        <test.asciidoctor.directory.input.generated>${asciidoctor.directory.input.generated}</test.asciidoctor.directory.input.generated>
+                        <test.asciidoctor.directory.output.html>${asciidoctor.directory.output.html}</test.asciidoctor.directory.output.html>
+                        <test.asciidoctor.directory.output.pdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.pdf>
+
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -367,123 +472,127 @@
 
             <!-- swagger2markup -->
             <!-- First, use the swagger2markup plugin to generate asciidoc -->
-            <plugin>
-                <groupId>io.github.swagger2markup</groupId>
-                <artifactId>swagger2markup-maven-plugin</artifactId>
-                <version>${swagger2markup.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-import-files-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
-                    </dependency>
-                    <!--&lt;!&ndash; https://mvnrepository.com/artifact/nl.jworks.markdown_to_asciidoc/markdown_to_asciidoc &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>io.github.swagger2markup</groupId>-->
+                <!--<artifactId>swagger2markup-maven-plugin</artifactId>-->
+                <!--<version>${swagger2markup.version}</version>-->
+                <!--<dependencies>-->
                     <!--<dependency>-->
-                        <!--<groupId>nl.jworks.markdown_to_asciidoc</groupId>-->
-                        <!--<artifactId>markdown_to_asciidoc</artifactId>-->
-                        <!--<version>1.0</version>-->
+                        <!--<groupId>io.github.swagger2markup</groupId>-->
+                        <!--<artifactId>swagger2markup-import-files-ext</artifactId>-->
+                        <!--<version>${swagger2markup.version}</version>-->
                     <!--</dependency>-->
-
-                    <!--&lt;!&ndash; https://mvnrepository.com/artifact/ch.netzwerg/paleo-core &ndash;&gt;-->
                     <!--<dependency>-->
-                        <!--<groupId>ch.netzwerg</groupId>-->
-                        <!--<artifactId>paleo-core</artifactId>-->
-                        <!--<version>0.11.0</version>-->
+                        <!--<groupId>io.github.swagger2markup</groupId>-->
+                        <!--<artifactId>swagger2markup-spring-restdocs-ext</artifactId>-->
+                        <!--<version>${swagger2markup.version}</version>-->
                     <!--</dependency>-->
-                </dependencies>
-                <configuration>
-                    <swaggerInput>${swagger2markup.swaggerInput}</swaggerInput>
-                    <outputDir>${swagger2markup.output.generated.directory}</outputDir>
-                    <config>
-                        <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-                        <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
+                    <!--&lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/nl.jworks.markdown_to_asciidoc/markdown_to_asciidoc &ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<groupId>nl.jworks.markdown_to_asciidoc</groupId>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<artifactId>markdown_to_asciidoc</artifactId>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<version>1.1</version>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<optional>true</optional>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
 
-                        <!--<swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>-->
-                        <!--<swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>-->
-                        <!--<swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>-->
-                        <!--<swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security/</swagger2markup.extensions.dynamicSecurity.contentPath>-->
-                        <!--<swagger2markup.extensions.springRestDocs.snippetBaseUri>${swagger.snippetOutput.dir}</swagger2markup.extensions.springRestDocs.snippetBaseUri>-->
-                        <!--<swagger2markup.extensions.springRestDocs.defaultSnippets>true</swagger2markup.extensions.springRestDocs.defaultSnippets>-->
-                    </config>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>convertSwagger2markup</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                    <!--&lt;!&ndash;&lt;!&ndash; https://mvnrepository.com/artifact/ch.netzwerg/paleo-core &ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<groupId>ch.netzwerg</groupId>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<artifactId>paleo-core</artifactId>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<version>0.13.2</version>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<optional>true</optional>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+                <!--</dependencies>-->
+                <!--<configuration>-->
+                    <!--<swaggerOutput>${swagger2markup.swaggerOutput}</swaggerOutput>-->
+                    <!--<outputDir>${swagger2markup.directory.output.generated}</outputDir>-->
+                    <!--<config>-->
+                        <!--<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>-->
+                        <!--<swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>-->
+
+                        <!--&lt;!&ndash;<swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security/</swagger2markup.extensions.dynamicSecurity.contentPath>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<swagger2markup.extensions.springRestDocs.snippetBaseUri>${swagger.snippetOutput.dir}</swagger2markup.extensions.springRestDocs.snippetBaseUri>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<swagger2markup.extensions.springRestDocs.defaultSnippets>true</swagger2markup.extensions.springRestDocs.defaultSnippets>&ndash;&gt;-->
+                    <!--</config>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>convertSwagger2markup</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <!-- Run the generated asciidoc through Asciidoctor to generate
                  other documentation types, such as PDFs or HTML5 -->
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
-                <!-- Include Asciidoctor PDF for pdf generation -->
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-pdf</artifactId>
-                        <version>1.5.0-alpha.10.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby-complete</artifactId>
-                        <version>1.7.21</version>
-                    </dependency>
-                </dependencies>
-                <!-- Configure generic document generation settings -->
-                <configuration>
-                    <sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
-                    <sourceDocumentName>index.adoc</sourceDocumentName>
-                    <attributes>
-                        <doctype>book</doctype>
-                        <toc>left</toc>
-                        <toclevels>3</toclevels>
-                        <numbered></numbered>
-                        <hardbreaks></hardbreaks>
-                        <sectlinks></sectlinks>
-                        <sectanchors></sectanchors>
-                        <generated>${asciidoctor.input.generated.directory}</generated>
-                    </attributes>
-                </configuration>
-                <!-- Since each execution can only handle one backend, run
-                     separate executions for each desired output type -->
-                <executions>
-                    <execution>
-                        <id>output-html</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <outputDirectory>${asciidoctor.output.html.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
+            <!--<plugin>-->
+                <!--<groupId>org.asciidoctor</groupId>-->
+                <!--<artifactId>asciidoctor-maven-plugin</artifactId>-->
+                <!--<version>1.5.3</version>-->
+                <!--&lt;!&ndash; Include Asciidoctor PDF for pdf generation &ndash;&gt;-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>org.asciidoctor</groupId>-->
+                        <!--<artifactId>asciidoctorj-pdf</artifactId>-->
+                        <!--<version>1.5.0-alpha.10.1</version>-->
+                    <!--</dependency>-->
+                    <!--<dependency>-->
+                        <!--<groupId>org.jruby</groupId>-->
+                        <!--<artifactId>jruby-complete</artifactId>-->
+                        <!--<version>1.7.21</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+                <!--&lt;!&ndash; Configure generic document generation settings &ndash;&gt;-->
+                <!--<configuration>-->
+                    <!--<sourceDirectory>${asciidoctor.directory.input}</sourceDirectory>-->
+                    <!--<sourceDocumentName>index.adoc</sourceDocumentName>-->
+                    <!--<attributes>-->
+                        <!--<doctype>book</doctype>-->
+                        <!--&lt;!&ndash; 菜单栏在左边 &ndash;&gt;-->
+                        <!--<toc>left</toc>-->
+                        <!--&lt;!&ndash; 多标题排列 &ndash;&gt;-->
+                        <!--<toclevels>3</toclevels>-->
+                        <!--<numbered></numbered>-->
+                        <!--<hardbreaks></hardbreaks>-->
+                        <!--<sectlinks></sectlinks>-->
+                        <!--<sectanchors></sectanchors>-->
+                        <!--<generated>${asciidoctor.directory.input.generated}</generated>-->
+                    <!--</attributes>-->
+                <!--</configuration>-->
+                <!--&lt;!&ndash; Since each execution can only handle one backend, run-->
+                     <!--separate executions for each desired output type &ndash;&gt;-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>output-html</id>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>process-asciidoc</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<backend>html5</backend>-->
+                            <!--<outputDirectory>${asciidoctor.directory.output.html}</outputDirectory>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
 
-                    <execution>
-                        <id>output-pdf</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>pdf</backend>
-                            <outputDirectory>${asciidoctor.output.pdf.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>output-pdf</id>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>process-asciidoc</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<backend>pdf</backend>-->
+                            <!--<outputDirectory>${asciidoctor.directory.output.pdf}</outputDirectory>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
 
-                </executions>
-            </plugin>
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
@@ -496,4 +605,29 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>spring-repository</id>-->
+            <!--<url>http://repo.spring.io/plugins-release/</url>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+                <!--<updatePolicy>always</updatePolicy>-->
+            <!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+                <!--<updatePolicy>interval:30</updatePolicy>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+                <!--<updatePolicy>always</updatePolicy>-->
+            </snapshots>
+            <id>jcenter-releases</id>
+            <name>jcenter</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
 </project>

@@ -1,12 +1,10 @@
 package com.york.portable.park.controller;
 
 //import com.york.portable.park.common.log.InjectedBaseLogger;
-import com.york.portable.park.common.log.LoggerHubFactory;
+import com.york.portable.park.common.log.CustomLoggerHubFactory;
 import com.york.portable.swiss.assist.cache.RedisLock;
-import com.york.portable.swiss.hamlet.model.ResponseEntity;
-import com.york.portable.swiss.sugar.DateTimeUtils;
+import com.york.portable.swiss.hamlet.model.ResponseWrapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +19,7 @@ import java.util.Date;
 public class DemoController {// extends InjectedBaseLogger {
     @GetMapping("loganno")
     public String loganno() {
-        LoggerHubFactory.newInstance().build(this.getClass()).d("debug");
+        CustomLoggerHubFactory.newInstance().build(this.getClass()).d("debug");
         return "ok";
     }
 
@@ -29,20 +27,19 @@ public class DemoController {// extends InjectedBaseLogger {
     RedisLock redisLock;
 
 //    @GetMapping("foo")
-//    public ResponseEntity foo() {
+//    public ResponseWrapper foo() {
 //        logger.info("log1", "some information");
 //        slf4jHubFactory.build(this.getClass()).info("log2", "some information");
-//        return ResponseEntity.build(BizStatusEnum.VERIFICATION.getCode(), "foo接口未进行授权");
+//        return ResponseWrapper.build(BizStatusEnum.VERIFICATION.getCode(), "foo接口未进行授权");
 //    }
 
-    @Autowired
-    AmqpTemplate amqpTemplate;
-    @GetMapping("mqsend")
-    public void mqsend() {
-        amqpTemplate.convertAndSend("tc.exchange","", "aaaaaaaaaaaaa");
-        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
-
-    }
+//    @Autowired
+//    AmqpTemplate amqpTemplate;
+//    @GetMapping("mqsend")
+//    public void mqsend() {
+//        amqpTemplate.convertAndSend("tc.exchange","", "aaaaaaaaaaaaa");
+//        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
+//    }
 
     @GetMapping("date")
     public Date date() {
@@ -50,8 +47,8 @@ public class DemoController {// extends InjectedBaseLogger {
     }
 
     @GetMapping("ok")
-    public ResponseEntity<String> ok() {
-        return ResponseEntity.success("oookkk");
+    public ResponseWrapper<String> ok() {
+        return ResponseWrapper.build(0, "oookkk");
     }
 
 //    @GetMapping("log")
@@ -61,15 +58,15 @@ public class DemoController {// extends InjectedBaseLogger {
 //        return msg;
 //    }
 
-    @Autowired
-    private AmqpTemplate rabbitTemplate;
-
-    @GetMapping("mq")
-    public String mq() {
-        String msg = MessageFormat.format("现在的时间是{0}", DateTimeUtils.UnixTime.convertUnix2DateTime(DateTimeUtils.UnixTime.nowUnix()));
-        rabbitTemplate.convertAndSend("application-log-queue", msg);
-        return msg;
-    }
+//    @Autowired
+//    private AmqpTemplate rabbitTemplate;
+//
+//    @GetMapping("mq")
+//    public String mq() {
+//        String msg = MessageFormat.format("现在的时间是{0}", DateTimeUtils.UnixTime.convertUnix2DateTime(DateTimeUtils.UnixTime.nowUnix()));
+//        rabbitTemplate.convertAndSend("application-log-queue", msg);
+//        return msg;
+//    }
 
     @GetMapping("lock")
     public String lock() {

@@ -179,14 +179,18 @@ public class JacksonUtil {
      * @return
      * @throws IOException
      */
-    public static <T> T json2Complex(String jsonStr) throws IOException {
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    public static <T> T json2Complex(String jsonStr) {
+        try {
+            ObjectMapper mapper = new ObjectMapper()
+                    .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+                    .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        return mapper.readValue(jsonStr, new TypeReference<T>() {
-        });
+            return mapper.readValue(jsonStr, new TypeReference<T>() {
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -198,12 +202,16 @@ public class JacksonUtil {
      * @return
      * @throws IOException
      */
-    public static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) throws IOException {
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper.readValue(jsonStr, valueTypeRef);
+    public static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
+        try {
+            ObjectMapper mapper = new ObjectMapper()
+                    .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+                    .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return mapper.readValue(jsonStr, valueTypeRef);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -227,7 +235,7 @@ public class JacksonUtil {
      * @return
      * @throws IOException
      */
-    public static <T> boolean can2Complex(String jsonStr, TypeReference<T> valueTypeRef) throws IOException {
+    public static <T> boolean can2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
         boolean can = json2Complex(jsonStr, valueTypeRef) == null ? false : true;
         return can;
     }

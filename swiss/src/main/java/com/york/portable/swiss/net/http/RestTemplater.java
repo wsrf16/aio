@@ -8,6 +8,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -81,9 +82,39 @@ public class RestTemplater {
         return factory;
     }
 
+    public static <Res> ResponseEntity<Res> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, Class<Res> responseType) {
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<Res> responseEntity = restTemplate.exchange(url, method, httpEntity, responseType);
+        return responseEntity;
+    }
+
+    public static <Res> ResponseEntity<Res> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<Res> responseEntity = restTemplate.exchange(url, method, httpEntity, parameterizedTypeReference);
+        return responseEntity;
+    }
+
+    public static <Res> ResponseEntity<Res> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, Class<Res> responseType) {
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        ResponseEntity<Res> responseEntity = exchange(restTemplate, url, method, headers, responseType);
+        return responseEntity;
+    }
+
+    public static <Res> ResponseEntity<Res> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        ResponseEntity<Res> responseEntity = exchange(restTemplate, url, method, headers, parameterizedTypeReference);
+        return responseEntity;
+    }
+
     public static <Res> ResponseEntity<Res> get(RestTemplate restTemplate, String url, HttpHeaders headers, Class<Res> responseType) {
         HttpEntity httpEntity = new HttpEntity<>(headers);
         ResponseEntity<Res> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, responseType);
+        return responseEntity;
+    }
+
+    public static <Res> ResponseEntity<Res> get(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        HttpEntity httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<Res> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, parameterizedTypeReference);
         return responseEntity;
     }
 
@@ -92,16 +123,29 @@ public class RestTemplater {
         return get(restTemplate, url, headers, responseType);
     }
 
+    public static <Res> ResponseEntity<Res> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return get(restTemplate, url, headers, parameterizedTypeReference);
+    }
+
     public static <Res, Req> ResponseEntity<Res> post(RestTemplate restTemplate, String url, Req body, HttpHeaders headers, Class<Res> responseType) {
         HttpEntity httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<Res> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, responseType);
         return responseEntity;
     }
 
+    public static <Res, Req> ResponseEntity<Res> post(RestTemplate restTemplate, String url, Req body, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        HttpEntity httpEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Res> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, parameterizedTypeReference);
+        return responseEntity;
+    }
     public static <Res, Req> ResponseEntity<Res> postJsonUTF8(RestTemplate restTemplate, String url, Req body, HttpHeaders headers, Class<Res> responseType) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return post(restTemplate, url, body, headers, responseType);
     }
 
-
+    public static <Res, Req> ResponseEntity<Res> postJsonUTF8(RestTemplate restTemplate, String url, Req body, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference) {
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return post(restTemplate, url, body, headers, parameterizedTypeReference);
+    }
 }

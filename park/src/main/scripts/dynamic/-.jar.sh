@@ -1,8 +1,13 @@
 #!/bin/bash
 
 function mkdirLog() {
-  if [ ! -d $log_path ];then
-    mkdir $log_path
+  if [ ! -d $log_dir_absolute_path ];then
+    mkdir $log_dir_absolute_path
+  else
+    if [ -f "${log_gclatest_file_absolute_path}" ];then
+      cat ${log_gclatest_file_absolute_path} >> ${log_gctotal_file_absolute_path}
+      rm -f ${log_gclatest_file_absolute_path}
+    fi
   fi
 }
 
@@ -33,26 +38,25 @@ function getDirectory() {
 
 function markProcess() {
   if [ $operate == "stop" ]; then
-  # $shfilename   $sh_file_path
+  # $shfilename   $sh_file_absolute_path
   #                         show line no   except         except         except
     process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
   else
     process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename calldaemon" | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
   fi
 
-  echo $process_line >> $log_path/process.log
+  echo $process_line >> $log_dir_absolute_path/process.log
 }
 
 function getPid() {
   if [ $operate == "stop" ]; then
-  # $shfilename   $sh_file_path
+  # $shfilename   $sh_file_absolute_path
   #                         show line no   except         except         except
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename once" | grep -v "$shfilename status" | grep -v "$shfilename restart")
   else
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename calldaemon" | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename calldaemon" | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename once" | grep -v "$shfilename status" | grep -v "$shfilename restart")
   fi
 
-  #echo $process_line >> $log_path/process.log
   pid=($(echo $process_line | awk '{print $2}'))
 
   if [ "$pid" ]; then
@@ -63,7 +67,7 @@ function getPid() {
 }
 
 function isRunning() {
-  pid=$(getPid $file_path)
+  pid=$(getPid $file_absolute_path)
   if [ "$pid" ]; then
     echo true
   else
@@ -72,16 +76,16 @@ function isRunning() {
 }
 
 function run() {
-  touch ${log_file_path}
-  tail -n ${log_remain_line} ${log_file_path} > $log_path/tmp
-  mv -f $log_path/tmp ${log_file_path}
+  touch ${log_file_absolute_path}
+  tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
+  mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
   if [ $operate == "once" ]; then
-    java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 2>&1 | tee ${log_file_path}
+    java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 2>&1 | tee ${log_file_absolute_path}
   elif [ $operate == "start" ]; then
-    nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_path} 2>&1 &
+    nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_absolute_path} 2>&1 &
   fi
 
-  #nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_path} 2>&1 &
+  #nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_absolute_path} 2>&1 &
   #nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 &
 
   sleep $check_period
@@ -93,10 +97,10 @@ function calldaemon() {
   while [ true ]; do
     is=$(isRunning $1)
     if [ ! ${is} ]; then
-      #$sh_file_path start
+      #$sh_file_absolute_path start
       operate="start"
       run $1
-      #nohup $sh_file_path start >/dev/null 2>&1 &
+      #nohup $sh_file_absolute_path start >/dev/null 2>&1 &
       #nohup $0 start >/dev/null 2>&1 &
     fi
     sleep $daemon_check_period
@@ -160,7 +164,11 @@ function restartlog() {
   operate="start"
   start $1
   operate="restartlog"
-  tail -100f ${log_file_path}
+  tail -100f ${log_file_absolute_path}
+}
+
+function log() {
+  tail -100f ${log_file_absolute_path}
 }
 
 function help() {
@@ -172,6 +180,7 @@ function help() {
   echo "<jarfile>.jar.sh restartlog"
   echo "<jarfile>.jar.sh stop"
   echo "<jarfile>.jar.sh status"
+  echo "<jarfile>.jar.sh log"
 
   echo "<self>.sh <jarfile> once"
   echo "<self>.sh <jarfile> start"
@@ -180,6 +189,7 @@ function help() {
   echo "<self>.sh <jarfile> restartlog"
   echo "<self>.sh <jarfile> stop"
   echo "<self>.sh <jarfile> status"
+  echo "<self>.sh <jarfile> log"
 }
 
 
@@ -192,7 +202,7 @@ function help() {
 
 
 
-
+now="`date +%Y%m%d%H%M%S`"
 check_period=2
 daemon_check_period=10
 log_remain_line=100000
@@ -201,10 +211,10 @@ ip_addr=$(getIpAddr)
 
 
 dir_absolute_path=$(cd $(dirname $0); pwd)
-_curfilename=${0##*/}
-if [[ ${_curfilename} =~ . ]]; then
-    shfilename=${_curfilename}
-    ext=$(getExt $_curfilename)
+_self=${0##*/}
+if [[ ${_self} =~ . ]]; then
+    shfilename=${_self}
+    # ext=$(getExt $_self)
 else
     echo "sorry! filename is error."
     exit 0
@@ -212,28 +222,30 @@ fi
 
 
 
-if [[ ${_curfilename} =~ \..+\.sh ]]; then
+if [[ ${_self} =~ \..+\.sh ]]; then
   mode="dynamic"
 else
   mode="static"
 fi
 
 if [ $mode == "dynamic" ]; then
-  filename=${_curfilename%.*}
-  file_path=$dir_absolute_path/$filename
-  sh_file_path=$dir_absolute_path/$shfilename
+  filename=${_self%.*}
+  file_absolute_path=$dir_absolute_path/$filename
+  sh_file_absolute_path=$dir_absolute_path/$shfilename
   dir_path=${dir_absolute_path}
 else
-  file_path=($(readlink -f $2))
-  filename=($(getFilename $file_path))
-  sh_file_path=$dir_absolute_path/$shfilename
-  dir_path=$(getDirectory ${file_path})
+  file_absolute_path=($(readlink -f $2))
+  filename=($(getFilename $file_absolute_path))
+  sh_file_absolute_path=$dir_absolute_path/$shfilename
+  dir_path=$(getDirectory ${file_absolute_path})
 fi
-log_path=${dir_path}/log
-log_file_path=/dev/null
-log_file_path=$log_path/service.log
+log_dir_absolute_path=${dir_path}/log
+log_file_absolute_path=/dev/null
+log_file_absolute_path=$log_dir_absolute_path/service.log
+log_gclatest_file_absolute_path=$log_dir_absolute_path/gc_latest.log
+log_gctotal_file_absolute_path=$log_dir_absolute_path/gc_total.log
 
-args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseParNewGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:$log_path/gc.log ${argsInject}"
+args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:$log_gclatest_file_absolute_path ${args_app}"
 
 
 operate=$1
@@ -242,27 +254,29 @@ if [ -z ${operate} ]; then
 else
   mkdirLog
   if [ $operate == "once" ]; then
-    start $file_path
+    start $file_absolute_path
   elif [ $operate == "start" ]; then
-    start $file_path
+    start $file_absolute_path
   elif [ $operate == "restartlog" ]; then
-    restartlog $file_path
+    restartlog $file_absolute_path
   elif [ $operate == "daemon" ]; then
     if [ $mode == "dynamic" ]; then
-      nohup $sh_file_path calldaemon >/dev/null 2>&1 &
+      nohup $sh_file_absolute_path calldaemon >/dev/null 2>&1 &
     elif [ $mode == "static" ]; then
-      nohup $sh_file_path calldaemon $file_path >/dev/null 2>&1 &
+      nohup $sh_file_absolute_path calldaemon $file_absolute_path >/dev/null 2>&1 &
     fi
     sleep $check_period
-    status $file_path
+    status $file_absolute_path
   elif [ $operate == "calldaemon" ]; then
-    calldaemon $file_path
+    calldaemon $file_absolute_path
   elif [ $operate == "stop" ]; then
-    stop $file_path
+    stop $file_absolute_path
   elif [ $operate == "restart" ]; then
-    restart $file_path
+    restart $file_absolute_path
   elif [ $operate == "status" ]; then
-    status $file_path
+    status $file_absolute_path
+  elif [ $operate == "log" ]; then
+    log
   elif [ $operate == "help" ]; then
     help
   else

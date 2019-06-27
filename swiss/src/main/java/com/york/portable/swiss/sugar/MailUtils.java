@@ -1,19 +1,36 @@
 package com.york.portable.swiss.sugar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 
+/**
+ * MailUtils
+ * refer:
+ *   org.springframework.boot.autoconfigure.mail.MailProperties.class
+ *   MailSenderPropertiesConfiguration.class
+ *   MailSenderAutoConfiguration.class
+ *   JavaMailSenderImpl.class
+ *   JavaMailSender.class
+ */
+@Component
+@ConditionalOnBean(JavaMailSender.class)
 public class MailUtils {
-//    @Autowired
-    private static JavaMailSender javaMailSender = new JavaMailSenderImpl();
+    private JavaMailSender javaMailSender;// = new JavaMailSenderImpl();
+
+    public MailUtils(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     /**
      * spring:
@@ -54,7 +71,7 @@ public class MailUtils {
      *   mail:
      *     host: smtp.gmail.com
      *     username:xxx@gmail.com
-     *     password: xxxxx #Gmail账号密码
+     *     password: xxxxx
      *     protocol: smtp
      *     properties.mail.smtp.auth: true
      *     properties.mail.smtp.port: 465
@@ -94,7 +111,7 @@ public class MailUtils {
      * @param content
      * @throws MessagingException
      */
-    public static void sendHtmlMail(String from, String to, String subject, String content, String... cc) throws MessagingException {
+    public void sendHtmlMail(String from, String to, String subject, String content, String... cc) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(from);
@@ -113,7 +130,7 @@ public class MailUtils {
      * @param content
      * @param filePath
      */
-    public static void sendAttachmentsMail(String from, String to, String subject, String content, String filePath) throws MessagingException {
+    public void sendAttachmentsMail(String from, String to, String subject, String content, String filePath) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -139,7 +156,7 @@ public class MailUtils {
      * @param rscId
      * @throws MessagingException
      */
-    public static void sendResourceMail(String from, String to, String subject, String html, String rscPath, String rscId) throws MessagingException {
+    public void sendResourceMail(String from, String to, String subject, String html, String rscPath, String rscId) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -155,12 +172,35 @@ public class MailUtils {
     }
 
     /**
-     *
+     * send
      * @param message
      */
-    public static void send(MimeMessage message) {
+    public void send(MimeMessage message) {
         javaMailSender.send(message);
     }
 
+    /**
+     * send
+     * @param message
+     */
+    public void send(MimeMessage... message) {
+        javaMailSender.send(message);
+    }
+
+    /**
+     * send
+     * @param message
+     */
+    public void send(SimpleMailMessage message) {
+        javaMailSender.send(message);
+    }
+
+    /**
+     * send
+     * @param message
+     */
+    public void send(SimpleMailMessage... message) {
+        javaMailSender.send(message);
+    }
 
 }

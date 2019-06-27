@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Swagger2Properties {
-    private boolean enable = false;
+    private boolean enable = true;
 
 //    private String version = "1.0";
 

@@ -1,10 +1,10 @@
 package com.york.portable.swiss.autoconfigure;
 
-import com.york.portable.swiss.assist.log.classic.parts.LogKafkaProperties;
-import com.york.portable.swiss.assist.log.classic.parts.LogRabbitMQProperties;
+import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
+import com.york.portable.swiss.assist.log.classic.properties.LogRabbitMQProperties;
 import com.york.portable.swiss.assist.log.hub.factory.classic.ConsoleHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.KafkaHubFactory;
-import com.york.portable.swiss.assist.log.hub.factory.classic.RabbitHubFactory;
+import com.york.portable.swiss.assist.log.hub.factory.classic.RabbitMQHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.Slf4jHubFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -38,8 +38,8 @@ public class LoggerHubAutoConfiguration {
     @DependsOn("logRabbitMQProperties")
     @ConditionalOnBean(LogRabbitMQProperties.class)
     @ConditionalOnClass({org.springframework.amqp.rabbit.connection.CachingConnectionFactory.class, org.springframework.amqp.rabbit.core.RabbitTemplate.class})
-    public RabbitHubFactory rabbitHubFactory() {
-        return RabbitHubFactory.newInstance();
+    public RabbitMQHubFactory rabbitHubFactory() {
+        return RabbitMQHubFactory.newInstance();
     }
 
     @Bean

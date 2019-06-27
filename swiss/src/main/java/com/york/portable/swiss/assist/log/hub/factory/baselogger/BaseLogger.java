@@ -1,19 +1,20 @@
 package com.york.portable.swiss.assist.log.hub.factory.baselogger;
 
-import com.york.portable.swiss.assist.log.hub.LoggerHub;
-import com.york.portable.swiss.assist.log.hub.factory.ILoggerHubFactory;
+import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
+import com.york.portable.swiss.assist.log.hub.factory.LoggerHubFactory;
 
 public abstract class BaseLogger {
-    protected LoggerHub logger;
+    protected LoggerHubImp logger;
 
-    public BaseLogger() {
+//    public BaseLogger() {
+//    }
+
+    public BaseLogger(LoggerHubFactory loggerHubFactory) {
+        this.logger = loggerHubFactory.build(BaseLogger.class);
     }
 
-    public BaseLogger(ILoggerHubFactory loggerHubFactory) {
-        build(loggerHubFactory);
-    }
-
-    protected synchronized void build(ILoggerHubFactory loggerHubFactory) {
-        logger = (loggerHubFactory != null && logger == null) ? loggerHubFactory.build(this.getClass()) : logger;
-    }
+//    protected static synchronized LoggerHubImp build(LoggerHubFactory loggerHubFactory) {
+//        LoggerHubImp logger = loggerHubFactory.build(BaseLogger.class);
+//        return logger;
+//    }
 }

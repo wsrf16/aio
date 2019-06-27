@@ -1,58 +1,55 @@
 package com.york.portable.park;
 
+//import io.github.robwin.markup.builder.MarkupLanguage;
+//import io.github.robwin.swagger2markup.GroupBy;
+//import io.github.robwin.swagger2markup.Language;
+//import io.github.robwin.swagger2markup.config.Swagger2MarkupConfig;
+import io.github.swagger2markup.GroupBy;
+import io.github.swagger2markup.Language;
+import io.github.swagger2markup.Swagger2MarkupConfig;
+import io.github.swagger2markup.Swagger2MarkupConverter;
+import io.github.swagger2markup.builder.Swagger2MarkupConfigBuilder;
+import io.github.swagger2markup.markup.builder.MarkupLanguage;
+import org.asciidoctor.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebAppConfiguration
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ParkApplication.class, Swagger2ConfigTests.class})
-@AutoConfigureMockMvc
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringBootTest(classes = {ParkApplication.class})
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ParkApplicationTests {
+    @Autowired
+    Swagger2MarkupSet swagger2MarkupSet;
 
     @Test
-    public void contextLoads() {
+    public void contextLoads() throws Exception {
+        swagger2MarkupSet.run();
     }
-
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @Test
-    public void createSpringfoxSwaggerJson() throws Exception {
-        //String designFirstSwaggerLocation = Swagger2MarkupTest.class.getResource("/swagger.yaml").getPath();
-        mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
-        String outputDir = System.getProperty("test.swagger2markup.input.directory");
-        MvcResult mvcResult = this.mockMvc.perform(get("/v2/api-docs")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String swaggerJson = mvcResult.getResponse().getContentAsString();
-        Files.createDirectories(Paths.get(outputDir));
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(outputDir, "swagger.json"), StandardCharsets.UTF_8)){
-            writer.write(swaggerJson);
-        }
-    }
-
 }

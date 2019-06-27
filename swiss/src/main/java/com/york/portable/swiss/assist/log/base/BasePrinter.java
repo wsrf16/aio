@@ -1,6 +1,6 @@
 package com.york.portable.swiss.assist.log.base;
 
-//public class BasePrinter implements IPrinter {
+//public class BasePrinter implements Printer {
 //    static class LoggerConfig {
 //        public static final String PATH_PROGRAM_ROOTFOLDER = Constant.CURRENT_DIRECTORY;
 //        public static final String SECTION_SEPARATOR = Constant.FILE_SEPARATOR;

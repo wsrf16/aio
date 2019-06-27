@@ -4,6 +4,7 @@ import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.parts.LogException;
 import com.york.portable.swiss.assist.log.base.parts.LogNote;
 import com.york.portable.swiss.assist.log.base.parts.LogThreadPool;
+import com.york.portable.swiss.bean.serializer.ISerializerSelector;
 import com.york.portable.swiss.bean.serializer.SerializerSelector;
 import com.york.portable.swiss.global.Constant;
 
@@ -16,7 +17,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class AbsLogger extends ILogger {
+public abstract class AbsLogger extends LoggerRoot {
     static final String NEWLINE = Constant.LINE_SEPARATOR;
 //    protected static final String INTERVAL_CHAR = " => ";
     protected static final String INTERVAL_CHAR = " ";
@@ -32,8 +33,8 @@ public abstract class AbsLogger extends ILogger {
         this.prefixSupplier = cleanPrefix;
     }
 
-    protected SerializerSelector serializer = new SerializerSelector();
-    public SerializerSelector getSerializer() {
+    protected ISerializerSelector serializer = new SerializerSelector();
+    public ISerializerSelector getSerializer() {
         return serializer;
     }
 
@@ -45,13 +46,13 @@ public abstract class AbsLogger extends ILogger {
         this.async = async;
     }
 
-    protected IPrinter verbosePrinter;
-    protected IPrinter infoPrinter;
-    protected IPrinter tracePrinter;
-    protected IPrinter debugPrinter;
-    protected IPrinter warningPrinter;
-    protected IPrinter errorPrinter;
-    protected IPrinter fatalPrinter;
+    protected Printer verbosePrinter;
+    protected Printer infoPrinter;
+    protected Printer tracePrinter;
+    protected Printer debugPrinter;
+    protected Printer warningPrinter;
+    protected Printer errorPrinter;
+    protected Printer fatalPrinter;
 
 
     protected AbsLogger(String name) {
@@ -66,30 +67,30 @@ public abstract class AbsLogger extends ILogger {
         initialPrinter();
     }
 
-    private static String spellShortExceptionText_1(Exception e) {
-        String errText = MessageFormat.format("Message : {0} || StackTrace : {1}", e.getMessage(), e.getStackTrace());
-        return errText;
-    }
-
-    protected static String spellLongExceptionText_2(Exception e) {
-        StringBuffer sb = new StringBuffer();
-
-        Exception currentException = e;
-        int layer = 0;
-
-        String text = MessageFormat.format("{0}:{1}--{2}:{3}{4}{5}--{6}:{7}{8}{9}",
-                AbsLogger.class.getName(), NEWLINE,
-                "message", NEWLINE,
-                currentException.toString(), NEWLINE,
-                "stackTrace", NEWLINE,
-                concatStackTraceElement(currentException.getStackTrace()), NEWLINE);
-        return text;
-    }
-
-    protected static String concatStackTraceElement(StackTraceElement[] stackTraceElements) {
-        String newLine = Constant.LINE_SEPARATOR;
-        return Arrays.stream(stackTraceElements).map(StackTraceElement::toString).reduce((sum, ele) -> sum + newLine + ele).get();
-    }
+//    private static String spellShortExceptionText_1(Exception e) {
+//        String errText = MessageFormat.format("Message : {0} || StackTrace : {1}", e.getMessage(), e.getStackTrace());
+//        return errText;
+//    }
+//
+//    protected static String spellLongExceptionText_2(Exception e) {
+//        StringBuffer sb = new StringBuffer();
+//
+//        Exception currentException = e;
+//        int layer = 0;
+//
+//        String text = MessageFormat.format("{0}:{1}--{2}:{3}{4}{5}--{6}:{7}{8}{9}",
+//                AbsLogger.class.getName(), NEWLINE,
+//                "message", NEWLINE,
+//                currentException.toString(), NEWLINE,
+//                "stackTrace", NEWLINE,
+//                concatStackTraceElement(currentException.getStackTrace()), NEWLINE);
+//        return text;
+//    }
+//
+//    protected static String concatStackTraceElement(StackTraceElement[] stackTraceElements) {
+//        String newLine = Constant.LINE_SEPARATOR;
+//        return Arrays.stream(stackTraceElements).map(StackTraceElement::toString).reduce((sum, ele) -> sum + newLine + ele).get();
+//    }
 
     protected static LogException buildLogException(Exception e) {
         LogException logEx = new LogException();
@@ -101,7 +102,7 @@ public abstract class AbsLogger extends ILogger {
     protected abstract void initialPrinter();
 
 
-    protected void output(IPrinter printer, String text) {
+    protected void output(Printer printer, String text) {
         try {
             if (async)
                 LogThreadPool.newInstance().executor.execute(() ->
@@ -109,14 +110,12 @@ public abstract class AbsLogger extends ILogger {
                 );
             else
                 printer.println(prefixSupplier.get() + INTERVAL_CHAR + text);
-        } catch (AmqpException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void output(IPrinter printer, LogNote note) {
+    protected void output(Printer printer, LogNote note) {
         String text = serializer.serialize(note);
         output(printer, text);
     }

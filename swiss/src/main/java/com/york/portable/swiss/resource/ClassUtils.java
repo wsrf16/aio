@@ -1,5 +1,6 @@
 package com.york.portable.swiss.resource;
 
+import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -72,4 +73,24 @@ public class ClassUtils {
         boolean exist = urlList != null && urlList.size() > 0;
         return exist;
     }
+
+    /**
+     * getShortName -> org.springframework.util.ClassUtils.getShortName
+     * @param className
+     * @return
+     */
+    public static String getShortName(String className) {
+        String shortClassName = org.springframework.util.ClassUtils.getShortName(className);
+        return shortClassName;
+    }
+
+    /**
+     * getBeanName
+     * @param shortClassName
+     * @return
+     */
+    public static String getBeanName(String shortClassName) {
+        return Introspector.decapitalize(shortClassName);
+    }
+
 }

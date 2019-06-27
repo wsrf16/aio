@@ -1,5 +1,6 @@
 package com.york.portable.swiss.net.mq.kafka;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.LoggingProducerListener;
@@ -35,17 +36,15 @@ public class KafkaBuilder {
     }
 
     public static ConsumerFactory<String, Object> kafkaConsumerFactory(KafkaProperties properties, Map<String, Object> extraProperties) {
-        Map<String, Object> consumerProperties = properties.buildProducerProperties();
+        Map<String, Object> consumerProperties = properties.buildConsumerProperties();
         consumerProperties.putAll(extraProperties);
 
         return new DefaultKafkaConsumerFactory(properties.buildConsumerProperties());
     }
 
-    public static ProducerListener<Object, Object> kafkaProducerListener() {
+    private static ProducerListener<Object, Object> kafkaProducerListener() {
         return new LoggingProducerListener();
     }
-
-
 
     public static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties) {
         return KafkaBuilder.kafkaTemplate(properties, null);
@@ -53,22 +52,21 @@ public class KafkaBuilder {
 
     public static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties, RecordMessageConverter messageConverter) {
         ProducerFactory<Object, Object> kafkaProducerFactory = (ProducerFactory<Object, Object>)KafkaBuilder.kafkaProducerFactory(properties);
-        ProducerListener<Object, Object> kafkaProducerListener = KafkaBuilder.kafkaProducerListener();
-        String defaultTopic = properties.getTemplate().getDefaultTopic();
-
-        KafkaTemplate<?, ?> kafkaTemplate = kafkaTemplate(kafkaProducerFactory, kafkaProducerListener, messageConverter, defaultTopic);
-        return kafkaTemplate;
-    }
-
-    public static KafkaTemplate<?, ?> kafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory, ProducerListener<Object, Object> kafkaProducerListener, RecordMessageConverter messageConverter, String defaultTopic) {
         KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate(kafkaProducerFactory);
+
         if (messageConverter != null) {
             kafkaTemplate.setMessageConverter(messageConverter);
         }
 
-        if (kafkaProducerListener != null)
+        ProducerListener<Object, Object> kafkaProducerListener = KafkaBuilder.kafkaProducerListener();
+        if (kafkaProducerListener != null) {
             kafkaTemplate.setProducerListener(kafkaProducerListener);
-        kafkaTemplate.setDefaultTopic(defaultTopic);
+        }
+
+        if (properties != null && properties.getTemplate() != null && StringUtils.isNotBlank(properties.getTemplate().getDefaultTopic())) {
+            String defaultTopic = properties.getTemplate().getDefaultTopic();
+            kafkaTemplate.setDefaultTopic(defaultTopic);
+        }
         return kafkaTemplate;
     }
 

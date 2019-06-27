@@ -9,15 +9,6 @@ import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsReques
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
-import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteRequestBuilder;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexRequestBuilder;
-import org.elasticsearch.action.support.replication.ReplicatedWriteRequest;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -28,7 +19,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 public class ElasticsearchUtils {
     private static final String TYPE = "type";
@@ -44,7 +34,7 @@ public class ElasticsearchUtils {
         }
 
         xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameTypesByBean(bean).entrySet();
+        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameClass((Object) bean).entrySet();
         startObject(xContentBuilder, propertySet);
 
         xContentBuilder.endObject().endObject();
@@ -63,7 +53,7 @@ public class ElasticsearchUtils {
         }
 
         xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameTypesByClass(clazz).entrySet();
+        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameClass((Class) clazz).entrySet();
         startObject(xContentBuilder, propertySet);
 
         xContentBuilder.endObject().endObject();

@@ -108,8 +108,8 @@ public abstract class BaseDataSourceConfiguration {
                 new SqlSessionTemplate(sqlSessionFactory, executorType) : new SqlSessionTemplate(sqlSessionFactory);
     }
 
-//    @Bean("platformTransactionManager")
-    public PlatformTransactionManager platformTransactionManager() {
+//    @Bean("dataSourceTransactionManager")
+    public DataSourceTransactionManager dataSourceTransactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 }

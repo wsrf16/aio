@@ -133,21 +133,8 @@ public class ResourceUtils {
      * @throws IOException
      */
     public static List<URL> getResourcesByClassName(final String className) throws IOException {
-        final String resourceRelationPath = ResourceUtils.fullName2Path(className);
+        final String resourceRelationPath = ClassUtils.convertClassName2ResourcePath(className);
         return ResourceUtils.getResourcesInClassFile(resourceRelationPath);
-    }
-
-    /**
-     * fullName2Name
-     *
-     * @param fullName className/packageName eg. com.company.biz | com.company.biz.Book
-     * @return com/company/biz | com/company/biz/Book
-     */
-    public static String fullName2Path(String fullName) {
-        String path;
-//        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(fullName).concat(".class");
-        path = fullName.replace(".", "/").concat(".class");
-        return path;
     }
 
     /**

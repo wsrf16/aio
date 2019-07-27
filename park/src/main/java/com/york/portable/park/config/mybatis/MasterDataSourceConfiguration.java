@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -53,9 +53,9 @@ public class MasterDataSourceConfiguration extends BaseDataSourceConfiguration {
     }
 
     @ConditionalOnBean(name = "masterDataSource")
-    @Bean("masterPlatformTransactionManager")
+    @Bean("masterDataSourceTransactionManager")
     @Primary
-    public PlatformTransactionManager platformTransactionManager() {
-        return super.platformTransactionManager();
+    public DataSourceTransactionManager dataSourceTransactionManager() {
+        return super.dataSourceTransactionManager();
     }
 }

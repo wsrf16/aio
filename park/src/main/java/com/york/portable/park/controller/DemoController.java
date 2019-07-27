@@ -72,11 +72,11 @@ public class DemoController {// extends InjectedBaseLogger {
     public String lock() {
         String identify;
 
-        identify = redisLock.lock("robot");
-        redisLock.releaseLock("robot", identify);
+        identify = redisLock.lock("robot", 60000, 5000);
+        redisLock.releaseLock("robot");
 
-        identify = redisLock.acquireLock("robot", 10000L, 10000L);
-        redisLock.releaseLock("robot", identify);
+        identify = redisLock.lock("robot", 10000L, 10000L);
+        redisLock.releaseLock("robot");
 
         return MessageFormat.format("lock : {0}", identify);
     }

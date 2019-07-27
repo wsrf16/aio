@@ -3,7 +3,7 @@ package com.york.portable.park.other;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapTest {
+public class MapCloneTest {
     public void cloneTest() {
         // shallow clone
         {

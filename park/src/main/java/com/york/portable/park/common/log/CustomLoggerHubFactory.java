@@ -1,13 +1,15 @@
 package com.york.portable.park.common.log;
 
+import com.york.portable.swiss.assist.log.classic.impl.slf4j.Slf4jLogger;
 import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
 import com.york.portable.swiss.assist.log.hub.factory.LoggerHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.ConsoleHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.KafkaHubFactory;
+import com.york.portable.swiss.assist.log.hub.factory.classic.Slf4jHubFactory;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CustomLoggerHubFactory extends KafkaHubFactory {
+public class CustomLoggerHubFactory extends Slf4jHubFactory { //KafkaHubFactory {
 }
 
 //@Configuration

@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
+//@Configuration
 public class RestTemplateConfig {
     private boolean httpDebug = false;
     private String debugHost = "127.0.0.1";

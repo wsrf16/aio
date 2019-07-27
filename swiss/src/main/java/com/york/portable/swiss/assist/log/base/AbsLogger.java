@@ -3,17 +3,19 @@ package com.york.portable.swiss.assist.log.base;
 import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.parts.LogException;
 import com.york.portable.swiss.assist.log.base.parts.LogNote;
-import com.york.portable.swiss.assist.log.base.parts.LogThreadPool;
+//import com.york.portable.swiss.assist.log.base.parts.LogThreadPool;
 import com.york.portable.swiss.bean.serializer.ISerializerSelector;
 import com.york.portable.swiss.bean.serializer.SerializerSelector;
 import com.york.portable.swiss.global.Constant;
 
-import java.text.MessageFormat;
+import java.net.UnknownHostException;
 
+import com.york.portable.swiss.systeminfo.HostInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.AmqpException;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void setAsync(boolean async) {
         this.async = async;
     }
+    public ExecutorService executor = Executors.newCachedThreadPool();
 
     protected Printer verbosePrinter;
     protected Printer infoPrinter;
@@ -54,18 +57,21 @@ public abstract class AbsLogger extends LoggerRoot {
     protected Printer errorPrinter;
     protected Printer fatalPrinter;
 
+//    protected AbsLogger(Class clazz) {
+//        this(clazz.getTypeName());
+//    }
 
     protected AbsLogger(String name) {
-        this.name = name;
+        setName(name);
         resetPrefix();
         initialPrinter();
     }
 
-    protected AbsLogger() {
-        this.name = DEFAULT_NAME;
-        resetPrefix();
-        initialPrinter();
-    }
+//    protected AbsLogger() {
+//        setName(DEFAULT_NAME);
+//        resetPrefix();
+//        initialPrinter();
+//    }
 
 //    private static String spellShortExceptionText_1(Exception e) {
 //        String errText = MessageFormat.format("Message : {0} || StackTrace : {1}", e.getMessage(), e.getStackTrace());
@@ -105,7 +111,7 @@ public abstract class AbsLogger extends LoggerRoot {
     protected void output(Printer printer, String text) {
         try {
             if (async)
-                LogThreadPool.newInstance().executor.execute(() ->
+                executor.execute(() ->
                         printer.println(prefixSupplier.get() + INTERVAL_CHAR + text)
                 );
             else
@@ -127,7 +133,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void verbose(String verbose) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.VERBOSE.getName();
             note.message = verbose;
         }
@@ -142,7 +148,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void verbose(String summary, String verbose) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.VERBOSE.getName();
             note.summary = summary;
             note.message = verbose;
@@ -158,7 +164,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void verbose(T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.VERBOSE.getName();
             note.data = t;
         }
@@ -174,7 +180,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void verbose(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.VERBOSE.getName();
             note.summary = summary;
             note.data = t;
@@ -189,7 +195,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void trace(String info) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.message = info;
         }
@@ -204,7 +210,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void trace(String summary, String info) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.summary = summary;
             note.message = info;
@@ -220,7 +226,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void trace(T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.data = t;
         }
@@ -236,7 +242,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void trace(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.summary = summary;
             note.data = t;
@@ -251,7 +257,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void info(String info) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.INFO.getName();
             note.message = info;
         }
@@ -266,7 +272,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void info(String summary, String info) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.INFO.getName();
             note.summary = summary;
             note.message = info;
@@ -282,7 +288,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void info(T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.INFO.getName();
             note.data = t;
         }
@@ -298,7 +304,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void info(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.INFO.getName();
             note.summary = summary;
             note.data = t;
@@ -313,7 +319,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void debug(String debug) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.DEBUG.getName();
             note.message = debug;
         }
@@ -328,7 +334,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void debug(String summary, String debug) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.DEBUG.getName();
             note.summary = summary;
             note.message = debug;
@@ -344,7 +350,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void debug(T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.DEBUG.getName();
             note.data = t;
         }
@@ -360,7 +366,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void debug(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.DEBUG.getName();
             note.summary = summary;
             note.data = t;
@@ -375,7 +381,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void warn(String warning) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.message = warning;
         }
@@ -389,7 +395,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void warn(Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.exception = buildLogException(e);
         }
@@ -404,7 +410,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void warn(String summary, String warning) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.summary = summary;
             note.message = warning;
@@ -420,7 +426,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void warn(String summary, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.summary = summary;
             note.exception = buildLogException(e);
@@ -437,7 +443,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void warn(String summary, String warning, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.summary = summary;
             note.message = warning;
@@ -455,7 +461,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void warn(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.summary = summary;
             note.data = t;
@@ -473,7 +479,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void warn(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.WARNING.getName();
             note.summary = summary;
             note.data = t;
@@ -489,7 +495,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void error(String error) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.message = error;
         }
@@ -503,7 +509,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void error(Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.exception = buildLogException(e);
         }
@@ -518,7 +524,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void error(String summary, String error) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.summary = summary;
             note.message = error;
@@ -534,7 +540,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void error(String summary, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.summary = summary;
             note.exception = buildLogException(e);
@@ -551,7 +557,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void error(String summary, String error, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.summary = summary;
             note.message = error;
@@ -569,7 +575,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void error(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.summary = summary;
             note.data = t;
@@ -587,7 +593,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void error(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.ERROR.getName();
             note.summary = summary;
             note.data = t;
@@ -603,7 +609,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void fatal(String fatal) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.message = fatal;
         }
@@ -617,7 +623,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void fatal(Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.exception = buildLogException(e);
         }
@@ -632,7 +638,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void fatal(String summary, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.summary = summary;
             note.exception = buildLogException(e);
@@ -648,7 +654,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void fatal(String summary, String fatal) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.summary = summary;
             note.message = fatal;
@@ -665,7 +671,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public void fatal(String summary, String fatal, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.summary = summary;
             note.message = fatal;
@@ -683,7 +689,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void fatal(String summary, T t) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.summary = summary;
             note.data = t;
@@ -701,7 +707,7 @@ public abstract class AbsLogger extends LoggerRoot {
     public <T> void fatal(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
-            note.name = name;
+            note.name = getName();
             note.level = LevelEnum.FATAL.getName();
             note.summary = summary;
             note.data = t;
@@ -723,5 +729,15 @@ public abstract class AbsLogger extends LoggerRoot {
             errorPrinter.dispose();
         if (fatalPrinter != null)
             fatalPrinter.dispose();
+    }
+
+    protected static String getLocalIp() {
+        String ip = "";
+        try {
+            ip = HostInfo.getLocalHostLANAddress().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return ip;
     }
 }

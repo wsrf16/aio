@@ -31,6 +31,7 @@ public class RabbitLogger extends AbsLogger {
 
     @Override
     protected void initialPrinter() {
+        String name = getName();
         configuration = LogRabbitMQProperties.newInstance();
         verbosePrinter = RabbitPrinter.instance(name, LevelEnum.VERBOSE.getName(), configuration);
         tracePrinter = RabbitPrinter.instance(name, LevelEnum.TRACE.getName(), configuration);
@@ -43,21 +44,10 @@ public class RabbitLogger extends AbsLogger {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        String ip = getLocalIp();
+        String ip = AbsLogger.getLocalIp();
         String esIndex = configuration.getEsIndex();
         KibanaLogNote kibanaLogNote = new KibanaLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);
         super.output(printer, text);
     }
-
-    private static String getLocalIp() {
-        String ip = null;
-        try {
-            ip = HostInfo.getLocalHostLANAddress().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        return ip;
-    }
-
 }

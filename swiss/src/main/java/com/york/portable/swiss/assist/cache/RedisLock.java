@@ -3,7 +3,9 @@ package com.york.portable.swiss.assist.cache;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.types.Expiration;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -17,37 +19,51 @@ public class RedisLock {
         this.redisConnectionFactory = redisConnectionFactory;
     }
 
-    public String lock(String lockName) {
-        return acquireLock(lockName, 60000, 60000);
+    public static String getKeyName(String key) {
+        String lockKey = MessageFormat.format("{0}:{1}", KEY_NAME, key);
+        return lockKey;
+    }
+
+    public String lock(String lockName, long expireMillisecond, long timeout) {
+        return acquireLock(lockName, expireMillisecond, timeout);
+    }
+
+    public String tryLock(String lockName, long expireMillisecond) {
+        return acquireLock(lockName, expireMillisecond, -1);
     }
 
     /**
      * 获取锁
      *
      * @param key
-     * @param acquireMillisecond
      * @param expireMillisecond
+     * @param timeout
      * @return
      */
-    public String acquireLock(String key, long acquireMillisecond, long expireMillisecond) {
+    private String acquireLock(String key, long expireMillisecond, long timeout) {
         if (StringUtils.isBlank(key))
             throw new IllegalArgumentException(key);
 
         String identifier = UUID.randomUUID().toString();
-        String lockKey = MessageFormat.format("{0}:{1}", KEY_NAME, key);
+        String lockKey = getKeyName(key);
         byte[] lockKeyBytes = lockKey.getBytes();
         long lockExpire = expireMillisecond / 1000;
-        long end = System.currentTimeMillis() + acquireMillisecond;
+        long end = System.currentTimeMillis() + timeout;
 
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        while (System.currentTimeMillis() < end) {
-            if (redisConnection.setNX(lockKeyBytes, identifier.getBytes())) {
-                redisConnection.expire(lockKeyBytes, lockExpire);
+        while (true) {
+//            if (redisConnection.setNX(lockKeyBytes, identifier.getBytes())) {
+//                redisConnection.expire(lockKeyBytes, lockExpire);
+//            }
+            Boolean b = redisConnection.set(lockKeyBytes, identifier.getBytes(), Expiration.milliseconds(expireMillisecond), RedisStringCommands.SetOption.SET_IF_PRESENT);
+            if (b) {
                 break;
                 // 返回-1代表key没有设置超时时间，为key设置一个超时时间
             } else if (redisConnection.ttl(lockKeyBytes) == -1) {
                 redisConnection.expire(lockKeyBytes, lockExpire);
             } else {
+                if (System.currentTimeMillis() > end)
+                    break;
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -66,22 +82,20 @@ public class RedisLock {
      * @param identifier
      * @return
      */
-    public boolean releaseLock(String key, String identifier) {
+    public boolean releaseLock(String key) {
         if (StringUtils.isBlank(key))
             throw new IllegalArgumentException(key);
-        if (StringUtils.isBlank(identifier))
-            throw new IllegalArgumentException(identifier);
 
-        String lockKey = MessageFormat.format("{0}:{1}", KEY_NAME, key);
+        String lockKey = getKeyName(key);
         byte[] lockKeyBytes = lockKey.getBytes();
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        boolean releaseFlag = false;
+        boolean releaseFlag;
         while (true) {
             // 监视lock，开始事务
             redisConnection.watch(lockKeyBytes);
             // 通过前面返回的value值判断是不是该锁，若是该锁，则删除，释放锁
             byte[] valueBytes = redisConnection.get(lockKeyBytes);
-            if (valueBytes == null || !identifier.equals(new String(valueBytes))) {
+            if (valueBytes == null) {
                 releaseFlag = false;
             } else {
                 redisConnection.multi();

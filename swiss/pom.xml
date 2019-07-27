@@ -39,6 +39,7 @@
         <mybatis.version>2.0.0</mybatis.version>
         <!--<elasticsearch.version>5.6.13</elasticsearch.version>-->
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
     </properties>
 
     <!--<parent>-->
@@ -387,6 +388,23 @@
                     <artifactId>spring-boot-autoconfigure</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

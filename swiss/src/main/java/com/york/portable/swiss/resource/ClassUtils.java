@@ -17,7 +17,7 @@ public class ClassUtils {
      * @return
      */
     public static String getPath(final Class clazz) throws MalformedURLException {
-        final String clsAsResource = ResourceUtils.fullName2Path(clazz.getName());
+        final String clsAsResource = convertClassName2ResourcePath(clazz.getName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
@@ -68,7 +68,7 @@ public class ClassUtils {
      * @throws IOException
      */
     private static boolean hasClassByCurrentThreadClassLoader(String className) throws IOException {
-        String resource = ResourceUtils.fullName2Path(className);
+        String resource = convertClassName2ResourcePath(className);
         List<URL> urlList = ResourceUtils.getResourcesInClassFile(resource);
         boolean exist = urlList != null && urlList.size() > 0;
         return exist;
@@ -93,4 +93,17 @@ public class ClassUtils {
         return Introspector.decapitalize(shortClassName);
     }
 
+
+    /**
+     * fullName2Name
+     *
+     * @param fullName className/packageName eg. com.company.biz | com.company.biz.Book
+     * @return com/company/biz | com/company/biz/Book
+     */
+    public static String convertClassName2ResourcePath(String fullName) {
+        String path;
+//        path = fullName.replace('.', '/').concat(".class");
+        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(fullName).concat(".class");
+        return path;
+    }
 }

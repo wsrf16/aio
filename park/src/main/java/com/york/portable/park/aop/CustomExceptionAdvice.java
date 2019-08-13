@@ -1,8 +1,8 @@
 package com.york.portable.park.aop;
 
-import com.york.portable.park.common.log.CustomLoggerHubFactory;
-import com.york.portable.swiss.assist.log.hub.factory.LoggerHubFactory;
-import com.york.portable.swiss.hamlet.ExceptionAdvice;
+import com.york.portable.park.common.CustomLogHubFactory;
+import com.york.portable.swiss.assist.log.hub.factory.LogHubFactory;
+import com.york.portable.swiss.hamlet.interceptor.HamletExceptionAdvice;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 @ResponseBody
-@Import(CustomLoggerHubFactory.class)
+@Import(CustomLogHubFactory.class)
 @Configuration
-public class CustomExceptionAdvice extends ExceptionAdvice {
+public class CustomExceptionAdvice extends HamletExceptionAdvice {
 
-    public CustomExceptionAdvice(LoggerHubFactory customLoggerHubFactory) {
-        super(customLoggerHubFactory);
+    public CustomExceptionAdvice(LogHubFactory customLogHubFactory) {
+        super(customLogHubFactory);
     }
 
 }

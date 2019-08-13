@@ -1,19 +1,16 @@
 package com.york.portable.swiss.assist.log.classic.impl.kibana.kafka;
 
-import com.york.portable.swiss.assist.log.base.AbsLogger;
+import com.york.portable.swiss.assist.log.base.AbstractLogger;
 import com.york.portable.swiss.assist.log.base.Printer;
 import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.parts.LogNote;
 import com.york.portable.swiss.assist.log.classic.impl.kibana.KibanaLogNote;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
-import com.york.portable.swiss.systeminfo.HostInfo;
-
-import java.net.UnknownHostException;
 
 /**
  * Created by York on 2017/11/23.
  */
-public class KafkaLogger extends AbsLogger {
+public class KafkaLogger extends AbstractLogger {
     public static KafkaLogger build(String name) {
         return new KafkaLogger(name);
     }
@@ -32,7 +29,7 @@ public class KafkaLogger extends AbsLogger {
     @Override
     protected void initialPrinter() {
         String name = getName();
-        properties = LogKafkaProperties.newInstance();
+        properties = LogKafkaProperties.singletonInstance();
         verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
         tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
         infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFO.getName(), properties);
@@ -44,7 +41,7 @@ public class KafkaLogger extends AbsLogger {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        String ip = AbsLogger.getLocalIp();
+        String ip = AbstractLogger.getLocalIp();
         String esIndex = properties.getEsIndex();
         KibanaLogNote kibanaLogNote = new KibanaLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);

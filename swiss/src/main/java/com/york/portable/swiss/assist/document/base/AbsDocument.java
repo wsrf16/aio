@@ -1,7 +1,6 @@
 package com.york.portable.swiss.assist.document.base;
 
 import com.york.portable.swiss.sugar.TextUtils;
-import com.york.portable.swiss.sugar.TextUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,7 +8,7 @@ import java.util.Date;
 /**
  * Created by York on 2017/11/27.
  */
-public abstract class AbsDocument implements IDocument {
+public abstract class AbsDocument implements Document {
     //public java.util.function.Function<String, String> getValOf;
 
     private String valOfKey(String key) {

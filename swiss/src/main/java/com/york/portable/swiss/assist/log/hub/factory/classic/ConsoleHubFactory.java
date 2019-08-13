@@ -1,10 +1,10 @@
 package com.york.portable.swiss.assist.log.hub.factory.classic;
 
 import com.york.portable.swiss.assist.log.classic.impl.console.ConsoleLogger;
-import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
-import com.york.portable.swiss.assist.log.hub.factory.LoggerHubFactory;
+import com.york.portable.swiss.assist.log.hub.LogHub;
+import com.york.portable.swiss.assist.log.hub.factory.LogHubFactory;
 
-public class ConsoleHubFactory implements LoggerHubFactory {
+public class ConsoleHubFactory implements LogHubFactory {
     protected static ConsoleHubFactory instance = new ConsoleHubFactory();
 
     public synchronized static ConsoleHubFactory newInstance() {
@@ -14,8 +14,8 @@ public class ConsoleHubFactory implements LoggerHubFactory {
     protected ConsoleHubFactory() {
     }
 
-    public LoggerHubImp build(String className) {
-        LoggerHubImp logger = LoggerHubImp.build(ConsoleLogger.build(className));
+    public LogHub build(String className) {
+        LogHub logger = LogHub.build(ConsoleLogger.build(className));
         return logger;
     }
 }

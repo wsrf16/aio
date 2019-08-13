@@ -1,12 +1,12 @@
 package com.york.portable.swiss.assist.log.classic.impl.console;
 
 import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
-import com.york.portable.swiss.assist.log.base.AbsLogger;
+import com.york.portable.swiss.assist.log.base.AbstractLogger;
 
 /**
  * Created by York on 2017/11/23.
  */
-public class ConsoleLogger extends AbsLogger {
+public class ConsoleLogger extends AbstractLogger {
     public static ConsoleLogger build(String name) {
         return new ConsoleLogger(name);
     }
@@ -22,6 +22,7 @@ public class ConsoleLogger extends AbsLogger {
 
     @Override
     protected void initialPrinter() {
+        String name = getName();
         verbosePrinter = ConsolePrinter.instance(name, LevelEnum.VERBOSE.getName());
         tracePrinter = ConsolePrinter.instance(name, LevelEnum.TRACE.getName());
         infoPrinter = ConsolePrinter.instance(name, LevelEnum.INFO.getName());

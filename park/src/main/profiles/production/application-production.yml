@@ -6,6 +6,8 @@ spring:
       url: jdbc:mysql://192.168.71.254:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 123456
+      mybatis:
+        mapper-locations: classpath:mapper/*.xml
 
   rabbitmq:
     main:
@@ -18,6 +20,8 @@ spring:
           routing-key: application-log-queue
           queue: application-log-queue
           exchange: application-log-exchange
+      mybatis:
+        mapper-locations: classpath:mapper/*.xml
 
   redis:
     host: 10.4.9.4

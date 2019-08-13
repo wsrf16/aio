@@ -4,3 +4,4 @@ echo %cd%
 where mvn
 call mvn clean deploy
 pause
+call deploy

@@ -43,6 +43,21 @@ public class RegexUtils {
         return Pattern.compile(regex).matcher(content).find();
     }
 
+//    /**
+//     * 正则替换
+//     * @param content
+//     * @param regex
+//     * @param replacement
+//     * @return
+//     */
+//    public final static String replaceAll(String content, String regex, String replacement) {
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(content);
+//
+//        String result = matcher.find() ? matcher..replaceAll(replacement) : regex;
+//        return result;
+//    }
+
     /**
      * 正则替换
      * @param content

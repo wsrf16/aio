@@ -7,7 +7,8 @@ spring:
       url: jdbc:mysql://192.168.71.254:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
-      mapper-locations: classpath:mapper/*.xml
+      mybatis:
+        mapper-locations: classpath:mapper/*.xml
 
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
@@ -15,7 +16,8 @@ spring:
       url: jdbc:mysql://192.168.71.254:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
-      mapper-locations: classpath:mapper/*.xml
+      mybatis:
+        mapper-locations: classpath:mapper/*.xml
 
   rabbitmq:
     main:
@@ -35,7 +37,7 @@ spring:
     port: 6379
     password: Yixin4redis
 
-  log:
+  log~:
     rabbitmq:
       enable: false
       host: 192.168.71.254

@@ -1,10 +1,10 @@
 package com.york.portable.park;
 
-import com.york.portable.park.beanprocessor.CustomImportBeanDefinitionRegistrar;
-import com.york.portable.park.beanprocessor.UserInfoEntity;
-import com.york.portable.park.other.ToMapTest;
-import com.york.portable.park.other.jvm.MetaspaceTest;
-import com.york.portable.park.task.ThreadLocalTest;
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
+//import com.york.portable.park.beanprocessor.CustomImportBeanDefinitionRegistrar;
+//import com.york.portable.park.other.ToMapTest;
+//import com.york.portable.park.other.jvm.MetaspaceTest;
+//import com.york.portable.park.task.ThreadLocalTest;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.york.portable.swiss.assist.log.classic.properties.PropertyBean;
 import com.york.portable.swiss.sugar.SpringUtils;
@@ -26,6 +26,7 @@ import java.util.Arrays;
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
         KafkaAutoConfiguration.class,
+        DruidDataSourceAutoConfigure.class
 }, scanBasePackages = "com.york.portable")
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
 //@EnableConfigurationProperties(LogKafkaProperties.class)
@@ -39,16 +40,16 @@ public class ParkApplication {
 //        AnnotationConfigEmbeddedWebApplicationContext
 //        org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
         ApplicationContext configurableApplicationContext = SpringApplication.run(ParkApplication.class, args);
-        String[] activeProfiles = configurableApplicationContext.getEnvironment().getActiveProfiles();
-        String activeProfilesText = StringUtils.join(activeProfiles, ", ");
-        String[] defaultProfiles = configurableApplicationContext.getEnvironment().getDefaultProfiles();
-        String defaultProfilesText = StringUtils.join(defaultProfiles, ", ");
-        String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
-        //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
-        beanNames = beanNames;
-
-        String name = SpringUtils.getBeanName(LogKafkaProperties.class.getSimpleName());
-        Arrays.stream(activeProfiles).anyMatch(cc -> Arrays.asList("development", "test", "default").contains(cc));
+//        String[] activeProfiles = configurableApplicationContext.getEnvironment().getActiveProfiles();
+//        String activeProfilesText = StringUtils.join(activeProfiles, ", ");
+//        String[] defaultProfiles = configurableApplicationContext.getEnvironment().getDefaultProfiles();
+//        String defaultProfilesText = StringUtils.join(defaultProfiles, ", ");
+//        String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
+//        //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
+//        beanNames = beanNames;
+//
+//        String name = SpringUtils.getBeanName(LogKafkaProperties.class.getSimpleName());
+//        Arrays.stream(activeProfiles).anyMatch(cc -> Arrays.asList("development", "test", "default").contains(cc));
     }
 
 //    @Bean(initMethod = "destroy", destroyMethod = "init")

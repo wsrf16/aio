@@ -153,7 +153,7 @@ public class KibanaLogNote {
 
         setEsIndex(esIndex);
         setServerIp(serverIp);
-        setTimeStamp(DateTimeUtils.Format.convertDate2String("yyyy-MM-dd'T'HH:mm:ss.SSSZ", new Date()));
+        setTimeStamp(DateTimeUtils.Format.convertDate2String(DateTimeUtils.Format.FORMAT_ISO8601, new Date()));
     }
 
     //    public KibanaLogNote(LogNote logNote, String esIndex, String serverIp, String hostName, long appId, String appEnv) {

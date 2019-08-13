@@ -1,6 +1,6 @@
 package com.york.portable.swiss.sandbox;
 
-import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
+import com.york.portable.swiss.assist.log.hub.LogHub;
 //import com.york.portable.swiss.assist.log.hub.factory.baselogger.classic.ConsoleBaseLogger;
 import com.york.portable.swiss.bean.SingletonProvider;
 import com.york.portable.swiss.bean.serializer.SerializerEnum;
@@ -162,8 +162,8 @@ class Sample {
 //                return;
             }
             {
-                LoggerHubImp loggerSet = LoggerHubImp.build(ConsoleLogger.build(LoggerSample.class), FileLogger.build(LoggerSample.class));
-                loggerSet.addRegister(Slf4jLogger.build(LoggerSample.class));
+                LogHub loggerSet = LogHub.build(ConsoleLogger.build(LoggerSample.class), FileLogger.build(LoggerSample.class));
+                loggerSet = LogHub.build(Slf4jLogger.build(LoggerSample.class));
                 loggerSet.d("this is loggerhub.");
             }
 //            {
@@ -194,9 +194,7 @@ class Sample {
             //logger2.openSingleIPPrefix();
             logger2.d("aaaa");
 
-            LoggerHubImp hub = new LoggerHubImp();
-            hub.addRegister(logger1);
-            hub.addRegister(logger2);
+            LogHub hub = LogHub.build(logger1, logger2);
             Map<String, String> map = new HashMap<String, String>();
 
             try {

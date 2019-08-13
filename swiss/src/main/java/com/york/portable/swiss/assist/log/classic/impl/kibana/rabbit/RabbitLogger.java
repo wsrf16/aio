@@ -1,19 +1,16 @@
 package com.york.portable.swiss.assist.log.classic.impl.kibana.rabbit;
 
-import com.york.portable.swiss.assist.log.base.AbsLogger;
+import com.york.portable.swiss.assist.log.base.AbstractLogger;
 import com.york.portable.swiss.assist.log.base.Printer;
 import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.parts.LogNote;
 import com.york.portable.swiss.assist.log.classic.impl.kibana.KibanaLogNote;
 import com.york.portable.swiss.assist.log.classic.properties.LogRabbitMQProperties;
-import com.york.portable.swiss.systeminfo.HostInfo;
-
-import java.net.UnknownHostException;
 
 /**
  * Created by York on 2017/11/23.
  */
-public class RabbitLogger extends AbsLogger {
+public class RabbitLogger extends AbstractLogger {
     public static RabbitLogger build(String name) {
         return new RabbitLogger(name);
     }
@@ -32,7 +29,7 @@ public class RabbitLogger extends AbsLogger {
     @Override
     protected void initialPrinter() {
         String name = getName();
-        configuration = LogRabbitMQProperties.newInstance();
+        configuration = LogRabbitMQProperties.singletonInstance();
         verbosePrinter = RabbitPrinter.instance(name, LevelEnum.VERBOSE.getName(), configuration);
         tracePrinter = RabbitPrinter.instance(name, LevelEnum.TRACE.getName(), configuration);
         infoPrinter = RabbitPrinter.instance(name, LevelEnum.INFO.getName(), configuration);
@@ -44,7 +41,7 @@ public class RabbitLogger extends AbsLogger {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        String ip = AbsLogger.getLocalIp();
+        String ip = AbstractLogger.getLocalIp();
         String esIndex = configuration.getEsIndex();
         KibanaLogNote kibanaLogNote = new KibanaLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);

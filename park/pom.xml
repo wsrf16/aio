@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.7.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -28,6 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
         <swagger.version>2.9.2</swagger.version>
         <springfox-staticdocs.version>2.6.1</springfox-staticdocs.version>
         <!--<assertj-swagger.version>0.8.1</assertj-swagger.version>-->
@@ -49,6 +50,8 @@
         <!--<project.build.finalName>${project.artifactId}${project.version}</project.build.finalName>-->
         <project.build.logName>park</project.build.logName>
         <project.deploy.appPath>/data1/services/${project.build.finalName}</project.deploy.appPath>
+        <directory.dependency.targetPath>lib/</directory.dependency.targetPath>
+        <directory.profile.targetPath>config/</directory.profile.targetPath>
         <directory.profile>src/main/profiles</directory.profile>
         <directory.profile.active>src/main/profiles/${profiles.active}</directory.profile.active>
         <assembly-plugin-assembly.descriptor>${project.basedir}/src/main/assembly/assembly.xml</assembly-plugin-assembly.descriptor>
@@ -111,7 +114,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
         </dependency>
         <!-- sqlserver -->
         <dependency>
@@ -223,12 +225,6 @@
         </dependency>
 
 
-
-
-
-
-
-
         <!--<dependency>-->
             <!--<groupId>org.springframework.restdocs</groupId>-->
             <!--<artifactId>spring-restdocs-mockmvc</artifactId>-->
@@ -296,6 +292,23 @@
             <artifactId>htmlunit</artifactId>
             <version>2.35.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -337,54 +350,45 @@
     <build>
         <finalName>${project-build-finalName}</finalName>
         <resources>
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>**/*</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
             <resource>
                 <directory>src/main/resources</directory>
+                <targetPath>${directory.profile.targetPath}</targetPath>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <targetPath>conf/</targetPath>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-
-            <!--<resource>-->
-                <!--<directory>src/main/resources/mapper</directory>-->
-                <!--<targetPath>mapper/</targetPath>-->
-                <!--<filtering>true</filtering>-->
-                <!--<includes>-->
-                    <!--<include>**/*</include>-->
-                <!--</includes>-->
-            <!--</resource>-->
 
             <resource>
                 <directory>${directory.profile}</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <excludes>
                     <exclude>**/*</exclude>
                 </excludes>
             </resource>
             <resource>
                 <directory>${directory.profile.active}</directory>
-                <targetPath>conf/</targetPath>
+                <targetPath>${directory.profile.targetPath}</targetPath>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>${directory.profile.active}</directory>
-                <targetPath>${project.build.outputDirectory}</targetPath>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
+<!--            <resource>-->
+<!--                <directory>${directory.profile.active}</directory>-->
+<!--                <targetPath>${project.build.outputDirectory}</targetPath>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>**/*</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
             <resource>
                 <directory>${project.build.scriptSourceDirectory}</directory>
                 <filtering>true</filtering>
@@ -620,6 +624,19 @@
         <!--</repository>-->
     <!--</repositories>-->
     <repositories>
+        <repository>
+            <id>ali-maven</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public//</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
+
         <repository>
             <snapshots>
                 <enabled>true</enabled>

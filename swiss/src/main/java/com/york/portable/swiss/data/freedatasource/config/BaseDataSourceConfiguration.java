@@ -33,11 +33,11 @@ import java.util.Map;
 
 public abstract class BaseDataSourceConfiguration {
 //    @Autowired
-    protected MybatisProperties properties;
+//    protected MybatisProperties properties;
 
-    public BaseDataSourceConfiguration(MybatisProperties properties) {
-        this.properties = properties;
-    }
+//    public BaseDataSourceConfiguration(MybatisProperties properties) {
+//        this.properties = properties;
+//    }
 
     @Bean
 //    @ConfigurationProperties(prefix = "spring.datasource")
@@ -48,24 +48,22 @@ public abstract class BaseDataSourceConfiguration {
     }
 
 
-    @PostConstruct
-    public void checkConfigFileExists() {
-        if (properties.isCheckConfigLocation() && StringUtils.hasText(properties.getConfigLocation())) {
-            Resource resource = new ClassPathResource(properties.getConfigLocation());
-            Assert.state(resource.exists(), "Cannot find config location: " + resource
-                    + " (please add config file or check your Mybatis configuration)");
-        }
-    }
+//    @PostConstruct
+//    public void checkConfigFileExists() {
+//        if (properties.isCheckConfigLocation() && StringUtils.hasText(properties.getConfigLocation())) {
+//            Resource resource = new ClassPathResource(properties.getConfigLocation());
+//            Assert.state(resource.exists(), "Cannot find config location: " + resource
+//                    + " (please add config file or check your Mybatis configuration)");
+//        }
+//    }
 
-//    @Bean("sqlSessionFactory")
-    @ConditionalOnMissingBean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
+    public SqlSessionFactory sqlSessionFactory(MybatisProperties properties) throws Exception {
         DataSource dataSource = dataSource();
-        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setVfs(SpringBootVFS.class);
+        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+        factoryBean.setDataSource(dataSource);
+        factoryBean.setVfs(SpringBootVFS.class);
         if (StringUtils.hasText(properties.getConfigLocation())) {
-            factory.setConfigLocation(new ClassPathResource(properties.getConfigLocation()));
+            factoryBean.setConfigLocation(new ClassPathResource(properties.getConfigLocation()));
         }
         Configuration configuration = properties.getConfiguration();
         if (configuration == null && !StringUtils.hasText(properties.getConfigLocation())) {
@@ -76,9 +74,9 @@ public abstract class BaseDataSourceConfiguration {
 //                customizer.customize(configuration);
 //            }
 //        }
-        factory.setConfiguration(configuration);
+        factoryBean.setConfiguration(configuration);
         if (properties.getConfigurationProperties() != null) {
-            factory.setConfigurationProperties(properties.getConfigurationProperties());
+            factoryBean.setConfigurationProperties(properties.getConfigurationProperties());
         }
 //        if (!ObjectUtils.isEmpty(this.interceptors)) {
 //            factory.setPlugins(this.interceptors);
@@ -87,29 +85,26 @@ public abstract class BaseDataSourceConfiguration {
 //            factory.setDatabaseIdProvider(this.databaseIdProvider);
 //        }
         if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
-            factory.setTypeAliasesPackage(properties.getTypeAliasesPackage());
+            factoryBean.setTypeAliasesPackage(properties.getTypeAliasesPackage());
         }
         if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
-            factory.setTypeHandlersPackage(properties.getTypeHandlersPackage());
+            factoryBean.setTypeHandlersPackage(properties.getTypeHandlersPackage());
         }
         if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
-            factory.setMapperLocations(properties.resolveMapperLocations());
+            factoryBean.setMapperLocations(properties.resolveMapperLocations());
         }
 
-        return factory.getObject();
+        return factoryBean.getObject();
     }
 
-//    @Bean("sqlSessionTemplate")
-    @ConditionalOnMissingBean
-    public SqlSessionTemplate sqlSessionTemplate() throws Exception {
-        SqlSessionFactory sqlSessionFactory = sqlSessionFactory();
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisProperties properties) throws Exception {
+//        SqlSessionFactory sqlSessionFactory = sqlSessionFactory(properties);
         ExecutorType executorType = properties.getExecutorType();
         return executorType != null ?
                 new SqlSessionTemplate(sqlSessionFactory, executorType) : new SqlSessionTemplate(sqlSessionFactory);
     }
 
-//    @Bean("dataSourceTransactionManager")
-    public DataSourceTransactionManager dataSourceTransactionManager() {
+    public PlatformTransactionManager platformTransactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 }

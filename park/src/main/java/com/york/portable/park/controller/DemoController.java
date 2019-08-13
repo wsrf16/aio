@@ -1,7 +1,7 @@
 package com.york.portable.park.controller;
 
 //import com.york.portable.park.common.log.InjectedBaseLogger;
-import com.york.portable.park.common.log.CustomLoggerHubFactory;
+import com.york.portable.park.common.CustomLogHubFactory;
 import com.york.portable.swiss.assist.cache.RedisLock;
 import com.york.portable.swiss.hamlet.model.ResponseWrapper;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import java.util.Date;
 public class DemoController {// extends InjectedBaseLogger {
     @GetMapping("loganno")
     public String loganno() {
-        CustomLoggerHubFactory.newInstance().build(this.getClass()).d("debug");
+        CustomLogHubFactory.singletonInstance().build(this.getClass()).d("debug");
         return "ok";
     }
 

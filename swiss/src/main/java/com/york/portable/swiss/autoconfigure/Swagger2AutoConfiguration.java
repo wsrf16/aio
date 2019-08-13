@@ -1,8 +1,9 @@
 package com.york.portable.swiss.autoconfigure;
 
-import com.york.portable.swiss.extra.Swagger2Properties;
+import com.york.portable.swiss.autoconfigure.properties.Swagger2Properties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Configuration
 @ConditionalOnClass(Docket.class)
+@EnableConfigurationProperties(Swagger2Properties.class)
 public class Swagger2AutoConfiguration {
 
 //    @Bean
@@ -53,7 +55,6 @@ public class Swagger2AutoConfiguration {
 
         List<Parameter> parameters = new ArrayList<>();
         parameters.add(tokenParameter);
-
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)

@@ -5,6 +5,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration;
 
 @Aspect
-@Configuration
+//@Configuration
 public class CustomDataSourceAspect extends FreeDataSourceAspect {
 }

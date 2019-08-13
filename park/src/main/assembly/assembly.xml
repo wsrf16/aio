@@ -21,7 +21,7 @@
         <!-- 打包resources下的配置文件 -->
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>${directory.profile.targetPath}</outputDirectory>
             <filtered>true</filtered>
             <includes>
                 <include>static/**</include>
@@ -44,22 +44,13 @@
         <fileSet>
             <directory>${project.basedir}/src/main/profiles/${profiles.active}</directory>
             <!--<directory>${project.build.outputDirectory}/conf</directory>-->
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>${directory.profile.targetPath}</outputDirectory>
             <filtered>true</filtered>
             <includes>
                 <include>**/*</include>
             </includes>
         </fileSet>
-        <!-- 打包scripts下的文件 -->
-        <!--<fileSet>-->
-            <!--<directory>${project.build.scriptSourceDirectory}</directory>-->
-            <!--<outputDirectory>/bin</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>**/*</include>-->
-            <!--</includes>-->
-            <!--<fileMode>755</fileMode>-->
-            <!--<filtered>true</filtered>-->
-        <!--</fileSet>-->
+
         <!-- 打包lib下的依赖文件 -->
         <!--<fileSet>-->
             <!--<directory>${project.build.outputDirectory}/lib</directory>-->
@@ -75,6 +66,7 @@
             </includes>
             <filtered>true</filtered>
         </fileSet>
+        <!-- 打包scripts下的文件 -->
         <fileSet>
             <directory>${project.build.scriptSourceDirectory}/root</directory>
             <outputDirectory></outputDirectory>
@@ -85,7 +77,6 @@
             <filtered>true</filtered>
         </fileSet>
     </fileSets>
-
     <files>
         <file>
             <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
@@ -105,7 +96,7 @@
     <dependencySets>
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>${directory.dependency.targetPath}</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>

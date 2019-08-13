@@ -10,7 +10,7 @@ public class LogKafkaProperties extends KafkaProperties {
 
     private static LogKafkaProperties instance = new LogKafkaProperties();
 
-    public synchronized static LogKafkaProperties newInstance() {
+    public synchronized static LogKafkaProperties singletonInstance() {
         return instance;
     }
 

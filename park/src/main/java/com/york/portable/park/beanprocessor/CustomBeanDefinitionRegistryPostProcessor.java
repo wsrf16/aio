@@ -12,7 +12,7 @@ import org.springframework.util.ClassUtils;
 
 import java.beans.Introspector;
 
-@Configuration
+//@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean

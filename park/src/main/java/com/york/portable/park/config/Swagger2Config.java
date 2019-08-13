@@ -1,11 +1,9 @@
 package com.york.portable.park.config;
 
 import com.york.portable.park.controller.DemoController;
-import com.york.portable.swiss.extra.Swagger2Properties;
+import com.york.portable.swiss.autoconfigure.properties.Swagger2Properties;
 import com.york.portable.swiss.hamlet.model.BizStatusEnum;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -18,7 +16,7 @@ import java.util.List;
 
 //@Import(BeanValidatorPluginsConfiguration.class)
 @EnableSwagger2
-@Configuration
+//@Configuration
 @ConditionalOnClass(ApiInfo.class)
 public class Swagger2Config {
     private final List<ResponseMessage> responseMessageList() {
@@ -33,9 +31,6 @@ public class Swagger2Config {
     }
 
     @Bean
-    @ConditionalOnClass(ApiInfo.class)
-    @ConditionalOnProperty(prefix = "swagger.api-info", name = "title")
-    @ConfigurationProperties(prefix = "swagger")
     public Swagger2Properties swagger2Properties() {
         return Swagger2Properties.build(DemoController.class.getPackage().getName(), responseMessageList());
     }

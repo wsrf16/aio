@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 
 @Component
@@ -39,6 +43,9 @@ public class Swagger2MarkupSet {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Value("${server.servlet.contextPath:}")
     private String contextPath;
@@ -73,6 +80,8 @@ public class Swagger2MarkupSet {
 
     private void generateMultiple() throws MalformedURLException {
         String urlApiDocs = MessageFormat.format("http://localhost:{0}{1}/v2/api-docs", port, contextPath);
+//        urlApiDocs = MessageFormat.format("{0}/v2/api-docs", contextPath);
+
         Swagger2MarkupConfig config = new Swagger2MarkupConfigBuilder()
                 .withMarkupLanguage(MarkupLanguage.ASCIIDOC)
                 .withOutputLanguage(Language.ZH)
@@ -95,7 +104,10 @@ public class Swagger2MarkupSet {
         swagger2MarkupConverter.toFile(Paths.get(toFile));
     }
 
-    private void asciiDoctor() {
+    private void asciiDoctor() throws IOException {
+        String root = System.getProperty("user.dir");
+        Path htmlOutputFile = Paths.get(root, "src/main/resources/static/index.html");
+
         String generated = System.getProperty("test.asciidoctor.directory.input.generated");
         String html = System.getProperty("test.asciidoctor.directory.output.html");
         String pdf = System.getProperty("test.asciidoctor.directory.output.pdf");
@@ -124,9 +136,11 @@ public class Swagger2MarkupSet {
                 .toDir(new  File(html))
                 .attributes(attributes);
         Options options = optionsBuilder.get();
-//        String asciiInputFile = "./target/asciidoc/generated/index.adoc";
-
-//        String asciiInputFile = "./src/docs/asciidoc/index.adoc";
+        options.setBackend("html5");
+        options.setToDir(html);
         Asciidoctor.Factory.create().convertFile(new File(asciiInputFile), options);
+
+
+        Files.copy(Paths.get(html, "index.html"), htmlOutputFile, StandardCopyOption.REPLACE_EXISTING);
     }
 }

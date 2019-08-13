@@ -5,7 +5,7 @@ import com.york.portable.swiss.assist.log.base.Printer;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.york.portable.swiss.assist.log.classic.impl.LoggerConfig;
 import com.york.portable.swiss.global.Constant;
-import com.york.portable.swiss.net.mq.kafka.KafkaBuilder;
+import com.york.portable.swiss.middleware.mq.kafka.KafkaBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.HashMap;

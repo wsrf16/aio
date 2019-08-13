@@ -1,7 +1,7 @@
 package com.york.portable.park.schedule.job;
 
-import com.york.portable.park.common.log.CustomLoggerHubFactory;
-import com.york.portable.swiss.assist.log.hub.LoggerHubImp;
+import com.york.portable.park.common.CustomLogHubFactory;
+import com.york.portable.swiss.assist.log.hub.LogHub;
 import org.springframework.context.annotation.Configuration;
 
 import java.text.MessageFormat;
@@ -14,7 +14,7 @@ public class MigrateJob implements Runnable {
 //    @Autowired
 //    UsedCarTaskService usedCarTaskService;
 
-    LoggerHubImp log = CustomLoggerHubFactory.newInstance().build(this.getClass());
+    LogHub log = CustomLogHubFactory.singletonInstance().build(this.getClass());
 
 
     private static int monthFromNow = -3;

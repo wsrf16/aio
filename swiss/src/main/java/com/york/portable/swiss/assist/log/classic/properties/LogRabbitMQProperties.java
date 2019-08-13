@@ -1,6 +1,6 @@
 package com.york.portable.swiss.assist.log.classic.properties;
 
-import com.york.portable.swiss.net.mq.rabbitmq.property.RabbitMQBindingProperty;
+import com.york.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -112,7 +112,7 @@ public class LogRabbitMQProperties { // extends CachingConnectionFactory {
 
     private static LogRabbitMQProperties instance = new LogRabbitMQProperties();
 
-    public synchronized static LogRabbitMQProperties newInstance() {
+    public synchronized static LogRabbitMQProperties singletonInstance() {
         return instance;
     }
 

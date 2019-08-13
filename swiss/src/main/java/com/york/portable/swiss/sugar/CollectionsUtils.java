@@ -76,6 +76,18 @@ public class CollectionsUtils {
         return list;
     }
 
+    /**
+     * copy
+     * @param src
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> copy(List<? extends T> src) {
+        List<T> dest = new ArrayList<>(Arrays.asList((T[]) new Object[src.size()]));
+        Collections.copy(dest, src);
+        return dest;
+    }
+
     private static void taolu() {
         {
             Iterator<String> iterator = Collections.emptyIterator();
@@ -89,6 +101,5 @@ public class CollectionsUtils {
             List<String> arrayList = Collections.emptyList();
             Enumeration<String> enumeration = Collections.enumeration(arrayList);
         }
-
     }
 }

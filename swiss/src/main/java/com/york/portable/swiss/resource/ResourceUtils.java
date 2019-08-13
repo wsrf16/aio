@@ -122,7 +122,7 @@ public class ResourceUtils {
      * @throws IOException
      */
     public static List<URL> getResourcesByClass(final Class clazz) throws IOException {
-        return getResourcesByClassName(clazz.getName());
+        return getResourcesByClassName(clazz.getTypeName());
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.york.portable.park.config.mq;
 
-import com.york.portable.swiss.net.mq.rabbitmq.property.RabbitMQBindingProperty;
-import com.york.portable.swiss.net.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
-import com.york.portable.swiss.net.mq.rabbitmq.RabbitMQUtil;
+import com.york.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
+import com.york.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
+import com.york.portable.swiss.middleware.mq.rabbitmq.RabbitMQUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

@@ -1,8 +1,8 @@
 package com.york.portable.swiss.assist.log.classic.impl.slf4j;
 
-import com.york.portable.swiss.assist.log.base.AbsLogger;
+import com.york.portable.swiss.assist.log.base.AbstractLogger;
 
-public class Slf4jLogger extends AbsLogger {
+public class Slf4jLogger extends AbstractLogger {
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 //    private org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(this.getClass());
 

@@ -13,45 +13,60 @@ import java.util.Date;
  */
 public class DateTimeUtils {
     public static class CalendarUtils {
-        public static Date getFirstDayOfMonth(Calendar calendar) {
+        public static Calendar getFirstDayOfMonth(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_MONTH);
         }
 
-        public static Date getLastDayOfMonth(Calendar calendar) {
+        public static Calendar getLastDayOfMonth(Calendar calendar) {
             return getLastDayOf(calendar, Calendar.DAY_OF_MONTH);
         }
 
-        public static Date getFirstDayOfYear(Calendar calendar) {
+        public static Calendar getFirstDayOfYear(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_YEAR);
         }
 
-        public static Date getLastDayOfYear(Calendar calendar) {
+        public static Calendar getLastDayOfYear(Calendar calendar) {
             return getLastDayOf(calendar, Calendar.DAY_OF_YEAR);
         }
 
-        public static Date getFirstDayOfWeek(Calendar calendar) {
+        public static Calendar getFirstDayOfWeek(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_WEEK);
         }
 
-        public static Date getLastDayOfWeek(Calendar calendar) {
+        public static Calendar getLastDayOfWeek(Calendar calendar) {
             return getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
         }
 
 
-
-        public static Date add(Calendar calendar, int field, int amount) {
+        /**
+         * add
+         * @param calendar
+         * @param field : Calendar. ERA YEAR MONTH WEEK_OF_YEAR WEEK_OF_MONTH DATE DAY_OF_MONTH DAY_OF_YEAR DAY_OF_WEEK DAY_OF_WEEK_IN_MONTH AM_PM HOUR HOUR_OF_DAY MINUTE SECOND MILLISECOND ZONE_OFFSET DST_OFFSET FIELD_COUNT
+         * @param amount
+         * @return
+         */
+        public static Calendar add(Calendar calendar, int field, int amount) {
             calendar.add(field, amount);
-            return calendar.getTime();
+            return calendar;
         }
 
-        public static Date getFirstDayOf(Calendar calendar, int field) {
+        public static Calendar getFirstDayOf(Calendar calendar, int field) {
             calendar.set(field, calendar.getActualMinimum(field));
-            Date date = calendar.getTime();
-            return date;
+            return calendar;
         }
 
-        public static Date getLastDayOf(Calendar calendar, int field) {
+        public static Calendar getLastDayOf(Calendar calendar, int field) {
             calendar.set(field, calendar.getActualMaximum(field));
+            return calendar;
+        }
+
+        public static Calendar dateToCalendar(Date date) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar;
+        }
+
+        public static Date calendarToDate(Calendar calendar) {
             Date date = calendar.getTime();
             return date;
         }
@@ -88,6 +103,35 @@ public class DateTimeUtils {
          * @throws ParseException
          */
         public static String convertDate2String(String format, Date date) {
+            String text = new SimpleDateFormat(format).format(date);
+            return text;
+        }
+
+        /**
+         * 从String转换为Calendar
+         *
+         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param text   "1987-06-05T44:33:22.111+0800"
+         * @return Date
+         * @throws ParseException
+         */
+        public static Calendar convertString2Calendar(String format, String text) throws ParseException {
+            Date date = new SimpleDateFormat(format).parse(text);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar;
+        }
+
+        /**
+         * 从Calendar转换为String
+         *
+         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param calendar
+         * @return String "1987-06-05T44:33:22.111+0800"
+         * @throws ParseException
+         */
+        public static String convertCalendar2String(String format, Calendar calendar) {
+            Date date = calendar.getTime();
             String text = new SimpleDateFormat(format).format(date);
             return text;
         }

@@ -17,7 +17,7 @@ public class ClassUtils {
      * @return
      */
     public static String getPath(final Class clazz) throws MalformedURLException {
-        final String clsAsResource = convertClassName2ResourcePath(clazz.getName());
+        final String clsAsResource = convertClassName2ResourcePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {

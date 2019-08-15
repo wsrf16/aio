@@ -71,7 +71,7 @@ public class PagePocket<T> {
             return cutLeft.subList(0, pageCapcity);
     }
 
-    public static <T> PagePocket<T> paging(List<T> list, int size, int index) {
+    public final static <T> PagePocket<T> paging(List<T> list, int size, int index) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
         instance.pageCapcity = size;
@@ -85,7 +85,7 @@ public class PagePocket<T> {
         return instance;
     }
 
-    public static <T> PagePocket<T> build(List<T> list, int size) {
+    public final static <T> PagePocket<T> build(List<T> list, int size) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
         instance.pageCapcity = size;
@@ -103,7 +103,7 @@ public class PagePocket<T> {
         return this;
     }
 
-//    public static <T> void instance(List<T> list, int size) {
+//    public final static <T> void instance(List<T> list, int size) {
 //        class Transition<T> {
 //            private List<T> list;
 //            private int size;

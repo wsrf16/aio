@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.core.query.*;
 import java.util.List;
 
 public abstract class ESTemplate {
-    public static <T> String create(ElasticsearchTemplate template, T t, String index, String type, String id) {
+    public final static <T> String create(ElasticsearchTemplate template, T t, String index, String type, String id) {
         IndexQueryBuilder indexQueryBuilder = new IndexQueryBuilder();
         indexQueryBuilder
                 .withIndexName(index)
@@ -23,14 +23,14 @@ public abstract class ESTemplate {
         return documentId;
     }
 
-    public static void delete(ElasticsearchTemplate template, String index, String type) {
+    public final static void delete(ElasticsearchTemplate template, String index, String type) {
         DeleteQuery deleteQuery = new DeleteQuery();
         deleteQuery.setIndex(index);
         deleteQuery.setType(type);
         template.delete(deleteQuery);
     }
 
-    public static void update(ElasticsearchTemplate template, String index, String type, String id) {
+    public final static void update(ElasticsearchTemplate template, String index, String type, String id) {
         UpdateQuery updateQuery = new UpdateQueryBuilder()
                 .withIndexName(index)
                 .withType(type)
@@ -39,13 +39,13 @@ public abstract class ESTemplate {
         template.update(updateQuery);
     }
 
-    public static <T> List<T> queryForList(ElasticsearchTemplate template, Class<T> clazz) {
+    public final static <T> List<T> queryForList(ElasticsearchTemplate template, Class<T> clazz) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.matchQuery("name","gaolujie")).build();
         return template.queryForList(searchQuery, clazz);
     }
 
-//    public static <T> Page<T> queryForPage(ElasticsearchTemplate template, Class<T> clazz) {
+//    public final static <T> Page<T> queryForPage(ElasticsearchTemplate template, Class<T> clazz) {
 //        StringQuery stringQuery = new NativeSearchQueryBuilder()
 //                .withQuery(QueryBuilders.matchQuery("name","gaolujie")).build();
 //        return template.queryForPage(stringQuery, clazz);

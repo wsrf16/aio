@@ -11,12 +11,12 @@ public class Slf4jLogger extends AbstractLogger {
         super(name);
     }
 
-    public static Slf4jLogger build(Class clazz) {
+    public final static Slf4jLogger build(Class clazz) {
         String name = clazz.toString();
         return build(name);
     }
 
-    public static Slf4jLogger build(String name) {
+    public final static Slf4jLogger build(String name) {
         return new Slf4jLogger(name);
     }
 

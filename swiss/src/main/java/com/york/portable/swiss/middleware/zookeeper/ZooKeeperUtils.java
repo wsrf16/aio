@@ -114,15 +114,15 @@ public class ZooKeeperUtils {
     }
 
     public static String create(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
-        return zookeeper.create(path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     public static String createIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : zookeeper.create(path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     public static String createIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : zookeeper.create(path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     public static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
@@ -138,15 +138,15 @@ public class ZooKeeperUtils {
     }
 
     public static String createEphemeral(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
-        return zookeeper.create(path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+        return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
     }
 
     public static String createEphemeralSequential(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
-        return zookeeper.create(path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+        return create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
     public static String createEphemeralSequential(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
-        return zookeeper.create(path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+        return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
     public static List<String> getChildren(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {

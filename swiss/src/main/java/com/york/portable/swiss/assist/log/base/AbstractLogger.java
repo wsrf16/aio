@@ -45,7 +45,7 @@ public abstract class AbstractLogger extends LogBody {
     public void setAsync(boolean async) {
         this.async = async;
     }
-    public static ExecutorService executor = Executors.newCachedThreadPool();
+    public final static ExecutorService executor = Executors.newCachedThreadPool();
 
     protected Printer verbosePrinter;
     protected Printer infoPrinter;

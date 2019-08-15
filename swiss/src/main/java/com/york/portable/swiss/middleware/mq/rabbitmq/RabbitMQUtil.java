@@ -50,22 +50,22 @@ public class RabbitMQUtil {
         return binding;
     }
 
-    public static List<Binding> binding(List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
+    public final static List<Binding> binding(List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
         List<Binding> bindingList = rabbitMQBindingPropertyList.stream().map(c -> binding(c)).collect(Collectors.toList());
         return bindingList;
     }
 
-//    public static List<Binding> binding(RabbitMQBindingListProperties rabbitMQBindingListProperties) {
+//    public final static List<Binding> binding(RabbitMQBindingListProperties rabbitMQBindingListProperties) {
 //        List<Binding> bindingList = rabbitMQBindingListProperties.getBindingList().stream().map(c -> binding(c)).collect(Collectors.toList());
 //        return bindingList;
 //    }
 
-    public static List<Binding> binding(RabbitMQCachingConnectionFactoryProperties rabbitMQCachingConnectionFactoryProperties) {
+    public final static List<Binding> binding(RabbitMQCachingConnectionFactoryProperties rabbitMQCachingConnectionFactoryProperties) {
         List<Binding> bindingList = rabbitMQCachingConnectionFactoryProperties.getBindingList().stream().map(c -> binding(c)).collect(Collectors.toList());
         return bindingList;
     }
 
-    public static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
+    public final static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -81,7 +81,7 @@ public class RabbitMQUtil {
         return container;
     }
 
-    public static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
+    public final static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -96,7 +96,7 @@ public class RabbitMQUtil {
         return container;
     }
 
-    public static AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
+    public final static AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
         ExponentialBackOffPolicy policy = new ExponentialBackOffPolicy();
         policy.setInitialInterval(500);
         policy.setMultiplier(10.0);

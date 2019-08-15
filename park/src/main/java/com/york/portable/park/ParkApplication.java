@@ -40,13 +40,13 @@ public class ParkApplication {
 //        AnnotationConfigEmbeddedWebApplicationContext
 //        org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
         ApplicationContext configurableApplicationContext = SpringApplication.run(ParkApplication.class, args);
-//        String[] activeProfiles = configurableApplicationContext.getEnvironment().getActiveProfiles();
-//        String activeProfilesText = StringUtils.join(activeProfiles, ", ");
-//        String[] defaultProfiles = configurableApplicationContext.getEnvironment().getDefaultProfiles();
-//        String defaultProfilesText = StringUtils.join(defaultProfiles, ", ");
-//        String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
-//        //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
-//        beanNames = beanNames;
+        String[] activeProfiles = configurableApplicationContext.getEnvironment().getActiveProfiles();
+        String activeProfilesText = StringUtils.join(activeProfiles, ", ");
+        String[] defaultProfiles = configurableApplicationContext.getEnvironment().getDefaultProfiles();
+        String defaultProfilesText = StringUtils.join(defaultProfiles, ", ");
+        String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
+        //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
+        beanNames = beanNames;
 //
 //        String name = SpringUtils.getBeanName(LogKafkaProperties.class.getSimpleName());
 //        Arrays.stream(activeProfiles).anyMatch(cc -> Arrays.asList("development", "test", "default").contains(cc));

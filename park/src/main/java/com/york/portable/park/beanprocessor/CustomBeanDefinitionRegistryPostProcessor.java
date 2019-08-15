@@ -12,7 +12,7 @@ import org.springframework.util.ClassUtils;
 
 import java.beans.Introspector;
 
-//@Configuration
+@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean
@@ -35,7 +35,7 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
         // 设置可通过@Autowire注解引用
         builder.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);
         // 注册到BeanDefinitionRegistry
-        registry.registerBeanDefinition("userInfoEntity", builder.getBeanDefinition());
+//        registry.registerBeanDefinition("userInfoEntity", builder.getBeanDefinition());
     }
 
 

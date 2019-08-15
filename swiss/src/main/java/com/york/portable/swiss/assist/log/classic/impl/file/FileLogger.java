@@ -7,11 +7,11 @@ import com.york.portable.swiss.assist.log.base.AbstractLogger;
  * Created by York on 2017/11/27.
  */
 public class FileLogger extends AbstractLogger {
-    public static FileLogger build(String name) {
+    public final static FileLogger build(String name) {
         return new FileLogger(name);
     }
 
-    public static FileLogger build(Class clazz) {
+    public final static FileLogger build(Class clazz) {
         String name = clazz.toString();
         return build(name);
     }

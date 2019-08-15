@@ -9,7 +9,7 @@ public class ByteUtil {
      * @param obj
      * @return
      */
-    public static byte[] toByteArray(Object obj) {
+    public final static byte[] toByteArray(Object obj) {
         byte[] bytes;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
@@ -31,7 +31,7 @@ public class ByteUtil {
      * @param bytes
      * @return
      */
-    public static Object toObject(byte[] bytes) {
+    public final static Object toObject(byte[] bytes) {
         Object obj;
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);

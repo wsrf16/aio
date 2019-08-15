@@ -20,9 +20,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class TextUtils {
-//	public static String ALBUM_PATH = Environment.getExternalStorageDirectory() + "/androidT/";
+//	public final static String ALBUM_PATH = Environment.getExternalStorageDirectory() + "/androidT/";
 
-    public static boolean isFirstChineseAndChar(String str) {
+    public final static boolean isFirstChineseAndChar(String str) {
         String temp = str.substring(0, 0 + 1);
         String chinese = "[\u0391-\uFFE5]";
         boolean b = false;
@@ -33,7 +33,7 @@ public class TextUtils {
         return b;
     }
 
-    public static boolean isFirstChinese(String str) {
+    public final static boolean isFirstChinese(String str) {
         String temp = str.substring(0, 0 + 1);
         String chineseAndChar = "[\u4e00-\u9fa5]";
         boolean b = false;
@@ -44,7 +44,7 @@ public class TextUtils {
         return b;
     }
 
-    public static int countByte(String value) {
+    public final static int countByte(String value) {
         int valueLength = 0;
         String chinese = "[\u0391-\uFFE5]";
 		/* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
@@ -63,7 +63,7 @@ public class TextUtils {
         return valueLength;
     }
 
-    public static int countChar(String value) {
+    public final static int countChar(String value) {
         int valueLength = 0;
 //		String chinese = "[\u0391-\uFFE5]";
 		/* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
@@ -84,7 +84,7 @@ public class TextUtils {
     }
 
 
-    public static LinkedList<String> cutStringByChar(String value, int wide) {
+    public final static LinkedList<String> cutStringByChar(String value, int wide) {
         LinkedList<String> list = new LinkedList<String>();
         StringBuffer sb = new StringBuffer();
         int cursor_whole = 0;
@@ -112,7 +112,7 @@ public class TextUtils {
         return list;
     }
 
-    public static String pad2RightByByte(String source, char fill, int l) {
+    public final static String pad2RightByByte(String source, char fill, int l) {
         while (true) {
             if (countByte(source) < l)
                 source = fill + source;
@@ -122,7 +122,7 @@ public class TextUtils {
         return source;
     }
 
-    public static String pad2LeftByByte(String source, char fill, int l) {
+    public final static String pad2LeftByByte(String source, char fill, int l) {
         while (true) {
             if (countByte(source) < l)
                 source = source + fill;
@@ -132,14 +132,14 @@ public class TextUtils {
         return source;
     }
 
-    public static String pad2BorderByByte(String source, char fill, int l, int gravity) {
+    public final static String pad2BorderByByte(String source, char fill, int l, int gravity) {
         if (gravity == 0)
             return pad2LeftByByte(source, fill, l);
         else
             return pad2RightByByte(source, fill, l);
     }
 
-    public static String pad2RightByChar(String source, char fill, int l) {
+    public final static String pad2RightByChar(String source, char fill, int l) {
         while (true) {
             if (countChar(source) < l)
                 source = fill + source;
@@ -149,7 +149,7 @@ public class TextUtils {
         return source;
     }
 
-    public static String pad2LeftByChar(String source, char fill, int l) {
+    public final static String pad2LeftByChar(String source, char fill, int l) {
         while (true) {
             if (countChar(source) < l)
                 source = source + fill;
@@ -159,7 +159,7 @@ public class TextUtils {
         return source;
     }
 
-    public static String pad2BorderByChar(String source, char fill, int l, int gravity) {
+    public final static String pad2BorderByChar(String source, char fill, int l, int gravity) {
         if (gravity == 0)
             return pad2LeftByChar(source, fill, l);
         else
@@ -179,7 +179,7 @@ public class TextUtils {
      * @param string
      *            要格式化的字符串
      */
-    public static String flushRight(String c, long l, String string) {
+    public final static String flushRight(String c, long l, String string) {
         String str = "";
         String temp = "";
         if (countByte(string) > l)
@@ -201,7 +201,7 @@ public class TextUtils {
      * @param string
      *            要格式化的字符串
      */
-    public static String flushLeft(char c, long l, String string) {
+    public final static String flushLeft(char c, long l, String string) {
         String str = "";
         String temp = "";
         if (countByte(string) > l)
@@ -213,7 +213,7 @@ public class TextUtils {
         return str;
     }
 
-    public static String flushLeft(String c, long l, String string) {
+    public final static String flushLeft(String c, long l, String string) {
         String str = "";
         String temp = "";
         if (countByte(string) > l)
@@ -225,19 +225,19 @@ public class TextUtils {
         return str;
     }
 
-    public static String cutBit(double doubleVal) {
+    public final static String cutBit(double doubleVal) {
         BigDecimal b = new BigDecimal(doubleVal);
         double ret = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         return String.valueOf(ret);
     }
 
-    public static String cutBit(double doubleVal, int bit) {
+    public final static String cutBit(double doubleVal, int bit) {
         BigDecimal b = new BigDecimal(doubleVal);
         double ret = b.setScale(bit, BigDecimal.ROUND_HALF_UP).doubleValue();
         return String.valueOf(ret);
     }
 
-    public static String carveNowDateTime(String format){
+    public final static String carveNowDateTime(String format){
         return new SimpleDateFormat(format).format(new java.util.Date());
     }
 

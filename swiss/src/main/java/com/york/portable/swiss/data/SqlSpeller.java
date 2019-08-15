@@ -23,7 +23,7 @@
 //     * @param specification
 //     * @return text as "(col1,col2) VALUES ('a',2)"
 //     */
-//    public static String spellInsertText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+//    public final static String spellInsertText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //        Map kvPairs = DynamicKit.object2Map(specification);
 ////        Map kvPairs = CommonBeanUtils.object2Map(specification);
 //        Set items = kvPairs.keySet();
@@ -38,7 +38,7 @@
 //     * @param specification
 //     * @return text as "col1='a',col2=2"
 //     */
-//    public static String spellUpdateText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+//    public final static String spellUpdateText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //        Map kvPairs = DynamicKit.object2Map(specification);
 ////        Map kvPairs = CommonBeanUtils.object2Map(specification, false);
 //        Set items = kvPairs.entrySet();
@@ -52,7 +52,7 @@
 //     * @param specification
 //     * @return text as "col1,col2"
 //     */
-//    public static String spellSelectText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+//    public final static String spellSelectText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //        Map kvPairs = DynamicKit.object2Map(specification, true);
 ////        Map kvPairs = CommonBeanUtils.object2Map(specification, false);
 //        Set items = kvPairs.keySet();
@@ -66,7 +66,7 @@
 //     * @param specification
 //     * @return col1=@col1 and col2=@col2
 //     */
-//    public static String spellConditionText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+//    public final static String spellConditionText(Object specification) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 ////        Map kvPairs = DynamicKit.object2Map(specification);
 //        Map kvPairs = CommonBeanUtils.object2Map(specification, false);
 //        Set items = kvPairs.keySet();

@@ -1,6 +1,7 @@
 package com.york.portable.swiss.assist.log.hub.factory;
 
 import com.york.portable.swiss.assist.log.hub.LogHub;
+import com.york.portable.swiss.sugar.StackTraceInfo;
 
 //@FunctionalInterface
 public interface LogHubFactory {
@@ -21,8 +22,8 @@ public interface LogHubFactory {
     }
 
     default LogHub build() {
-        Class clazz = this.getClass();
-        return build(clazz);
+        String className = StackTraceInfo.Previous.getClassName();
+        return build(className);
     }
 
     default LogHub buildAsync(String className) {
@@ -35,6 +36,13 @@ public interface LogHubFactory {
         LogHub logger = build(clazz);
         logger.setAsync(true);
         return logger;
+    }
+
+    default LogHub buildAsync() {
+        Throwable throwable = new Throwable();
+        int depth = 1;
+        String className = throwable.getStackTrace()[depth].getClassName();
+        return buildAsync(className);
     }
 
 }

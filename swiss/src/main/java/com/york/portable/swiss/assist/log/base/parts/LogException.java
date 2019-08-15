@@ -9,7 +9,7 @@ public class LogException {
         setException(e);
     }
 
-    public static LogException buildLogException(Exception e) {
+    public final static LogException buildLogException(Exception e) {
         return new LogException(e);
     }
 

@@ -10,13 +10,13 @@ import org.springframework.kafka.support.converter.RecordMessageConverter;
 import java.util.Map;
 
 public class KafkaBuilder {
-    public static ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties) {
+    public final static ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
         DefaultKafkaProducerFactory<?, ?> factory = new DefaultKafkaProducerFactory(producerProperties);
         return factory;
     }
 
-    public static ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties, Map<String, Object> extraProperties, String transactionIdPrefix) {
+    public final static ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties, Map<String, Object> extraProperties, String transactionIdPrefix) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
         producerProperties.putAll(extraProperties);
 
@@ -31,11 +31,11 @@ public class KafkaBuilder {
         return factory;
     }
 
-    public static ConsumerFactory<String, Object> kafkaConsumerFactory(KafkaProperties properties) {
+    public final static ConsumerFactory<String, Object> kafkaConsumerFactory(KafkaProperties properties) {
         return new DefaultKafkaConsumerFactory(properties.buildConsumerProperties());
     }
 
-    public static ConsumerFactory<String, Object> kafkaConsumerFactory(KafkaProperties properties, Map<String, Object> extraProperties) {
+    public final static ConsumerFactory<String, Object> kafkaConsumerFactory(KafkaProperties properties, Map<String, Object> extraProperties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
         consumerProperties.putAll(extraProperties);
 
@@ -46,11 +46,11 @@ public class KafkaBuilder {
         return new LoggingProducerListener();
     }
 
-    public static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties) {
+    public final static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties) {
         return KafkaBuilder.kafkaTemplate(properties, null);
     }
 
-    public static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties, RecordMessageConverter messageConverter) {
+    public final static KafkaTemplate<?, ?> kafkaTemplate(KafkaProperties properties, RecordMessageConverter messageConverter) {
         ProducerFactory<Object, Object> kafkaProducerFactory = (ProducerFactory<Object, Object>)KafkaBuilder.kafkaProducerFactory(properties);
         KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate(kafkaProducerFactory);
 

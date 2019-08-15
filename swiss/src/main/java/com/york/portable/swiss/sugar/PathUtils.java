@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 public class PathUtils {
     final static String[] intervals = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
 
-    public static Path concatBySysteom(String first, String... more) {
+    public final static Path concatBySysteom(String first, String... more) {
         return Paths.get(first, more);
     }
 
-    public static String concat(String... parts) {
+    public final static String concat(String... parts) {
         Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringUtils.replaceEach(c, intervals, new String[]{File.separator, File.separator, File.separator, File.separator, File.separator, File.separator}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
@@ -37,7 +37,7 @@ public class PathUtils {
     }
 
     final static String INTERVAL_CHAR = "/";
-    public static String getPathByResourceUtils(String path) throws FileNotFoundException {
+    public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
             urlPath = StringUtils.removeStart(urlPath, INTERVAL_CHAR);
@@ -45,11 +45,11 @@ public class PathUtils {
         return urlPath;
     }
 
-    public static String getAbsolutePathByFile(String path) {
+    public final static String getAbsolutePathByFile(String path) {
         return new File(path).getAbsolutePath();
     }
 
-    public static String getCanonicalPathByFile(String path) throws IOException {
+    public final static String getCanonicalPathByFile(String path) throws IOException {
         return new File(path).getCanonicalPath();
     }
     //Relative

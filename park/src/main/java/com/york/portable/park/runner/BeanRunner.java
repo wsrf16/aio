@@ -18,27 +18,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//@Component
+@Component
 //@TargetDataSource("slave")
 public class BeanRunner implements ApplicationRunner {
     @Autowired
     Schedule schedule;
 
-    @Autowired
-    MybatisTest mybatisTest;
+//    @Autowired
+//    MybatisTest mybatisTest;
 
 //    Object o = SpringContextUtil.getBean("logKafkaProperties");
-    static LogHub staticLogger = CustomLogHubFactory.singletonInstance().build(BeanRunner.class);
+    static LogHub staticLogger = CustomLogHubFactory.singletonInstance().build();
 
     LogHub dynamicLogger;
 
     public BeanRunner(CustomLogHubFactory customLoggerHubFactory) {
-        dynamicLogger = customLoggerHubFactory.build(this.getClass());
+        dynamicLogger = customLoggerHubFactory.build();
     }
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        mybatisTest.main();
+//        mybatisTest.main();
 
         dynamicLogger.i("beanrunner.java", "ttttttt");
         staticLogger.i("beanrunner.java", "ttttttt");

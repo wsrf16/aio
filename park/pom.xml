@@ -31,7 +31,6 @@
 
         <swagger.version>2.9.2</swagger.version>
         <springfox-staticdocs.version>2.6.1</springfox-staticdocs.version>
-        <!--<assertj-swagger.version>0.8.1</assertj-swagger.version>-->
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <mysql.version>8.0.11</mysql.version>
         <tk.mybatis.version>1.1.3</tk.mybatis.version>
@@ -55,9 +54,6 @@
         <directory.profile>src/main/profiles</directory.profile>
         <directory.profile.active>src/main/profiles/${profiles.active}</directory.profile.active>
         <assembly-plugin-assembly.descriptor>${project.basedir}/src/main/assembly/assembly.xml</assembly-plugin-assembly.descriptor>
-
-
-        <!--<args_app>-javaagent:/opt/pinpoint-agent/pinpoint-bootstrap-1.7.3.jar -Dpinpoint.applicationName=${project.build.finalName} -Dpinpoint.agentId=$ip_addr</args_app>-->
     </properties>
 
     <dependencies>
@@ -67,17 +63,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter</artifactId>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.springframework.boot</groupId>-->
-                    <!--<artifactId>spring-boot-starter-logging</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
@@ -86,16 +71,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
         <dependency>
@@ -104,11 +94,12 @@
             <version>1.1.4-SNAPSHOT</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.york.portable</groupId>-->
-            <!--<artifactId>hamlet</artifactId>-->
-            <!--<version>1.1.4-SNAPSHOT</version>-->
-        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
 
         <!-- mysql -->
         <dependency>
@@ -138,12 +129,12 @@
             </exclusions>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<scope>provided</scope>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.springframework.boot</groupId>-->
@@ -162,16 +153,16 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-bean-validators</artifactId>
             <version>${swagger.version}</version>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
 
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-swagger-ui</artifactId>-->
-            <!--<version>${swagger.version}</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+            <optional>true</optional>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>io.springfox</groupId>-->
@@ -192,30 +183,6 @@
             <optional>true</optional>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/nl.jworks.markdown_to_asciidoc/markdown_to_asciidoc -->
-        <!--<dependency>-->
-            <!--<groupId>nl.jworks.markdown_to_asciidoc</groupId>-->
-            <!--<artifactId>markdown_to_asciidoc</artifactId>-->
-            <!--<version>1.1</version>-->
-            <!--<optional>true</optional>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/ch.netzwerg/paleo-core &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>ch.netzwerg</groupId>-->
-            <!--<artifactId>paleo-core</artifactId>-->
-            <!--<version>0.13.2</version>-->
-            <!--<optional>true</optional>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.pegdown/pegdown &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.pegdown</groupId>-->
-            <!--<artifactId>pegdown</artifactId>-->
-            <!--<version>1.5.0</version>-->
-            <!--<optional>true</optional>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj -->
         <dependency>
@@ -231,21 +198,6 @@
             <!--<version>2.0.1.RELEASE</version>-->
             <!--<scope>test</scope>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.github.robwin</groupId>-->
-            <!--<artifactId>assertj-swagger</artifactId>-->
-            <!--<version>${assertj-swagger.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-
-
-        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-
 
         <dependency>
             <groupId>tk.mybatis</groupId>
@@ -292,33 +244,24 @@
             <artifactId>htmlunit</artifactId>
             <version>2.35.0</version>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-            <optional>true</optional>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
     <profiles>
         <profile>
-            <id>development</id>
+            <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <profiles.active>development</profiles.active>
+                <profiles.active>dev</profiles.active>
             </properties>
         </profile>
         <profile>
@@ -334,15 +277,15 @@
             </properties>
         </profile>
         <profile>
-            <id>production</id>
+            <id>prod</id>
             <properties>
-                <profiles.active>production</profiles.active>
+                <profiles.active>prod</profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>production-docker</id>
+            <id>prod-docker</id>
             <properties>
-                <profiles.active>production-docker</profiles.active>
+                <profiles.active>prod-docker</profiles.active>
             </properties>
         </profile>
     </profiles>
@@ -350,13 +293,6 @@
     <build>
         <finalName>${project-build-finalName}</finalName>
         <resources>
-<!--            <resource>-->
-<!--                <directory>src/main/resources</directory>-->
-<!--                <filtering>true</filtering>-->
-<!--                <includes>-->
-<!--                    <include>**/*</include>-->
-<!--                </includes>-->
-<!--            </resource>-->
             <resource>
                 <directory>src/main/resources</directory>
                 <targetPath>${directory.profile.targetPath}</targetPath>
@@ -381,14 +317,6 @@
                     <include>**/*</include>
                 </includes>
             </resource>
-<!--            <resource>-->
-<!--                <directory>${directory.profile.active}</directory>-->
-<!--                <targetPath>${project.build.outputDirectory}</targetPath>-->
-<!--                <filtering>true</filtering>-->
-<!--                <includes>-->
-<!--                    <include>**/*</include>-->
-<!--                </includes>-->
-<!--            </resource>-->
             <resource>
                 <directory>${project.build.scriptSourceDirectory}</directory>
                 <filtering>true</filtering>

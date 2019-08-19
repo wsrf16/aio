@@ -1,4 +1,4 @@
-package com.york.portable.park.other;
+package com.york.portable.park.unit;
 
 import com.york.portable.park.ParkApplication;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;

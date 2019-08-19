@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 @Configuration
-public class LoggerHubAutoConfiguration {
+public class LogHubAutoConfiguration {
     @Bean
     public ConsoleHubFactory consoleHubFactory() {
         return ConsoleHubFactory.newInstance();

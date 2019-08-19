@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-//@Configuration
+@Configuration
 public class AutowiredOrderTest implements InitializingBean {
 
     @Autowired

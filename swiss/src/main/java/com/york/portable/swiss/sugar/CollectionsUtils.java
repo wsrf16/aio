@@ -1,6 +1,7 @@
 package com.york.portable.swiss.sugar;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -14,12 +15,12 @@ public class CollectionsUtils {
      * @param collection
      * @return
      */
-    public final static boolean isNullOrEmpty(Collection<?> collection) {
+    public final static boolean isEmpty(Collection<?> collection) {
 //        return list == null || list.isEmpty();
         return CollectionUtils.isEmpty(collection);
     }
 
-    public final static boolean isNullOrEmpty(Object[] array) {
+    public final static boolean isEmpty(Object[] array) {
 //        return array == null || array.length < 1;
         return ObjectUtils.isEmpty(array);
     }
@@ -85,6 +86,25 @@ public class CollectionsUtils {
     public final static <T> List<T> copy(List<? extends T> src) {
         List<T> dest = new ArrayList<>(Arrays.asList((T[]) new Object[src.size()]));
         Collections.copy(dest, src);
+        return dest;
+    }
+
+    public final static <S, T> List<T> copyProperties(List<? extends S> src, Class clazz) {
+        List<T> dest = new ArrayList<>();
+        for (S s : src) {
+            T t = null;
+            try {
+                t = (T)clazz.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            BeanUtils.copyProperties(s, t);
+            dest.add(t);
+        }
         return dest;
     }
 

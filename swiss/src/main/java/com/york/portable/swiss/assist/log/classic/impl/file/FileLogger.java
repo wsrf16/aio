@@ -1,12 +1,18 @@
 package com.york.portable.swiss.assist.log.classic.impl.file;
 
-import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.AbstractLogger;
+import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
+import com.york.portable.swiss.sugar.StackTraceInfo;
 
 /**
  * Created by York on 2017/11/27.
  */
 public class FileLogger extends AbstractLogger {
+    public final static FileLogger build() {
+        String name = StackTraceInfo.Previous.getClassName();
+        return build(name);
+    }
+
     public final static FileLogger build(String name) {
         return new FileLogger(name);
     }

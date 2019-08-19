@@ -1,6 +1,11 @@
-package com.york.portable.park.other;
+package com.york.portable.park.unit;
 
+import org.junit.Test;
+import org.springframework.boot.test.context.TestComponent;
+
+@TestComponent
 public class StringInternTest {
+    @Test
     public static void main() {
 //        System.out.println(System.getProperty("java.version"));
 //        String a = new String("abc");

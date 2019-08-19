@@ -5,12 +5,19 @@ import com.york.portable.swiss.assist.log.base.Printer;
 import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.parts.LogNote;
 import com.york.portable.swiss.assist.log.classic.impl.kibana.KibanaLogNote;
+import com.york.portable.swiss.assist.log.classic.impl.slf4j.Slf4jLogger;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
+import com.york.portable.swiss.sugar.StackTraceInfo;
 
 /**
  * Created by York on 2017/11/23.
  */
 public class KafkaLogger extends AbstractLogger {
+    public final static KafkaLogger build() {
+        String name = StackTraceInfo.Previous.getClassName();
+        return build(name);
+    }
+
     public static KafkaLogger build(String name) {
         return new KafkaLogger(name);
     }
@@ -47,7 +54,6 @@ public class KafkaLogger extends AbstractLogger {
         String text = serializer.serialize(kibanaLogNote);
         super.output(printer, text);
     }
-
 
 
 }

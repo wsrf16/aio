@@ -8,6 +8,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -28,12 +29,19 @@ public class RestTemplater {
         return new RestTemplate(factory);
     }
 
+    public static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
+        SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        restTemplate.setRequestFactory(factory);
+        return restTemplate;
+    }
+
     public static RestTemplate buildProxyRestTemplate(String host, int port) {
         SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
 
         return new RestTemplate(factory);
     }
-
     public static Map.Entry buildAuthorizationHead(String username, int password) {
         final String plainCreds = MessageFormat.format("{0}:{1}", username, password);
 

@@ -1,12 +1,18 @@
 package com.york.portable.swiss.assist.log.classic.impl.console;
 
-import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.york.portable.swiss.assist.log.base.AbstractLogger;
+import com.york.portable.swiss.assist.log.base.parts.LevelEnum;
+import com.york.portable.swiss.sugar.StackTraceInfo;
 
 /**
  * Created by York on 2017/11/23.
  */
 public class ConsoleLogger extends AbstractLogger {
+    public final static ConsoleLogger build() {
+        String name = StackTraceInfo.Previous.getClassName();
+        return build(name);
+    }
+
     public static ConsoleLogger build(String name) {
         return new ConsoleLogger(name);
     }

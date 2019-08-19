@@ -4,9 +4,10 @@ import com.york.portable.park.common.CustomLogHubFactory;
 import com.york.portable.swiss.bean.node.NodeUtils;
 import com.york.portable.swiss.bean.node.next.layered.LayeredNextNode;
 import com.york.portable.swiss.bean.node.next.layered.LayeredNextNodeBean;
-import com.york.portable.swiss.bean.node.relation.RelationNode;
-import com.york.portable.swiss.bean.node.relation.RelationNodeBean;
+import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
+import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNodeBean;
 import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
+import com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -18,6 +19,24 @@ import java.util.Objects;
 @TestComponent
 public class NodeTest {
 
+    public static class Bao {
+        public Bao() {
+        }
+
+        public Bao(String name) {
+            this.name = name;
+        }
+
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
     @TestComponent
     public static class Lst {
         private final List<String> source1() {
@@ -60,40 +79,16 @@ public class NodeTest {
         }
     }
 
-    public static class Bao {
-        public Bao() {
-        }
-
-        public Bao(String name) {
-            this.name = name;
-        }
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 
     @TestComponent
-    public static class Relation {
-        private List<RelationNode> source() {
-
-            RelationNode u1 = new RelationNodeBean(new Bao("我是一串文字A"), 111, 222);
-            RelationNode u2 = new RelationNodeBean(new Bao("我是一串文字B"), 222, 333);
-            RelationNode u3 = new RelationNodeBean(new Bao("我是一串文字C"), 333, 444);
-            RelationNode u4 = new RelationNodeBean(new Bao("我是一串文字D"), 444, 555);
-            RelationNode u5 = new RelationNodeBean(new Bao("我是一串文字E"), 888, null);
-//            RelationNode u1 = new RelationNodeBean("我是一串文字A", 111, 222);
-//            RelationNode u2 = new RelationNodeBean("我是一串文字B", 222, 333);
-//            RelationNode u3 = new RelationNodeBean("我是一串文字C", 333, 444);
-//            RelationNode u4 = new RelationNodeBean("我是一串文字D", 444, 555);
-//            RelationNode u5 = new RelationNodeBean("我是一串文字E", 888, null);
-            List<RelationNode> list = new ArrayList<>();
+    public static class TiledRelation {
+        private List<TiledRelationNodeSample> source() {
+            TiledRelationNodeSample u1 = new TiledRelationNodeSample( 111, 222,"我是一串文字A");
+            TiledRelationNodeSample u2 = new TiledRelationNodeSample( 222, 333,"我是一串文字B");
+            TiledRelationNodeSample u3 = new TiledRelationNodeSample( 333, 444,"我是一串文字C");
+            TiledRelationNodeSample u4 = new TiledRelationNodeSample( 444, 555,"我是一串文字D");
+            TiledRelationNodeSample u5 = new TiledRelationNodeSample( 888, null,"我是一串文字E");
+            List<TiledRelationNodeSample> list = new ArrayList<>();
             list.add(u1);
             list.add(u2);
             list.add(u3);
@@ -104,18 +99,59 @@ public class NodeTest {
 
         @Test
         public void pressIntoTiledNextNode() {
-            List<RelationNode> source = source();
-            List<TiledNextNodeSample> node1 = NodeUtils.Relation.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
-            List<TiledNextNodeSample> node2 = NodeUtils.Relation.pressIntoTiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            List<TiledRelationNodeSample> source = source();
+            List<TiledNextNodeSample> node1 = NodeUtils.TiledRelation.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = NodeUtils.TiledRelation.pressIntoTiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }
 
         @Test
         public void pressIntoLayeredNextNode() {
-            List<RelationNode> source = source();
-            List<LayeredNextNodeBean> node1 = NodeUtils.Relation.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
-            List<LayeredNextNodeBean> node2 = NodeUtils.Relation.pressIntoLayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            List<TiledRelationNodeSample> source = source();
+            List<LayeredNextNodeBean> node1 = NodeUtils.TiledRelation.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = NodeUtils.TiledRelation.pressIntoLayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            CustomLogHubFactory.singletonInstance().build().i(node1);
+            CustomLogHubFactory.singletonInstance().build().i(node2);
+        }
+    }
+
+    @TestComponent
+    public static class LayeredRelation {
+        private List<LayeredRelationNode> source() {
+            LayeredRelationNode u1 = new LayeredRelationNodeBean(new Bao("我是一串文字A"), 111, 222);
+            LayeredRelationNode u2 = new LayeredRelationNodeBean(new Bao("我是一串文字B"), 222, 333);
+            LayeredRelationNode u3 = new LayeredRelationNodeBean(new Bao("我是一串文字C"), 333, 444);
+            LayeredRelationNode u4 = new LayeredRelationNodeBean(new Bao("我是一串文字D"), 444, 555);
+            LayeredRelationNode u5 = new LayeredRelationNodeBean(new Bao("我是一串文字E"), 888, null);
+//            RelationNode u1 = new RelationNodeBean("我是一串文字A", 111, 222);
+//            RelationNode u2 = new RelationNodeBean("我是一串文字B", 222, 333);
+//            RelationNode u3 = new RelationNodeBean("我是一串文字C", 333, 444);
+//            RelationNode u4 = new RelationNodeBean("我是一串文字D", 444, 555);
+//            RelationNode u5 = new RelationNodeBean("我是一串文字E", 888, null);
+            List<LayeredRelationNode> list = new ArrayList<>();
+            list.add(u1);
+            list.add(u2);
+            list.add(u3);
+            list.add(u4);
+            list.add(u5);
+            return list;
+        }
+
+        @Test
+        public void pressIntoTiledNextNode() {
+            List<LayeredRelationNode> source = source();
+            List<TiledNextNodeSample> node1 = NodeUtils.LayeredRelation.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = NodeUtils.LayeredRelation.pressIntoTiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            CustomLogHubFactory.singletonInstance().build().i(node1);
+            CustomLogHubFactory.singletonInstance().build().i(node2);
+        }
+
+        @Test
+        public void pressIntoLayeredNextNode() {
+            List<LayeredRelationNode> source = source();
+            List<LayeredNextNodeBean> node1 = NodeUtils.LayeredRelation.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = NodeUtils.LayeredRelation.pressIntoLayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }

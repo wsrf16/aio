@@ -1,17 +1,17 @@
-package com.york.portable.swiss.bean.node.relation;
+package com.york.portable.swiss.bean.node.relation.layered;
 
-public class RelationNodeBean<ID, T> implements RelationNode<ID, T> {
+public class LayeredRelationNodeBean<ID, T> implements LayeredRelationNode<ID, T> {
     T item;
     ID nodeId;
-    ID nextId;
+    ID nextNodeId;
 
-    public RelationNodeBean(T item, ID nodeId, ID nextId) {
+    public LayeredRelationNodeBean(T item, ID nodeId, ID nextNodeId) {
         setItem(item);
         setNodeId(nodeId);
-        setNextId(nextId);
+        setNextNodeId(nextNodeId);
     }
 
-    public RelationNodeBean(T item, ID nodeId) {
+    public LayeredRelationNodeBean(T item, ID nodeId) {
         setItem(item);
         setNodeId(nodeId);
     }
@@ -37,13 +37,13 @@ public class RelationNodeBean<ID, T> implements RelationNode<ID, T> {
     }
 
     @Override
-    public ID getNextId() {
-        return nextId;
+    public ID getNextNodeId() {
+        return nextNodeId;
     }
 
     @Override
-    public void setNextId(ID nextId) {
-        this.nextId = nextId;
+    public void setNextNodeId(ID nextNodeId) {
+        this.nextNodeId = nextNodeId;
     }
 }
 

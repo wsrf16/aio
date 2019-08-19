@@ -1,9 +1,11 @@
 package com.york.portable.swiss.bean.node;
 
 import com.york.portable.swiss.bean.node.next.layered.LayeredNextNode;
+import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
 import com.york.portable.swiss.bean.node.relation.RelationEquals;
 import com.york.portable.swiss.bean.node.relation.RelationNode;
-import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
+import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
+import com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -44,7 +46,6 @@ public class NodeUtils {
             }
             return first;
         }
-
 
         /**
          * pressIntoLayeredNextNode
@@ -118,7 +119,11 @@ public class NodeUtils {
 //        }
     }
 
-    public final static class Relation {
+
+
+
+
+    public final static class LayeredRelation {
         /**
          * pressIntoLayeredNextNode
          * @param list
@@ -128,7 +133,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends RelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
             return pressIntoLayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
@@ -142,7 +147,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends RelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -163,11 +168,10 @@ public class NodeUtils {
                         break;
                 }
             }
-//？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+
             List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoLayeredNextNode(c, returnClazz)).collect(Collectors.toList());
             return resultTwoStep;
         }
-
 
         /**
          * pressIntoTiledNextNode
@@ -178,7 +182,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends RelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
             return pressIntoTiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
@@ -192,7 +196,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends RelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -221,38 +225,106 @@ public class NodeUtils {
 
 
 
+
+
+    public final static class TiledRelation {
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
+            return pressIntoLayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        }
+
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> pressIntoLayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+            List<T> sourceList = list;
+            List<T> tails = Utils.getTailList(sourceList, relationEquals);
+            List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
+
+            for (int i = 0; i < tails.size(); i++) {
+                T current = tails.get(i);
+                LinkedList<T> linkedList = new LinkedList<>();
+                linkedList.offerFirst(current);
+                resultOneStep.add(linkedList);
+
+                while (true) {
+                    ID byNextId = current.getNodeId();
+                    T prev = Utils.findByNextId(sourceList, byNextId, relationEquals);
+                    if (prev != null) {
+                        linkedList.offerFirst(prev);
+                        current = prev;
+                    } else
+                        break;
+                }
+            }
+
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoLayeredNextNode(c, returnClazz)).collect(Collectors.toList());
+            return resultTwoStep;
+        }
+
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
+            return pressIntoTiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        }
+
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+            List<T> sourceList = list;
+            List<T> tails = Utils.getTailList(sourceList, relationEquals);
+            List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
+
+            for (int i = 0; i < tails.size(); i++) {
+                T current = tails.get(i);
+                LinkedList<T> linkedList = new LinkedList<>();
+                resultOneStep.add(linkedList);
+                linkedList.offer(current);
+
+                while (true) {
+                    ID byNextId = current.getNodeId();
+                    T prev = Utils.findByNextId(sourceList, byNextId, relationEquals);
+                    if (prev != null) {
+                        linkedList.offerFirst(prev);
+                        current = prev;
+                    } else
+                        break;
+                }
+            }
+
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoTiledNextNode(c, returnClazz)).collect(Collectors.toList());
+            return resultTwoStep;
+        }
+    }
+
+
+
+
+
     static class Utils {
-        private final static <T extends RelationNode<ID, ?>, ID> List<T> getTailList(List<T> list) {
+        private final static <T extends RelationNode<ID>, ID> List<T> getTailList(List<T> list) {
             return getTailList(list, RelationEquals.OBJECTS_EQUALS);
         }
 
-        private final static <T extends RelationNode<ID, ?>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
+        private final static <T extends RelationNode<ID>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
             List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
             List<T> candidateHeadList = list.stream().collect(Collectors.toList());
-            List<T> tailList = candidateTailList.stream().filter(tail -> candidateHeadList.stream().noneMatch(head -> relationEquals.equals(tail.getNextId(), head.getNodeId()))).collect(Collectors.toList());
+            List<T> tailList = candidateTailList.stream().filter(tail -> candidateHeadList.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId()))).collect(Collectors.toList());
             List<T> nextIdList = list.stream().filter(c -> c.tail()).collect(Collectors.toList());
             tailList.addAll(nextIdList);
             return tailList;
         }
 
-        private final static <T extends RelationNode<ID, ?>, ID> List<T> getHeadList(List<T> list) {
+        private final static <T extends RelationNode<ID>, ID> List<T> getHeadList(List<T> list) {
             return getHeadList(list, RelationEquals.OBJECTS_EQUALS);
         }
 
-        private final static <T extends RelationNode<ID, ?>, ID> List<T> getHeadList(List<T> list, RelationEquals relationEquals) {
+        private final static <T extends RelationNode<ID>, ID> List<T> getHeadList(List<T> list, RelationEquals relationEquals) {
             List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
             List<T> candidateHeadList = list.stream().collect(Collectors.toList());
-            List<T> headList = candidateHeadList.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextId(), head.getNodeId()))).collect(Collectors.toList());
+            List<T> headList = candidateHeadList.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId()))).collect(Collectors.toList());
             return headList;
         }
 
-        private final static <T extends RelationNode<ID, ?>, ID> T findByNodeId(List<T> list, ID id, final RelationEquals relationEquals) {
+        private final static <T extends RelationNode<ID>, ID> T findByNodeId(List<T> list, ID id, final RelationEquals relationEquals) {
             T t = list.stream().filter(c -> relationEquals.equals(c.getNodeId(), id)).findFirst().orElse(null);
             return t;
         }
 
-        private final static <T extends RelationNode<ID, ?>, ID> T findByNextId(List<T> list, ID id, final RelationEquals relationEquals) {
-            T t = list.stream().filter(c -> relationEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
+        private final static <T extends RelationNode<ID>, ID> T findByNextId(List<T> list, ID id, final RelationEquals relationEquals) {
+            T t = list.stream().filter(c -> relationEquals.equals(c.getNextNodeId(), id)).findFirst().orElse(null);
             return t;
         }
     }

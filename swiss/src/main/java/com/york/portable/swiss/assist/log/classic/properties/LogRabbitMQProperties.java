@@ -116,7 +116,7 @@ public class LogRabbitMQProperties { // extends CachingConnectionFactory {
         return instance;
     }
 
-    public LogRabbitMQProperties() {
+    private LogRabbitMQProperties() {
         instance = this;
     }
 

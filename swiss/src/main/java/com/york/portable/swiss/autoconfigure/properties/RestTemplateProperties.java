@@ -1,4 +1,4 @@
-package com.york.portable.swiss.net.http;
+package com.york.portable.swiss.autoconfigure.properties;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 //@Configuration
-public class RestTemplateConfig {
+public class RestTemplateProperties {
     private boolean httpDebug = false;
     private String debugHost = "127.0.0.1";
     private int debugPort = 8888;
@@ -36,17 +36,6 @@ public class RestTemplateConfig {
 
     public void setDebugPort(int debugPort) {
         this.debugPort = debugPort;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate;
-        if (httpDebug)
-            restTemplate = RestTemplater.buildProxyRestTemplate(debugHost, debugPort);
-        else
-            restTemplate = new RestTemplate();
-        return restTemplate;
     }
 
     public final static HttpHeaders jsonHttpHead() {

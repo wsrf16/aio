@@ -1,6 +1,7 @@
 package com.york.portable.swiss.assist.log.classic.impl.slf4j;
 
 import com.york.portable.swiss.assist.log.base.AbstractLogger;
+import com.york.portable.swiss.sugar.StackTraceInfo;
 
 public class Slf4jLogger extends AbstractLogger {
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -9,6 +10,11 @@ public class Slf4jLogger extends AbstractLogger {
 
     private Slf4jLogger(String name) {
         super(name);
+    }
+
+    public final static Slf4jLogger build() {
+        String name = StackTraceInfo.Previous.getClassName();
+        return build(name);
     }
 
     public final static Slf4jLogger build(Class clazz) {

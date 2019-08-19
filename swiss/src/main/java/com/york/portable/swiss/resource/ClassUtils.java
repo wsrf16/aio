@@ -106,4 +106,22 @@ public class ClassUtils {
         path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(fullName).concat(".class");
         return path;
     }
+
+    /**
+     * newInstance
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public synchronized final static <T> T newInstance(Class<T> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

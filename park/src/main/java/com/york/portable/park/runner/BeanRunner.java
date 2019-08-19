@@ -1,20 +1,17 @@
 package com.york.portable.park.runner;
 
 //import com.york.portable.park.common.log.InjectedBaseLogger;
-import com.york.portable.park.other.MybatisTest;
+
 import com.york.portable.swiss.assist.log.hub.LogHub;
 import com.york.portable.park.common.CustomLogHubFactory;
 import com.york.portable.park.schedule.Schedule;
-import com.york.portable.swiss.sugar.DateTimeUtils;
 import com.york.portable.swiss.sugar.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,29 +24,25 @@ public class BeanRunner implements ApplicationRunner {
 //    @Autowired
 //    MybatisTest mybatisTest;
 
-//    Object o = SpringContextUtil.getBean("logKafkaProperties");
+    //    Object o = SpringContextUtil.getBean("logKafkaProperties");
     static LogHub staticLogger = CustomLogHubFactory.singletonInstance().build();
 
     LogHub dynamicLogger;
 
-    public BeanRunner(CustomLogHubFactory customLoggerHubFactory) {
-        dynamicLogger = customLoggerHubFactory.build();
+    public BeanRunner(CustomLogHubFactory customLogHubFactory) {
+        dynamicLogger = customLogHubFactory.build();
     }
+
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
 //        mybatisTest.main();
 
+
         dynamicLogger.i("beanrunner.java", "ttttttt");
         staticLogger.i("beanrunner.java", "ttttttt");
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -3);
-        Date first = DateTimeUtils.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
-        Date last = DateTimeUtils.CalendarUtils.getLastDayOfMonth(calendar).getTime();
 
-        DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 00:00:00", first);
-        DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 23:59:59", last);
 
         Stream<Integer> stream = Stream.iterate(1, n -> n + 1).limit(1000);
 
@@ -64,12 +57,11 @@ public class BeanRunner implements ApplicationRunner {
 //        mq();
     }
 
-    private void logCase1(){
+    private void logCase1() {
         LogHub logger = CustomLogHubFactory.singletonInstance().build("随便写哒");
         logger.i("abcdefghijklmnopqrstuvwxyz1介个是kafka");
         System.out.println("日志执行完成~~~~~~~~~~~~~");
     }
-
 
 
     private void logCase2() {
@@ -77,7 +69,6 @@ public class BeanRunner implements ApplicationRunner {
         logger.i("abcdefghijklmnopqrstuvwxyz11111111");
         logger.i("abcdefghijklmnopqrstuvwxyz22222222222");
     }
-
 
 
 //    @Autowired

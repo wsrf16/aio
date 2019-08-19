@@ -61,6 +61,8 @@ public abstract class AbstractLogger extends LogBody {
         initialPrinter();
     }
 
+
+
     protected abstract void initialPrinter();
 
 

@@ -1,3 +1,3 @@
 where mvn
-call mvn dependency:tree>dependency.txt
+call mvn dependency:tree>dependency.log
 pause

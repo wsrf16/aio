@@ -1,13 +1,12 @@
 package com.york.portable.park.unit.swiss.node;
 
 import com.york.portable.park.common.CustomLogHubFactory;
-import com.york.portable.swiss.bean.node.NodeUtils;
+import com.york.portable.swiss.bean.node.LinkedNodeUtils;
 import com.york.portable.swiss.bean.node.next.layered.LayeredNextNode;
 import com.york.portable.swiss.bean.node.next.layered.LayeredNextNodeBean;
 import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
 import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNodeBean;
 import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
-import com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -65,17 +64,17 @@ public class NodeTest {
         }
 
         @Test
-        public void pressIntoTiledNextNode() {
+        public void link2TiledNextNode() {
             List<TiledNextNode> source = source2();
-            TiledNextNode tiledNextNode1 = NodeUtils.Lst.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
-            TiledNextNode tiledNextNode2 = NodeUtils.Lst.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode tiledNextNode1 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode tiledNextNode2 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
         }
 
         @Test
-        public void pressIntoLayeredNextNode() {
+        public void link2LayeredNextNode() {
             List<String> source = source1();
-            LayeredNextNode<String> node1 = NodeUtils.Lst.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
-            LayeredNextNode<String> node2 = NodeUtils.Lst.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
+            LayeredNextNode<String> node1 = LinkedNodeUtils.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            LayeredNextNode<String> node2 = LinkedNodeUtils.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
         }
     }
 
@@ -98,19 +97,19 @@ public class NodeTest {
         }
 
         @Test
-        public void pressIntoTiledNextNode() {
+        public void link2TiledNextNode() {
             List<TiledRelationNodeSample> source = source();
-            List<TiledNextNodeSample> node1 = NodeUtils.TiledRelation.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
-            List<TiledNextNodeSample> node2 = NodeUtils.TiledRelation.pressIntoTiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node1 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }
 
         @Test
-        public void pressIntoLayeredNextNode() {
+        public void link2LayeredNextNode() {
             List<TiledRelationNodeSample> source = source();
-            List<LayeredNextNodeBean> node1 = NodeUtils.TiledRelation.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
-            List<LayeredNextNodeBean> node2 = NodeUtils.TiledRelation.pressIntoLayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node1 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }
@@ -139,19 +138,19 @@ public class NodeTest {
         }
 
         @Test
-        public void pressIntoTiledNextNode() {
+        public void link2TiledNextNode() {
             List<LayeredRelationNode> source = source();
-            List<TiledNextNodeSample> node1 = NodeUtils.LayeredRelation.pressIntoTiledNextNode(source, TiledNextNodeSample.class);
-            List<TiledNextNodeSample> node2 = NodeUtils.LayeredRelation.pressIntoTiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node1 = LinkedNodeUtils.LayeredRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = LinkedNodeUtils.LayeredRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }
 
         @Test
-        public void pressIntoLayeredNextNode() {
+        public void link2LayeredNextNode() {
             List<LayeredRelationNode> source = source();
-            List<LayeredNextNodeBean> node1 = NodeUtils.LayeredRelation.pressIntoLayeredNextNode(source, LayeredNextNodeBean.class);
-            List<LayeredNextNodeBean> node2 = NodeUtils.LayeredRelation.pressIntoLayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node1 = LinkedNodeUtils.LayeredRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = LinkedNodeUtils.LayeredRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
             CustomLogHubFactory.singletonInstance().build().i(node1);
             CustomLogHubFactory.singletonInstance().build().i(node2);
         }

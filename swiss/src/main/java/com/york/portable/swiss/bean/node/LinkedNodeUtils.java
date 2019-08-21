@@ -5,22 +5,21 @@ import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
 import com.york.portable.swiss.bean.node.relation.RelationEquals;
 import com.york.portable.swiss.bean.node.relation.RelationNode;
 import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
-import com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NodeUtils {
+public class LinkedNodeUtils {
     public final static class Lst {
         /**
-         * pressIntoTileNextNode
+         * link2TiledNextNode
          * @param list
          * @param <T extends TileNextNode>
          * @return
          */
-        public final static <T, R extends TiledNextNode> R pressIntoTiledNextNode(List<T> list, Class<R> clazz) {
+        public final static <T, R extends TiledNextNode> R link2TiledNextNode(List<T> list, Class<R> clazz) {
             R first;
             if (list.size() > 0) {
                 T firstItem = list.get(0);
@@ -48,14 +47,14 @@ public class NodeUtils {
         }
 
         /**
-         * pressIntoLayeredNextNode
+         * link2LayeredNextNode
          * @param list
          * @param returnClazz
          * @param <T>
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <T, R extends LayeredNextNode<T>> R pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <T, R extends LayeredNextNode<T>> R link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
             R first;
             if (list.size() > 0) {
                 T firstItem = list.get(0);
@@ -82,41 +81,6 @@ public class NodeUtils {
                 first = LayeredNextNode.newInstance(returnClazz);
             return first;
         }
-
-//        /**
-//         * pressIntoLayeredNextNode
-//         * @param list
-//         * @param returnClazz
-//         * @param <T>
-//         * @param <R extends LayeredNextNode<T>>
-//         * @return
-//         */
-//        public final static <T extends TiledNextNode, R extends TiledNextNode> R pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
-//            R first;
-//            if (list.size() > 0) {
-//                T firstItem = list.get(0);
-//                first = TiledNextNode.newInstance(returnClazz);
-//
-//                R current = first;
-//                for (int i = 0; i < list.size() - 1; i++) {
-//                    T nextItem = list.get(i + 1);
-//                    if (nextItem == null) {
-//                        continue;
-//                    }
-//                    else {
-//                        R next = TiledNextNode.newInstance(returnClazz, nextItem);
-//                        next.setItem(nextItem);
-//
-//                        current.setNext(next);
-//                        next.setPrev(current);
-//
-//                        current = next;
-//                    }
-//                }
-//            } else
-//                first = LayeredNextNode.newInstance(returnClazz);
-//            return first;
-//        }
     }
 
 
@@ -125,7 +89,7 @@ public class NodeUtils {
 
     public final static class LayeredRelation {
         /**
-         * pressIntoLayeredNextNode
+         * link2LayeredNextNode
          * @param list
          * @param returnClazz
          * @param <ID>
@@ -133,12 +97,12 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
-            return pressIntoLayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
+            return link2LayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
         /**
-         * pressIntoLayeredNextNode
+         * link2LayeredNextNode
          * @param list
          * @param relationEquals
          * @param returnClazz
@@ -147,7 +111,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> pressIntoLayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -169,12 +133,12 @@ public class NodeUtils {
                 }
             }
 
-            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoLayeredNextNode(c, returnClazz)).collect(Collectors.toList());
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.link2LayeredNextNode(c, returnClazz)).collect(Collectors.toList());
             return resultTwoStep;
         }
 
         /**
-         * pressIntoTiledNextNode
+         * link2TiledNextNode
          * @param list
          * @param returnClazz
          * @param <ID>
@@ -182,12 +146,12 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
-            return pressIntoTiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, Class<R> returnClazz) {
+            return link2TiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
         /**
-         * pressIntoTiledNextNode
+         * link2TiledNextNode
          * @param list
          * @param relationEquals
          * @param returnClazz
@@ -196,7 +160,7 @@ public class NodeUtils {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -218,7 +182,7 @@ public class NodeUtils {
                 }
             }
 
-            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoTiledNextNode(c, returnClazz)).collect(Collectors.toList());
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.link2TiledNextNode(c, returnClazz)).collect(Collectors.toList());
             return resultTwoStep;
         }
     }
@@ -228,11 +192,11 @@ public class NodeUtils {
 
 
     public final static class TiledRelation {
-        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> pressIntoLayeredNextNode(List<T> list, Class<R> returnClazz) {
-            return pressIntoLayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
+            return link2LayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
-        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> pressIntoLayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
@@ -254,15 +218,15 @@ public class NodeUtils {
                 }
             }
 
-            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoLayeredNextNode(c, returnClazz)).collect(Collectors.toList());
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.link2LayeredNextNode(c, returnClazz)).collect(Collectors.toList());
             return resultTwoStep;
         }
 
-        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, Class<R> returnClazz) {
-            return pressIntoTiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, Class<R> returnClazz) {
+            return link2TiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
-        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> pressIntoTiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, T extends com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode<ID>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
@@ -284,7 +248,7 @@ public class NodeUtils {
                 }
             }
 
-            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.pressIntoTiledNextNode(c, returnClazz)).collect(Collectors.toList());
+            List<R> resultTwoStep = resultOneStep.stream().map(c -> Lst.link2TiledNextNode(c, returnClazz)).collect(Collectors.toList());
             return resultTwoStep;
         }
     }

@@ -10,14 +10,14 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Configuration
-public class AutowiredOrderTest implements InitializingBean {
+public class AutowiredOrder implements InitializingBean {
 
     @Autowired
     UserInfoEntity userInfoEntity4th;
 
     UserInfoEntity userInfoEntity2nd = new UserInfoEntity();
 
-    public AutowiredOrderTest(UserInfoEntity userInfoEntity1st) {
+    public AutowiredOrder(UserInfoEntity userInfoEntity1st) {
         UserInfoEntity userInfoEntity3th = userInfoEntity1st;
     }
 

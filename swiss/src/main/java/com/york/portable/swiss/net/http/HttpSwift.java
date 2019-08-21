@@ -1,11 +1,13 @@
 package com.york.portable.swiss.net.http;
 
+import com.york.portable.swiss.bean.serializer.SerializerEnum;
 import com.york.portable.swiss.bean.serializer.SerializerSelector;
 import com.york.portable.swiss.bean.serializer.SerializerSelector;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -13,7 +15,9 @@ import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -21,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HttpSwift {
@@ -154,6 +159,54 @@ public class HttpSwift {
             return EntityUtils.toString(entity);
         } else {
             return EntityUtils.toString(entity);
+        }
+    }
+
+
+
+
+
+    private static class BlahUnit {
+        private static void todo() throws IOException {
+            class People {
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                private String name;
+            }
+
+            People people = new People();
+            people.setName("John");
+            String url = "http://www.baidu.com";
+            HttpHost httpProxy = new HttpHost("127.0.0.1", 8888, "http");
+            RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
+            HttpSwift.getSerializer().setSerializer(SerializerEnum.SERIALIZE_JACKXML);
+            StringEntity entity = HttpSwift.buildJsonObjectEntity(people, "utf-8");
+            Header[] headers = newHeaders("sign");
+
+            HttpPost httpPost = HttpSwift.buildPost(url, config, entity, headers);
+            CloseableHttpClient client;
+            {
+                client = HttpClientBuilder.create().build();
+                client = HttpClients.createDefault();
+            }
+            CloseableHttpResponse response = client.execute(httpPost);
+            String result = HttpSwift.getResult(response);
+            System.out.println(result);
+        }
+
+        private static Header[] newHeaders(String sign) {
+            List<BasicHeader> headers = new ArrayList<>();
+            BasicHeader header2 = new BasicHeader("sign", sign);
+            BasicHeader header1 = new BasicHeader("Accept-Language", "zh-cn");
+            headers.add(header1);
+            headers.add(header2);
+            return headers.toArray(new BasicHeader[0]);
         }
     }
 

@@ -1,5 +1,10 @@
 package com.york.portable.swiss.resource;
 
+import com.york.portable.swiss.bean.serializer.json.GsonUtil;
+import com.york.portable.swiss.bean.serializer.json.JacksonUtil;
+import com.york.portable.swiss.sandbox.Wood;
+import com.york.portable.swiss.sandbox.a中文.AA;
+
 import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
@@ -122,6 +127,42 @@ public class ClassUtils {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+    private static class BlahUnit {
+        private static void todo() throws IOException {
+            String ss = ClassUtils.getPath(AA.class);
+            boolean b1 = ClassUtils.exist("com.york.portable.swiss.sandbox.Wood");
+            boolean b2 = ClassUtils.exist("com.york.portable.swiss.sandbox.Wood");
+
+
+            if (isExistJackson())
+                System.out.println(JacksonUtil.obj2Json(new Wood() {
+                    {
+                        setA(888);
+                    }
+                }));
+
+            System.out.println();
+
+            if (isExistGson())
+                System.out.println(GsonUtil.obj2Json(new Wood() {
+                    {
+                        setA(888);
+                    }
+                }));
+        }
+
+        private static boolean isExistJackson() throws IOException {
+            return ClassUtils.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
+        }
+
+        private static boolean isExistGson() throws IOException {
+            return ClassUtils.exist(("com.google.gson.Gson"));
         }
     }
 }

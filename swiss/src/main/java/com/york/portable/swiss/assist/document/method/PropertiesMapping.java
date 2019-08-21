@@ -4,6 +4,8 @@ import com.york.portable.swiss.assist.document.base.AbsDocument;
 import com.york.portable.swiss.assist.document.base.AbsDocument;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Properties;
 
 public class PropertiesMapping extends AbsDocument {
@@ -55,6 +57,17 @@ public class PropertiesMapping extends AbsDocument {
         //以适合使用 load 方法加载到 Properties 表中的格式，
         //将此 Properties 表中的属性列表（键和元素对）写入输出流
         pps.store(out, "Update " + pKey + " name");
+    }
+
+
+
+    private static class BlahUnit {
+        private static void todo() throws IOException {
+            PropertiesMapping pps = new PropertiesMapping("1.properties");
+            BigDecimal v1 = pps.getDecimal("AAA");
+            Date v2 = pps.getDateTime("BBB");
+            String v3 = pps.getString("CCCD", "888");
+        }
     }
 
 }

@@ -108,4 +108,23 @@ public class PackageUtils {
 
         return classList;
     }
+
+
+
+
+
+    public static class BlahUnit {
+        public void todo() throws IOException, ClassNotFoundException {
+            List<String> list = PackageUtils.getClassName(this.getClass().getPackage().getName());
+            for (String name : list) {
+//            Class<?> clazz = Class.forName(name);
+                Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);
+                if (clazz.isAnnotationPresent(com.york.portable.swiss.sandbox.a中文.Flag.class)) {
+                    com.york.portable.swiss.sandbox.a中文.Flag flag = clazz.getAnnotation(com.york.portable.swiss.sandbox.a中文.Flag.class);
+                    int age = flag.age();
+                    System.out.println(name);
+                }
+            }
+        }
+    }
 }

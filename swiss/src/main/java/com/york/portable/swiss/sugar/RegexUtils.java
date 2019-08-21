@@ -72,4 +72,15 @@ public class RegexUtils {
         String result = matcher.find() ? matcher.replaceAll(replacement) : regex;
         return result;
     }
+
+    private static class BlahUnit {
+        private static void regex() {
+            String ret1 = RegexUtils.fakePhone("12345678901");
+            String ret2 = RegexUtils.replaceAll("12345678901", "4567", "xxxx");
+            boolean ret3 = RegexUtils.matches("12345678901", "456");
+            System.out.println(ret1);
+            System.out.println(ret2);
+            System.out.println(ret3);
+        }
+    }
 }

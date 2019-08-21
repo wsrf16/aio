@@ -119,33 +119,6 @@ class Sample {
 //        }
 //    }
 
-    public static class CacheRoomSample {
-        public static void sample() {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("a", "1");
-            map.put("b", "2");
-            map.put("c", "3");
-            map.put("d", "4");
-
-            CacheRoom.saveByJson("A1", map);
-        }
-    }
-
-
-
-
-    public class PropertiesMappingSample {
-        public void sample() throws IOException {
-            PropertiesMapping pps = new PropertiesMapping("1.properties");
-            BigDecimal v1 = pps.getDecimal("AAA");
-            Date v2 = pps.getDateTime("BBB");
-            String v3 = pps.getString("CCCD", "888");
-        }
-    }
-
-
-
-
 
     @Flag(isMaster = true, age = 22)
     public class AnnotationBlah {
@@ -166,97 +139,17 @@ class Sample {
 
 
 
-
-    public static class ResourceUtilSample {
-    }
-
-
-    public static class BasicTypeBlah {
-        public static void blah() {
+    private static class BlahUnit {
+        private static void todo() {
             BasicType.InnerClosure innerClosure = new BasicType().serialNumber();
             String s1 = innerClosure.serialNumber();
             String s2 = innerClosure.serialNumber();
         }
     }
 
-    public static class PathUtilsBlah {
-        public static void blah() {
-            String[] directories = new String[]{"/a/\\1\\", "/b/\\2", "c\\3\\", "d",
-                    "//e\\\\", "\\/f", "g/\\", "h//"};
-            String concat = PathUtils.concat(directories);
-        }
-    }
-
-    public static class TotalEncryptBlah {
-        public static void blah() throws UnsupportedEncodingException {
-            String a1 = TotalEncrypt.md5("aaa");
-            String a2 = TotalEncrypt.SpringFrameWork.encodeBase64("aaa");
-        }
-    }
-
-    public static class PackageUtilsBlah {
-        public static void blah() throws IOException, ClassNotFoundException {
-            List<String> list = PackageUtils.getClassName(PackageUtilsBlah.class.getPackage().getName());
-            for (String name : list) {
-//            Class<?> clazz = Class.forName(name);
-                Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);
-                if (clazz.isAnnotationPresent(com.york.portable.swiss.sandbox.a中文.Flag.class)) {
-                    com.york.portable.swiss.sandbox.a中文.Flag flag = clazz.getAnnotation(com.york.portable.swiss.sandbox.a中文.Flag.class);
-                    int age = flag.age();
-                    System.out.println(name);
-                }
-            }
-        }
-    }
 
 
-    public static class ClassUtilBlah {
-        public static void sample() throws IOException {
-            String ss = ClassUtils.getPath(AA.class);
-            boolean b1 = ClassUtils.exist("com.york.portable.swiss.sandbox.Wood");
-            boolean b2 = ClassUtils.exist("com.york.portable.swiss.sandbox.Wood");
 
-
-            if (isExistJackson())
-                System.out.println(JacksonUtil.obj2Json(new Wood() {
-                    {
-                        setA(888);
-                    }
-                }));
-
-            System.out.println();
-
-            if (isExistGson())
-                System.out.println(GsonUtil.obj2Json(new Wood() {
-                    {
-                        setA(888);
-                    }
-                }));
-        }
-
-        private static boolean isExistJackson() throws IOException {
-            return ClassUtils.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
-        }
-
-        private static boolean isExistGson() throws IOException {
-            return ClassUtils.exist(("com.google.gson.Gson"));
-        }
-    }
-
-    public static class PackageUtilBlah {
-
-    }
-
-    public static class SingletonProviderBlah {
-        public static void blah() throws InstantiationException, IllegalAccessException {
-            AA aa = SingletonProvider.instance(AA.class);
-            aa.aa = 77;
-            BB bb = SingletonProvider.instance(BB.class);
-            bb.aa = 44;
-            AA aa1 = SingletonProvider.instance(AA.class);
-            BB bb2 = SingletonProvider.instance(BB.class);
-        }
-    }
 
 
 

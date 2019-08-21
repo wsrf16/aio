@@ -229,5 +229,28 @@ public class DateTimeUtils {
             public static final int SECOND = 0;
         }
     }
+
+
+
+
+
+    private static class BlahUnit {
+        private static void todo() {
+            long longg = DateTimeUtils.UnixTime.nowUnix();
+            long longgg = DateTimeUtils.UnixTime.convertDateTime2Unix(LocalDateTime.now());
+            LocalDateTime time = DateTimeUtils.UnixTime.convertUnix2DateTime(longg);
+            long longggg = DateTimeUtils.UnixTime.convertUTC2Unix(time);
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, -3);
+            Date first = DateTimeUtils.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
+            Date last = DateTimeUtils.CalendarUtils.getLastDayOfMonth(calendar).getTime();
+
+            DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 00:00:00", first);
+            DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 23:59:59", last);
+        }
+    }
+
 }
 

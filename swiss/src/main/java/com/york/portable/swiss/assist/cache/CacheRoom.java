@@ -69,7 +69,7 @@ public class CacheRoom {
 //        List<String> bb1 = bb.collect(Collectors.toList());
         List<String> keys = Arrays.stream(dir.listFiles()).filter(c -> c.getName().split("\\.")[1].toLowerCase().equals(EXTENSION)).
                 map(c -> c.getName().replace(EXTENSION, Constant.EMPTY)).collect(Collectors.toList());
-        CacheRooms = new Hashtable<String, CacheRoom>();
+        CacheRooms = new Hashtable<>();
         keys.forEach(key -> {
             try {
                 CacheRooms.put(key, new CacheRoom(key));
@@ -289,4 +289,15 @@ public class CacheRoom {
         CacheRoom.CacheRoomFactory(key).clear();
     }
 
+    private static class BlahUnit {
+        private static void todo() {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("a", "1");
+            map.put("b", "2");
+            map.put("c", "3");
+            map.put("d", "4");
+
+            CacheRoom.saveByJson("A1", map);
+        }
+    }
 }

@@ -1,5 +1,8 @@
 package com.york.portable.swiss.bean;
 
+import com.york.portable.swiss.sandbox.a中文.AA;
+import com.york.portable.swiss.sandbox.a中文.BB;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,4 +65,16 @@ public abstract class SingletonProvider {
 //            return Object.class;//若没有给定泛型，则返回Object类
 //        }
 //    }
+
+
+    private static class BlahUnit {
+        private static void todo() throws InstantiationException, IllegalAccessException {
+            AA aa = SingletonProvider.instance(AA.class);
+            aa.aa = 77;
+            BB bb = SingletonProvider.instance(BB.class);
+            bb.aa = 44;
+            AA aa1 = SingletonProvider.instance(AA.class);
+            BB bb2 = SingletonProvider.instance(BB.class);
+        }
+    }
 }

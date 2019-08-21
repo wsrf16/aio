@@ -1,13 +1,16 @@
 package com.york.portable.swiss.bean.serializer.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -270,5 +273,52 @@ public class JacksonUtil {
     public static <T> T deepClone(Object source, Class<T> targetClass) {
         T t = JacksonUtil.json2T(JacksonUtil.obj2Json(source), targetClass);
         return t;
+    }
+
+
+    private static class BlahUnit {
+        private void todo() throws IOException {
+            JsonModel a = new JsonModel() {{
+                setNo(88);
+            }};
+            List<JsonModel> list = new ArrayList<>();
+            list.add(a);
+            Map<Integer, JsonModel> map = new HashMap<>();
+            map.put(1, a);
+
+            a = JacksonUtil.json2T(JacksonUtil.obj2Json(a), JsonModel.class);
+            {
+                JsonModel _model;
+                _model= JacksonUtil.json2T(JacksonUtil.obj2Json(""), JsonModel.class);
+                _model = JacksonUtil.json2T(JacksonUtil.obj2Json(null), JsonModel.class);
+            }
+            list = JacksonUtil.json2Complex(JacksonUtil.obj2Json(list));
+            map = JacksonUtil.json2Complex(JacksonUtil.obj2Json(map));
+//        String aListJson = JsonUtil.obj2Json(aList);
+//        AA b = JsonUtil.json2Obj(aJson);
+//        List<AA> bList = JsonUtil.json2Obj(aListJson);
+        }
+
+        class JsonModel {
+            public int getNo() {
+                return no;
+            }
+
+            public void setNo(int no) {
+                this.no = no;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            private int no;
+
+            private String name;
+        }
     }
 }

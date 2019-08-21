@@ -1,6 +1,6 @@
 package com.york.portable.swiss.sandbox;
 
-class Wood {
+public class Wood {
     public int getA() {
         return a;
     }

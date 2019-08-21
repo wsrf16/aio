@@ -102,91 +102,91 @@ public class TotalEncrypt {
     }
 
 
-    public static class JavaUtil {
-        public static String encode(String text){
+    public final static class JavaUtil {
+        public final static String encode(String text){
             byte[] bytes = java.util.Base64.getEncoder().encode(text.getBytes());
             String result = new String(bytes);
             return result;
         }
 
-        public static String encode(String text, Charset charset){
+        public final static String encode(String text, Charset charset){
             byte[] bytes = java.util.Base64.getEncoder().encode(text.getBytes());
             String result = new String(bytes, charset);
             return result;
         }
 
-        public static String decode(String text){
+        public final static String decode(String text){
             byte[] bytes = java.util.Base64.getDecoder().decode(text);
             String result = new String(bytes);
             return result;
         }
 
-        public static String decode(String text, Charset charset){
+        public final static String decode(String text, Charset charset){
             byte[] bytes = java.util.Base64.getDecoder().decode(text);
             String result = new String(bytes, charset);
             return result;
         }
     }
 
-    public static class ApacheCommon {
-        public static String encode(Base64 base64, String text) {
+    public final static class ApacheCommon {
+        public final static String encode(Base64 base64, String text) {
             String ret = base64.encodeAsString(text.getBytes());
             return ret;
         }
 
-        public static String encode(Base64 base64, String text, Charset charset) {
+        public final static String encode(Base64 base64, String text, Charset charset) {
             String ret = base64.encodeAsString(text.getBytes(charset));
             return ret;
         }
 
-        public static String encode(Base64 base64, String text, String charsetName) throws UnsupportedEncodingException {
+        public final static String encode(Base64 base64, String text, String charsetName) throws UnsupportedEncodingException {
             String ret = base64.encodeAsString(text.getBytes(charsetName));
             return ret;
         }
 
-        public static String decode(Base64 base64, String text) {
+        public final static String decode(Base64 base64, String text) {
             byte[] bytes = base64.decode(text);
             String ret = new String(bytes);
             return ret;
         }
 
-        public static String decode(Base64 base64, String text, Charset charset) {
+        public final static String decode(Base64 base64, String text, Charset charset) {
             byte[] bytes = base64.decode(text);
             String ret = new String(bytes, charset);
             return ret;
         }
 
-        public static String decode(Base64 base64, String text, String charsetName) throws UnsupportedEncodingException {
+        public final static String decode(Base64 base64, String text, String charsetName) throws UnsupportedEncodingException {
             byte[] bytes = base64.decode(text);
             String ret = new String(bytes, charsetName);
             return ret;
         }
 
-        public static String encode(String text) {
+        public final static String encode(String text) {
             byte[] bytes = Base64.encodeBase64(text.getBytes());
             String result = new String(bytes);
             return result;
         }
 
-        public static String encode(String text, Charset charset) {
+        public final static String encode(String text, Charset charset) {
             byte[] bytes = Base64.encodeBase64(text.getBytes());
             String result = new String(bytes, charset);
             return result;
         }
 
-        public static String encode(String text, String charsetName) throws UnsupportedEncodingException {
+        public final static String encode(String text, String charsetName) throws UnsupportedEncodingException {
             byte[] bytes = Base64.encodeBase64(text.getBytes());
             String result = new String(bytes, charsetName);
             return result;
         }
 
-        public static String decode(String text) {
+        public final static String decode(String text) {
             byte[] bytes = Base64.decodeBase64(text);
             String result = new String(bytes);
             return result;
         }
 
-        public static String decode(String text, Charset charset) {
+        public final static String decode(String text, Charset charset) {
             byte[] bytes = Base64.decodeBase64(text);
             String result = new String(bytes, charset);
             return result;
@@ -202,4 +202,13 @@ public class TotalEncrypt {
 //        Key keySpec = new SecretKeySpec(key.getBytes(), "AES");
 //
 //    }
+
+
+
+    private static class BlahUnit {
+        private static void todo() {
+            String a1 = TotalEncrypt.md5("aaa");
+            String a2 = TotalEncrypt.SpringFrameWork.encodeBase64("aaa");
+        }
+    }
 }

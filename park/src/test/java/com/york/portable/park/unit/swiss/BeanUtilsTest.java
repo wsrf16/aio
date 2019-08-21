@@ -46,7 +46,7 @@ public class BeanUtilsTest {
     }
 
     @Test
-    public static void sample() throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException {
+    public static void todo() throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException {
 
         String typeName = People.class.getTypeName();
         Class clazz = Class.forName(typeName);

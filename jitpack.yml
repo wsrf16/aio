@@ -1,0 +1,9 @@
+jdk:
+  - openjdk8
+#before_install:
+#  - ./custom_setup.sh
+install:
+  - cd swiss
+  - mvn clean install
+#env:
+#  MYVAR: "custom environment variable"

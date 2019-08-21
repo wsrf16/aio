@@ -4,6 +4,6 @@ jdk:
 #  - ./custom_setup.sh
 install:
   - cd swiss
-  - mvn clean install -DskipTests
+  - ../mvnw clean install -DskipTests
 #env:
 #  MYVAR: "custom environment variable"

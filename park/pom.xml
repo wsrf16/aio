@@ -88,9 +88,15 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.york.portable</groupId>-->
+<!--            <artifactId>swiss</artifactId>-->
+<!--            <version>1.1.4-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>com.york.portable</groupId>
-            <artifactId>swiss</artifactId>
+            <groupId>com.github.wsrf16</groupId>
+            <artifactId>aio</artifactId>
             <version>1.1.4-SNAPSHOT</version>
         </dependency>
 
@@ -552,6 +558,11 @@
         <!--</repository>-->
     <!--</repositories>-->
     <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://www.jitpack.io</url>
+        </repository>
+
         <repository>
             <id>ali-maven</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public//</url>

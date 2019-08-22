@@ -171,7 +171,7 @@ public class CollectionsUtils {
         return Collections.enumeration(c);
     }
 
-    public final static <T> List nextToList(T t, Function<? super T, T> getNextFunction) {
+    public final static <T> List flatNextToList(T t, Function<T, T> getNextFunction) {
         List<T> list = new ArrayList<>();
         while (t != null) {
             list.add(t);

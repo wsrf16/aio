@@ -10,29 +10,30 @@ import java.util.concurrent.locks.*;
  * Created by York on 2017/11/23.
  */
 public class BasicType {
-    private static Object _serialNumberLock = new Object();
-    private static Lock lock = new ReentrantLock();
+    private final static Object _serialNumberLock = new Object();
+    private final static Lock lock = new ReentrantLock();
+    private final static String DATETIME_FORMAT = "yyyyMMddHHmmssSSS";
 
-    /// <summary>
-    /// 生成时间戳序列号（默认格式1712302359596660001）
-    /// </summary>
-    /// <param name="dateTimeFormat">时间格式：默认值："yyMMddHHmmssSSS"</param>
-    /// <param name="minCount">起始值（默认值：1）</param>
-    /// <param name="countDigit">最大位数（默认值：4）</param>
-    /// <returns></returns>
-    public static InnerClosure serialNumber() {
-        String dateTimeFormat = "yyMMddHHmmssSSS";
+    public static SerialNumberBuilder serialNumberBuilder() {
+        String dateTimeFormat = DATETIME_FORMAT;
         int minCount = 1;
         int countDigit = 4;
-        return serialNumber(dateTimeFormat, minCount, countDigit);
+        return serialNumberBuilder(dateTimeFormat, minCount, countDigit);
     }
 
-    public static InnerClosure serialNumber(String dateTimeFormat, int minCount, int countDigit) {
-        return new InnerClosure(dateTimeFormat, minCount, countDigit);
+    /**
+     * serialNumber
+     * @param dateTimeFormat 时间格式：默认值："yyyyMMddHHmmssSSS"
+     * @param minCount 起始值（默认值：1）
+     * @param countDigit 最大位数（默认值：4）
+     * @return
+     */
+    public static SerialNumberBuilder serialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
+        return new SerialNumberBuilder(dateTimeFormat, minCount, countDigit);
     }
 
 
-    public static class InnerClosure {
+    public static class SerialNumberBuilder {
         String dateTimeFormat;
         int countInSecond;
         String latestDateTime;
@@ -40,14 +41,14 @@ public class BasicType {
         int COUNT_DIGIT;
         double MAX_COUNT;
 
-        InnerClosure(String dateTimeFormat, int minCount, int countDigit) {
+        SerialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
             this.dateTimeFormat = dateTimeFormat;
             this.MIN_COUNT = minCount;
             this.COUNT_DIGIT = countDigit;
             this.MAX_COUNT = Math.pow(10, COUNT_DIGIT) - 1;
         }
 
-        public String serialNumber(){
+        public String build(){
             String id;
             //lock (_serialNumberLock)
             try {
@@ -58,7 +59,6 @@ public class BasicType {
                     latestDateTime = now;
                 } else
                     countInSecond = (countInSecond + 1) > MAX_COUNT ? MIN_COUNT : (countInSecond + 1);
-
                 id = latestDateTime + StringUtils.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
             } finally {
                 lock.unlock();
@@ -68,6 +68,13 @@ public class BasicType {
         }
     }
 
+    private static class BlahUnit {
+        private static void todo() {
+            SerialNumberBuilder serialNumberBuilder = new BasicType().serialNumberBuilder();
+            String s1 = serialNumberBuilder.build();
+            String s2 = serialNumberBuilder.build();
+        }
+    }
 
     //public static <T> Class<T> T2Class(T)
      //(Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]

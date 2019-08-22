@@ -6,6 +6,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CollectionsUtils {
@@ -77,6 +80,44 @@ public class CollectionsUtils {
         return list;
     }
 
+
+    /**
+     * distinctBy
+     * @param list
+     * @param getPropertyFunction T::getId
+     * @param <T>
+     * @return
+     */
+    public static  <T> List<T> distinctBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
+        List<T> collect = list.parallelStream().filter(falseIfRepeat(getPropertyFunction)).collect(Collectors.toList());
+        return collect;
+    }
+
+    /**
+     * repeatBy
+     * @param list
+     * @param getPropertyFunction T::getId
+     * @param <T>
+     * @return
+     */
+    public static  <T> boolean repeatBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
+        boolean b = list.parallelStream().anyMatch(falseIfRepeat(getPropertyFunction));
+        return b;
+    }
+
+    /**
+     * falseIfRepeat
+     * @param getPropertyFunction User::getName
+     * @param <T>
+     * @return
+     */
+    private static  <T> Predicate<T> falseIfRepeat(Function<? super T, ?> getPropertyFunction) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(getPropertyFunction.apply(t));
+    }
+
+
+
     /**
      * copy
      * @param src
@@ -89,12 +130,20 @@ public class CollectionsUtils {
         return dest;
     }
 
-    public final static <S, T> List<T> copyProperties(List<? extends S> src, Class clazz) {
+    /**
+     * copyProperties
+     * @param src
+     * @param target
+     * @param <S>
+     * @param <T>
+     * @return
+     */
+    public final static <S, T> List<T> copyPropertiesToNewList(List<S> src, Class target) {
         List<T> dest = new ArrayList<>();
         for (S s : src) {
             T t = null;
             try {
-                t = (T)clazz.newInstance();
+                t = (T) target.newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -108,6 +157,8 @@ public class CollectionsUtils {
         return dest;
     }
 
+
+
     public final static List tolist(Iterator iterator) {
         return IteratorUtils.toList(iterator);
     }
@@ -118,6 +169,15 @@ public class CollectionsUtils {
 
     public final static <T> Enumeration<T> toEnumeration(final Collection<T> c) {
         return Collections.enumeration(c);
+    }
+
+    public final static <T> List nextToList(T t, Function<? super T, T> getNextFunction) {
+        List<T> list = new ArrayList<>();
+        while (t != null) {
+            list.add(t);
+            t = getNextFunction.apply(t);
+        }
+        return list;
     }
 
     private static void taolu() {

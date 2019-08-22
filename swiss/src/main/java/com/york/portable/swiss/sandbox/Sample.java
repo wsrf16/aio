@@ -139,13 +139,7 @@ class Sample {
 
 
 
-    private static class BlahUnit {
-        private static void todo() {
-            BasicType.InnerClosure innerClosure = new BasicType().serialNumber();
-            String s1 = innerClosure.serialNumber();
-            String s2 = innerClosure.serialNumber();
-        }
-    }
+
 
 
 

@@ -1,5 +1,8 @@
 package com.york.portable.swiss.systeminfo;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+
 public class OSInfo {
     private static String OS = System.getProperty("os.name").toLowerCase();
 
@@ -69,5 +72,11 @@ public class OSInfo {
 
     public static boolean isOpenVMS() {
         return OS.indexOf("openvms") >= 0;
+    }
+
+    public static final int getProcessID() {
+        RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        return Integer.valueOf(runtimeMXBean.getName().split("@")[0])
+                .intValue();
     }
 }

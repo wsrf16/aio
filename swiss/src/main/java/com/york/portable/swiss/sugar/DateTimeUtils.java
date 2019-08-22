@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by York on 2017/11/23.
@@ -66,9 +67,28 @@ public class DateTimeUtils {
             return calendar;
         }
 
-        public static Date calendarToDate(Calendar calendar) {
+        public static Date calendarToLocal(Calendar calendar) {
             Date date = calendar.getTime();
             return date;
+        }
+
+//        public static Date calendarToUTC(Calendar calendar) {
+//            Calendar newCalendar = Calendar.getInstance();
+//            newCalendar.add(Calendar.MILLISECOND, -calendar.getTimeZone().getRawOffset());
+//            Date date = newCalendar.getTime();
+//            return date;
+//        }
+
+        public static Calendar utcEpoch() {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTimeInMillis(0);
+            return calendar;
+        }
+
+        public static Calendar defaultEpoch() {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(0);
+            return calendar;
         }
     }
 
@@ -205,10 +225,10 @@ public class DateTimeUtils {
          * 将UTC时间格式转换为Unix时间戳格式
          *
          * @param time UTC时间
-         * @return long
+         * @return long ms
          */
         public static long convertUTC2Unix(LocalDateTime time) {
-            return Duration.between(getUTCEpochTime(), time).toMillis() / 1000;
+            return Duration.between(getUTCEpochTime(), time).toMillis();
         }
 
         /**

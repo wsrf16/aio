@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.UUID;
 
+
 public class RedisLock {
     private final static String KEY_NAME = "REDIS_LOCK";
     private RedisConnectionFactory redisConnectionFactory;

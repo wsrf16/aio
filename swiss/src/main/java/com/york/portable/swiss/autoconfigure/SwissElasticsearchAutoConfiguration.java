@@ -21,7 +21,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Properties;
 
-@Configuration
+//@Configuration
 @ConditionalOnClass({Client.class, TransportClientFactoryBean.class})
 @ConditionalOnProperty(
         prefix = "spring.data.elasticsearch",

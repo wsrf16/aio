@@ -36,6 +36,7 @@ public class Constant {
     public static final String CLASS_PATH = System.getProperty("java.class.path");
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     //public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+
     public static final String FILE_SEPARATOR = File.separator;
     public static final String EMPTY = StringUtils.EMPTY;
 

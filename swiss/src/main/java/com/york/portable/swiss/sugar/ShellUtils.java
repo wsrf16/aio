@@ -21,7 +21,7 @@ public class ShellUtils {
                 InputStream errorStream = process.getErrorStream();
                 String feedback = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
                 String error = IOUtils.toString(errorStream, StandardCharsets.UTF_8);
-                if (StringUtils.isNotEmpty(error))
+                if (StringUtils.isNotBlank(error))
                     throw new Exception(error);
                 return feedback;
             } catch (Exception e) {

@@ -8,7 +8,10 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import java.beans.Introspector;
 
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
@@ -16,26 +19,37 @@ public class SpringContextUtils implements ApplicationContextAware {
 
     /**
      * 获取静态变量中的ApplicationContext.
+     *
      * @return
      */
     public final static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 
+    /**
+     * 实现ApplicationContextAware接口, 注入Context到静态变量中.
+     *
+     * @param applicationContext
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        SpringContextUtils.applicationContext = applicationContext;
+    }
+
     public final static <T extends ApplicationContext> T getSimilarApplicationContext() {
-        return (T)applicationContext;
+        return (T) applicationContext;
     }
 
     public final static ConfigurableApplicationContext getConfigurableApplicationContext() {
-        return (ConfigurableApplicationContext)getSimilarApplicationContext();
+        return (ConfigurableApplicationContext) getSimilarApplicationContext();
     }
 
     public final static <T extends BeanFactory> T getSimilarBeanFactory() {
-        return (T)getConfigurableApplicationContext().getBeanFactory();
+        return (T) getConfigurableApplicationContext().getBeanFactory();
     }
 
     public final static DefaultListableBeanFactory getDefaultListableBeanFactory() {
-        return ((DefaultListableBeanFactory)getSimilarBeanFactory());
+        return ((DefaultListableBeanFactory) getSimilarBeanFactory());
     }
 
     public final static ListableBeanFactory getListableBeanFactory() {
@@ -47,8 +61,12 @@ public class SpringContextUtils implements ApplicationContextAware {
     }
 
     public static class BeanCenter {
+        public static String getBeanName(String simpleClassName) {
+            return Introspector.decapitalize(simpleClassName);
+        }
+
         public final static <T> T getBean(String beanName) {
-            return (T)getBeanFactory().getBean(beanName);
+            return (T) getBeanFactory().getBean(beanName);
         }
 
         public final static <T> T getBean(Class<T> clazz) {
@@ -77,16 +95,8 @@ public class SpringContextUtils implements ApplicationContextAware {
 
 
     /**
-     * 实现ApplicationContextAware接口, 注入Context到静态变量中.
-     * @param applicationContext
-     */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringContextUtils.applicationContext = applicationContext;
-    }
-
-    /**
      * 从静态变量applicationContext中得到Bean, 自动转型为所赋值对象的类型.
+     *
      * @param name
      * @param <T>
      * @return
@@ -97,6 +107,7 @@ public class SpringContextUtils implements ApplicationContextAware {
 
     /**
      * 从静态变量applicationContext中得到Bean, 自动转型为所赋值对象的类型.
+     *
      * @param requiredType
      * @param <T>
      * @return
@@ -104,6 +115,15 @@ public class SpringContextUtils implements ApplicationContextAware {
     public final static <T> T getBean(Class<T> requiredType) {
         return applicationContext.getBean(requiredType);
     }
+
+    /**
+     * getEnvironment
+     * @return
+     */
+    public final static Environment getEnvironment() {
+        return applicationContext.getEnvironment();
+    }
+
 
     /**
      * 清除SpringContextHolder中的ApplicationContext为Null.

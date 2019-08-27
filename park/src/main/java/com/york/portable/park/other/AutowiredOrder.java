@@ -32,7 +32,7 @@ public class AutowiredOrder implements InitializingBean {
     }
 
     @Autowired
-    public UserInfoEntity userInfoEntity5th(UserInfoEntity userInfoEntity) {
+    public UserInfoEntity userInfoEntity(UserInfoEntity userInfoEntity5th) {
         return new UserInfoEntity();
     }
 

@@ -20,7 +20,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 @ConditionalOnClass(Docket.class)
 @EnableConfigurationProperties(Swagger2Properties.class)
 public class Swagger2AutoConfiguration {

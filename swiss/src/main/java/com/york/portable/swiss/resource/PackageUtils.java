@@ -22,10 +22,10 @@ public class PackageUtils {
         return ver;
     }
 
-    public static String getImplementationVersion(){
-        String ver = Package.getPackage("java.lang").getImplementationVersion();
-        return ver;
-    }
+//    public static String getImplementationVersion(){
+//        String ver = Package.getPackage("java.lang").getImplementationVersion();
+//        return ver;
+//    }
 
 
     /**
@@ -36,7 +36,7 @@ public class PackageUtils {
      */
     public static List<String> getClassName(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
-        List<URL> urlList = ResourceUtils.getResourcesInClassFile(packagePath);
+        List<URL> urlList = ResourceUtils.ByClassLoader.getResources(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
             List<String> _classList = new ArrayList<>();
             try {

@@ -1,5 +1,6 @@
 package com.york.portable.park;
 
+import com.york.portable.swiss.global.Constant;
 import io.github.swagger2markup.GroupBy;
 import io.github.swagger2markup.Language;
 import io.github.swagger2markup.Swagger2MarkupConfig;
@@ -105,7 +106,7 @@ public class Swagger2MarkupSet {
     }
 
     private void asciiDoctor() throws IOException {
-        String root = System.getProperty("user.dir");
+        String root = Constant.CURRENT_DIRECTORY;
         Path htmlOutputFile = Paths.get(root, "src/main/resources/static/index.html");
 
         String generated = System.getProperty("test.asciidoctor.directory.input.generated");

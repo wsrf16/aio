@@ -57,8 +57,8 @@ public abstract class BaseDataSourceConfiguration {
 //        }
 //    }
 
-    public SqlSessionFactory sqlSessionFactory(MybatisProperties properties) throws Exception {
-        DataSource dataSource = dataSource();
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties) throws Exception {
+//        DataSource dataSource = dataSource();
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setVfs(SpringBootVFS.class);
@@ -104,7 +104,7 @@ public abstract class BaseDataSourceConfiguration {
                 new SqlSessionTemplate(sqlSessionFactory, executorType) : new SqlSessionTemplate(sqlSessionFactory);
     }
 
-    public PlatformTransactionManager platformTransactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    public PlatformTransactionManager platformTransactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 }

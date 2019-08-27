@@ -5,12 +5,13 @@ import org.springframework.data.util.Streamable;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamUtils {
     /**
-     * Reverse a Stream
+     * reverse a Stream
      *
      * <pre>
      * {@code
@@ -23,11 +24,14 @@ public class StreamUtils {
      * @return Reversed stream
      */
     public static <T> Stream<T> reverse(final Stream<T> stream) {
-        return reversedStream(stream.collect(Collectors.toList()));
+        List<T> reverseList = stream.collect(Collectors.toList());
+        Collections.reverse(reverseList);
+        return reverseList.stream();
     }
 
     public static <T> Optional<T> tail(final Stream<T> stream) {
-        Optional<T> optional = reversedStream(stream.collect(Collectors.toList())).findFirst();
+        long count = stream.count();
+        Optional<T> optional = stream.skip(count-1).findFirst();
         return optional;
     }
 
@@ -44,13 +48,11 @@ public class StreamUtils {
      * }
      * </pre>
      *
-     * @param list List to create a reversed Stream from
+     * @param list from to create a reversed
      * @return Reversed Stream
      */
-    public static <T> Stream<T> reversedStream(final List<T> list) {
-        List<T> reverseList = list;
-        Collections.reverse(reverseList);
-        return reverseList.stream();
+    public static <T> Stream<T> reverse(final List<T> list) {
+        return reverse(list.stream());
     }
 
     /**
@@ -64,13 +66,24 @@ public class StreamUtils {
      * }
      * </pre>
      *
-     * @param s Streamable to cycle
+     * @param stream Streamable to cycle
      * @return New cycling stream
      */
-    public static <T> Stream<T> cycle(final int times, final Streamable<T> s) {
-        return Stream.iterate(s.stream(), s1 -> s.stream())
+    public static <T> Stream<T> cycle(final Streamable<T> stream, final int times) {
+        return Stream.iterate(stream.stream(), s1 -> stream.stream())
                 .limit(times)
                 .flatMap(Function.identity());
+    }
+
+    /**
+     * increase
+     * @param seed : 1
+     * @param f : n -> n + 1
+     * @param limit 1000
+     * @param <T> {1, 2, 3, 4, ..., 1000}
+     */
+    public static <T> Stream<T> increase(final T seed, final UnaryOperator<T> f, long limit) {
+        return Stream.iterate(seed, f).limit(limit);
     }
 
     /**
@@ -233,6 +246,13 @@ public class StreamUtils {
         Stream.iterate(0, n -> n + 1).limit(loop).forEach(i ->
                 segments.add(list.stream().skip(i * size).limit(size).collect(Collectors.toList())));
         return segments;
+    }
+
+    private static class BlahUnit {
+        private static void blah() {
+            List<Integer> list = StreamUtils.increase(1, n -> n + 1, 100).collect(Collectors.toList());
+            StreamUtils.split(list, 8);
+        }
     }
 
 }

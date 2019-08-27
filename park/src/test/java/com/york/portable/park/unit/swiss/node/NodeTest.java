@@ -66,8 +66,8 @@ public class NodeTest {
         @Test
         public void link2TiledNextNode() {
             List<TiledNextNode> source = source2();
-            TiledNextNode tiledNextNode1 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
-            TiledNextNode tiledNextNode2 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode node1 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode node2 = LinkedNodeUtils.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
         }
 
         @Test
@@ -101,8 +101,8 @@ public class NodeTest {
             List<TiledRelationNodeSample> source = source();
             List<TiledNextNodeSample> node1 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
             List<TiledNextNodeSample> node2 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
-            CustomLogHubFactory.singletonInstance().build().i(node1);
-            CustomLogHubFactory.singletonInstance().build().i(node2);
+//            CustomLogHubFactory.singletonInstance().build().i(node1);
+//            CustomLogHubFactory.singletonInstance().build().i(node2);
         }
 
         @Test
@@ -110,8 +110,8 @@ public class NodeTest {
             List<TiledRelationNodeSample> source = source();
             List<LayeredNextNodeBean> node1 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
             List<LayeredNextNodeBean> node2 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
-            CustomLogHubFactory.singletonInstance().build().i(node1);
-            CustomLogHubFactory.singletonInstance().build().i(node2);
+//            CustomLogHubFactory.singletonInstance().build().i(node1);
+//            CustomLogHubFactory.singletonInstance().build().i(node2);
         }
     }
 
@@ -142,8 +142,8 @@ public class NodeTest {
             List<LayeredRelationNode> source = source();
             List<TiledNextNodeSample> node1 = LinkedNodeUtils.LayeredRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
             List<TiledNextNodeSample> node2 = LinkedNodeUtils.LayeredRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
-            CustomLogHubFactory.singletonInstance().build().i(node1);
-            CustomLogHubFactory.singletonInstance().build().i(node2);
+//            CustomLogHubFactory.singletonInstance().build().i(node1);
+//            CustomLogHubFactory.singletonInstance().build().i(node2);
         }
 
         @Test
@@ -151,8 +151,8 @@ public class NodeTest {
             List<LayeredRelationNode> source = source();
             List<LayeredNextNodeBean> node1 = LinkedNodeUtils.LayeredRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
             List<LayeredNextNodeBean> node2 = LinkedNodeUtils.LayeredRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
-            CustomLogHubFactory.singletonInstance().build().i(node1);
-            CustomLogHubFactory.singletonInstance().build().i(node2);
+//            CustomLogHubFactory.singletonInstance().build().i(node1);
+//            CustomLogHubFactory.singletonInstance().build().i(node2);
         }
     }
 

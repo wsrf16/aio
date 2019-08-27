@@ -5,9 +5,11 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 //import com.york.portable.park.ToMapTest;
 //import com.york.portable.park.other.jvm.MetaspaceTest;
 //import com.york.portable.park.task.ThreadLocalTest;
+import com.york.portable.park.config.mybatis.MasterDataSourceConfiguration;
+import com.york.portable.park.config.mybatis.SlaveDataSourceConfiguration;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.york.portable.swiss.assist.log.classic.properties.PropertyBean;
-import com.york.portable.swiss.sugar.SpringUtils;
+import com.york.portable.swiss.sugar.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,8 +17,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
@@ -28,29 +32,17 @@ import java.util.Arrays;
         KafkaAutoConfiguration.class,
         DruidDataSourceAutoConfigure.class
 }, scanBasePackages = "com.york.portable")
+//@ComponentScan(lazyInit = true)
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
-//@EnableConfigurationProperties(LogKafkaProperties.class)
-//@Import(CustomImportBeanDefinitionRegistrar.class)
-//@Import(UserInfoEntity.class)
+//@Import({MasterDataSourceConfiguration.class, SlaveDataSourceConfiguration.class})
 public class ParkApplication {
     public static void main(String[] args) {
-//        System.exit(0);
-//        MetaspaceTest.constantOOM();
-//        ToMapTest.main();
 //        AnnotationConfigEmbeddedWebApplicationContext
-//        org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
         ApplicationContext configurableApplicationContext = SpringApplication.run(ParkApplication.class, args);
-        String[] activeProfiles = configurableApplicationContext.getEnvironment().getActiveProfiles();
-        String activeProfilesText = StringUtils.join(activeProfiles, ", ");
-        String[] defaultProfiles = configurableApplicationContext.getEnvironment().getDefaultProfiles();
-        String defaultProfilesText = StringUtils.join(defaultProfiles, ", ");
+        Environment environment = configurableApplicationContext.getEnvironment();
+        String[] activeProfiles = environment.getActiveProfiles();
+        String[] defaultProfiles = environment.getDefaultProfiles();
         String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
-        //List<URL> sss = ResourceUtils.getResourcesInJar("E:/NutDisk/Program/Resource/Library/Java/_solution/Project/aio/park/swiss-1.1.0.jar");
-        beanNames = beanNames;
-//
-//        String name = SpringUtils.getBeanName(LogKafkaProperties.class.getSimpleName());
-//        Arrays.stream(activeProfiles).anyMatch(cc -> Arrays.asList("development", "test", "default").contains(cc));
-    }
 
 //    @Bean(initMethod = "destroy", destroyMethod = "init")
 //    public AutowiredOrderTest ff() {
@@ -59,6 +51,6 @@ public class ParkApplication {
 
 //    @Autowired
 //    public AutowiredOrderTest autowiredOrderTest;
-
+    }
 
 }

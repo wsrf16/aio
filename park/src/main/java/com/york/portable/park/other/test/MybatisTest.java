@@ -1,20 +1,18 @@
-package com.york.portable.park.unit;
+package com.york.portable.park.other.test;
 
 import com.york.portable.park.parkdb.dao.master.mapper.BookMasterMapper;
 import com.york.portable.park.parkdb.dao.master.model.Book;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
-//@Service
+//@Configuration
 public class MybatisTest {
     @Autowired
     BookMasterMapper bookMasterMapper;
     @Autowired
     BookMasterMapper bookSlaveMapper;
 
-    @Test
-    public void main() {
+    public void blah() {
         {
             Book book1 = bookMasterMapper.get(16);
             Book book2 = bookSlaveMapper.get(16);

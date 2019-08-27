@@ -16,4 +16,9 @@ public interface RelationNode<ID> {
     default boolean tail() {
         return getNextNodeId() == null;
     }
+
+    default boolean hasNext() {
+        return getNextNodeId() != null;
+    }
+
 }

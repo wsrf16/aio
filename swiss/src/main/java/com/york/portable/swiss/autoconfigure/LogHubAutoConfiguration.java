@@ -1,13 +1,11 @@
 package com.york.portable.swiss.autoconfigure;
 
-import com.rabbitmq.client.Channel;
 import com.york.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.york.portable.swiss.assist.log.classic.properties.LogRabbitMQProperties;
 import com.york.portable.swiss.assist.log.hub.factory.classic.ConsoleHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.KafkaHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.RabbitMQHubFactory;
 import com.york.portable.swiss.assist.log.hub.factory.classic.Slf4jHubFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-@Configuration
+//@Configuration
 public class LogHubAutoConfiguration {
     @Bean
     public ConsoleHubFactory consoleHubFactory() {

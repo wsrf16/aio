@@ -75,18 +75,21 @@ function isRunning() {
   fi
 }
 
+
+
+
 function run() {
   touch ${log_file_absolute_path}
   tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
   mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
   if [ $operate == "once" ]; then
-    java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 2>&1 | tee ${log_file_absolute_path}
+    java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 2>&1 | tee ${log_file_absolute_path}
   elif [ $operate == "start" ]; then
-    nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_absolute_path} 2>&1 &
+    nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
   fi
 
-  #nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 >>${log_file_absolute_path} 2>&1 &
-  #nohup java $args -Dloader.path="$dir_path/lib/,$dir_path/conf/" -jar $1 &
+  #nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
+  #nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 &
 
   sleep $check_period
   markProcess $1
@@ -206,10 +209,10 @@ now="`date +%Y%m%d%H%M%S`"
 check_period=2
 daemon_check_period=10
 log_remain_line=100000
-
 ip_addr=$(getIpAddr)
 
-
+dirname_dependency=@project.deploy.directoryName.dependency@
+dirname_config=@project.deploy.directoryName.profile@
 dir_absolute_path=$(cd $(dirname $0); pwd)
 _self=${0##*/}
 if [[ ${_self} =~ . ]]; then

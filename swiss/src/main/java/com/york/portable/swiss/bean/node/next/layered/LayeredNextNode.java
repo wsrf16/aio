@@ -1,8 +1,10 @@
 package com.york.portable.swiss.bean.node.next.layered;
 
+import com.york.portable.swiss.bean.node.NextNode;
+import com.york.portable.swiss.bean.node.PrevNode;
 import com.york.portable.swiss.resource.ClassUtils;
 
-public interface LayeredNextNode<T> {
+public interface LayeredNextNode<T> extends NextNode<LayeredNextNode<T>>, PrevNode<LayeredNextNode<T>> {
     static <R extends LayeredNextNode> R newInstance(Class<R> clazz) {
         return ClassUtils.newInstance(clazz);
     }
@@ -17,22 +19,6 @@ public interface LayeredNextNode<T> {
 
     void setItem(T item);
 
-    LayeredNextNode<T> getNext();
-
-    void setNext(LayeredNextNode<T> next);
-
-    LayeredNextNode<T> getPrev();
-
-    void setPrev(LayeredNextNode<T> prev);
-
-    default boolean head() {
-        return getPrev() == null;
-    }
-
-    default boolean tail() {
-        return getNext() == null;
-    }
-
-//    Function<Class<? extends NextNode<?>>, NextNode<?>> newInstance1 = clazz -> ClassUtils.newInstance(clazz);
+    //    Function<Class<? extends NextNode<?>>, NextNode<?>> newInstance1 = clazz -> ClassUtils.newInstance(clazz);
 
 }

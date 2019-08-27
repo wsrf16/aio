@@ -21,7 +21,7 @@
         <!-- 打包resources下的配置文件 -->
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
-            <outputDirectory>${directory.profile.targetPath}</outputDirectory>
+            <outputDirectory>${project.deploy.directoryName.profile}</outputDirectory>
             <filtered>true</filtered>
             <includes>
                 <include>static/**</include>
@@ -33,7 +33,7 @@
         <fileSet>
             <directory>${project.basedir}/src/main/profiles/${profiles.active}</directory>
             <!--<directory>${project.build.outputDirectory}/conf</directory>-->
-            <outputDirectory>${directory.profile.targetPath}</outputDirectory>
+            <outputDirectory>${project.deploy.directoryName.profile}</outputDirectory>
             <filtered>true</filtered>
             <includes>
                 <include>**/*</include>
@@ -84,7 +84,7 @@
     <dependencySets>
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>${directory.dependency.targetPath}</outputDirectory>
+            <outputDirectory>${project.deploy.directoryName.dependency}</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>

@@ -7,7 +7,6 @@ public class LogKafkaProperties extends KafkaProperties {
     private String topic;
     private String esIndex;
 
-
     private static LogKafkaProperties instance = new LogKafkaProperties();
 
     public synchronized static LogKafkaProperties singletonInstance() {

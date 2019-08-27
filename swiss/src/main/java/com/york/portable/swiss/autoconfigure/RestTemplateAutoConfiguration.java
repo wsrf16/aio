@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
+//@Configuration
 @ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class})
 //@EnableConfigurationProperties(RestTemplateProperties.class)
 @AutoConfigureAfter(org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration.class)

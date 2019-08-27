@@ -16,8 +16,8 @@ public interface Document {
     long getLong(String key, long defaultVal);
     BigDecimal getDecimal(String key);
     BigDecimal getDecimal(String key, BigDecimal defaultVal);
-    Date getDateTime(String key);
-    Date getDateTime(String key, Date defaultVal);
+//    Date getDateTime(String key);
+//    Date getDateTime(String key, Date defaultVal);
     Boolean getBool(String key);
     Boolean getBool(String key, Boolean defaultVal);
 }

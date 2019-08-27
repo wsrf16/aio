@@ -52,8 +52,8 @@ public class SlaveDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     @ConditionalOnBean(name = DATA_SOURCE_BEAN)
     @Bean(SQL_SESSION_FACTORY_BEAN)
-    public SqlSessionFactory sqlSessionFactory(@Qualifier(MYBATIS_PROPERTIES_BEAN) MybatisProperties properties) throws Exception {
-        return super.sqlSessionFactory(properties);
+    public SqlSessionFactory sqlSessionFactory(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, @Qualifier(MYBATIS_PROPERTIES_BEAN) MybatisProperties properties) throws Exception {
+        return super.sqlSessionFactory(dataSource, properties);
     }
 
     @ConditionalOnBean(name = SQL_SESSION_FACTORY_BEAN)
@@ -64,7 +64,7 @@ public class SlaveDataSourceConfiguration extends BaseDataSourceConfiguration {
 
     @ConditionalOnBean(name = DATA_SOURCE_BEAN)
     @Bean(PLATFORM_TRANSACTION_MANAGER_BEAN)
-    public PlatformTransactionManager platformTransactionManager() {
-        return super.platformTransactionManager();
+    public PlatformTransactionManager platformTransactionManager(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource) {
+        return super.platformTransactionManager(dataSource);
     }
 }

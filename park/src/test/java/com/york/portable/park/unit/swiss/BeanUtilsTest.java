@@ -52,7 +52,7 @@ public class BeanUtilsTest {
         Class clazz = Class.forName(typeName);
         Object people = clazz.newInstance();
         ConvertUtils.register(new DateLocaleConverter(), java.util.Date.class);
-        // 鎴?
+
         ConvertUtils.register(
                 new Converter() {
                     public Object convert(Class type, Object value) {

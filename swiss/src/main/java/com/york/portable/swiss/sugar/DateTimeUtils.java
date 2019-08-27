@@ -67,7 +67,7 @@ public class DateTimeUtils {
             return calendar;
         }
 
-        public static Date calendarToLocal(Calendar calendar) {
+        public static Date calendarToLocalDate(Calendar calendar) {
             Date date = calendar.getTime();
             return date;
         }

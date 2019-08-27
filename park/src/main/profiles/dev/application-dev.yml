@@ -4,7 +4,7 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
 #      driver-class-name: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.71.254:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
       mybatis:
@@ -13,7 +13,7 @@ spring:
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.71.254:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
       mybatis:
@@ -21,7 +21,7 @@ spring:
 
   rabbitmq:
     main:
-      host: 192.168.71.254
+      host: mecs.com
       port: 5672
       username: admin
       password: admin
@@ -40,12 +40,12 @@ spring:
   log~:
     rabbitmq:
       enable: false
-      host: 192.168.71.254
+      host: mecs.com
       port: 5672
       username: yixincapital
       password: yixincapital
       virtual-host: yx_mq
-      es-index: @profiles.active@_@project.build.logName@_log
+      es-index: @profiles.active@_@project.build.finalName@_log
       publisher-confirms: true
       publisher-returns: true
       binding-list:
@@ -56,7 +56,7 @@ spring:
 
     kafka:
       enable: false
-      esIndex: @profiles.active@_@project.build.logName@_log
+      esIndex: @profiles.active@_@project.build.finalName@_log
       topic: basic_application_log
       template:
         defaultTopic: basic_application_log

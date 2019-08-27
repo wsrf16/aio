@@ -65,7 +65,7 @@ public class PropertiesMapping extends AbsDocument {
         private static void todo() throws IOException {
             PropertiesMapping pps = new PropertiesMapping("1.properties");
             BigDecimal v1 = pps.getDecimal("AAA");
-            Date v2 = pps.getDateTime("BBB");
+//            Date v2 = pps.getDateTime("BBB");
             String v3 = pps.getString("CCCD", "888");
         }
     }

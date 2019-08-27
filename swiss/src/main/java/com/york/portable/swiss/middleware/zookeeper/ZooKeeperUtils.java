@@ -18,7 +18,7 @@ public class ZooKeeperUtils {
     }
 
     private static List<String> wholePath(List<String> children, String path) {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         for (String child : children) {
             if (path.trim().equals("/"))
                 ret.add(path + child);
@@ -43,58 +43,57 @@ public class ZooKeeperUtils {
         return sb.toString();
     }
 
-    public static List<String> fullChildren(ZooKeeper zookeeper, String path, Watcher watcher) throws KeeperException, InterruptedException {
-        return fullChildren(zookeeper, path, watcher, false);
+    public static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+        return getChildrenFull1Path(zookeeper, path, false, true);
+    }
+
+    public static List<String> getChildrenFull1Path1(ZooKeeper zookeeper, String path, Watcher watcher, boolean recursive) throws KeeperException, InterruptedException {
+        return getChildrenFullPath(zookeeper, path, watcher, recursive);
+    }
+
+    public static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path, boolean watcher, boolean recursive) throws KeeperException, InterruptedException {
+        return getChildrenFullPath(zookeeper, path, watcher, recursive);
     }
 
 
-    public static List<String> fullChildren(ZooKeeper zookeeper, String path, Watcher watcher, boolean recursive) throws KeeperException, InterruptedException {
-        try {
-            List<String> children = zookeeper.getChildren(path, watcher);
-            if (!children.isEmpty()) {
-                children = wholePath(children, path);
-            }
 
-            List<String> ret = new ArrayList(children);
+
+
+    public static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, boolean watch, boolean recursive) throws KeeperException, InterruptedException {
+        List<String> children = zookeeper.getChildren(path, watch);
+        List<String> result = new ArrayList<>();;
+        if (!children.isEmpty()) {
+            children = wholePath(children, path);
+            result.addAll(children);
+
             if (recursive) {
                 for (String child : children) {
-                    ret.addAll(fullChildren(zookeeper, child));
+                    List<String> item = zookeeper.getChildren(child, watch);
+                    result.addAll(item);
                 }
             }
-            Collections.sort(ret);
-            return ret;
-        } catch (KeeperException.NoNodeException e) {
-            System.out.printf("Group %s does not exist \n", path);
-            //System.exit(1);
-            return null;
+            Collections.sort(result);
         }
+        return result;
     }
 
-    public static List<String> fullChildren(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
-        return fullChildren(zookeeper, path, false);
-    }
 
-    public static List<String> fullChildren(ZooKeeper zookeeper , String path, boolean recursive) throws KeeperException, InterruptedException {
-        try {
-            path = path.trim();
-//            List<String> children = fullChildren(zookeeper, path);
-            List<String> children = zookeeper.getChildren(path, true);
-            if (!children.isEmpty()) {
-                children = wholePath(children, path);
-            }
+    public static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, Watcher watch, boolean recursive) throws KeeperException, InterruptedException {
+        List<String> children = zookeeper.getChildren(path, watch);
+        List<String> result = new ArrayList<>();;
+        if (!children.isEmpty()) {
+            children = wholePath(children, path);
+            result.addAll(children);
 
-            List<String> ret = new ArrayList(children);
             if (recursive) {
                 for (String child : children) {
-                    ret.addAll(fullChildren(zookeeper, child));
+                    List<String> item = zookeeper.getChildren(child, watch);
+                    result.addAll(item);
                 }
             }
-            Collections.sort(ret);
-            return ret;
-        } catch (KeeperException.NoNodeException e) {
-            System.out.println(String.format("Group %s does not exist", path));
-            return null;
+            Collections.sort(result);
         }
+        return result;
     }
 
     public static boolean exists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
@@ -147,10 +146,6 @@ public class ZooKeeperUtils {
 
     public static String createEphemeralSequential(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
         return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-    }
-
-    public static List<String> getChildren(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
-        return zookeeper.getChildren(path, watch);
     }
 
     public static byte[] getData(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {

@@ -1,9 +1,6 @@
 package com.york.portable.swiss.assist.document.base;
 
-import com.york.portable.swiss.sugar.TextUtils;
-
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Created by York on 2017/11/27.
@@ -62,19 +59,6 @@ public abstract class AbsDocument implements Document {
         BigDecimal val = _val != null ? new BigDecimal(_val) : defaultVal;
         return val;
     }
-
-    public Date getDateTime(String key) {
-        String _val = valOfKey(key);
-        Date val = TextUtils.string2Date(_val);
-        return val;
-    }
-
-    public Date getDateTime(String key, Date defaultVal) {
-        String _val = valOfKey(key);
-        Date val = _val != null ? TextUtils.string2Date(_val) : defaultVal;
-        return val;
-    }
-
 
     public Boolean getBool(String key) {
         String _val = valOfKey(key);

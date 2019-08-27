@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
-@ResponseBody
+@RestControllerAdvice
 @Import(CustomLogHubFactory.class)
 @Configuration
 public class CustomExceptionAdvice extends HamletExceptionAdvice {

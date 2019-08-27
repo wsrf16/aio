@@ -44,7 +44,7 @@ public class MetaspaceTest {
 
 
     static String base = "string";
-    public static void constantOOM() {
+    public static void oomConstant() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < Integer.MAX_VALUE; i++) {
             String str = base + base;

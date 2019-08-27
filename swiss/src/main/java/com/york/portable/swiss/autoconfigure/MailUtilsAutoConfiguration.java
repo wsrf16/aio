@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import javax.activation.MimeType;
 import javax.mail.internet.MimeMessage;
 
-@Configuration
+//@Configuration
 //@Import(JavaMailSenderImpl.class)
 @AutoConfigureAfter(MailSenderAutoConfiguration.class)
 

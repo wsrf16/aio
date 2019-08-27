@@ -22,7 +22,7 @@ public class ClassUtils {
      * @return
      */
     public static String getPath(final Class clazz) throws MalformedURLException {
-        final String clsAsResource = convertClassName2ResourcePath(clazz.getTypeName());
+        final String clazzAsResource = convertClassName2ResourcePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
@@ -33,17 +33,17 @@ public class ClassUtils {
                     if (location.toExternalForm().endsWith(".jar") ||
                             location.toExternalForm().endsWith(".zip"))
                         location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
-                                .concat("!/").concat(clsAsResource));
+                                .concat("!/").concat(clazzAsResource));
                     else if (new File(location.getFile()).isDirectory())
-                        location = new URL(location, clsAsResource);
+                        location = new URL(location, clazzAsResource);
                 }
             }
         }
         if (location == null) {
             final ClassLoader clsLoader = clazz.getClassLoader();
             location = clsLoader != null ?
-                    clsLoader.getResource(clsAsResource) :
-                    ClassLoader.getSystemResource(clsAsResource);
+                    clsLoader.getResource(clazzAsResource) :
+                    ClassLoader.getSystemResource(clazzAsResource);
         }
         return location.toString();
     }
@@ -61,23 +61,10 @@ public class ClassUtils {
      * @throws IOException
      */
     public static boolean exist(String className) throws IOException {
-        return hasClassByCurrentThreadClassLoader(className);
-    }
-
-
-    /**
-     * hasClassByCurrentThreadClassLoader 判断是否存在某一个类
-     *
-     * @param className eg. com.art.Book
-     * @return
-     * @throws IOException
-     */
-    private static boolean hasClassByCurrentThreadClassLoader(String className) throws IOException {
         String resource = convertClassName2ResourcePath(className);
-        List<URL> urlList = ResourceUtils.getResourcesInClassFile(resource);
-        boolean exist = urlList != null && urlList.size() > 0;
-        return exist;
+        return ResourceUtils.ByClassLoader.existResource(resource);
     }
+
 
     /**
      * getShortName -> org.springframework.util.ClassUtils.getShortName
@@ -140,7 +127,7 @@ public class ClassUtils {
             boolean b2 = ClassUtils.exist("com.york.portable.swiss.sandbox.Wood");
 
 
-            if (isExistJackson())
+            if (existJackson())
                 System.out.println(JacksonUtil.obj2Json(new Wood() {
                     {
                         setA(888);
@@ -149,7 +136,7 @@ public class ClassUtils {
 
             System.out.println();
 
-            if (isExistGson())
+            if (existGson())
                 System.out.println(GsonUtil.obj2Json(new Wood() {
                     {
                         setA(888);
@@ -157,11 +144,11 @@ public class ClassUtils {
                 }));
         }
 
-        private static boolean isExistJackson() throws IOException {
+        private static boolean existJackson() throws IOException {
             return ClassUtils.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
         }
 
-        private static boolean isExistGson() throws IOException {
+        private static boolean existGson() throws IOException {
             return ClassUtils.exist(("com.google.gson.Gson"));
         }
     }

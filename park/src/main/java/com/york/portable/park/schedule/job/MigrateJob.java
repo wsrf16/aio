@@ -8,13 +8,7 @@ import java.text.MessageFormat;
 
 @Configuration
 public class MigrateJob implements Runnable {
-//    @Autowired
-//    UsedCarCustomerService usedCarCustomerService;
-//
-//    @Autowired
-//    UsedCarTaskService usedCarTaskService;
-
-    LogHub log = CustomLogHubFactory.singletonInstance().build(this.getClass());
+    LogHub log = CustomLogHubFactory.singletonInstance().build();
 
 
     private static int monthFromNow = -3;

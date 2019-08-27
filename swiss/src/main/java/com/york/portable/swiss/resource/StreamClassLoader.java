@@ -76,12 +76,15 @@ public class StreamClassLoader extends ClassLoader {
             in = new FileInputStream(new File(file));
             return loadClassData(in);
         } catch (Exception e) {
+            e.getStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
-                in.close();
+                if (in != null)
+                    in.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

@@ -7,8 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 
-@Configuration
+//@Configuration
 @ConditionalOnClass({RedisOperations.class})
+// org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 public class RedisAutoConfiguration {
     @Bean
     public RedisLock redisLock(RedisConnectionFactory redisConnectionFactory) {

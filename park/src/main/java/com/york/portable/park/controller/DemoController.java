@@ -23,7 +23,7 @@ public class DemoController {// extends InjectedBaseLogger {
         return "ok";
     }
 
-    @Autowired
+    @Autowired(required = false)
     RedisLock redisLock;
 
 //    @GetMapping("foo")

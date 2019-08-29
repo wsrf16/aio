@@ -7,6 +7,7 @@ import com.york.portable.swiss.bean.node.next.layered.LayeredNextNodeBean;
 import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
 import com.york.portable.swiss.bean.node.relation.layered.LayeredRelationNodeBean;
 import com.york.portable.swiss.bean.node.next.tiled.TiledNextNode;
+import com.york.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -81,13 +82,13 @@ public class NodeTest {
 
     @TestComponent
     public static class TiledRelation {
-        private List<TiledRelationNodeSample> source() {
-            TiledRelationNodeSample u1 = new TiledRelationNodeSample( 111, 222,"我是一串文字A");
-            TiledRelationNodeSample u2 = new TiledRelationNodeSample( 222, 333,"我是一串文字B");
-            TiledRelationNodeSample u3 = new TiledRelationNodeSample( 333, 444,"我是一串文字C");
-            TiledRelationNodeSample u4 = new TiledRelationNodeSample( 444, 555,"我是一串文字D");
-            TiledRelationNodeSample u5 = new TiledRelationNodeSample( 888, null,"我是一串文字E");
-            List<TiledRelationNodeSample> list = new ArrayList<>();
+        private List<TiledRelationNode> source() {
+            TiledRelationNode u1 = new TiledRelationNodeSample( 111, 222,"我是一串文字A");
+            TiledRelationNode u2 = new TiledRelationNodeSample( 222, 333,"我是一串文字B");
+            TiledRelationNode u3 = new TiledRelationNodeSample( 333, 444,"我是一串文字C");
+            TiledRelationNode u4 = new TiledRelationNodeSample( 444, 555,"我是一串文字D");
+            TiledRelationNode u5 = new TiledRelationNodeSample( 888, null,"我是一串文字E");
+            List<TiledRelationNode> list = new ArrayList<>();
             list.add(u1);
             list.add(u2);
             list.add(u3);
@@ -98,7 +99,7 @@ public class NodeTest {
 
         @Test
         public void link2TiledNextNode() {
-            List<TiledRelationNodeSample> source = source();
+            List<TiledRelationNode> source = source();
             List<TiledNextNodeSample> node1 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
             List<TiledNextNodeSample> node2 = LinkedNodeUtils.TiledRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
 //            CustomLogHubFactory.singletonInstance().build().i(node1);
@@ -107,7 +108,7 @@ public class NodeTest {
 
         @Test
         public void link2LayeredNextNode() {
-            List<TiledRelationNodeSample> source = source();
+            List<TiledRelationNode> source = source();
             List<LayeredNextNodeBean> node1 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
             List<LayeredNextNodeBean> node2 = LinkedNodeUtils.TiledRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
 //            CustomLogHubFactory.singletonInstance().build().i(node1);
@@ -123,11 +124,6 @@ public class NodeTest {
             LayeredRelationNode u3 = new LayeredRelationNodeBean(new Bao("我是一串文字C"), 333, 444);
             LayeredRelationNode u4 = new LayeredRelationNodeBean(new Bao("我是一串文字D"), 444, 555);
             LayeredRelationNode u5 = new LayeredRelationNodeBean(new Bao("我是一串文字E"), 888, null);
-//            RelationNode u1 = new RelationNodeBean("我是一串文字A", 111, 222);
-//            RelationNode u2 = new RelationNodeBean("我是一串文字B", 222, 333);
-//            RelationNode u3 = new RelationNodeBean("我是一串文字C", 333, 444);
-//            RelationNode u4 = new RelationNodeBean("我是一串文字D", 444, 555);
-//            RelationNode u5 = new RelationNodeBean("我是一串文字E", 888, null);
             List<LayeredRelationNode> list = new ArrayList<>();
             list.add(u1);
             list.add(u2);

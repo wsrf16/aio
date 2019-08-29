@@ -1,15 +1,14 @@
 #!/bin/bash
 
-parentdir=$(cd $(dirname $0); pwd)
-parentdir=${parentdir##*/}
-
-proj_name=${parentdir}           # "usedcar-crm-pm-core"
-proj_env=$1                 # "uat"
+proj_dir=$(cd $(dirname $0); pwd)
+proj_basedir=${proj_dir%/*}
+proj_name=${proj_dir##*/}           # "usedcar-crm-pm-core"
+proj_env=$1                         # "uat"
 proj_filename="${proj_name}-${proj_env}.tar.gz"
-proj_basedir=~/app
-proj_dir=${proj_basedir}/${proj_name}/
+
 now="`date +%Y%m%d%H%M%S`"
 ftp_url="http://192.168.145.11/CRM/zip"
+
 
 cd ${proj_dir}
 if [ -f "./${proj_filename}" ];then
@@ -24,7 +23,7 @@ if [ -f "./${proj_filename}" ];then
   cp ./${proj_filename} ./bak/${now}/
 else
   echo "${proj_filename} is not exist."
-  # exit 0
+#  exit 0
 fi
 # wget -N ${ftp_url}/${proj_filename}
 rz -y

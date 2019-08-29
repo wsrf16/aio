@@ -174,6 +174,10 @@ function log() {
   tail -100f ${log_file_absolute_path}
 }
 
+function gclog() {
+  tail -100f ${log_gctotal_file_absolute_path}
+}
+
 function help() {
   echo "cp '<jarfile>' to '<jarfile>.sh'"
   echo "<jarfile>.jar.sh once"
@@ -248,7 +252,7 @@ log_file_absolute_path=$log_dir_absolute_path/service.log
 log_gclatest_file_absolute_path=$log_dir_absolute_path/gc_latest.log
 log_gctotal_file_absolute_path=$log_dir_absolute_path/gc_total.log
 
-args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:$log_gclatest_file_absolute_path ${args_app}"
+args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
 
 
 operate=$1
@@ -280,6 +284,8 @@ else
     status $file_absolute_path
   elif [ $operate == "log" ]; then
     log
+  elif [ $operate == "gclog" ]; then
+    gclog
   elif [ $operate == "help" ]; then
     help
   else

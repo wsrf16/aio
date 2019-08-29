@@ -33,11 +33,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ComponentScan("com.york.portable")
 public class ParkApplicationTests {
-    @Autowired
-    Swagger2MarkupSet swagger2MarkupSet;
-
     @Test
     public void contextLoads() throws Exception {
-        swagger2MarkupSet.run();
     }
 }

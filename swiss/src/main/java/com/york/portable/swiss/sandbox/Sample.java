@@ -119,32 +119,4 @@ class Sample {
 //        }
 //    }
 
-
-    @Flag(isMaster = true, age = 22)
-    public class AnnotationBlah {
-        public void test() {
-            Class<?> clazz = AnnotationBlah.class;
-            Flag flag = clazz.getAnnotation(Flag.class);
-        }
-    }
-
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
-    @interface Flag {
-        boolean isMaster() default false;
-
-        int age() default 18;
-    }
-
-
-
-
-
-
-
-
-
-
-
 }

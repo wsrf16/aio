@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.beans.Introspector;
+import java.util.Map;
 
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
@@ -82,13 +83,18 @@ public class SpringContextUtils implements ApplicationContextAware {
             defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinition);
         }
 
-        public final static BeanDefinition getRawBeanDefinition(Class<?> clazz) {
+        public final static BeanDefinition getRawBeanDefinition(Class<?> clazz, Map<String, Object> propertyValueMap) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+            for (Map.Entry<String, Object> stringObjectEntry : propertyValueMap.entrySet()) {
+                String name = stringObjectEntry.getKey();
+                Object value = stringObjectEntry.getValue();
+                beanDefinitionBuilder.addPropertyValue(name, value);
+            }
             return beanDefinitionBuilder.getRawBeanDefinition();
         }
 
-        public final static void registry(String beanName, Class<?> clazz) {
-            BeanDefinition rawBeanDefinition = getRawBeanDefinition(clazz);
+        public final static void registry(String beanName, Class<?> clazz, Map<String, Object> propertyValueMap) {
+            BeanDefinition rawBeanDefinition = getRawBeanDefinition(clazz, propertyValueMap);
             registry(beanName, rawBeanDefinition);
         }
     }

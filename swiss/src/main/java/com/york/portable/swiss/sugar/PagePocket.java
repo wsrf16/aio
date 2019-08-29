@@ -1,6 +1,5 @@
 package com.york.portable.swiss.sugar;
 
-import javafx.animation.Transition;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;

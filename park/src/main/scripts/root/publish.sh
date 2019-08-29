@@ -7,7 +7,7 @@ proj_env=$1                         # "uat"
 proj_filename="${proj_name}-${proj_env}.tar.gz"
 
 now="`date +%Y%m%d%H%M%S`"
-# ftp_url="http://192.168.145.11/CRM/zip"
+#  ftp_url="http://192.168.145.11/CRM/zip"
 
 
 cd ${proj_dir}

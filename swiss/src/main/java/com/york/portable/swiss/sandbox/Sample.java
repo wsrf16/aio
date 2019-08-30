@@ -1,62 +1,8 @@
 package com.york.portable.swiss.sandbox;
 
-import com.york.portable.swiss.assist.log.hub.LogHub;
 //import com.york.portable.swiss.assist.log.hub.factory.baselogger.classic.ConsoleBaseLogger;
-import com.york.portable.swiss.bean.SingletonProvider;
-import com.york.portable.swiss.bean.serializer.SerializerEnum;
-import com.york.portable.swiss.bean.serializer.json.GsonUtil;
-import com.york.portable.swiss.bean.serializer.json.JacksonUtil;
-import com.york.portable.swiss.assist.cache.CacheRoom;
-import com.york.portable.swiss.ciphering.TotalEncrypt;
 //import com.york.portable.swiss.db.SqlSpeller;
 //import com.york.portable.hamlet.model.ResponseWrapper;
-import com.york.portable.swiss.net.http.HttpSwift;
-import com.york.portable.swiss.sandbox.a中文.AA;
-import com.york.portable.swiss.sandbox.a中文.BB;
-import com.york.portable.swiss.sugar.*;
-import com.york.portable.swiss.assist.log.classic.impl.slf4j.Slf4jLogger;
-import com.york.portable.swiss.resource.ClassLoaderUtils;
-import com.york.portable.swiss.resource.ClassUtils;
-import com.york.portable.swiss.resource.StreamClassLoader;
-import com.york.portable.swiss.resource.PackageUtils;
-import com.york.portable.swiss.resource.ResourceUtils;
-import com.york.portable.swiss.assist.document.method.PropertiesMapping;
-import com.york.portable.swiss.assist.log.classic.impl.console.ConsoleLogger;
-import com.york.portable.swiss.assist.log.classic.impl.file.FileLogger;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
-import org.apache.http.Header;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
-
-import java.awt.print.Book;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Sample {
     public static void sample() throws Exception {

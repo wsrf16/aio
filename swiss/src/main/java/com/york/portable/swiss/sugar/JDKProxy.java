@@ -1,8 +1,8 @@
 package com.york.portable.swiss.sugar;
 
 import com.york.portable.swiss.type.BiFunction;
-import net.sf.cglib.proxy.InvocationHandler;
-import net.sf.cglib.proxy.Proxy;
+import org.springframework.cglib.proxy.InvocationHandler;
+import org.springframework.cglib.proxy.Proxy;
 
 import java.lang.reflect.Method;
 

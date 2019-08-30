@@ -1,7 +1,7 @@
 package com.york.portable.swiss.bean;
 
-import net.sf.cglib.beans.BeanCopier;
-import net.sf.cglib.core.Converter;
+import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.cglib.core.Converter;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.ConcurrentHashMap;

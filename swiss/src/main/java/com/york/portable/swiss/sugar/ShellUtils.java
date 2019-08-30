@@ -2,7 +2,6 @@ package com.york.portable.swiss.sugar;
 
 //import org.apache.commons.io.IOUtils;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
@@ -19,8 +18,8 @@ public class ShellUtils {
                 process.waitFor();
                 InputStream inputStream = process.getInputStream();
                 InputStream errorStream = process.getErrorStream();
-                String feedback = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-                String error = IOUtils.toString(errorStream, StandardCharsets.UTF_8);
+                String feedback = org.springframework.util.StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+                String error = org.springframework.util.StreamUtils.copyToString(errorStream, StandardCharsets.UTF_8);
                 if (StringUtils.isNotBlank(error))
                     throw new Exception(error);
                 return feedback;

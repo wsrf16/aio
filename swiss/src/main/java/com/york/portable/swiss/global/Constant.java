@@ -34,9 +34,13 @@ public class Constant {
     public static final String LIBRARY_DIRECTORY = "Lib";
     public static final String CURRENT_DIRECTORY = System.getProperty("user.dir");
     public static final String CLASS_PATH = System.getProperty("java.class.path");
+    // \r\n
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    // ; :
+    public static final String PATH_SEPARATOR = System.getProperty("line.separator");
     //public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
+    // \
     public static final String FILE_SEPARATOR = File.separator;
     public static final String EMPTY = StringUtils.EMPTY;
 

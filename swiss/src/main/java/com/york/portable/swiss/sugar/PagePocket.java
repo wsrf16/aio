@@ -1,9 +1,12 @@
 package com.york.portable.swiss.sugar;
 
+import com.york.portable.swiss.assist.cache.CacheRoom;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by York on 2017/11/23.
@@ -125,8 +128,26 @@ public class PagePocket<T> {
                 list.add(pojo);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return PagePocket.paging(list, this.pageIndex, this.pageSize);
+    }
+
+    private static class BlahUnit {
+        private static void blah() {
+            List<Integer> ints = Stream.iterate(1, item -> item + 1).limit(101).collect(Collectors.toList());
+            PagePocket<Integer> pocket = PagePocket.paging(ints, 3, 31);
+            Integer currentPage = pocket.getPageIndex();
+            List<Integer> currentPageItems = pocket.getCurrentPageItems();
+            Integer currentSize = pocket.getPageSize();
+            Integer currentSizeCapcity = pocket.getPageCapcity();
+//        List<Integer> totalItems = pocket.totalItems;
+            Integer totalPages = pocket.getTotalPages();
+            Integer totalCount = pocket.getTotalCount();
+
+
+            PagePocket<Integer> pock111 = CacheRoom.popByJson("A1", PagePocket.class);
+        }
     }
 }

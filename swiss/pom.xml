@@ -29,8 +29,8 @@
         <swagger.version>2.9.2</swagger.version>
         <!--<commons-lang3.version>3.8.1</commons-lang3.version>-->
         <!--<httpclient.version>4.5.9</httpclient.version>-->
-        <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <cglib-nodep.version>3.2.8</cglib-nodep.version>
+<!--        <commons-beanutils.version>1.9.3</commons-beanutils.version>-->
+<!--        <cglib-nodep.version>3.2.8</cglib-nodep.version>-->
         <cron-utils.version>7.0.6</cron-utils.version>
 
         <druid.version>1.1.18</druid.version>
@@ -121,11 +121,11 @@
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-io -->
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>commons-io</groupId>-->
+<!--            <artifactId>commons-io</artifactId>-->
+<!--            <version>2.5</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -147,11 +147,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/cglib/cglib-nodep -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>${cglib-nodep.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cglib</groupId>-->
+<!--            <artifactId>cglib-nodep</artifactId>-->
+<!--            <version>${cglib-nodep.version}</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 <!--        <dependency>-->
@@ -160,12 +160,12 @@
 <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>commons-beanutils</groupId>-->
+<!--            <artifactId>commons-beanutils</artifactId>-->
+<!--            <version>${commons-beanutils.version}</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>net.sf.json-lib</groupId>-->

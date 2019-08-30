@@ -1,9 +1,9 @@
 package com.york.portable.park;
 
-import net.sf.cglib.proxy.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.spi.LoggerRepository;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.proxy.*;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
@@ -21,7 +21,7 @@ public class Logger {
             eh.setSuperclass(org.apache.log4j.Logger.class);
             eh.setCallbackType(LogInterceptor.class);
             Class c = eh.createClass();
-            Enhancer.registerCallbacks(c, new LogInterceptor[]{new LogInterceptor()});
+            Enhancer.registerCallbacks(c, (Callback[]) new LogInterceptor[]{new LogInterceptor()});//？？？？？？？？？？？
 
             Constructor<org.apache.log4j.Logger> constructor = c.getConstructor(String.class);
             org.apache.log4j.Logger loggerProxy = constructor.newInstance(Logger.class.getName());
@@ -31,7 +31,7 @@ public class Logger {
             Object loggerFactoryProxy = Proxy.newProxyInstance(
                     LoggerFactory.class.getClassLoader(),
                     new Class[]{LoggerFactory.class},
-                    new NewLoggerHandler(loggerProxy)
+                    (InvocationHandler) new NewLoggerHandler(loggerProxy)//？？？？？？？？？？？
             );
 
             ReflectionUtil.setFieldValue(loggerRepository, "defaultFactory", loggerFactoryProxy);

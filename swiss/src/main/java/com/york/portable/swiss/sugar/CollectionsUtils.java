@@ -1,6 +1,5 @@
 package com.york.portable.swiss.sugar;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -159,11 +158,32 @@ public class CollectionsUtils {
 
 
 
-    public final static List tolist(Iterator iterator) {
-        return IteratorUtils.toList(iterator);
+//    public final static List tolist(Iterator iterator) {
+//        return IteratorUtils.toList(iterator);
+//    }
+
+    private final static List toList(Iterator iterator, int estimatedSize) {
+        if (iterator == null) {
+            throw new NullPointerException("Iterator must not be null");
+        } else if (estimatedSize < 1) {
+            throw new IllegalArgumentException("Estimated size must be greater than 0");
+        } else {
+            ArrayList list = new ArrayList(estimatedSize);
+
+            while(iterator.hasNext()) {
+                list.add(iterator.next());
+            }
+
+            return list;
+        }
     }
 
-    public final static <T> ArrayList<T> tolist(Enumeration<T> e) {
+    public final static List toList(Iterator iterator) {
+        return toList(iterator, 10);
+    }
+
+
+    public final static <T> ArrayList<T> toList(Enumeration<T> e) {
         return Collections.list(e);
     }
 
@@ -183,7 +203,7 @@ public class CollectionsUtils {
     private static void taolu() {
         {
             Iterator<String> iterator = Collections.emptyIterator();
-            List<String> list = IteratorUtils.toList(iterator);
+            List<String> list = CollectionsUtils.toList(iterator);
         }
         {
             Enumeration<String> enumeration = Collections.emptyEnumeration();

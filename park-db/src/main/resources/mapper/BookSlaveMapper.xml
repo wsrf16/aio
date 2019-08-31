@@ -4,22 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- mapper标签要指定namespace属性，不然会报错，且mapper开发时设置为Mapper接口的全限定名-->
-<mapper namespace="com.york.portable.park.parkdb.dao.slave.mapper.BookSlaveMapper">
-    <resultMap id="UserResultMap" type="com.york.portable.park.parkdb.dao.slave.model.Book">
+<mapper namespace="com.aio.portable.parkdb.dao.slave.mapper.BookSlaveMapper">
+    <resultMap id="UserResultMap" type="com.aio.portable.parkdb.dao.slave.model.Book">
         <id property="id" column="id"></id>
         <result property="name" column="name"></result>
         <result property="author" column="author"></result>
-        <result property="description" column="description" typeHandler="com.york.portable.swiss.data.mybatis.BlobToStringTypeHandler"></result>
+        <result property="description" column="description" typeHandler="com.aio.portable.swiss.data.mybatis.BlobToStringTypeHandler"></result>
     </resultMap>
 
-    <select id="getAll" resultType="com.york.portable.park.parkdb.dao.slave.model.Book">
+    <select id="getAll" resultType="com.aio.portable.parkdb.dao.slave.model.Book">
         SELECT * FROM book_store
     </select>
-    <select id="get" parameterType="java.lang.Integer" resultType="com.york.portable.park.parkdb.dao.slave.model.Book">
+    <select id="get" parameterType="java.lang.Integer" resultType="com.aio.portable.parkdb.dao.slave.model.Book">
         SELECT * FROM book WHERE id=#{id}
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.york.portable.park.parkdb.dao.slave.model.Book" >
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.aio.portable.parkdb.dao.slave.model.Book" >
         insert into book (name, author, description)
         values(#{name}, #{author}, #{description})
     </insert>

@@ -23,7 +23,7 @@ spring:
       password: 123456
 
 @Configuration
-@MapperScan(basePackages = {"com.york.portable.park.dao.master.mapper"})
+@MapperScan(basePackages = {"com.aio.portable.park.dao.master.mapper"})
 public class CustomDataSourceConfiguration extends FreeDataSourceConfiguration {
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.default")

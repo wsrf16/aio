@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!--<parent>-->
     <!--<artifactId>aio</artifactId>-->
-    <!--<groupId>com.york.portable</groupId>-->
+    <!--<groupId>com.aio.portable</groupId>-->
     <!--<version>1.1.4-SNAPSHOT</version>-->
     <!--</parent>-->
 
-    <groupId>com.york.portable</groupId>
+    <groupId>com.aio.portable</groupId>
     <version>1.1.4-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.york.portable</groupId>
+            <groupId>com.aio.portable</groupId>
             <artifactId>swiss</artifactId>
             <version>1.1.4-SNAPSHOT</version>
         </dependency>
@@ -37,18 +37,18 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-autoconfigure</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
+<!--            <version>1.1.18</version>-->
+<!--            <optional>true</optional>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

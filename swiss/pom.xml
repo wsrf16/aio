@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.york.portable</groupId>
+    <groupId>com.aio.portable</groupId>
     <artifactId>swiss</artifactId>
     <version>1.1.4-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -39,11 +39,11 @@
         <mybatis.version>2.0.0</mybatis.version>
         <!--<elasticsearch.version>6.4.3</elasticsearch.version>-->
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
-        <zookeeper.version>3.4.14</zookeeper.version>
+        <zookeeper.version>3.5.5</zookeeper.version>
     </properties>
 
 <!--    <parent>-->
-<!--        <groupId>com.york.portable</groupId>-->
+<!--        <groupId>com.aio.portable</groupId>-->
 <!--        <artifactId>aio</artifactId>-->
 <!--        <version>1.1.4-SNAPSHOT</version>-->
 <!--    </parent>-->
@@ -220,26 +220,19 @@
 <!--            <version>${cron-utils.version}</version>-->
 <!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid</artifactId>-->
+<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
 <!--            <version>${druid.version}</version>-->
+<!--            <optional>true</optional>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
 <!--        </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-autoconfigure</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
         <dependency>

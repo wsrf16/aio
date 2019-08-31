@@ -1,9 +1,9 @@
 #org.springframework.boot.autoconfigure.EnableAutoConfiguration=
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.york.portable.swiss.autoconfigure.LogHubAutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.RedisAutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.Swagger2AutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.SwissElasticsearchAutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.MailUtilsAutoConfiguration,\
-  com.york.portable.swiss.autoconfigure.RestTemplateAutoConfiguration\
+  com.aio.portable.swiss.autoconfigure.LogHubAutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.RedisAutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.Swagger2AutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.SwissElasticsearchAutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.MailUtilsAutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.RestTemplateAutoConfiguration\
   

@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * Created by York on 2017/11/28.
  */
-public class FileUtils {
+public abstract class FileUtils {
     public static String readFileForText(String path) {
         StringBuffer sb = null;
         try {

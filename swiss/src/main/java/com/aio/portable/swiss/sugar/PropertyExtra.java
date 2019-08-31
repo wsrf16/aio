@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PropertyExtra {
+public abstract class PropertyExtra {
     public static Map<String, Object> getPropertyNameValue(Object bean) {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
         Map<String, Object> map = Arrays.stream(BeanUtils.getPropertyDescriptors(bean.getClass()))

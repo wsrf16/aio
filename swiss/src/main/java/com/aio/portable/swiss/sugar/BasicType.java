@@ -10,7 +10,7 @@ import java.util.concurrent.locks.*;
  * Created by York on 2017/11/23.
  */
 public class BasicType {
-    private final static Object _serialNumberLock = new Object();
+//    private final static Object _serialNumberLock = new Object();
     private final static Lock lock = new ReentrantLock();
     private final static String DATETIME_FORMAT = "yyyyMMddHHmmssSSS";
 

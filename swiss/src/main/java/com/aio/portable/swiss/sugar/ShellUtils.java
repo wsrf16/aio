@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShellUtils {
+public abstract class ShellUtils {
     public static List<String> run(String... cmd) {
         List<String> feedbackList = Arrays.stream(cmd).map(c -> {
             try {

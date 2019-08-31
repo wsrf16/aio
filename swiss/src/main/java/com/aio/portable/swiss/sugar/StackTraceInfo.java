@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-public class StackTraceInfo {
+public abstract class StackTraceInfo {
     private final static int CURRENT_STACK_INDEX_THREAD = 3;
     private final static int CURRENT_STACK_INDEX_EXCEPTION = 2;
 

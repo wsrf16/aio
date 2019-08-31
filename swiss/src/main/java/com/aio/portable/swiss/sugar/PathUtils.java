@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PathUtils {
+public abstract class PathUtils {
     final static String[] intervals = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
 
     public final static Path concatBySysteom(String first, String... more) {

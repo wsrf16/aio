@@ -12,7 +12,7 @@ import java.util.TimeZone;
 /**
  * Created by York on 2017/11/23.
  */
-public class DateTimeUtils {
+public abstract class DateTimeUtils {
     public static class CalendarUtils {
         public static Calendar getFirstDayOfMonth(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_MONTH);

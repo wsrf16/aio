@@ -87,7 +87,7 @@ public class PagePocket<T> {
         return instance;
     }
 
-    public final static <T> PagePocket<T> build(List<T> list, int size) {
+    public final static <T> PagePocket<T> paging(List<T> list, int size) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
         instance.pageCapcity = size;

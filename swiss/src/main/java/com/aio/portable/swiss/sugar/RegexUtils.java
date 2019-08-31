@@ -3,7 +3,7 @@ package com.aio.portable.swiss.sugar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexUtils {
+public abstract class RegexUtils {
     private final static String REGEX_PHONE = "^(1)\\d{10}$";
     private final static String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
     private final static String FAKE_TEXT = "****";

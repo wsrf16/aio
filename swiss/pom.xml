@@ -370,72 +370,72 @@
             </plugin>
 
             <!-- springboot: option -->
-            <!--<plugin>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--<configuration>-->
-            <!--&lt;!&ndash;<mainClass>${start-class}</mainClass>&ndash;&gt;-->
-            <!--<layout>NONE</layout>-->
-            <!--<classifier>exec</classifier>-->
-            <!--</configuration>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--<mainClass>${start-class}</mainClass>-->
+                    <layout>NONE</layout>
+                    <classifier>exec</classifier>
+                </configuration>
 
-            <!--&lt;!&ndash;<executions>&ndash;&gt;-->
-            <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-            <!--&lt;!&ndash;<goals>&ndash;&gt;-->
-            <!--&lt;!&ndash;<goal>repackage</goal>&ndash;&gt;-->
-            <!--&lt;!&ndash;</goals>&ndash;&gt;-->
-            <!--&lt;!&ndash;</execution>&ndash;&gt;-->
-            <!--&lt;!&ndash;</executions>&ndash;&gt;-->
-            <!--</plugin>-->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- javaweb: option -->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-dependency-plugin</artifactId>-->
-            <!--<version>2.10</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>copy-dependencies</id>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>copy-dependencies</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<outputDirectory>${project.build.directory}/lib</outputDirectory>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-jar-plugin</artifactId>-->
-            <!--<version>3.0.2</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>default-jar</id>-->
-            <!--<phase>compile</phase>-->
-            <!--<goals>-->
-            <!--<goal>jar</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--&lt;!&ndash;<classifier>aio</classifier>&ndash;&gt;-->
-            <!--<classesDirectory>${project.basedir}/target/classes</classesDirectory>-->
-            <!--&lt;!&ndash; 打包行为 &ndash;&gt;-->
-            <!--&lt;!&ndash; 生成jar包格式：<artifactId>-<version>，如helloword-0.0.1-SNAPSHOT &ndash;&gt;-->
-            <!--<archive>-->
-            <!--<manifest>-->
-            <!--<addClasspath>true</addClasspath>-->
-            <!--<classpathPrefix>/lib</classpathPrefix>-->
-            <!--<mainClass>${start-class}</mainClass>-->
-            <!--</manifest>-->
-            <!--</archive>-->
-            <!--&lt;!&ndash;<includes>&ndash;&gt;-->
-            <!--&lt;!&ndash;<include>com/**</include>&ndash;&gt;-->
-            <!--&lt;!&ndash;</includes>&ndash;&gt;-->
-            <!--</configuration>-->
-            <!--</plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <version>2.10</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>copy-dependencies</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>3.0.2</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>default-jar</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>jar</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash;<classifier>aio</classifier>&ndash;&gt;-->
+<!--                    <classesDirectory>${project.basedir}/target/classes</classesDirectory>-->
+<!--                    &lt;!&ndash; 打包行为 &ndash;&gt;-->
+<!--                    &lt;!&ndash; 生成jar包格式：<artifactId>-<version>，如helloword-0.0.1-SNAPSHOT &ndash;&gt;-->
+<!--                    <archive>-->
+<!--                        <manifest>-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                            <classpathPrefix>/lib</classpathPrefix>-->
+<!--                            <mainClass>${start-class}</mainClass>-->
+<!--                        </manifest>-->
+<!--                    </archive>-->
+<!--                    &lt;!&ndash;<includes>&ndash;&gt;-->
+<!--                    &lt;!&ndash;<include>com/**</include>&ndash;&gt;-->
+<!--                    &lt;!&ndash;</includes>&ndash;&gt;-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

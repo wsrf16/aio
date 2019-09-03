@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.data.freedatasource.config;
+package com.aio.portable.swiss.data.multidatasource;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;

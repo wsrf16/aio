@@ -104,7 +104,7 @@ public abstract class DateTimeUtils {
         /**
          * 从String转换为Date
          *
-         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param format eg. {@value #FORMAT_ISO8601}
          * @param text   "1987-06-05T44:33:22.111+0800"
          * @return Date
          * @throws ParseException
@@ -117,7 +117,7 @@ public abstract class DateTimeUtils {
         /**
          * 从Date转换为String
          *
-         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param format eg. {@value #FORMAT_ISO8601}
          * @param date
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
@@ -130,7 +130,7 @@ public abstract class DateTimeUtils {
         /**
          * 从String转换为Calendar
          *
-         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param format eg. {@value #FORMAT_ISO8601}
          * @param text   "1987-06-05T44:33:22.111+0800"
          * @return Date
          * @throws ParseException
@@ -145,7 +145,7 @@ public abstract class DateTimeUtils {
         /**
          * 从Calendar转换为String
          *
-         * @param format "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+         * @param format eg. {@value #FORMAT_ISO8601}
          * @param calendar
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
@@ -157,7 +157,7 @@ public abstract class DateTimeUtils {
         }
 
         /**
-         * 返回"yyyyMMddHHmmssSSSZ"格式的时间
+         * 返回 {@value #FORMAT_TIGHT_LONG} 格式的时间
          *
          * @return
          */

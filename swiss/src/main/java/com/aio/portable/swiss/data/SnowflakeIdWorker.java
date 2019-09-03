@@ -157,15 +157,14 @@ public class SnowflakeIdWorker {
 
     //==============================Test=============================================
 
-    /**
-     * 测试
-     */
-    public final static void main(String[] args) {
-        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
-        for (int i = 0; i < 1000; i++) {
-            long id = idWorker.nextId();
-            System.out.println(Long.toBinaryString(id));
-            System.out.println(id);
+    public static class BlahUnit {
+        public final static void blah(String[] args) {
+            SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+            for (int i = 0; i < 1000; i++) {
+                long id = idWorker.nextId();
+                System.out.println(Long.toBinaryString(id));
+                System.out.println(id);
+            }
         }
     }
 }

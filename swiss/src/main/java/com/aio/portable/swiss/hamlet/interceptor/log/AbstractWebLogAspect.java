@@ -42,8 +42,8 @@ class AbstractWebLogAspect {
             " || @annotation(org.springframework.web.bind.annotation.Mapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected final static String LOG_MARKER_TYPENAME = "LogMarker";
-    protected final static String LOG_MARKER_EXCEPT_TYPENAME = "LogMarkerExcept";
+    protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.assist.log.annotation.LogMarker";
+    protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.assist.log.annotation.LogMarkerExcept";
 
     protected final static String POINTCUT_SPECIAL = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")" + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")" +

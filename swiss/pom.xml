@@ -15,8 +15,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <java.code>utf-8</java.code>
+<!--        <resource.delimiter>@</resource.delimiter>-->
         <springboot.version>${project.parent.version}</springboot.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!--<slf4j.version>1.7.26</slf4j.version>-->
         <!--<log4j2.version>2.11.2</log4j2.version>-->
@@ -257,6 +259,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
             <optional>true</optional>
         </dependency>
@@ -364,7 +371,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <encoding>${java.code}</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <skip>true</skip>
                 </configuration>
             </plugin>

@@ -63,18 +63,25 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>javax.servlet</groupId>-->
+<!--            <artifactId>servlet-api</artifactId>-->
+<!--            <version>2.3</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -283,13 +290,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.3</version>
-            <scope>provided</scope>
-        </dependency>
-
 <!--        <dependency>-->
 <!--            <groupId>cglib</groupId>-->
 <!--            <artifactId>cglib-nodep</artifactId>-->
@@ -404,7 +404,7 @@
                         <test.asciidoctor.directory.input>${asciidoctor.directory.input}</test.asciidoctor.directory.input>
                         <test.asciidoctor.directory.input.generated>${asciidoctor.directory.input.generated}</test.asciidoctor.directory.input.generated>
                         <test.asciidoctor.directory.output.html>${asciidoctor.directory.output.html}</test.asciidoctor.directory.output.html>
-                        <test.asciidoctor.directory.output.pdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.pdf>
+                        <test.asciidoctor.directory.output.seveletpdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.seveletpdf>
 
                     </systemPropertyVariables>
                 </configuration>
@@ -412,14 +412,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${parent.version}</version>
                 <configuration>
                     <layout>ZIP</layout>
-                    <includes>
-                        <include>
-                            <groupId>nothing</groupId>
-                            <artifactId>nothing</artifactId>
-                        </include>
-                    </includes>
+<!--                    <includes>-->
+<!--                        <include>-->
+<!--                            <groupId>nothing</groupId>-->
+<!--                            <artifactId>nothing</artifactId>-->
+<!--                        </include>-->
+<!--                    </includes>-->
                     <excludeGroupIds>
                         org.hibernate,
                         org.hibernate.validator,

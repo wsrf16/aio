@@ -36,29 +36,26 @@ function getDirectory() {
   echo ${1%/*}
 }
 
-function markProcess() {
+function captureProcessLine() {
   if [ $operate == "stop" ]; then
-  # $shfilename   $sh_file_absolute_path
-  #                         show line no   except         except         except
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
+    #                       show line no   except         except         except
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename break" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once")
   else
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename calldaemon" | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename break" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once" | grep -v "$shfilename calldaemon")
   fi
+  echo $process_line
+}
+
+function markProcess() {
+  process_line=$(captureProcessLine $1)
 
   echo $process_line >> $log_dir_absolute_path/process.log
 }
 
 function getPid() {
-  if [ $operate == "stop" ]; then
-  # $shfilename   $sh_file_absolute_path
-  #                         show line no   except         except         except
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename once" | grep -v "$shfilename status" | grep -v "$shfilename restart")
-  else
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename calldaemon" | grep -v "$shfilename stop" | grep -v "$shfilename start" | grep -v "$shfilename once" | grep -v "$shfilename status" | grep -v "$shfilename restart")
-  fi
+  process_line=$(captureProcessLine $1)
 
   pid=($(echo $process_line | awk '{print $2}'))
-
   if [ "$pid" ]; then
     echo $pid
   else
@@ -153,6 +150,25 @@ function stop() {
   status $1
 }
 
+function break() {
+  is=$(isRunning $1)
+  while [ ${is} ]; do
+    status $1
+    pid=$(getPid $1)
+    if [ "$pid" ]; then
+      for p in ${pid[@]}
+      do
+        kill -9 $p >/dev/null 2>&1
+      done
+    else
+      break
+    fi
+    sleep $check_period
+    is=$(isRunning $1)
+  done
+  status $1
+}
+
 function restart() {
   operate="stop"
   stop $1
@@ -186,6 +202,7 @@ function help() {
   echo "<jarfile>.jar.sh restart"
   echo "<jarfile>.jar.sh restartlog"
   echo "<jarfile>.jar.sh stop"
+  echo "<jarfile>.jar.sh break"
   echo "<jarfile>.jar.sh status"
   echo "<jarfile>.jar.sh log"
 
@@ -195,6 +212,7 @@ function help() {
   echo "<self>.sh <jarfile> restart"
   echo "<self>.sh <jarfile> restartlog"
   echo "<self>.sh <jarfile> stop"
+  echo "<self>.sh <jarfile> break"
   echo "<self>.sh <jarfile> status"
   echo "<self>.sh <jarfile> log"
 }
@@ -278,6 +296,8 @@ else
     calldaemon $file_absolute_path
   elif [ $operate == "stop" ]; then
     stop $file_absolute_path
+  elif [ $operate == "break" ]; then
+    break $file_absolute_path
   elif [ $operate == "restart" ]; then
     restart $file_absolute_path
   elif [ $operate == "status" ]; then

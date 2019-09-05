@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 //import com.aio.portable.swiss.data.batis.MybatisExtraProperties;
 
 
-public abstract class BaseDataSourceConfiguration {
+public abstract class MybatisBaseDataSourceConfiguration {
 //    @Autowired
 //    protected MybatisProperties properties;
 

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.data.freedatasource.config;
 
-import com.aio.portable.swiss.data.multidatasource.BaseDataSourceConfiguration;
+import com.aio.portable.swiss.data.multidatasource.MybatisBaseDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -16,8 +16,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 //@Configuration
-@MapperScan(basePackages = {TemplateDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = TemplateDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
-public class TemplateDataSourceConfiguration extends BaseDataSourceConfiguration {
+@MapperScan(basePackages = {MybatisTemplateDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = MybatisTemplateDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
+public class MybatisTemplateDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public static final String BASE_PACKAGES = "com.aio.portable.park.parkdb.dao.master.mapper";
     private static final String SPECIAL_NAME = "master";
 

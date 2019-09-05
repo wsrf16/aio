@@ -1,7 +1,7 @@
 package com.aio.portable.park.config.mybatis;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
-import com.aio.portable.swiss.data.multidatasource.BaseDataSourceConfiguration;
+import com.aio.portable.swiss.data.multidatasource.MybatisBaseDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 //@Configuration
 @MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
-public class SlaveDataSourceConfiguration extends BaseDataSourceConfiguration {
+public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public static final String BASE_PACKAGES = "com.aio.portable.park.parkdb.dao.slave.mapper";
     private static final String SPECIAL_NAME = "slave";
 

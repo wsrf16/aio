@@ -12,7 +12,7 @@ import java.util.TimeZone;
 /**
  * Created by York on 2017/11/23.
  */
-public abstract class DateTimes {
+public abstract class DateTimeUtils {
     public static class CalendarUtils {
         public static Calendar getFirstDayOfMonth(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_MONTH);
@@ -256,19 +256,19 @@ public abstract class DateTimes {
 
     private static class BlahUnit {
         private static void todo() {
-            long longg = DateTimes.UnixTime.nowUnix();
-            long longgg = DateTimes.UnixTime.convertDateTime2Unix(LocalDateTime.now());
-            LocalDateTime time = DateTimes.UnixTime.convertUnix2DateTime(longg);
-            long longggg = DateTimes.UnixTime.convertUTC2Unix(time);
+            long longg = DateTimeUtils.UnixTime.nowUnix();
+            long longgg = DateTimeUtils.UnixTime.convertDateTime2Unix(LocalDateTime.now());
+            LocalDateTime time = DateTimeUtils.UnixTime.convertUnix2DateTime(longg);
+            long longggg = DateTimeUtils.UnixTime.convertUTC2Unix(time);
 
 
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, -3);
-            Date first = DateTimes.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
-            Date last = DateTimes.CalendarUtils.getLastDayOfMonth(calendar).getTime();
+            Date first = DateTimeUtils.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
+            Date last = DateTimeUtils.CalendarUtils.getLastDayOfMonth(calendar).getTime();
 
-            DateTimes.Format.convertDate2String("yyyy-MM-dd 00:00:00", first);
-            DateTimes.Format.convertDate2String("yyyy-MM-dd 23:59:59", last);
+            DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 00:00:00", first);
+            DateTimeUtils.Format.convertDate2String("yyyy-MM-dd 23:59:59", last);
         }
     }
 

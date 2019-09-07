@@ -17,7 +17,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-public class PackageUtils {
+public class Packages {
     public static String getImplementationVersion(Class clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
@@ -37,7 +37,7 @@ public class PackageUtils {
      */
     public static List<String> getClassName(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
-        List<URL> urlList = ResourceUtils.ByClassLoader.getResources(packagePath);
+        List<URL> urlList = Resources.ByClassLoader.getResources(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
             List<String> _classList = new ArrayList<>();
             try {
@@ -116,7 +116,7 @@ public class PackageUtils {
 
     public static class BlahUnit {
         public void todo() throws IOException, ClassNotFoundException {
-            List<String> list = PackageUtils.getClassName(this.getClass().getPackage().getName());
+            List<String> list = Packages.getClassName(this.getClass().getPackage().getName());
             for (String name : list) {
 //            Class<?> clazz = Class.forName(name);
                 Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);

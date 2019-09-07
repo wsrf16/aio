@@ -25,7 +25,7 @@ public abstract class Streams {
      */
     public static <T> Stream<T> reverse(final Stream<T> stream) {
         List<T> reverseList = stream.collect(Collectors.toList());
-        Collections.reverse(reverseList);
+        java.util.Collections.reverse(reverseList);
         return reverseList.stream();
     }
 

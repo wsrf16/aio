@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.middleware.elasticsearch;
 
-import com.aio.portable.swiss.sugar.CollectionsUtils;
+import com.aio.portable.swiss.sugar.Collections;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +44,7 @@ public abstract class ESRepository { // <T, ID extends Serializable> implements 
      * @return
      */
     public static <T, ID extends Serializable> List<T> search(ElasticsearchRepository<T, ID> repository, QueryBuilder builder) {
-        List<T> list = CollectionsUtils.toList(repository.search(builder).iterator());
+        List<T> list = Collections.toList(repository.search(builder).iterator());
         return list;
     }
 

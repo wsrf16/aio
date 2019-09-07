@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-public abstract class StackTraceInfo {
+public abstract class StackTraceInfos {
     private final static int CURRENT_STACK_INDEX_THREAD = 3;
     private final static int CURRENT_STACK_INDEX_EXCEPTION = 2;
 
@@ -41,19 +41,19 @@ public abstract class StackTraceInfo {
         }
 
         public static String getFileName() {
-            return StackTraceInfo.getFileName(getStackTraceElementByThread());
+            return StackTraceInfos.getFileName(getStackTraceElementByThread());
         }
 
         public static String getClassName() {
-            return StackTraceInfo.getClassName(getStackTraceElementByThread());
+            return StackTraceInfos.getClassName(getStackTraceElementByThread());
         }
 
         public static String getMethodName() {
-            return StackTraceInfo.getMethodName(getStackTraceElementByThread());
+            return StackTraceInfos.getMethodName(getStackTraceElementByThread());
         }
 
         public static int getLineNumber() {
-            return StackTraceInfo.getLineNumber(getStackTraceElementByThread());
+            return StackTraceInfos.getLineNumber(getStackTraceElementByThread());
         }
     }
 
@@ -67,19 +67,19 @@ public abstract class StackTraceInfo {
         }
 
         public static String getFileName() {
-            return StackTraceInfo.getFileName(getStackTraceElementByThread());
+            return StackTraceInfos.getFileName(getStackTraceElementByThread());
         }
 
         public static String getClassName() {
-            return StackTraceInfo.getClassName(getStackTraceElementByThread());
+            return StackTraceInfos.getClassName(getStackTraceElementByThread());
         }
 
         public static String getMethodName() {
-            return StackTraceInfo.getMethodName(getStackTraceElementByThread());
+            return StackTraceInfos.getMethodName(getStackTraceElementByThread());
         }
 
         public static int getLineNumber() {
-            return StackTraceInfo.getLineNumber(getStackTraceElementByThread());
+            return StackTraceInfos.getLineNumber(getStackTraceElementByThread());
         }
     }
 }

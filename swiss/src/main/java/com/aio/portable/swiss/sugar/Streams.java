@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class StreamUtils {
+public abstract class Streams {
     /**
      * reverse a Stream
      *
@@ -250,8 +250,8 @@ public abstract class StreamUtils {
 
     private static class BlahUnit {
         private static void blah() {
-            List<Integer> list = StreamUtils.increase(1, n -> n + 1, 100).collect(Collectors.toList());
-            StreamUtils.split(list, 8);
+            List<Integer> list = Streams.increase(1, n -> n + 1, 100).collect(Collectors.toList());
+            Streams.split(list, 8);
         }
     }
 

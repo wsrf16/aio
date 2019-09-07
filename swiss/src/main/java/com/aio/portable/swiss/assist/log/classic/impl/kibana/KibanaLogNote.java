@@ -3,7 +3,7 @@ package com.aio.portable.swiss.assist.log.classic.impl.kibana;
 import com.aio.portable.swiss.assist.log.base.parts.LogException;
 import com.aio.portable.swiss.assist.log.base.parts.LogNote;
 import com.aio.portable.swiss.bean.serializer.json.JacksonUtil;
-import com.aio.portable.swiss.sugar.DateTimeUtils;
+import com.aio.portable.swiss.sugar.DateTimes;
 
 import java.util.Date;
 
@@ -136,7 +136,7 @@ public class KibanaLogNote {
         setException(JacksonUtil.obj2Json(logException));
 
         setEsIndex(esIndex);
-        setTimeStamp(DateTimeUtils.Format.convertDate2String("yyyy-MM-dd'T'HH:mm:ss.SSSZ", new Date()));
+        setTimeStamp(DateTimes.Format.convertDate2String("yyyy-MM-dd'T'HH:mm:ss.SSSZ", new Date()));
         setServerIp(serverIp);
         //        setHostName(hostName);
         //        setAppEnv(appEnv);
@@ -153,7 +153,7 @@ public class KibanaLogNote {
 
         setEsIndex(esIndex);
         setServerIp(serverIp);
-        setTimeStamp(DateTimeUtils.Format.convertDate2String(DateTimeUtils.Format.FORMAT_ISO8601, new Date()));
+        setTimeStamp(DateTimes.Format.convertDate2String(DateTimes.Format.FORMAT_ISO8601, new Date()));
     }
 
     //    public KibanaLogNote(LogNote logNote, String esIndex, String serverIp, String hostName, long appId, String appEnv) {

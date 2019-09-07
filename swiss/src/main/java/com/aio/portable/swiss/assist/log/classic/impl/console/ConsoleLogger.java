@@ -2,14 +2,14 @@ package com.aio.portable.swiss.assist.log.classic.impl.console;
 
 import com.aio.portable.swiss.assist.log.base.AbstractLogger;
 import com.aio.portable.swiss.assist.log.base.parts.LevelEnum;
-import com.aio.portable.swiss.sugar.StackTraceInfo;
+import com.aio.portable.swiss.sugar.StackTraceInfos;
 
 /**
  * Created by York on 2017/11/23.
  */
 public class ConsoleLogger extends AbstractLogger {
     public final static ConsoleLogger build() {
-        String name = StackTraceInfo.Previous.getClassName();
+        String name = StackTraceInfos.Previous.getClassName();
         return build(name);
     }
 

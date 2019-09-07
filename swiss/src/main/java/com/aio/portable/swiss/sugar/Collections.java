@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class CollectionsUtils {
+public abstract class Collections {
     /**
      * 判断集合为空
      *
@@ -125,7 +125,7 @@ public abstract class CollectionsUtils {
      */
     public final static <T> List<T> copy(List<? extends T> src) {
         List<T> dest = new ArrayList<>(Arrays.asList((T[]) new Object[src.size()]));
-        Collections.copy(dest, src);
+        java.util.Collections.copy(dest, src);
         return dest;
     }
 
@@ -184,11 +184,11 @@ public abstract class CollectionsUtils {
 
 
     public final static <T> ArrayList<T> toList(Enumeration<T> e) {
-        return Collections.list(e);
+        return java.util.Collections.list(e);
     }
 
     public final static <T> Enumeration<T> toEnumeration(final Collection<T> c) {
-        return Collections.enumeration(c);
+        return java.util.Collections.enumeration(c);
     }
 
     public final static <T> List<T> flatNextToList(T t, Function<T, T> getNextFunction) {
@@ -202,16 +202,16 @@ public abstract class CollectionsUtils {
 
     private static void taolu() {
         {
-            Iterator<String> iterator = Collections.emptyIterator();
-            List<String> list = CollectionsUtils.toList(iterator);
+            Iterator<String> iterator = java.util.Collections.emptyIterator();
+            List<String> list = Collections.toList(iterator);
         }
         {
-            Enumeration<String> enumeration = Collections.emptyEnumeration();
-            List<String> arrayList = Collections.list(enumeration);
+            Enumeration<String> enumeration = java.util.Collections.emptyEnumeration();
+            List<String> arrayList = java.util.Collections.list(enumeration);
         }
         {
-            List<String> arrayList = Collections.emptyList();
-            Enumeration<String> enumeration = Collections.enumeration(arrayList);
+            List<String> arrayList = java.util.Collections.emptyList();
+            Enumeration<String> enumeration = java.util.Collections.enumeration(arrayList);
         }
     }
 }

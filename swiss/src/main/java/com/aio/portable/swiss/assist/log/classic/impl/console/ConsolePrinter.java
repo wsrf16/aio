@@ -57,7 +57,7 @@ public class ConsolePrinter implements Printer {
     }
 
 
-    static final String prefixTimePattern = "yyyy/MM/dd HH:mm:ss";
+    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss";
 
     private static String nowTime() {
         String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());

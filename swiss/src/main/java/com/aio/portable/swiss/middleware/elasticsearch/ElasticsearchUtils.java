@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ElasticsearchUtils {
-    private static final String TYPE = "type";
+    private final static String TYPE = "type";
 
     public static XContentBuilder buildMappingXContentBuilderByBean(Map<String, String> keyValueMap, Object bean) throws IOException {
         XContentBuilder xContentBuilder = XContentFactory.jsonBuilder();

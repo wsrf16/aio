@@ -15,8 +15,8 @@
 //
 //public class RSAUtils {
 //
-//    public static final String CHARSET = "UTF-8";
-//    public static final String RSA_ALGORITHM = "RSA";
+//    public final static String CHARSET = "UTF-8";
+//    public final static String RSA_ALGORITHM = "RSA";
 //
 //
 //    public static Map<String, String> createKeys(int keySize){

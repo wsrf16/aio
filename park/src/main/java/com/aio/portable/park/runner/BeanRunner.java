@@ -19,7 +19,7 @@ public class BeanRunner implements ApplicationRunner {
     @Autowired
     Schedule schedule;
 
-    @Autowired(required = false)
+    @Autowired
     MybatisTest mybatisTest;
 
     LogHub log = CustomLogHubFactory.singletonInstance().build();
@@ -38,7 +38,9 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        new ResourceTest();
+        mybatisTest.blah();
+
+        //        new ResourceTest();
 
         if (1 == 1)
             return;

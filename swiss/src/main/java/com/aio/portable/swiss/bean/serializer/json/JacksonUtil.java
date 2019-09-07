@@ -22,7 +22,7 @@ public class JacksonUtil {
         CamelCase,
     }
 
-//    private static final ObjectMapper objectMapper = new ObjectMapper();
+//    private final static ObjectMapper objectMapper = new ObjectMapper();
 //
 //    static {
 //        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);

@@ -13,7 +13,7 @@ public class XmlUtil {
         CamelCase,
     }
 
-    private static final ObjectMapper mapper = new XmlMapper();
+    private final static ObjectMapper mapper = new XmlMapper();
 
     static {
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);//

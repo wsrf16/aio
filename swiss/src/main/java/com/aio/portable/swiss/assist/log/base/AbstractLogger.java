@@ -18,11 +18,11 @@ import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public abstract class AbstractLogger extends LogBody {
-    static final String NEWLINE = Constant.LINE_SEPARATOR;
-//    protected static final String INTERVAL_CHAR = " => ";
-    protected static final String INTERVAL_CHAR = " ";
-    protected static final Supplier<String> EMPTY_PREFIX = () -> StringUtils.EMPTY;
-    protected static final String DEFAULT_NAME = AbstractLogger.class.getTypeName();
+    final static String NEWLINE = Constant.LINE_SEPARATOR;
+//    protected final static String INTERVAL_CHAR = " => ";
+    protected final static String INTERVAL_CHAR = " ";
+    protected final static Supplier<String> EMPTY_PREFIX = () -> StringUtils.EMPTY;
+    protected final static String DEFAULT_NAME = AbstractLogger.class.getTypeName();
 
 
     protected Supplier<String> prefixSupplier;

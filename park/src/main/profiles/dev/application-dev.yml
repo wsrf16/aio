@@ -4,7 +4,7 @@ spring:
       type: com.alibaba.druid.pool.DruidDataSource
 #      driver-class-name: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
       mybatis:
@@ -13,11 +13,18 @@ spring:
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
       mybatis:
         mapper-locations: classpath:mapper/*.xml
+
+    third:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 1
 
   rabbitmq:
     main:

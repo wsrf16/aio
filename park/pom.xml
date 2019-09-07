@@ -32,7 +32,7 @@
         <swagger.version>2.9.2</swagger.version>
         <springfox-staticdocs.version>2.6.1</springfox-staticdocs.version>
         <swagger2markup.version>1.3.3</swagger2markup.version>
-        <mysql.version>8.0.11</mysql.version>
+        <mysql.version>8.0.13</mysql.version>
         <tk.mybatis.version>1.1.3</tk.mybatis.version>
         <shiro.version>1.4.0</shiro.version>
         <cglib-nodep.version>3.2.8</cglib-nodep.version>
@@ -164,12 +164,12 @@
 <!--            </exclusions>-->
 <!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
         <!--<dependency>-->
             <!--<groupId>org.springframework.boot</groupId>-->
@@ -295,7 +295,10 @@
 <!--            <artifactId>cglib-nodep</artifactId>-->
 <!--            <version>${cglib-nodep.version}</version>-->
 <!--        </dependency>-->
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>

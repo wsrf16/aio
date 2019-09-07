@@ -1,7 +1,7 @@
 package com.aio.portable.park.config.mybatis.choice;
 
 //@Configuration
-//@MapperScan(basePackages = {"com.aio.portable.park.parkdb.dao.master.mapper"})
+//@MapperScan(basePackages = {"com.aio.portable.parkdb.dao.master.mapper"})
 //@ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
 //public class MybatisDataSource extends FreeDataSourceConfiguration {
 //
@@ -18,7 +18,7 @@ package com.aio.portable.park.config.mybatis.choice;
 //
 ////    @Override
 //    public String mapperScanBasePackages() {
-//        return "com.aio.portable.park.parkdb.dao.master.mapper";
+//        return "com.aio.portable.parkdb.dao.master.mapper";
 //    }
 //
 ////    @Bean

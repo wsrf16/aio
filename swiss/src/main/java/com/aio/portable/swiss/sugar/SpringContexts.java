@@ -15,7 +15,7 @@ import java.beans.Introspector;
 import java.util.Map;
 
 @Component
-public abstract class SpringContextUtils implements ApplicationContextAware {
+public abstract class SpringContexts implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
     /**
@@ -34,7 +34,7 @@ public abstract class SpringContextUtils implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringContextUtils.applicationContext = applicationContext;
+        SpringContexts.applicationContext = applicationContext;
     }
 
     public final static <T extends ApplicationContext> T getSimilarApplicationContext() {

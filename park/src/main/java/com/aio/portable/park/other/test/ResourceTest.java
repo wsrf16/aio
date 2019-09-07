@@ -4,7 +4,8 @@ import com.aio.portable.park.common.CustomLogHubFactory;
 import com.aio.portable.park.ParkApplication;
 import com.aio.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
-import com.aio.portable.swiss.resource.StreamClassLoader;
+import com.aio.portable.swiss.resource.Resources;
+import com.aio.portable.swiss.resource.StreamClassLoaders;
 import com.aio.portable.swiss.sandbox.Wood;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
@@ -124,7 +125,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = com.aio.portable.swiss.resource.ResourceUtils.ByClassLoader.getResources(resourceLocation);
+            List<URL> r1 = Resources.ByClassLoader.getResources(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,14 +133,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = com.aio.portable.swiss.resource.ResourceUtils.ByClassLoader.getResourcesByClassName(classname);
+            List<URL> r2 = Resources.ByClassLoader.getResourcesByClassName(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = com.aio.portable.swiss.resource.ResourceUtils.ByClassLoader.getResourcesByClass(clazz);
+            List<URL> r3 = Resources.ByClassLoader.getResourcesByClass(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,8 +149,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = com.aio.portable.swiss.resource.ResourceUtils.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = com.aio.portable.swiss.resource.ResourceUtils.getResourcesInJar(jarPath);
+            URL url = Resources.getResourceInJar(jarPath, resourceLocation);
+            List<URL> r4 = Resources.getResourcesInJar(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {
@@ -162,7 +163,7 @@ public class ResourceTest {
 //            String ss = "jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/";
         try {
             System.out.println(jarPath);
-            Class r5 = StreamClassLoader.buildByFile(jarPath).loadClassByBinary(classname);
+            Class r5 = StreamClassLoaders.buildByFile(jarPath).loadClassByBinary(classname);
             clazz = r5;
             log.i("r5！！！！！", r5);
         } catch (Exception e) {

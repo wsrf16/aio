@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ZooKeepers {
+public class ZooKeeperUtils {
     public static ZooKeeper build(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
         return new ZooKeeper(connectString, sessionTimeout, watcher);
     }

@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.data.freedatasource.config;
+package com.aio.portable.park.config.mybatis;
 
 import com.aio.portable.swiss.data.multidatasource.JpaBaseDataSourceConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,10 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-//@Configuration
-//@EnableJpaRepositories(basePackages = {JpaTemplateDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = JpaTemplateDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = JpaTemplateDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
+@Configuration
+@EnableJpaRepositories(basePackages = {ThirdDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = ThirdDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = ThirdDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
-public class JpaTemplateDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
+public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
     public final static String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
     public final static String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
     private final static String SPECIAL_NAME = "third";

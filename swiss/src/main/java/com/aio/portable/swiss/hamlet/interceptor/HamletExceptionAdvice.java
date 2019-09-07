@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 //@RestControllerAdvice
 public class HamletExceptionAdvice {
 
-    private static final String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
-    private static final String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
+    private final static String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
+    private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
 
     public HamletExceptionAdvice(LogHubFactory logHubFactory) {
         loggerPool = LogHubPool.getSingleton(logHubFactory);

@@ -19,17 +19,17 @@ import java.util.stream.Stream;
  */
 public class FilePrinter implements Printer {
 //    static class LoggerConfig {
-//        public static final String PATH_PROGRAM_ROOTFOLDER = Constant.CURRENT_DIRECTORY;
-//        public static final String NAME_LOG_ROOTFOLDER = "logs";
-//        public static final String LOG_EXTENSION = ".log";
-//        public static final String ZIP_EXTENSION = ".zip";
-//        public static final String SECTION_SEPARATOR = "\\";
-//        public static final String LINE_SEPARATOR = " : ";
-//        public static final String OCCUPY_SEPARATOR = "_";
-//        public static final String SEPARATOR_CHAR = "_";
-//        public static final int OCCUPY_MAX = 30;
-//        public static final String TIME_FORMAT = "yyyyMMdd";
-//        public static final int EMPTY_LINES = 1;
+//        public final static String PATH_PROGRAM_ROOTFOLDER = Constant.CURRENT_DIRECTORY;
+//        public final static String NAME_LOG_ROOTFOLDER = "logs";
+//        public final static String LOG_EXTENSION = ".log";
+//        public final static String ZIP_EXTENSION = ".zip";
+//        public final static String SECTION_SEPARATOR = "\\";
+//        public final static String LINE_SEPARATOR = " : ";
+//        public final static String OCCUPY_SEPARATOR = "_";
+//        public final static String SEPARATOR_CHAR = "_";
+//        public final static int OCCUPY_MAX = 30;
+//        public final static String TIME_FORMAT = "yyyyMMdd";
+//        public final static int EMPTY_LINES = 1;
 //    }
 
 
@@ -222,7 +222,7 @@ public class FilePrinter implements Printer {
     }
 
 
-    static final String prefixTimePattern = "yyyy/MM/dd HH:mm:ss";
+    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss";
 
     private static String nowTime() {
         String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());

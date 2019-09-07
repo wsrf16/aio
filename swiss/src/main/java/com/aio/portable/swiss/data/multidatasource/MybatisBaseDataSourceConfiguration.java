@@ -8,10 +8,13 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -20,16 +23,13 @@ import javax.sql.DataSource;
 
 //import com.aio.portable.swiss.data.batis.MybatisExtraProperties;
 
-
+@ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 public abstract class MybatisBaseDataSourceConfiguration {
-//    @Autowired
-//    protected MybatisProperties properties;
+    public MybatisProperties mybatisProperties() {
+        return new MybatisProperties();
+    }
 
-//    public BaseDataSourceConfiguration(MybatisProperties properties) {
-//        this.properties = properties;
-//    }
-
-    @Bean
+//    @Bean
 //    @ConfigurationProperties(prefix = "spring.datasource")
 //    @ConditionalOnProperty(prefix = "spring.datasource", value = "url")
 //    @ConditionalOnClass(DruidDataSourceBuilder.class)

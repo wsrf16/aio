@@ -92,11 +92,11 @@ public abstract class StreamUtils {
      *
      * @return An immutable toX of this stream.
      */
-    public static final <T> Collection<T> toLazyCollection(final Stream<T> stream) {
+    public final static <T> Collection<T> toLazyCollection(final Stream<T> stream) {
         return toLazyCollection(stream.iterator());
     }
 
-    public static final <T> Collection<T> toLazyCollection(final Iterator<T> iterator) {
+    public final static <T> Collection<T> toLazyCollection(final Iterator<T> iterator) {
         return toLazyCollection(iterator, false);
     }
 
@@ -104,20 +104,20 @@ public abstract class StreamUtils {
      * Lazily constructs a Collection from specified Stream. Collections iterator may be safely used
      * concurrently by multiple threads.
      */
-    public static final <T> Collection<T> toConcurrentLazyCollection(final Stream<T> stream) {
+    public final static <T> Collection<T> toConcurrentLazyCollection(final Stream<T> stream) {
         return toConcurrentLazyCollection(stream.iterator());
     }
 
-    public static final <T> Collection<T> toConcurrentLazyCollection(final Iterator<T> iterator) {
+    public final static <T> Collection<T> toConcurrentLazyCollection(final Iterator<T> iterator) {
         return toLazyCollection(iterator, true);
     }
 
-    private static final <T> Collection<T> toLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
+    private final static <T> Collection<T> toLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
         return createLazyCollection(iterator, concurrent);
 
     }
 
-    private static final <T> Collection<T> createLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
+    private final static <T> Collection<T> createLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
         return new AbstractCollection<T>() {
 
             @Override

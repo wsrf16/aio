@@ -75,7 +75,7 @@ public enum HttpStatusEnum {
     private final String reasonPhraseUS;
     private final String reasonPhraseCN;
 
-    private static final int
+    private final static int
             INFORMATIONAL = 1,
             SUCCESSFUL = 2,
             REDIRECTION = 3,

@@ -13,7 +13,7 @@ package com.aio.portable.park.config.mybatis.choice;
 //    public static MapperScannerConfigurer mapperScannerConfigurer() {
 //        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
 //        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
-//        mapperScannerConfigurer.setBasePackage("com.aio.portable.park.parkdb.dao.master.mapper");
+//        mapperScannerConfigurer.setBasePackage("com.aio.portable.parkdb.dao.master.mapper");
 //        /**
 //        Properties properties = new Properties();
 //        // 这里要特别注意，不要把MyMapper放到 basePackage 中，也就是不能同其他Mapper一样被扫描到。

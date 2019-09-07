@@ -17,9 +17,12 @@ import org.springframework.core.env.Environment;
         KafkaAutoConfiguration.class,
         DruidDataSourceAutoConfigure.class
 }, scanBasePackages = "com.aio.portable")
+//@EntityScan("com.aio.portable")
+
 //@ComponentScan(lazyInit = true)
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
 //@Import({MasterDataSourceConfiguration.class, SlaveDataSourceConfiguration.class})
+//@Import({ThirdDataSourceConfiguration.class})
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

@@ -95,11 +95,11 @@ public abstract class DateTimeUtils {
 
 
     public static class Format {
-        public static final String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-        public static final String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
-        public static final String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
-        public static final String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";
-        public static final String FORMAT_TIGHT_SHORT = "yyyyMMdd";
+        public final static String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        public final static String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
+        public final static String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
+        public final static String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";
+        public final static String FORMAT_TIGHT_SHORT = "yyyyMMdd";
 
         /**
          * 从String转换为Date
@@ -241,12 +241,12 @@ public abstract class DateTimeUtils {
         }
 
         static class EpochTime {
-            public static final int YEAR = 1970;
-            public static final int MONTH = 1;
-            public static final int DAY_OF_MONTH = 1;
-            public static final int HOUR = 0;
-            public static final int MINUTE = 0;
-            public static final int SECOND = 0;
+            public final static int YEAR = 1970;
+            public final static int MONTH = 1;
+            public final static int DAY_OF_MONTH = 1;
+            public final static int HOUR = 0;
+            public final static int MINUTE = 0;
+            public final static int SECOND = 0;
         }
     }
 

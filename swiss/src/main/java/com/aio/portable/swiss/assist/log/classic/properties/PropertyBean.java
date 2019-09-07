@@ -6,11 +6,11 @@ import java.beans.Introspector;
 
 public class PropertyBean {
     //Introspector.decapitalize(LogRabbitMQProperties.class.getName());
-    public static final String RABBITMQ_PROPERTIES = "logRabbitMQProperties";
+    public final static String RABBITMQ_PROPERTIES = "logRabbitMQProperties";
 
     //Introspector.decapitalize(LogKafkaProperties.class.getName());
-    public static final String KAFKA_PROPERTIES = "logKafkaProperties";
+    public final static String KAFKA_PROPERTIES = "logKafkaProperties";
 
-//    public static final String[] ALL = {KAFKA_PROPERTIES, RABBITMQ_PROPERTIES};
+//    public final static String[] ALL = {KAFKA_PROPERTIES, RABBITMQ_PROPERTIES};
 
 }

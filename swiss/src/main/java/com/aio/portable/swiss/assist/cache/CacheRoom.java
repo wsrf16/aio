@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
  */
 public class CacheRoom {
     String key;
-    static final String KEYISNULL = "the key can not be empty or null.";
-    static final String ROOTDIRECTORY = Constant.CURRENT_DIRECTORY;
-    static final String CACHEDIRECTORYNAME = "Cache";
-    static final String EXTENSION = ".cache";
+    final static String KEYISNULL = "the key can not be empty or null.";
+    final static String ROOTDIRECTORY = Constant.CURRENT_DIRECTORY;
+    final static String CACHEDIRECTORYNAME = "Cache";
+    final static String EXTENSION = ".cache";
     //System.Text.Encoding CahceFileEncoding = System.Text.Encoding.UTF8;
 
     static Hashtable<String, CacheRoom> CacheRooms;

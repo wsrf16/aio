@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 public class Logger {
     private static org.slf4j.Logger logger;
-    private static final String FQCN = Logger.class.getName();
+    private final static String FQCN = Logger.class.getName();
 
     static {
         try {

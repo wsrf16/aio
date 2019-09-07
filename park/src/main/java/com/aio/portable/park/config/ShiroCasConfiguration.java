@@ -22,7 +22,7 @@ package com.aio.portable.park.config;
 //@Configuration
 //public class ShiroCasConfiguration {
 //
-//    private static final String casFilterUrlPattern = "/shiro-cas";
+//    private final static String casFilterUrlPattern = "/shiro-cas";
 //    @Bean
 //    public FilterRegistrationBean filterRegistrationBean() {
 //        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();

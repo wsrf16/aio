@@ -74,7 +74,7 @@ public class OSInfo {
         return OS.indexOf("openvms") >= 0;
     }
 
-    public static final int getProcessID() {
+    public final static int getProcessID() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Integer.valueOf(runtimeMXBean.getName().split("@")[0])
                 .intValue();

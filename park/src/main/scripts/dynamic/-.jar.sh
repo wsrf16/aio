@@ -234,7 +234,13 @@ log_remain_line=100000
 ip_addr=$(getIpAddr)
 
 dirname_dependency=@project.deploy.directoryName.dependency@
+if [ "${dirname_dependency}"=="@project.deploy.directoryName.dependency@" ]; then
+  dirname_dependency=lib/
+fi
 dirname_config=@project.deploy.directoryName.profile@
+if [ "${dirname_config}"=="@project.deploy.directoryName.profile@" ]; then
+  dirname_config=config/
+fi
 dir_absolute_path=$(cd $(dirname $0); pwd)
 _self=${0##*/}
 if [[ ${_self} =~ . ]]; then
@@ -271,6 +277,10 @@ log_gclatest_file_absolute_path=$log_dir_absolute_path/gc_latest.log
 log_gctotal_file_absolute_path=$log_dir_absolute_path/gc_total.log
 
 args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
+
+# jdk9
+args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
+
 
 
 operate=$1

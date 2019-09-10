@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -41,6 +42,7 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
+//    @Primary
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }

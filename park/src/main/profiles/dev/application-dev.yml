@@ -19,12 +19,32 @@ spring:
       mybatis:
         mapper-locations: classpath:mapper/*.xml
 
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    #      driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+#    username: root
+#    password: 1
+
     third:
       driver-class-name: com.mysql.cj.jdbc.Driver
 #      driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
+#  jpa:
+##    database: mysql
+#    show-sql: true
+#    open-in-view: false
+#    hibernate:
+#      ddl-auto: update
+##      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+
 
   rabbitmq:
     main:

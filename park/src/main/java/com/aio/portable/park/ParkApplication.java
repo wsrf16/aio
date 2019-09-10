@@ -5,17 +5,21 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 //import com.aio.portable.park.ToMapTest;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
 //import com.aio.portable.park.task.ThreadLocalTest;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
+        DruidDataSourceAutoConfigure.class,
+//        MybatisAutoConfiguration.class,
         KafkaAutoConfiguration.class,
-        DruidDataSourceAutoConfigure.class
 }, scanBasePackages = "com.aio.portable")
 //@EntityScan("com.aio.portable")
 

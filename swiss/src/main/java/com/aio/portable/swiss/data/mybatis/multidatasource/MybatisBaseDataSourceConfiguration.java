@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.data.multidatasource;
+package com.aio.portable.swiss.data.mybatis.multidatasource;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;

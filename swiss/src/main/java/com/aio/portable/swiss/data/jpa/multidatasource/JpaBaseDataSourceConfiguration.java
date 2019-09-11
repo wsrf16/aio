@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.data.multidatasource;
+package com.aio.portable.swiss.data.jpa.multidatasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;

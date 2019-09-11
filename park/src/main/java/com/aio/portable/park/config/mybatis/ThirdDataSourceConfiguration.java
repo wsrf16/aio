@@ -1,6 +1,6 @@
 package com.aio.portable.park.config.mybatis;
 
-import com.aio.portable.swiss.data.multidatasource.JpaBaseDataSourceConfiguration;
+import com.aio.portable.swiss.data.jpa.multidatasource.JpaBaseDataSourceConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -63,7 +63,6 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) throws ClassNotFoundException {
         return super.dataSource(properties);
     }
-
 
     @ConditionalOnBean(name = DATA_SOURCE_BEAN)
     @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)

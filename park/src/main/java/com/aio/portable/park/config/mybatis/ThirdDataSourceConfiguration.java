@@ -30,12 +30,14 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     private final static String PERSISTENCE_UNIT = "persistenceUnit";
 
     protected final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    protected final static String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
+
     protected final static String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
     protected final static String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
     protected final static String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
 
-    //    protected final static String JDBC_PREFIX = DATA_SOURCE_PREFIX + ".jdbc";
     protected final static String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
+    protected final static String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
     protected final static String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
 
 
@@ -48,6 +50,14 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     }
 
     @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
+    @Bean(JPA_PROPERTIES_BEAN)
+    @ConfigurationProperties(prefix = JPA_PREFIX)
+//    @Primary
+    public JpaProperties jpaProperties() {
+        return super.jpaProperties();
+    }
+
+    @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
     @Bean(DATA_SOURCE_BEAN)
 //    @Primary
     public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) throws ClassNotFoundException {
@@ -57,7 +67,7 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
 
     @ConditionalOnBean(name = DATA_SOURCE_BEAN)
     @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
-    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, JpaProperties jpaProperties) {
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
         return super.localContainerEntityManagerFactoryBean(dataSource, builder, jpaProperties, ENTITY_BASE_PACKAGES, PERSISTENCE_UNIT);
     }
 

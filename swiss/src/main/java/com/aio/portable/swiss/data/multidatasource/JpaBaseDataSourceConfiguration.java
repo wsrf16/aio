@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.data.multidatasource;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -28,16 +28,18 @@ import javax.sql.DataSource;
 public abstract class JpaBaseDataSourceConfiguration {
     public final static String REPOSITORY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.mapper";
     public final static String ENTITY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.model";
-    private final static String SPECIAL_NAME = StringUtils.EMPTY; //"third";
-    private final static String PERSISTENCE_UNIT = StringUtils.EMPTY; //"persistenceUnit";
+    private final static String SPECIAL_NAME = org.apache.commons.lang3.StringUtils.EMPTY; //"third";
+    private final static String PERSISTENCE_UNIT = org.apache.commons.lang3.StringUtils.EMPTY; //"persistenceUnit";
 
     protected final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    protected final static String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
+
     protected final static String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
     protected final static String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
     protected final static String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
 
-    //    protected final static String JDBC_PREFIX = DATA_SOURCE_PREFIX + ".jdbc";
     protected final static String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
+    protected final static String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
     protected final static String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
 
 
@@ -47,6 +49,14 @@ public abstract class JpaBaseDataSourceConfiguration {
 //    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
+    }
+
+//    @ConditionalOnProperty(prefix = JPA_PREFIX, value = "jpa")
+//    @Bean(JPA_PROPERTIES_BEAN)
+//    @ConfigurationProperties(prefix = JPA_PREFIX)
+//    @Primary
+    public JpaProperties jpaProperties() {
+        return new JpaProperties();
     }
 
 //    @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
@@ -63,10 +73,12 @@ public abstract class JpaBaseDataSourceConfiguration {
 //    @ConditionalOnBean(name = DATA_SOURCE_BEAN)
 //    @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, JpaProperties jpaProperties, String entityBasePackages, String persistenceUnit) {
+//        org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+//        map.put("hibernate.naming.physical-strategy","org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
         LocalContainerEntityManagerFactoryBean factory = builder
                 .dataSource(dataSource)
                 .properties(jpaProperties.getProperties())
-                .packages(entityBasePackages)
+                .packages(StringUtils.tokenizeToStringArray(entityBasePackages, ","))
                 .persistenceUnit(persistenceUnit)
                 .build();
         return factory;
@@ -86,7 +98,7 @@ public abstract class JpaBaseDataSourceConfiguration {
 
 //    @ConditionalOnBean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
 //    @Bean(PLATFORM_TRANSACTION_MANAGER_BEAN)
-    public JpaTransactionManager jpaPlatformTransactionManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
+    public PlatformTransactionManager jpaPlatformTransactionManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
         return new JpaTransactionManager(factory.getObject());
     }
 }

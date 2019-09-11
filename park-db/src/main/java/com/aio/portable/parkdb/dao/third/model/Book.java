@@ -3,8 +3,8 @@ package com.aio.portable.parkdb.dao.third.model;
 import javax.persistence.*;
 
 @Entity
-//@Table
-@Table(name = "book")
+@Table
+//@Table(name = "book")
 public class Book {
     public Long getId() {
         return id;

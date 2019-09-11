@@ -31,18 +31,23 @@ spring:
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1
-#  jpa:
-##    database: mysql
-#    show-sql: true
-#    open-in-view: false
-#    hibernate:
-#      ddl-auto: update
-##      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-#      naming:
-#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      jpa:
+        database: mysql
+        show-sql: true
+        open-in-view: false
+        hibernate:
+          ddl-auto: update
+    #      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+          naming:
+    #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
+            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    #        implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+            physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+            implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 
 
 

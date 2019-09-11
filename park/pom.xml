@@ -11,18 +11,19 @@
     <name>park</name>
     <description>Park project for Spring Boot</description>
 
-    <parent>
-        <groupId>com.aio.portable</groupId>
-        <artifactId>all-in-one</artifactId>
-        <version>1.1.4-SNAPSHOT</version>
-    </parent>
-
 <!--    <parent>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-starter-parent</artifactId>-->
-<!--        <version>2.1.6.RELEASE</version>-->
+<!--        <groupId>com.aio.portable</groupId>-->
+<!--        <artifactId>all-in-one</artifactId>-->
+<!--        <version>1.1.4-SNAPSHOT</version>-->
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--    </parent>-->
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -52,7 +52,7 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
     @Bean(JPA_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = JPA_PREFIX)
-//    @Primary
+    @Primary
     public JpaProperties jpaProperties() {
         return super.jpaProperties();
     }

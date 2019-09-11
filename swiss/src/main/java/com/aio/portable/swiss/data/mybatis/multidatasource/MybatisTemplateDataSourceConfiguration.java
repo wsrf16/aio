@@ -1,9 +1,8 @@
-package com.aio.portable.swiss.data.freedatasource.config;
+package com.aio.portable.swiss.data.mybatis.multidatasource;
 
-import com.aio.portable.swiss.data.multidatasource.MybatisBaseDataSourceConfiguration;
+import com.aio.portable.swiss.data.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

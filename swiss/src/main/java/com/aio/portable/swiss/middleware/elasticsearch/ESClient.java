@@ -36,13 +36,13 @@ public abstract class ESClient {
         return settings;
     }
 
-    public final static CreateIndexResponse createStrictIndex(TransportClient transportClient, String index, String type, Class clazz) throws IOException, ExecutionException, InterruptedException, IllegalAccessException, InstantiationException {
+    public final static CreateIndexResponse createStrictIndex(TransportClient transportClient, String index, String type, Class clazz) throws Exception {
         AdminClient adminClient = transportClient.admin();
         IndicesAdminClient indicesAdminClient = adminClient.indices();
 
         Map<String, String> keyValueMap = new HashMap<>();
         keyValueMap.put("dynamic", "strict");
-        XContentBuilder contentBuilder = ElasticsearchUtils.buildMappingXContentBuilderByClass(keyValueMap, clazz);
+        XContentBuilder contentBuilder = ElasticsearchUtils.buildMappingXContentBuilder(keyValueMap, clazz);
 
         CreateIndexRequest createIndexRequest = Requests.createIndexRequest(index)
 //                .settings(settings)

@@ -8,6 +8,7 @@ import com.aio.portable.swiss.sandbox.a中文.AA;
 import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -106,11 +107,17 @@ public class ClassUtils {
      */
     public synchronized final static <T> T newInstance(Class<T> clazz) {
         try {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

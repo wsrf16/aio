@@ -3,6 +3,7 @@ package com.aio.portable.swiss.bean;
 import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.sandbox.a中文.BB;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +29,12 @@ public abstract class SingletonProvider {
 //        return v.getClass().newInstance();
 //    }
 
-    public static <T> T instance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
+    public static <T> T instance(Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         T instance = get(clazz);
         if (instance == null)
             synchronized (instances) {
                 if (instance == null) {
-                    instance = clazz.newInstance();
+                    instance = clazz.getDeclaredConstructor().newInstance();
                     instances.add(instance);
                     return instance;
                 }
@@ -68,7 +69,7 @@ public abstract class SingletonProvider {
 
 
     private static class BlahUnit {
-        private static void todo() throws InstantiationException, IllegalAccessException {
+        private static void todo() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
             AA aa = SingletonProvider.instance(AA.class);
             aa.aa = 77;
             BB bb = SingletonProvider.instance(BB.class);

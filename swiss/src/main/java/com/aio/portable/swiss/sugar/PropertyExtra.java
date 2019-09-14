@@ -1,58 +1,53 @@
 package com.aio.portable.swiss.sugar;
 
-//import com.sun.javafx.collections.MappingChange;
-
 import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class PropertyExtra {
-    public static Map<String, Object> getPropertyNameValue(Object bean) {
+
+    public final static Map<String, Object> getNameValue(Object bean) {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
         Map<String, Object> map = Arrays.stream(BeanUtils.getPropertyDescriptors(bean.getClass()))
                 .filter(c -> !c.getName().equals("class"))
-                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+//                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
         return map;
     }
 
-    public static Map<String, Class> getPropertyNameClass(Object bean) {
+    public final static Map<String, Class> getNameClass(Class clazz) {
 //        Stream<PropertyDescriptor> propertyDescriptorStream
-        Map<String, Class> map = Arrays.stream(BeanUtils.getPropertyDescriptors(bean.getClass()))
+        Map<String, Class> map = Arrays.stream(BeanUtils.getPropertyDescriptors(clazz))
                 .filter(c -> !c.getName().equals("class"))
                 .collect(Collectors.toMap(c -> c.getName(), c -> c.getPropertyType()));
         return map;
     }
 
-    public static Map<String, Object> getPropertyNameValue(Class clazz) throws IllegalAccessException, InstantiationException {
-//        Stream<PropertyDescriptor> propertyDescriptorStream
-//        new PropertyDescriptor("id", Person.class);
-        Object bean = clazz.newInstance();
-        Map<String, Object> map = getPropertyNameValue(bean);
-        return map;
-    }
-
-    public static Map<String, Class> getPropertyNameClass(Class clazz) throws IllegalAccessException, InstantiationException {
-//        Stream<PropertyDescriptor> propertyDescriptorStream
-//        new PropertyDescriptor("id", Person.class);
-        Object bean = clazz.newInstance();
-        Map<String, Class> map = getPropertyNameClass(bean);
-        return map;
-    }
 
 
-    private static Object getKeyValue(Object bean, PropertyDescriptor c) {
+//    public final static Map<String, Object> getNameValue(Class clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+////        Stream<PropertyDescriptor> propertyDescriptorStream
+////        new PropertyDescriptor("id", Person.class);
+//        Object bean = clazz.getDeclaredConstructor().newInstance();
+//        Map<String, Object> map = getNameValue(bean);
+//        return map;
+//    }
+
+    private static Object getValue(Object bean, PropertyDescriptor c) {
         try {
             return c.getReadMethod().invoke(bean);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

@@ -5,9 +5,11 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class CollectionUtils {
     /**
@@ -188,6 +190,11 @@ public abstract class CollectionUtils {
 
     public final static <T> Enumeration<T> toEnumeration(final Collection<T> c) {
         return java.util.Collections.enumeration(c);
+    }
+
+    public final static <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        HashMap<K, V> map = stream.collect(HashMap::new, (_map, _entity) -> _map.put(keyMapper.apply(_entity), valueMapper.apply(_entity)), HashMap::putAll);
+        return map;
     }
 
     public final static <T> List<T> flatNextToList(T t, Function<T, T> getNextFunction) {

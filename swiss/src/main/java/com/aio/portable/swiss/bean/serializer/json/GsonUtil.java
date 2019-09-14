@@ -56,7 +56,7 @@ public class GsonUtil {
 //	
 //
 //	public <T> T xGetExtra(String key, Class<T> clazz) throws FileNotFoundException, InstantiationException, IllegalAccessException {
-//		T t = clazz.newInstance();
+//		T t = clazz.getDeclaredConstructor().newInstance();
 //		XStream xStream = new XStream(new DomDriver());
 //		String fullPath = path + key + extXml;
 //		File file = new File(fullPath);

@@ -16,6 +16,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +24,7 @@ import java.util.Set;
 public class ElasticsearchUtils {
     private final static String TYPE = "type";
 
-    public static XContentBuilder buildMappingXContentBuilderByBean(Map<String, String> keyValueMap, Object bean) throws IOException {
+    public static XContentBuilder buildMappingXContentBuilder(Map<String, String> keyValueMap, Class clazz) throws IOException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         XContentBuilder xContentBuilder = XContentFactory.jsonBuilder();
 
         xContentBuilder.startObject();
@@ -34,26 +35,7 @@ public class ElasticsearchUtils {
         }
 
         xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameClass((Object) bean).entrySet();
-        startObject(xContentBuilder, propertySet);
-
-        xContentBuilder.endObject().endObject();
-        return xContentBuilder;
-    }
-
-
-    public static XContentBuilder buildMappingXContentBuilderByClass(Map<String, String> keyValueMap, Class clazz) throws IOException, InstantiationException, IllegalAccessException {
-        XContentBuilder xContentBuilder = XContentFactory.jsonBuilder();
-
-        xContentBuilder.startObject();
-        Set<Map.Entry<String, String>> keyValueSet = keyValueMap.entrySet();
-        for (Map.Entry<String, String> entry : keyValueSet) {
-            xContentBuilder.field(entry.getKey(), entry.getValue());
-//            xContentBuilder.field("dynamic", "strict");
-        }
-
-        xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getPropertyNameClass((Class) clazz).entrySet();
+        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getNameClass(clazz).entrySet();
         startObject(xContentBuilder, propertySet);
 
         xContentBuilder.endObject().endObject();

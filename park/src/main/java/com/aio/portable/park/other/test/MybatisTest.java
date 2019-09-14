@@ -37,6 +37,8 @@ public class MybatisTest {
                 book.setAuthor("ooooo");
 //                book.setId(100L);
                 bookThirdRepository.save(book);
+                Book vo = new Book();
+                bookThirdRepository.findAll();
                 Optional<com.aio.portable.parkdb.dao.third.model.Book> book2 = bookThirdRepository.findById(10L);
             }
         }

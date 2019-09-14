@@ -7,6 +7,7 @@ import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -229,7 +230,7 @@ public abstract class Resources {
 
 
     private static class BlahUnit {
-        private static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        private static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
             Resources.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
             Resources.ByClassLoader.getResourcesByClassName("Wood");
             Resources.ByClassLoader.getResourcesByClass(Book.class);
@@ -246,14 +247,14 @@ public abstract class Resources {
                 className = "Wood";
                 Class clazz1 = StreamClassLoaders.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
                 Class clazz2 = StreamClassLoaders.buildByResource("com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-                Object obj = clazz.newInstance();
-                Object obj1 = clazz.newInstance();
+                Object obj = clazz.getDeclaredConstructor().newInstance();
+                Object obj1 = clazz.getDeclaredConstructor().newInstance();
             }
             {
                 URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL("file:/" + jarPath)});
                 Class clazz = urlClassLoader.loadClass("sandbox.console.Book");
-                Object obj = clazz.newInstance();
-                Object obj1 = clazz.newInstance();
+                Object obj = clazz.getDeclaredConstructor().newInstance();
+                Object obj1 = clazz.getDeclaredConstructor().newInstance();
             }
         }
     }

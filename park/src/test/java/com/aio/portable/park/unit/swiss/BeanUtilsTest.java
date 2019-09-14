@@ -47,11 +47,11 @@ public class BeanUtilsTest {
     }
 
     @Test
-    public static void todo() throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException {
+    public static void todo() throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException {
 
         String typeName = People.class.getTypeName();
         Class<?> clazz = Class.forName(typeName);
-        Object people = clazz.newInstance();
+        Object people = clazz.getDeclaredConstructor().newInstance();
         ConvertUtils.register(new DateLocaleConverter(), java.util.Date.class);
 
         ConvertUtils.register(

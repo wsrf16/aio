@@ -1,15 +1,14 @@
 package com.aio.portable.swiss.data.jpa;
 
 import com.aio.portable.swiss.data.jpa.annotation.*;
+import com.aio.portable.swiss.data.jpa.annotation.where.*;
+import com.google.common.base.Function;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 //import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -120,9 +119,11 @@ public class SpecificationUtils {
      */
     public final static <R> Specification<R> buildSpecification(Object bean) {
         Specification<R> specification = (root, query, criteriaBuilder) -> {
-            Map<String, PropertyItem> properties = Util.getNamePropertyItem(bean);
-            List<Predicate> predicateList = SpecificationUtils.buildPredicate(properties, root, criteriaBuilder);
-            Predicate predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+            List<Predicate> predicateList = SpecificationUtils.buildPredicate(bean, root, criteriaBuilder);
+            Predicate predicate;
+            predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+//            predicate = query.where(predicateList.toArray(new Predicate[predicateList.size()])).getRestriction();
+
             return predicate;
         };
         return specification;
@@ -130,12 +131,13 @@ public class SpecificationUtils {
 
     /**
      * buildPredicate
-     * @param properties
+     * @param bean
      * @param root
      * @param criteriaBuilder
      * @return
      */
-    public final static <R> List<Predicate> buildPredicate(Map<String, PropertyItem> properties, Root<R> root, CriteriaBuilder criteriaBuilder) {
+    public final static <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
+        Map<String, PropertyItem> properties = Util.getNamePropertyItem(bean);
         List<Predicate> predicateList = new ArrayList<>();
         fillPredicateWithAllCriteria(properties, predicateList, root, criteriaBuilder);
         return predicateList;
@@ -192,88 +194,72 @@ public class SpecificationUtils {
 
     static class CriteriaUtil {
         static class LevelThree {
-            public final static <T> void fillPredicateWithXxxCriteria(BiFunction<Expression<T>, T, Predicate> biFunction, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                String name = property.getName();
+//            public final static <T> void fillPredicate(BiFunction<Expression<T>, T, Predicate> biFunction, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
+//                String name = property.getName();
+//                Object value = property.getValue();
+//                predicateList.add(biFunction.apply(root.get(name).as(clazz), (T) value));
+////        predicateList.add(criteriaBuilder.like(root.get(name).as(clazz), (String)value));
+//            }
+
+            public final static <T> void fillPredicate(BiFunction<Expression<T>, T, Predicate> biFunction, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
                 Object value = property.getValue();
                 predicateList.add(biFunction.apply(root.get(name).as(clazz), (T) value));
-//        predicateList.add(criteriaBuilder.like(root.get(name).as(clazz), (String)value));
             }
 
-            public final static <T> void fillPredicateWithXxxCriteria(BiFunction<Expression<T>, T, Predicate> biFunction, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                Object value = property.getValue();
-                predicateList.add(biFunction.apply(root.get(name).as(clazz), (T) value));
-//        predicateList.add(criteriaBuilder.like(root.get(name).as(clazz), (String)value));
+            public final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
+                Collection<T> value = (Collection<T>) property.getValue();
+                CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
+                value.stream().forEach(c -> predicate.value(c));
+                predicateList.add(predicate);
             }
         }
 
         static class LevelTwo {
-            public final static void fillPredicateWithLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::like, root, clazz, property, predicateList);
-            }
-
-            public final static void fillPredicateWithNotLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::notLike, root, clazz, property, predicateList);
-            }
-
-            public final static <T> void fillPredicateWithEqualCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::equal, root, clazz, property, predicateList);
-            }
-
-            public final static <T> void fillPredicateWithNotEqualCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::notEqual, root, clazz, property, predicateList);
-            }
-
-            public final static <T extends Comparable<? super T>> void fillPredicateWithGreaterThanCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::greaterThan, root, clazz, property, predicateList);
-            }
-
-            public final static <T extends Comparable<? super T>> void fillPredicateWithGreaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::greaterThanOrEqualTo, root, clazz, property, predicateList);
-            }
-
-            public final static <T extends Comparable<? super T>> void fillPredicateWithLessThanCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::lessThan, root, clazz, property, predicateList);
-            }
-
-            public final static <T extends Comparable<? super T>> void fillPredicateWithLessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::lessThanOrEqualTo, root, clazz, property, predicateList);
+            public final static <T> void fillPredicateWithInCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
+                LevelThree.fillPredicate(criteriaBuilder::in, root, name, clazz, property, predicateList);
             }
 
 
-
-
-
-
-            public final static void fillPredicateWithLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name,Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::equal, root, name, clazz, property, predicateList);
+            public final static void fillPredicateWithLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
+                LevelThree.fillPredicate(criteriaBuilder::like, root, name, clazz, property, predicateList);
             }
 
-            public final static void fillPredicateWithNotLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name,Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::notEqual, root, name, clazz, property, predicateList);
+
+            public final static void fillPredicateWithNotLikeCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<String> clazz, PropertyItem property, List<Predicate> predicateList) {
+                LevelThree.fillPredicate(criteriaBuilder::notLike, root, name, clazz, property, predicateList);
             }
+
 
             public final static <T> void fillPredicateWithEqualCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::equal, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::equal, root, name, clazz, property, predicateList);
             }
+
 
             public final static <T> void fillPredicateWithNotEqualCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::notEqual, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::notEqual, root, name, clazz, property, predicateList);
             }
 
+
+
+
+
+
+
+
             public final static <T extends Comparable<? super T>> void fillPredicateWithGreaterThanCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::greaterThan, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::greaterThan, root, name, clazz, property, predicateList);
             }
 
             public final static <T extends Comparable<? super T>> void fillPredicateWithGreaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::greaterThanOrEqualTo, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::greaterThanOrEqualTo, root, name, clazz, property, predicateList);
             }
 
             public final static <T extends Comparable<? super T>> void fillPredicateWithLessThanCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::lessThan, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::lessThan, root, name, clazz, property, predicateList);
             }
 
             public final static <T extends Comparable<? super T>> void fillPredicateWithLessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<T> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicateWithXxxCriteria(criteriaBuilder::lessThanOrEqualTo, root, name, clazz, property, predicateList);
+                LevelThree.fillPredicate(criteriaBuilder::lessThanOrEqualTo, root, name, clazz, property, predicateList);
             }
         }
 
@@ -294,10 +280,24 @@ public class SpecificationUtils {
                 if (field.isAnnotationPresent(IgnoreSQL.class))
                     return;
                 if (field.isAnnotationPresent(Like.class)) {
-                    LevelTwo.fillPredicateWithLikeCriteria(criteriaBuilder, root, (Class<String>) clazz, property, predicateList);
+                    Like annotation = field.getDeclaredAnnotation(Like.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
                 } else if (field.isAnnotationPresent(NotLike.class)) {
-                    LevelTwo.fillPredicateWithNotLikeCriteria(criteriaBuilder, root, (Class<String>) clazz, property, predicateList);
+                    NotLike annotation = field.getDeclaredAnnotation(NotLike.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithNotLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
                 }
+
+
+                else if (!field.isAnnotationPresent(Like.class) && name.endsWith("Like")) {
+                    name = removeEnd(name, "Like");
+                    LevelTwo.fillPredicateWithLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
+                } else if (!field.isAnnotationPresent(NotLike.class) && name.endsWith("NotLike")) {
+                    name = removeEnd(name, "NotLike");
+                    LevelTwo.fillPredicateWithNotLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
+                }
+
             }
 
             /**
@@ -315,11 +315,47 @@ public class SpecificationUtils {
                 if (field.isAnnotationPresent(IgnoreSQL.class))
                     return;
                 if (field.isAnnotationPresent(Equal.class)) {
-                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (field.isAnnotationPresent(NotEqual.class)) {
-                    LevelTwo.fillPredicateWithNotEqualCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    LevelTwo.fillPredicateWithNotEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                }
+
+
+                else if (!field.isAnnotationPresent(Equal.class) && name.endsWith("Equal")) {
+                    name = removeEnd(name, "Equal");
+                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                } else if (!field.isAnnotationPresent(NotEqual.class) && name.endsWith("NotEqual")) {
+                    name = removeEnd(name, "NotEqual");
+                    LevelTwo.fillPredicateWithNotEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
             }
+
+
+            /**
+             * fillPredicateWithInsCriteria
+             * @param criteriaBuilder
+             * @param root
+             * @param clazz
+             * @param property
+             * @param predicateList
+             * @param <T>
+             */
+            public final static <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
+                Field field = property.getField();
+                String name = property.getName();
+                if (field.isAnnotationPresent(IgnoreSQL.class))
+                    return;
+                if (field.isAnnotationPresent(In.class)) {
+                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                }
+
+
+                else if (!field.isAnnotationPresent(In.class) && name.endsWith("In")) {
+                    name = removeEnd(name, "In");
+                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                }
+            }
+
 
             /**
              * fillPredicateWithComparableCriteria
@@ -337,13 +373,25 @@ public class SpecificationUtils {
                 if (field.isAnnotationPresent(IgnoreSQL.class))
                     return;
                 if (field.isAnnotationPresent(GreaterThan.class)) {
-                    LevelTwo.fillPredicateWithGreaterThanCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    GreaterThan annotation = field.getDeclaredAnnotation(GreaterThan.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithGreaterThanCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (field.isAnnotationPresent(GreaterThanOrEqualTo.class)) {
-                    LevelTwo.fillPredicateWithGreaterThanOrEqualToCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    GreaterThanOrEqualTo annotation = field.getDeclaredAnnotation(GreaterThanOrEqualTo.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithGreaterThanOrEqualToCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (field.isAnnotationPresent(LessThan.class)) {
-                    LevelTwo.fillPredicateWithLessThanCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    LessThan annotation = field.getDeclaredAnnotation(LessThan.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithLessThanCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (field.isAnnotationPresent(LessThanOrEqualTo.class)) {
-                    LevelTwo.fillPredicateWithLessThanOrEqualToCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    LessThanOrEqualTo annotation = field.getDeclaredAnnotation(LessThanOrEqualTo.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithLessThanOrEqualToCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                } else if (field.isAnnotationPresent(Equal.class)) {
+                    Equal annotation = field.getDeclaredAnnotation(Equal.class);
+                    name = annotation.targetProperty();
+                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
 
 
@@ -364,7 +412,7 @@ public class SpecificationUtils {
                 }
 
                 else {
-                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, clazz, property, predicateList);
+                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
             }
 

@@ -1,13 +1,8 @@
 package com.aio.portable.parkdb.dao.third.model;
 
-import com.aio.portable.swiss.data.jpa.annotation.Like;
+import com.aio.portable.swiss.data.jpa.annotation.where.Like;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-public class BookVO {
+public class BookVO extends Book {
     private Long id;
     @Like
     private String name;

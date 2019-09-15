@@ -10,9 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.Date;
+import java.util.Locale;
 
 public class ClassUtils {
     /**
@@ -121,6 +124,16 @@ public class ClassUtils {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+
+    /**
+     * isSimpleValueType
+     * @param clazz
+     * @return
+     */
+    public static boolean isSimpleValueType(Class<?> clazz) {
+        return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
     }
 
 

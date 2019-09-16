@@ -1,6 +1,6 @@
 package com.aio.portable.park.other.test;
 
-import com.aio.portable.park.common.CustomLogHubFactory;
+import com.aio.portable.park.common.LogFactory;
 import com.aio.portable.park.ParkApplication;
 import com.aio.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = CustomLogHubFactory.singletonInstance().build();
+    LogHub log = LogFactory.singletonInstance().build();
 
     {
         {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 //@Configuration
-public class HamletBeanConfig {
+public abstract class HamletBeanConfig {
     @Bean
     public static ObjectMapper objectMapper(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

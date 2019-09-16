@@ -1,7 +1,7 @@
 package com.aio.portable.park.controller;
 
 //import com.aio.portable.park.common.log.InjectedBaseLogger;
-import com.aio.portable.park.common.CustomLogHubFactory;
+import com.aio.portable.park.common.LogFactory;
 import com.aio.portable.swiss.assist.cache.RedisLock;
 import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import java.util.Date;
 public class DemoController {// extends InjectedBaseLogger {
     @GetMapping("loganno")
     public String loganno() {
-        CustomLogHubFactory.singletonInstance().build(this.getClass()).d("debug");
+        LogFactory.singletonInstance().build(this.getClass()).d("debug");
         return "ok";
     }
 

@@ -56,7 +56,7 @@ public class ResponseWrapper<T> {
      * 默认返回实体
      * @return
      */
-    public static ResponseWrapper build() {
+    public static <T> ResponseWrapper<T> build() {
         return new ResponseWrapper();
     }
 
@@ -66,7 +66,7 @@ public class ResponseWrapper<T> {
      * @param message
      * @return
      */
-    public static ResponseWrapper build(int statusCode, String message) {
+    public static <T> ResponseWrapper<T> build(int statusCode, String message) {
         return new ResponseWrapper<>(statusCode, message, null);
     }
 

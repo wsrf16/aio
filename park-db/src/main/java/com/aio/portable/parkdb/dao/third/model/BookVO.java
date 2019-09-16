@@ -4,7 +4,7 @@ import com.aio.portable.swiss.data.jpa.annotation.where.Like;
 
 public class BookVO extends Book {
     private Long id;
-    @Like
+    @Like(targetProperty = "name")
     private String name;
     private String author;
     private String description;

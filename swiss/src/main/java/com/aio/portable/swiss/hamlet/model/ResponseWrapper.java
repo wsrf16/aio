@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
-@ApiModel("返回实体")
+//@ApiModel("返回实体")
 public class ResponseWrapper<T> {
     /**
      * 作为一次请求的唯一标识，用于问题定位（不需赋值）

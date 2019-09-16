@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function mkdirLog() {
-  if [ ! -d $log_dir_absolute_path ];then
+  if [[ ! -d $log_dir_absolute_path ]];then
     mkdir $log_dir_absolute_path
   else
-    if [ -f "${log_gclatest_file_absolute_path}" ];then
+    if [[ -f "${log_gclatest_file_absolute_path}" ]];then
       cat ${log_gclatest_file_absolute_path} >> ${log_gctotal_file_absolute_path}
       rm -f ${log_gclatest_file_absolute_path}
     fi
@@ -37,7 +37,7 @@ function getDirectory() {
 }
 
 function captureProcessLine() {
-  if [ $operate == "stop" ]; then
+  if [[ $operate == "stop" ]]; then
     #                       show line no   except         except         except
     process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename break" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once")
   else
@@ -79,9 +79,9 @@ function run() {
   touch ${log_file_absolute_path}
   tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
   mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
-  if [ $operate == "once" ]; then
+  if [[ $operate == "once" ]]; then
     java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 2>&1 | tee ${log_file_absolute_path}
-  elif [ $operate == "start" ]; then
+  elif [[ $operate == "start" ]]; then
     nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
   fi
 
@@ -96,7 +96,7 @@ function calldaemon() {
   echo "current running status..."
   while [ true ]; do
     is=$(isRunning $1)
-    if [ ! ${is} ]; then
+    if [[ ! ${is} ]]; then
       #$sh_file_absolute_path start
       operate="start"
       run $1
@@ -111,7 +111,7 @@ function calldaemon() {
 function status() {
   echo "current running status..."
   is=$(isRunning $1)
-  if [ ${is} ]; then
+  if [[ ${is} ]]; then
     echo "$filename is running."
   else
     echo "$filename is not running."
@@ -120,7 +120,7 @@ function status() {
 
 function start() {
   is=$(isRunning $1)
-  if [ ${is} ]; then
+  if [[ ${is} ]]; then
     #status $1
     echo "nothing happened."
     echo "$filename has been running."
@@ -133,10 +133,10 @@ function start() {
 
 function stop() {
   is=$(isRunning $1)
-  while [ ${is} ]; do
+  while [[ ${is} ]]; do
     status $1
     pid=$(getPid $1)
-    if [ "$pid" ]; then
+    if [[ "$pid" ]]; then
       for p in ${pid[@]}
       do
           kill -15 $p >/dev/null 2>&1
@@ -152,10 +152,10 @@ function stop() {
 
 function break() {
   is=$(isRunning $1)
-  while [ ${is} ]; do
+  while [[ ${is} ]]; do
     status $1
     pid=$(getPid $1)
-    if [ "$pid" ]; then
+    if [[ "$pid" ]]; then
       for p in ${pid[@]}
       do
         kill -9 $p >/dev/null 2>&1
@@ -234,11 +234,11 @@ log_remain_line=100000
 ip_addr=$(getIpAddr)
 
 dirname_dependency=@project.deploy.directoryName.dependency@
-if [ "${dirname_dependency}"=="@project.deploy.directoryName.dependency@" ]; then
+if [[ "${dirname_dependency}"=="@project.deploy.directoryName.dependency@" ]]; then
   dirname_dependency=lib/
 fi
 dirname_config=@project.deploy.directoryName.profile@
-if [ "${dirname_config}"=="@project.deploy.directoryName.profile@" ]; then
+if [[ "${dirname_config}"=="@project.deploy.directoryName.profile@" ]]; then
   dirname_config=config/
 fi
 dir_absolute_path=$(cd $(dirname $0); pwd)
@@ -259,7 +259,7 @@ else
   mode="static"
 fi
 
-if [ $mode == "dynamic" ]; then
+if [[ $mode == "dynamic" ]]; then
   filename=${_self%.*}
   file_absolute_path=$dir_absolute_path/$filename
   sh_file_absolute_path=$dir_absolute_path/$shfilename
@@ -285,39 +285,39 @@ args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis
 
 
 operate=$1
-if [ -z ${operate} ]; then
+if [[ -z ${operate} ]]; then
   help
 else
   mkdirLog
-  if [ $operate == "once" ]; then
+  if [[ $operate == "once" ]]; then
     start $file_absolute_path
-  elif [ $operate == "start" ]; then
+  elif [[ $operate == "start" ]]; then
     start $file_absolute_path
-  elif [ $operate == "restartlog" ]; then
+  elif [[ $operate == "restartlog" ]]; then
     restartlog $file_absolute_path
-  elif [ $operate == "daemon" ]; then
-    if [ $mode == "dynamic" ]; then
+  elif [[ $operate == "daemon" ]]; then
+    if [[ $mode == "dynamic" ]]; then
       nohup $sh_file_absolute_path calldaemon >/dev/null 2>&1 &
-    elif [ $mode == "static" ]; then
+    elif [[ $mode == "static" ]]; then
       nohup $sh_file_absolute_path calldaemon $file_absolute_path >/dev/null 2>&1 &
     fi
     sleep $check_period
     status $file_absolute_path
-  elif [ $operate == "calldaemon" ]; then
+  elif [[ $operate == "calldaemon" ]]; then
     calldaemon $file_absolute_path
-  elif [ $operate == "stop" ]; then
+  elif [[ $operate == "stop" ]]; then
     stop $file_absolute_path
-  elif [ $operate == "break" ]; then
+  elif [[] $operate == "break" ]]; then
     break $file_absolute_path
-  elif [ $operate == "restart" ]; then
+  elif [[ $operate == "restart" ]]; then
     restart $file_absolute_path
-  elif [ $operate == "status" ]; then
+  elif [[ $operate == "status" ]]; then
     status $file_absolute_path
-  elif [ $operate == "log" ]; then
+  elif [[ $operate == "log" ]]; then
     log
-  elif [ $operate == "gclog" ]; then
+  elif [[ $operate == "gclog" ]]; then
     gclog
-  elif [ $operate == "help" ]; then
+  elif [[ $operate == "help" ]]; then
     help
   else
     help

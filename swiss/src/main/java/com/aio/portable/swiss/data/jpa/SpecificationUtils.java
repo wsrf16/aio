@@ -1,45 +1,39 @@
 package com.aio.portable.swiss.data.jpa;
 
-import com.aio.portable.swiss.data.jpa.annotation.*;
+import com.aio.portable.swiss.bean.BeanUtils;
+import com.aio.portable.swiss.data.jpa.annotation.IgnoreSQL;
 import com.aio.portable.swiss.data.jpa.annotation.where.*;
 import com.google.common.base.Function;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
-//import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 public class SpecificationUtils {
     static class Util {
-        private static Object getValue(Object bean, PropertyDescriptor c) {
-            try {
-                return c.getReadMethod().invoke(bean);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
-
         public final static Map<String, PropertyItem> getNamePropertyItem(Object bean) {
             Class<?> clazz = bean.getClass();
-            Map<String, PropertyItem> map = Arrays.stream(BeanUtils.getPropertyDescriptors(clazz))
+            Map<String, PropertyItem> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                     .filter(c -> !c.getName().equals("class"))
 //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
                     .collect(HashMap::new, (_map, _property) -> {
                         String name = _property.getName();
-                        Object value = getValue(bean, _property);
-                        Field field = getDeclaredField(clazz, name);
+                        Object value = BeanUtils.PropertyDescriptors.getValue(bean, _property);
+                        Field field = null;
+                        try {
+                            field = BeanUtils.Fields.getDeclaredFieldIncludeParents(clazz, name);
+                        } catch (NoSuchFieldException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
                         PropertyItem propertyItem = new PropertyItem();
                         propertyItem.setName(name);
                         propertyItem.setValue(value);
@@ -50,26 +44,6 @@ public class SpecificationUtils {
             return map;
         }
 
-        private final static Field getDeclaredField(Class<?> clazz, String name) {
-            try {
-                List<String> fieldNames = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())).stream().map(Field::getName).collect(Collectors.toList());
-                Field field;
-                if (fieldNames.contains(name)) {
-                    field = clazz.getDeclaredField(name);
-                } else {
-                    Class<?> parentClazz = clazz.getSuperclass();
-                    if (parentClazz == null) {
-                        throw new NoSuchFieldException(name);
-                    } else {
-                        field = getDeclaredField(parentClazz, name);
-                    }
-                }
-                return field;
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public static class PropertyItem {
@@ -118,7 +92,7 @@ public class SpecificationUtils {
      * @return
      */
     public final static <R> Specification<R> buildSpecification(Object bean) {
-        Specification<R> specification = (root, query, criteriaBuilder) -> {
+        Specification<R> specification = (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicateList = SpecificationUtils.buildPredicate(bean, root, criteriaBuilder);
             Predicate predicate;
             predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.middleware.elasticsearch;
 
-import com.aio.portable.swiss.sugar.PropertyExtra;
+import com.aio.portable.swiss.bean.BeanUtils;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -35,7 +35,7 @@ public class ElasticsearchUtils {
         }
 
         xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = PropertyExtra.getNameClass(clazz).entrySet();
+        Set<Map.Entry<String, Class>> propertySet = BeanUtils.PropertyDescriptors.getNameClass(clazz).entrySet();
         startObject(xContentBuilder, propertySet);
 
         xContentBuilder.endObject().endObject();

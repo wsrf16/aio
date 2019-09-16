@@ -5,12 +5,11 @@ import com.aio.portable.swiss.data.jpa.annotation.order.Order;
 import org.springframework.data.domain.Sort;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PageableSort {
+public abstract class PageableSort {
 
     public final static Sort buildSort(Class<?> clazz) {
         List<Field> fieldList = BeanUtils.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(Order.class)).collect(Collectors.toList());

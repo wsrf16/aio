@@ -6,6 +6,7 @@
         <groupId>com.aio.portable</groupId>
         <artifactId>all-in-one</artifactId>
         <version>1.1.4-SNAPSHOT</version>
+<!--        <relativePath/>-->
     </parent>
 
     <groupId>com.aio.portable</groupId>
@@ -20,6 +21,7 @@
         <java.version>1.8</java.version>
         <!--<swagger.version>2.9.2</swagger.version>-->
         <mysql.version>8.0.11</mysql.version>
+        <mybatis.version>2.1.0</mybatis.version>
     </properties>
 
     <dependencies>
@@ -40,6 +42,28 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>2.1.6.RELEASE</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+<!--            <optional>true</optional>-->
+            <version>${mybatis.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-autoconfigure</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

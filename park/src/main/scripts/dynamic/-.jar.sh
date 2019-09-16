@@ -307,7 +307,7 @@ else
     calldaemon $file_absolute_path
   elif [[ $operate == "stop" ]]; then
     stop $file_absolute_path
-  elif [[] $operate == "break" ]]; then
+  elif [[ $operate == "break" ]]; then
     break $file_absolute_path
   elif [[ $operate == "restart" ]]; then
     restart $file_absolute_path

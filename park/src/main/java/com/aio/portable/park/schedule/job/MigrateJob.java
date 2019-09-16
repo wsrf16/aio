@@ -1,6 +1,6 @@
 package com.aio.portable.park.schedule.job;
 
-import com.aio.portable.park.common.CustomLogHubFactory;
+import com.aio.portable.park.common.LogFactory;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 
 @Configuration
 public class MigrateJob implements Runnable {
-    LogHub log = CustomLogHubFactory.singletonInstance().build();
+    LogHub log = LogFactory.singletonInstance().build();
 
 
     private static int monthFromNow = -3;

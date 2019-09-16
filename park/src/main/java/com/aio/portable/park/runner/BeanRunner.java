@@ -4,8 +4,7 @@ package com.aio.portable.park.runner;
 
 import com.aio.portable.park.other.test.MybatisTest;
 import com.aio.portable.park.schedule.Schedule;
-import com.aio.portable.park.common.CustomLogHubFactory;
-import com.aio.portable.park.other.test.ResourceTest;
+import com.aio.portable.park.common.LogFactory;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -22,7 +21,7 @@ public class BeanRunner implements ApplicationRunner {
     @Autowired
     MybatisTest mybatisTest;
 
-    LogHub log = CustomLogHubFactory.singletonInstance().build();
+    LogHub log = LogFactory.singletonInstance().build();
 
 
     private void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {

@@ -280,7 +280,7 @@ args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis
 
 
 # jdk9
-args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
+#args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
 
 
 

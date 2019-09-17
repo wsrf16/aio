@@ -15,7 +15,7 @@ public class TaskRequest
                 status = status;} };
         }
 
-        public boolean HasStorge(RequestStatusEnum status)
+        public boolean hasStorge(RequestStatusEnum status)
         {
             return storage.containsKey(status);
         }

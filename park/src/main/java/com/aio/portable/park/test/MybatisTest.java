@@ -1,4 +1,4 @@
-package com.aio.portable.park.other.test;
+package com.aio.portable.park.test;
 
 import com.aio.portable.parkdb.dao.master.mapper.BookMasterMapper;
 import com.aio.portable.parkdb.dao.slave.mapper.BookSlaveMapper;

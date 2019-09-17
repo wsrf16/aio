@@ -1,4 +1,4 @@
-package com.aio.portable.park.other;
+package com.aio.portable.park.test;
 
 import com.aio.portable.park.beanprocessor.UserInfoEntity;
 import org.springframework.beans.factory.InitializingBean;

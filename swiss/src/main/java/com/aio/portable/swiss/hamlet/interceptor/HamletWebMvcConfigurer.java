@@ -65,9 +65,9 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 
     static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE" };
 
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("/**")
+        registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowCredentials(true)
                 .allowedMethods("*")

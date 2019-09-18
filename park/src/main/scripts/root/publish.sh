@@ -28,9 +28,9 @@ fi
 # wget -N ${ftp_url}/${proj_filename}
 rz -y
 if [[ $? -eq 0 ]]; then
-  echo -e "\nupload succeed."
+  echo -e "\nupload succeed.\n"
 else
-  echo -e "\nupload failed!"
+  echo -e "\nupload failed!\n"
   exit 0
 fi
 rm -rf ${proj_dir}/lib

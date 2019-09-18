@@ -39,9 +39,9 @@ function getDirectory() {
 function captureProcessLine() {
   if [[ $operate == "stop" ]]; then
     #                       show line no   except         except         except
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename break" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename forcestop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once")
   else
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename break" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once" | grep -v "$shfilename calldaemon")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename forcestop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once" | grep -v "$shfilename calldaemon")
   fi
   echo $process_line
 }
@@ -150,7 +150,7 @@ function stop() {
   status $1
 }
 
-function break() {
+function forcestop() {
   is=$(isRunning $1)
   while [[ ${is} ]]; do
     status $1
@@ -202,7 +202,7 @@ function help() {
   echo "<jarfile>.jar.sh restart"
   echo "<jarfile>.jar.sh restartlog"
   echo "<jarfile>.jar.sh stop"
-  echo "<jarfile>.jar.sh break"
+  echo "<jarfile>.jar.sh forcestop"
   echo "<jarfile>.jar.sh status"
   echo "<jarfile>.jar.sh log"
 
@@ -212,7 +212,7 @@ function help() {
   echo "<self>.sh <jarfile> restart"
   echo "<self>.sh <jarfile> restartlog"
   echo "<self>.sh <jarfile> stop"
-  echo "<self>.sh <jarfile> break"
+  echo "<self>.sh <jarfile> forcestop"
   echo "<self>.sh <jarfile> status"
   echo "<self>.sh <jarfile> log"
 }
@@ -226,7 +226,7 @@ function help() {
 
 
 
-
+jdk_version=$(java -version 2>&1 |awk 'NR==1{ gsub(/"/,""); print $3 }'|grep -P '^\d\.\d' -o)
 now="`date +%Y%m%d%H%M%S`"
 check_period=2
 daemon_check_period=10
@@ -276,12 +276,11 @@ log_file_absolute_path=$log_dir_absolute_path/service.log
 log_gclatest_file_absolute_path=$log_dir_absolute_path/gc_latest.log
 log_gctotal_file_absolute_path=$log_dir_absolute_path/gc_total.log
 
-args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
-
-
-# jdk9
-#args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
-
+if [[ `expr ${jdk_version} \<= 1.8` -eq 1 ]]; then
+  args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
+elif [[ `expr ${jdk_version} \> 1.8` -eq 1 ]]; then
+  args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
+fi
 
 
 operate=$1
@@ -307,8 +306,8 @@ else
     calldaemon $file_absolute_path
   elif [[ $operate == "stop" ]]; then
     stop $file_absolute_path
-  elif [[ $operate == "break" ]]; then
-    break $file_absolute_path
+  elif [[ $operate == "forcestop" ]]; then
+    forcestop $file_absolute_path
   elif [[ $operate == "restart" ]]; then
     restart $file_absolute_path
   elif [[ $operate == "status" ]]; then

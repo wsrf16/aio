@@ -65,7 +65,7 @@ public class ClassUtils {
      */
     public static boolean exist(String className) throws IOException {
         String resource = convertClassName2ResourcePath(className);
-        return Resources.ByClassLoader.existResource(resource);
+        return ResourceUtils.ByClassLoader.existResource(resource);
     }
 
 

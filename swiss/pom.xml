@@ -461,19 +461,6 @@
                 <updatePolicy>interval:30</updatePolicy>
             </snapshots>
         </repository>
-
-        <!--<repository>-->
-            <!--<id>public-bak</id>-->
-            <!--<url>http://192.168.145.246:8081/nexus/content/repositories/public/</url>-->
-            <!--<releases>-->
-                <!--<enabled>true</enabled>-->
-                <!--<updatePolicy>alway</updatePolicy>-->
-            <!--</releases>-->
-            <!--<snapshots>-->
-                <!--<enabled>true</enabled>-->
-                <!--<updatePolicy>interval:30</updatePolicy>-->
-            <!--</snapshots>-->
-        <!--</repository>-->
     </repositories>
 
     <distributionManagement>

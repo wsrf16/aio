@@ -4,11 +4,10 @@ import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.ParkApplication;
 import com.aio.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
-import com.aio.portable.swiss.resource.Resources;
+import com.aio.portable.swiss.resource.ResourceUtils;
 import com.aio.portable.swiss.resource.StreamClassLoaders;
 import com.aio.portable.swiss.sandbox.Wood;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +35,7 @@ public class ResourceTest {
             // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
             try {
                 System.out.println("--2.ResourceUtils.getFile(\"classpath:1.properties\")");
-                File file = ResourceUtils.getFile("classpath:1.properties");
+                File file = org.springframework.util.ResourceUtils.getFile("classpath:1.properties");
                 System.out.println(file.toURI());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -46,7 +45,7 @@ public class ResourceTest {
             // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
             try {
                 System.out.println("--√3.ResourceUtils.getURL");
-                String path = ResourceUtils.getURL("classpath:1.properties").toString();
+                String path = org.springframework.util.ResourceUtils.getURL("classpath:1.properties").toString();
                 System.out.println(path);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -125,7 +124,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = Resources.ByClassLoader.getResources(resourceLocation);
+            List<URL> r1 = ResourceUtils.ByClassLoader.getResources(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,14 +132,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = Resources.ByClassLoader.getResourcesByClassName(classname);
+            List<URL> r2 = ResourceUtils.ByClassLoader.getResourcesByClassName(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = Resources.ByClassLoader.getResourcesByClass(clazz);
+            List<URL> r3 = ResourceUtils.ByClassLoader.getResourcesByClass(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,8 +148,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = Resources.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = Resources.getResourcesInJar(jarPath);
+            URL url = ResourceUtils.getResourceInJar(jarPath, resourceLocation);
+            List<URL> r4 = ResourceUtils.getResourcesInJar(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

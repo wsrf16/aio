@@ -21,7 +21,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class Resources {
+public abstract class ResourceUtils {
 
     /**
      * JarPath         eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
@@ -199,7 +199,7 @@ public abstract class Resources {
          * @throws IOException
          */
         public static boolean existResource(String resourceLocation) throws IOException {
-            List<URL> urlList = Resources.ByClassLoader.getResources(resourceLocation);
+            List<URL> urlList = ResourceUtils.ByClassLoader.getResources(resourceLocation);
             boolean exist = urlList != null && urlList.size() > 0;
             return exist;
         }
@@ -231,18 +231,18 @@ public abstract class Resources {
 
     private static class BlahUnit {
         private static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-            Resources.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
-            Resources.ByClassLoader.getResourcesByClassName("Wood");
-            Resources.ByClassLoader.getResourcesByClass(Book.class);
+            ResourceUtils.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
+            ResourceUtils.ByClassLoader.getResourcesByClassName("Wood");
+            ResourceUtils.ByClassLoader.getResourcesByClass(Book.class);
 
 
             String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
             String resourceInJar = "/sandbox/console/Book.class";
-            URL url = Resources.getResourceInJar(jarPath, resourceInJar);
-            List<URL> urlList = Resources.getResourcesInJar(jarPath);
+            URL url = ResourceUtils.getResourceInJar(jarPath, resourceInJar);
+            List<URL> urlList = ResourceUtils.getResourcesInJar(jarPath);
 
             {
-                String className = Resources.path2FullName(resourceInJar);
+                String className = ResourceUtils.path2FullName(resourceInJar);
                 Class clazz = StreamClassLoaders.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
                 className = "Wood";
                 Class clazz1 = StreamClassLoaders.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);

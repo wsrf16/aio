@@ -31,4 +31,32 @@
 
         <springboot.version>2.1.6.RELEASE</springboot.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>ali-maven</id>
+<!--            http://maven.aliyun.com/mvn/view-->
+            <url>http://maven.aliyun.com/nexus/content/groups/public//</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>central</id>
+            <url>http://central.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:30</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

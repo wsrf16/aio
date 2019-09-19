@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit.swiss;
 
-import com.aio.portable.swiss.resource.Packages;
+import com.aio.portable.swiss.resource.PackageUtils;
 import com.aio.portable.swiss.sugar.StackTraceInfos;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -14,7 +14,7 @@ public class ResourceUtilTest {
     @Test
     public void getClassName() throws IOException {
         String packageName = StackTraceInfos.Current.getClassName();
-        List<String> list = Packages.getClassName(packageName);
+        List<String> list = PackageUtils.getClassName(packageName);
     }
 
 }

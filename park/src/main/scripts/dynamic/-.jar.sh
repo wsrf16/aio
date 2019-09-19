@@ -234,11 +234,11 @@ log_remain_line=100000
 ip_addr=$(getIpAddr)
 
 dirname_dependency=@project.deploy.directoryName.dependency@
-if [[ "${dirname_dependency}"=="@project.deploy.directoryName.dependency@" ]]; then
+if [[ "${dirname_dependency}" =~ "^@.*@$" ]]; then
   dirname_dependency=lib/
 fi
 dirname_config=@project.deploy.directoryName.profile@
-if [[ "${dirname_config}"=="@project.deploy.directoryName.profile@" ]]; then
+if [[ "${dirname_config}" =~ "^@.*@$" ]]; then
   dirname_config=config/
 fi
 dir_absolute_path=$(cd $(dirname $0); pwd)

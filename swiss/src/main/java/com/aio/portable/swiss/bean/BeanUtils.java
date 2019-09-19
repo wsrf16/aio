@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.bean;
 
+import com.aio.portable.swiss.resource.ClassUtils;
 import com.aio.portable.swiss.sugar.CollectionUtils;
 
 import java.beans.PropertyDescriptor;
@@ -10,6 +11,37 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class BeanUtils {
+
+    public static <T, NEXT> Boolean match(T match, T bean, Class<T> clazz) {
+        Map<String, Object> nameBeanCondition = BeanUtils.PropertyDescriptors.getNameValue(match);
+        Map<String, Object> nameValueBean = BeanUtils.PropertyDescriptors.getNameValue(bean);
+
+        Set<String> nameList = nameBeanCondition.keySet();
+        boolean equal = nameList.stream().allMatch(key -> {
+
+
+            Boolean b;
+            NEXT nextMatch = (NEXT)nameBeanCondition.get(key);
+            NEXT nextBean = (NEXT)nameValueBean.get(key);
+            if (nextMatch == null)
+                b = true;
+            else if (nextBean == null)
+                b = false;
+            else {
+                Class<NEXT> nextClazz = (Class<NEXT>) nextMatch.getClass();
+                if (ClassUtils.isSimpleValueType(nextClazz))
+                    b = Objects.equals(nextMatch, nextBean);
+                else
+                    b = match(nextMatch, nextBean, nextClazz);
+            }
+            return b;
+        });
+        return equal;
+    }
+
+
+
+
     public abstract static class PropertyDescriptors {
         public final static PropertyDescriptor getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
             List<String> propertyDescriptorNameList = new ArrayList<>(Arrays.asList(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))).stream().map(PropertyDescriptor::getName).collect(Collectors.toList());

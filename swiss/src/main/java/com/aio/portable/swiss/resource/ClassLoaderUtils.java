@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
-public class ClassLoaders {
+public abstract class ClassLoaderUtils {
 
     /**
      * 判断某一个类是否已加载（被实例化过，仅声明不会被加载）
@@ -70,20 +70,20 @@ public class ClassLoaders {
             String name;
             boolean b;
             name = "java.lang.System";
-            b = ClassLoaders.hasLoadedInCurrentThread(name);
+            b = ClassLoaderUtils.hasLoadedInCurrentThread(name);
             printResult(name, b);
 
             name = "java.sql.Date";
-            b = ClassLoaders.hasLoadedInCurrentThread(name);
+            b = ClassLoaderUtils.hasLoadedInCurrentThread(name);
             printResult(name, b);
             java.sql.Date date = new java.sql.Date(0);
-            b = ClassLoaders.hasLoadedInCurrentThread(name);
+            b = ClassLoaderUtils.hasLoadedInCurrentThread(name);
             printResult(name, b);
 
             name = "Wood";
-            b = ClassLoaders.hasLoadedInCurrentThread(name);
+            b = ClassLoaderUtils.hasLoadedInCurrentThread(name);
             printResult(name, b);
-            b = ClassLoaders.hasLoadedInCurrentThread(name);
+            b = ClassLoaderUtils.hasLoadedInCurrentThread(name);
             printResult(name, b);
 
         }

@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.bean;
 
-import com.aio.portable.swiss.resource.ClassUtils;
-import com.aio.portable.swiss.sugar.CollectionUtils;
+import com.aio.portable.swiss.resource.ClassWorld;
+import com.aio.portable.swiss.sugar.CollectionWorld;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -10,21 +10,21 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class BeanUtils {
+public abstract class BeanWorld {
 
     public static <T> Boolean match(T match, T bean) {
-        Map<String, Object> nameValueMatch = BeanUtils.PropertyDescriptors.getNameValue(match);
-        Map<String, Object> nameValueBean = BeanUtils.PropertyDescriptors.getNameValue(bean);
+        Map<String, Object> nameValueMatch = BeanWorld.PropertyDescriptors.getNameValue(match);
+        Map<String, Object> nameValueBean = BeanWorld.PropertyDescriptors.getNameValue(bean);
 
         boolean equal = equals(nameValueMatch, nameValueBean);
         return equal;
     }
 
     public static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
-        Map<String, Object> nameValueMatch = BeanUtils.PropertyDescriptors.getNameValue(matchList.get(0));
+        Map<String, Object> nameValueMatch = BeanWorld.PropertyDescriptors.getNameValue(matchList.get(0));
 
         boolean equal = beanList.stream().anyMatch(bean -> {
-            Map<String, Object> nameValueBean = BeanUtils.PropertyDescriptors.getNameValue(bean);
+            Map<String, Object> nameValueBean = BeanWorld.PropertyDescriptors.getNameValue(bean);
 
             boolean itemEqual = equals(nameValueMatch, nameValueBean);
             return itemEqual;
@@ -44,7 +44,7 @@ public abstract class BeanUtils {
                 b = false;
             else {
                 Class<SUB> subClazz = (Class<SUB>) subMatch.getClass();
-                if (ClassUtils.isSimpleValueType(subClazz))
+                if (ClassWorld.isSimpleValueType(subClazz))
                     b = Objects.equals(subMatch, subBean);
                 else if ((List.class).isAssignableFrom(subClazz))
                     b = matchList((List) subMatch, (List) subBean);
@@ -80,7 +80,7 @@ public abstract class BeanUtils {
             Class<?> parentClazz = clazz.getSuperclass();
             if (parentClazz != null) {
                 List<PropertyDescriptor> parentPropertyDescriptorList = getDeclaredPropertyDescriptorIncludeParents(parentClazz);
-                if (!CollectionUtils.isEmpty(parentPropertyDescriptorList))
+                if (!CollectionWorld.isEmpty(parentPropertyDescriptorList))
                     propertyDescriptorList.addAll(parentPropertyDescriptorList);
             }
             return propertyDescriptorList;
@@ -140,7 +140,7 @@ public abstract class BeanUtils {
             Class<?> parentClazz = clazz.getSuperclass();
             if (parentClazz != null) {
                 List<Field> parentFieldList = getDeclaredFieldIncludeParents(parentClazz);
-                if (!CollectionUtils.isEmpty(parentFieldList))
+                if (!CollectionWorld.isEmpty(parentFieldList))
                     fieldList.addAll(parentFieldList);
             }
             return fieldList;
@@ -167,7 +167,7 @@ public abstract class BeanUtils {
             Class<?> parentClazz = clazz.getSuperclass();
             if (parentClazz != null) {
                 List<Field> parentFieldList = getFieldIncludeParents(parentClazz);
-                if (!CollectionUtils.isEmpty(parentFieldList))
+                if (!CollectionWorld.isEmpty(parentFieldList))
                     fieldList.addAll(parentFieldList);
             }
             return fieldList;

@@ -3,7 +3,7 @@ package com.aio.portable.swiss.bean.serializer;
 import com.aio.portable.swiss.bean.serializer.json.GsonUtil;
 import com.aio.portable.swiss.bean.serializer.json.JacksonUtil;
 import com.aio.portable.swiss.bean.serializer.xml.XmlUtil;
-import com.aio.portable.swiss.resource.ClassUtils;
+import com.aio.portable.swiss.resource.ClassWorld;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -84,8 +84,8 @@ public class SerializerSelector implements ISerializerSelector {
     private final static boolean existJackson() {
 //        return ClassUtils.load("com.fasterxml.jackson.databind.JsonSerializer");
         try {
-            return ClassUtils.exist("com.fasterxml.jackson.databind.JsonSerializer") &&
-                    ClassUtils.exist("com.fasterxml.jackson.databind.ObjectMapper");
+            return ClassWorld.exist("com.fasterxml.jackson.databind.JsonSerializer") &&
+                    ClassWorld.exist("com.fasterxml.jackson.databind.ObjectMapper");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -95,7 +95,7 @@ public class SerializerSelector implements ISerializerSelector {
     private final static boolean existGson() {
 //        return ClassUtils.load("com.google.gson.Gson");
         try {
-            return ClassUtils.exist("com.google.gson.Gson");
+            return ClassWorld.exist("com.google.gson.Gson");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

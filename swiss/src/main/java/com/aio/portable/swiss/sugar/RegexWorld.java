@@ -3,7 +3,7 @@ package com.aio.portable.swiss.sugar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class RegexUtils {
+public abstract class RegexWorld {
     private final static String REGEX_PHONE = "^(1)\\d{10}$";
     private final static String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
     private final static String FAKE_TEXT = "****";
@@ -75,9 +75,9 @@ public abstract class RegexUtils {
 
     private static class BlahUnit {
         private static void regex() {
-            String ret1 = RegexUtils.fakePhone("12345678901");
-            String ret2 = RegexUtils.replaceAll("12345678901", "4567", "xxxx");
-            boolean ret3 = RegexUtils.matches("12345678901", "456");
+            String ret1 = RegexWorld.fakePhone("12345678901");
+            String ret2 = RegexWorld.replaceAll("12345678901", "4567", "xxxx");
+            boolean ret3 = RegexWorld.matches("12345678901", "456");
             System.out.println(ret1);
             System.out.println(ret2);
             System.out.println(ret3);

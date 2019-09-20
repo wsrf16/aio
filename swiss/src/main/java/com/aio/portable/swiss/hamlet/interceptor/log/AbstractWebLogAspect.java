@@ -3,11 +3,12 @@ package com.aio.portable.swiss.hamlet.interceptor.log;
 import com.aio.portable.swiss.assist.log.hub.LogHub;
 import com.aio.portable.swiss.assist.log.hub.factory.LogHubFactory;
 import com.aio.portable.swiss.assist.log.hub.factory.LogHubPool;
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.hamlet.model.RequestRecord;
 import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -96,13 +97,13 @@ class AbstractWebLogAspect {
     }
 
     private static String generateUniqueId() {
-        return UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
+        return UUID.randomUUID().toString().replace("-", Constant.EMPTY);
     }
 
     private static RequestRecord createRequestRecord(HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
         requestRecord.setRemoteAddress(request.getRemoteAddr());
-        String url = StringUtils.isBlank(request.getQueryString()) ? request.getRequestURL().toString() : request.getRequestURL().toString() + "?" + request.getQueryString();
+        String url = !StringUtils.hasText(request.getQueryString()) ? request.getRequestURL().toString() : request.getRequestURL().toString() + "?" + request.getQueryString();
         requestRecord.setRequestURL(url);
         requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         requestRecord.setHttpMethod(request.getMethod());

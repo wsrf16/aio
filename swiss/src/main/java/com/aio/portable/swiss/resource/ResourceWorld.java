@@ -1,7 +1,8 @@
 package com.aio.portable.swiss.resource;
 
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.ProtocolType;
-import org.apache.commons.lang3.StringUtils;
+import com.aio.portable.swiss.sugar.StringWorld;
 
 import java.awt.print.Book;
 import java.io.File;
@@ -21,7 +22,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class ResourceUtils {
+public abstract class ResourceWorld {
 
     /**
      * JarPath         eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
@@ -109,9 +110,9 @@ public abstract class ResourceUtils {
      * @return com.company.biz | com.company.biz.Book
      */
     public static String path2FullName(String path) {
-        path = StringUtils.removeEnd(path, ".class");
+        path = StringWorld.removeEnd(path, ".class");
         String fullName = path.replace("/", ".");
-        fullName = StringUtils.removeStart(fullName, ".");
+        fullName = StringWorld.removeStart(fullName, ".");
         return fullName;
     }
 
@@ -125,16 +126,16 @@ public abstract class ResourceUtils {
      * @return
      */
     public static String concat(String... parts) {
-        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringUtils.replaceEach(c, intervals, new String[]{interval, interval}));
+        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringWorld.replaceEach(c, intervals, new String[]{interval, interval}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
-            String _a = StringUtils.removeStart(c, interval);
-            String _b = StringUtils.removeEnd(_a, interval);
+            String _a = StringWorld.removeStart(c, interval);
+            String _b = StringWorld.removeEnd(_a, interval);
             return _b;
         }).toArray(String[]::new);
         String combined = String.join(interval, fixParts);
-        String start = fixPartList.get(0).startsWith(interval) ? interval : StringUtils.EMPTY;
-        String end = fixPartList.get(parts.length - 1).endsWith(interval) ? interval : StringUtils.EMPTY;
+        String start = fixPartList.get(0).startsWith(interval) ? interval : Constant.EMPTY;
+        String end = fixPartList.get(parts.length - 1).endsWith(interval) ? interval : Constant.EMPTY;
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
@@ -199,7 +200,7 @@ public abstract class ResourceUtils {
          * @throws IOException
          */
         public static boolean existResource(String resourceLocation) throws IOException {
-            List<URL> urlList = ResourceUtils.ByClassLoader.getResources(resourceLocation);
+            List<URL> urlList = ResourceWorld.ByClassLoader.getResources(resourceLocation);
             boolean exist = urlList != null && urlList.size() > 0;
             return exist;
         }
@@ -223,7 +224,7 @@ public abstract class ResourceUtils {
          * @throws IOException
          */
         public static List<URL> getResourcesByClassName(final String className) throws IOException {
-            final String resourceRelationPath = ClassUtils.convertClassName2ResourcePath(className);
+            final String resourceRelationPath = ClassWorld.convertClassName2ResourcePath(className);
             return getResources(resourceRelationPath);
         }
     }
@@ -231,22 +232,22 @@ public abstract class ResourceUtils {
 
     private static class BlahUnit {
         private static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-            ResourceUtils.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
-            ResourceUtils.ByClassLoader.getResourcesByClassName("Wood");
-            ResourceUtils.ByClassLoader.getResourcesByClass(Book.class);
+            ResourceWorld.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
+            ResourceWorld.ByClassLoader.getResourcesByClassName("Wood");
+            ResourceWorld.ByClassLoader.getResourcesByClass(Book.class);
 
 
             String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
             String resourceInJar = "/sandbox/console/Book.class";
-            URL url = ResourceUtils.getResourceInJar(jarPath, resourceInJar);
-            List<URL> urlList = ResourceUtils.getResourcesInJar(jarPath);
+            URL url = ResourceWorld.getResourceInJar(jarPath, resourceInJar);
+            List<URL> urlList = ResourceWorld.getResourcesInJar(jarPath);
 
             {
-                String className = ResourceUtils.path2FullName(resourceInJar);
-                Class clazz = StreamClassLoaders.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
+                String className = ResourceWorld.path2FullName(resourceInJar);
+                Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
                 className = "Wood";
-                Class clazz1 = StreamClassLoaders.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-                Class clazz2 = StreamClassLoaders.buildByResource("com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
+                Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
+                Class clazz2 = StreamClassLoader.buildByResource("com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
                 Object obj = clazz.getDeclaredConstructor().newInstance();
                 Object obj1 = clazz.getDeclaredConstructor().newInstance();
             }

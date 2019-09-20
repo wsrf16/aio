@@ -3,7 +3,7 @@ package com.aio.portable.swiss.assist.cache;
 import com.aio.portable.swiss.bean.serializer.json.JacksonUtil;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.FileUtils;
-import com.aio.portable.swiss.sugar.PathUtils;
+import com.aio.portable.swiss.sugar.PathWorld;
 import org.springframework.util.SerializationUtils;
 
 import java.util.*;
@@ -91,11 +91,11 @@ public class CacheRoom {
     }
 
     public String CacheFilePath() {
-        return PathUtils.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME, this.key + EXTENSION);
+        return PathWorld.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME, this.key + EXTENSION);
     }
 
     public static String CacheDirectorPath() {
-        return PathUtils.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME);
+        return PathWorld.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME);
     }
 
     public Boolean exist() {

@@ -2,7 +2,8 @@ package com.aio.portable.swiss.sugar;
 
 //import org.apache.commons.io.IOUtils;
 
-import org.apache.commons.lang3.StringUtils;
+
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class ShellUtils {
+public abstract class ShellWorld {
     public static List<String> run(String... cmd) {
         List<String> feedbackList = Arrays.stream(cmd).map(c -> {
             try {
@@ -20,7 +21,7 @@ public abstract class ShellUtils {
                 InputStream errorStream = process.getErrorStream();
                 String feedback = org.springframework.util.StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                 String error = org.springframework.util.StreamUtils.copyToString(errorStream, StandardCharsets.UTF_8);
-                if (StringUtils.isNotBlank(error))
+                if (StringUtils.hasText(error))
                     throw new Exception(error);
                 return feedback;
             } catch (Exception e) {

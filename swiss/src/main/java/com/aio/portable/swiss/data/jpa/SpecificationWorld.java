@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.data.jpa;
 
-import com.aio.portable.swiss.bean.BeanUtils;
+import com.aio.portable.swiss.bean.BeanWorld;
 import com.aio.portable.swiss.data.jpa.annotation.IgnoreSQL;
 import com.aio.portable.swiss.data.jpa.annotation.where.*;
+import com.aio.portable.swiss.sugar.StringWorld;
 import com.google.common.base.Function;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class SpecificationUtils {
+public class SpecificationWorld {
     static class Util {
         public final static Map<String, PropertyItem> getNamePropertyItem(Object bean) {
             Class<?> clazz = bean.getClass();
@@ -26,10 +26,10 @@ public class SpecificationUtils {
 //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
                     .collect(HashMap::new, (_map, _property) -> {
                         String name = _property.getName();
-                        Object value = BeanUtils.PropertyDescriptors.getValue(bean, _property);
+                        Object value = BeanWorld.PropertyDescriptors.getValue(bean, _property);
                         Field field = null;
                         try {
-                            field = BeanUtils.Fields.getDeclaredFieldIncludeParents(clazz, name);
+                            field = BeanWorld.Fields.getDeclaredFieldIncludeParents(clazz, name);
                         } catch (NoSuchFieldException e) {
                             e.printStackTrace();
                             throw new RuntimeException(e);
@@ -93,7 +93,7 @@ public class SpecificationUtils {
      */
     public final static <R> Specification<R> buildSpecification(Object bean) {
         Specification<R> specification = (root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> predicateList = SpecificationUtils.buildPredicate(bean, root, criteriaBuilder);
+            List<Predicate> predicateList = SpecificationWorld.buildPredicate(bean, root, criteriaBuilder);
             Predicate predicate;
             predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
 //            predicate = query.where(predicateList.toArray(new Predicate[predicateList.size()])).getRestriction();
@@ -265,10 +265,10 @@ public class SpecificationUtils {
 
 
                 else if (!field.isAnnotationPresent(Like.class) && name.endsWith("Like")) {
-                    name = removeEnd(name, "Like");
+                    name = StringWorld.removeEnd(name, "Like");
                     LevelTwo.fillPredicateWithLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
                 } else if (!field.isAnnotationPresent(NotLike.class) && name.endsWith("NotLike")) {
-                    name = removeEnd(name, "NotLike");
+                    name = StringWorld.removeEnd(name, "NotLike");
                     LevelTwo.fillPredicateWithNotLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
                 }
 
@@ -296,10 +296,10 @@ public class SpecificationUtils {
 
 
                 else if (!field.isAnnotationPresent(Equal.class) && name.endsWith("Equal")) {
-                    name = removeEnd(name, "Equal");
+                    name = StringWorld.removeEnd(name, "Equal");
                     LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (!field.isAnnotationPresent(NotEqual.class) && name.endsWith("NotEqual")) {
-                    name = removeEnd(name, "NotEqual");
+                    name = StringWorld.removeEnd(name, "NotEqual");
                     LevelTwo.fillPredicateWithNotEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
             }
@@ -325,7 +325,7 @@ public class SpecificationUtils {
 
 
                 else if (!field.isAnnotationPresent(In.class) && name.endsWith("In")) {
-                    name = removeEnd(name, "In");
+                    name = StringWorld.removeEnd(name, "In");
                     LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
             }
@@ -372,29 +372,21 @@ public class SpecificationUtils {
 
 
                 else if (!field.isAnnotationPresent(GreaterThan.class) && name.endsWith("From")) {
-                    name = removeEnd(name, "From");
+                    name = StringWorld.removeEnd(name, "From");
                     LevelTwo.fillPredicateWithGreaterThanCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (!field.isAnnotationPresent(GreaterThanOrEqualTo.class) && name.endsWith("FromContain")) {
-                    name = removeEnd(name, "FromContain");
+                    name = StringWorld.removeEnd(name, "FromContain");
                     LevelTwo.fillPredicateWithGreaterThanOrEqualToCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if (!field.isAnnotationPresent(LessThan.class) && name.endsWith("To")) {
-                    name = removeEnd(name, "To");
+                    name = StringWorld.removeEnd(name, "To");
                     LevelTwo.fillPredicateWithLessThanCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 } else if ((!field.isAnnotationPresent(LessThanOrEqualTo.class) && name.endsWith("ToContain"))) {
-                    name = removeEnd(name, "ToContain");
+                    name = StringWorld.removeEnd(name, "ToContain");
                     LevelTwo.fillPredicateWithLessThanOrEqualToCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
 
                 else {
                     LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
-                }
-            }
-
-            private static String removeEnd(String str, String remove) {
-                if (StringUtils.hasLength(str) && StringUtils.hasLength(remove)) {
-                    return str.endsWith(remove) ? str.substring(0, str.length() - remove.length()) : str;
-                } else {
-                    return str;
                 }
             }
         }

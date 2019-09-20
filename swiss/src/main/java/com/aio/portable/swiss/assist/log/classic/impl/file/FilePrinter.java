@@ -4,7 +4,7 @@ import com.aio.portable.swiss.assist.document.method.PropertiesMapping;
 import com.aio.portable.swiss.assist.log.base.Printer;
 import com.aio.portable.swiss.assist.log.classic.impl.LoggerConfig;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.sugar.PathUtils;
+import com.aio.portable.swiss.sugar.PathWorld;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -116,7 +116,7 @@ public class FilePrinter implements Printer {
      * @return
      */
     private static String createRootLogFoldIfNotExist(String logName) {
-        String _logFolder = PathUtils.concat(PATH_PROGRAM_ROOTFOLDER, NAME_LOG_ROOTFOLDER, logName);
+        String _logFolder = PathWorld.concat(PATH_PROGRAM_ROOTFOLDER, NAME_LOG_ROOTFOLDER, logName);
         File dir = new File(_logFolder);
         if (!dir.exists())
             dir.mkdirs();
@@ -133,7 +133,7 @@ public class FilePrinter implements Printer {
         String _logFolder = createRootLogFoldIfNotExist(logName);
         String _prefixString = String.join(SEPARATOR_CHAR, logFilePrefixes);
         String dateTime = new SimpleDateFormat(TIME_FORMAT).format(Calendar.getInstance().getTime());
-        String logFile = PathUtils.concat(_logFolder, _prefixString + SEPARATOR_CHAR + dateTime + LOG_EXTENSION);
+        String logFile = PathWorld.concat(_logFolder, _prefixString + SEPARATOR_CHAR + dateTime + LOG_EXTENSION);
         return logFile;
     }
 //private static String declareLogFile(String logName, String logFilePrefix, int occupyNO)
@@ -154,7 +154,7 @@ public class FilePrinter implements Printer {
         cal.add(Calendar.DATE, -2);
         String dateTime = new SimpleDateFormat(TIME_FORMAT).format(cal.getTime());
 
-        String logFile = PathUtils.concat(_logFolder, logfilePrefix + SEPARATOR_CHAR + dateTime + extension);
+        String logFile = PathWorld.concat(_logFolder, logfilePrefix + SEPARATOR_CHAR + dateTime + extension);
         return logFile;
     }
 
@@ -166,7 +166,7 @@ public class FilePrinter implements Printer {
     private synchronized void createOrUpdate() throws UnsupportedEncodingException, FileNotFoundException {
         String logFile = declareLogFile(this.logName, this.logfilePrefix);
         String lastLogFile_absolute = declareLogFileOfLastDay(this.logName, this.logfilePrefix, LOG_EXTENSION);
-        String lastLogFile_relative = lastLogFile_absolute.substring(lastLogFile_absolute.indexOf(PathUtils.concat(NAME_LOG_ROOTFOLDER, this.logName)));
+        String lastLogFile_relative = lastLogFile_absolute.substring(lastLogFile_absolute.indexOf(PathWorld.concat(NAME_LOG_ROOTFOLDER, this.logName)));
         String lastZipFile_absolute = declareLogFileOfLastDay(this.logName, this.logfilePrefix, ZIP_EXTENSION);
 
         try {

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.data.jpa.multidatasource;
 
+import com.aio.portable.swiss.global.Constant;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -28,8 +29,8 @@ import javax.sql.DataSource;
 public abstract class JpaBaseDataSourceConfiguration {
     public final static String REPOSITORY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.mapper";
     public final static String ENTITY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.model";
-    private final static String SPECIAL_NAME = org.apache.commons.lang3.StringUtils.EMPTY; //"third";
-    private final static String PERSISTENCE_UNIT = org.apache.commons.lang3.StringUtils.EMPTY; //"persistenceUnit";
+    private final static String SPECIAL_NAME = Constant.EMPTY; //"third";
+    private final static String PERSISTENCE_UNIT = Constant.EMPTY; //"persistenceUnit";
 
     protected final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
     protected final static String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";

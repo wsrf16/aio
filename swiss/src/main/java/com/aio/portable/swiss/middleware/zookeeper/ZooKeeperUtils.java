@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.middleware.zookeeper;
 
-import org.apache.commons.lang3.StringUtils;
+import com.aio.portable.swiss.global.Constant;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
@@ -117,19 +117,19 @@ public class ZooKeeperUtils {
     }
 
     public static String createIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return exists(zookeeper, path, watch) ? Constant.EMPTY : create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     public static String createIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return exists(zookeeper, path, watch) ? Constant.EMPTY : create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     public static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : createEphemeral(zookeeper, path);
+        return exists(zookeeper, path, watch) ? Constant.EMPTY : createEphemeral(zookeeper, path);
     }
 
     public static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
-        return exists(zookeeper, path, watch) ? StringUtils.EMPTY : createEphemeral(zookeeper, path, bytes);
+        return exists(zookeeper, path, watch) ? Constant.EMPTY : createEphemeral(zookeeper, path, bytes);
     }
 
     public static String createEphemeral(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {

@@ -2,15 +2,15 @@ package com.aio.portable.swiss.bean.node.next.layered;
 
 import com.aio.portable.swiss.bean.node.NextNode;
 import com.aio.portable.swiss.bean.node.PrevNode;
-import com.aio.portable.swiss.resource.ClassUtils;
+import com.aio.portable.swiss.resource.ClassWorld;
 
 public interface LayeredNextNode<T> extends NextNode<LayeredNextNode<T>>, PrevNode<LayeredNextNode<T>> {
     static <R extends LayeredNextNode> R newInstance(Class<R> clazz) {
-        return ClassUtils.newInstance(clazz);
+        return ClassWorld.newInstance(clazz);
     }
 
     static <T, R extends LayeredNextNode<T>> R newInstance(Class<R> clazz, T item) {
-        R r = ClassUtils.newInstance(clazz);
+        R r = ClassWorld.newInstance(clazz);
         r.setItem(item);
         return r;
     }

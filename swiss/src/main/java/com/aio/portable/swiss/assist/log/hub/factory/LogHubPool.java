@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.assist.log.hub.factory;
 
 import com.aio.portable.swiss.assist.log.hub.LogHub;
-import org.apache.commons.lang3.StringUtils;
+import com.aio.portable.swiss.global.Constant;
 
 import java.util.HashMap;
 
@@ -27,7 +27,7 @@ public class LogHubPool {
     }
 
     private static String getClassNameFromException(Exception e) {
-        String className = e.getStackTrace().length > 0 ? e.getStackTrace()[0].getClassName() : StringUtils.EMPTY;
+        String className = e.getStackTrace().length > 0 ? e.getStackTrace()[0].getClassName() : Constant.EMPTY;
         return className;
     }
 

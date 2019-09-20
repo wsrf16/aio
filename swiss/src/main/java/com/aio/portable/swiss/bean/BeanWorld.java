@@ -13,11 +13,19 @@ import java.util.stream.Collectors;
 public abstract class BeanWorld {
 
     public static <T> Boolean match(T match, T bean) {
-        Map<String, Object> nameValueMatch = BeanWorld.PropertyDescriptors.getNameValue(match);
-        Map<String, Object> nameValueBean = BeanWorld.PropertyDescriptors.getNameValue(bean);
+        if (match == null)
+            return true;
+        else {
+            if (bean == null)
+                return false;
+            else {
+                Map<String, Object> nameValueMatch = BeanWorld.PropertyDescriptors.getNameValue(match);
+                Map<String, Object> nameValueBean = BeanWorld.PropertyDescriptors.getNameValue(bean);
 
-        boolean equal = equals(nameValueMatch, nameValueBean);
-        return equal;
+                boolean equal = matchNameValueMap(nameValueMatch, nameValueBean);
+                return equal;
+            }
+        }
     }
 
     public static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
@@ -26,13 +34,13 @@ public abstract class BeanWorld {
         boolean equal = beanList.stream().anyMatch(bean -> {
             Map<String, Object> nameValueBean = BeanWorld.PropertyDescriptors.getNameValue(bean);
 
-            boolean itemEqual = equals(nameValueMatch, nameValueBean);
+            boolean itemEqual = matchNameValueMap(nameValueMatch, nameValueBean);
             return itemEqual;
         });
         return equal;
     }
 
-    private static <SUB> boolean equals(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
+    private static <SUB> boolean matchNameValueMap(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
         Set<String> nameList = nameValueMatch.keySet();
         return nameList.stream().allMatch(key -> {
             Boolean b;

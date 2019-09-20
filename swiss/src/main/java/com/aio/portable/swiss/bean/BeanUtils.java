@@ -12,33 +12,48 @@ import java.util.stream.Collectors;
 
 public abstract class BeanUtils {
 
-    public static <T, NEXT> Boolean match(T match, T bean, Class<T> clazz) {
-        Map<String, Object> nameBeanCondition = BeanUtils.PropertyDescriptors.getNameValue(match);
+    public static <T> Boolean match(T match, T bean) {
+        Map<String, Object> nameValueMatch = BeanUtils.PropertyDescriptors.getNameValue(match);
         Map<String, Object> nameValueBean = BeanUtils.PropertyDescriptors.getNameValue(bean);
 
-        Set<String> nameList = nameBeanCondition.keySet();
-        boolean equal = nameList.stream().allMatch(key -> {
+        boolean equal = equals(nameValueMatch, nameValueBean);
+        return equal;
+    }
 
+    public static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
+        Map<String, Object> nameValueMatch = BeanUtils.PropertyDescriptors.getNameValue(matchList.get(0));
 
-            Boolean b;
-            NEXT nextMatch = (NEXT)nameBeanCondition.get(key);
-            NEXT nextBean = (NEXT)nameValueBean.get(key);
-            if (nextMatch == null)
-                b = true;
-            else if (nextBean == null)
-                b = false;
-            else {
-                Class<NEXT> nextClazz = (Class<NEXT>) nextMatch.getClass();
-                if (ClassUtils.isSimpleValueType(nextClazz))
-                    b = Objects.equals(nextMatch, nextBean);
-                else
-                    b = match(nextMatch, nextBean, nextClazz);
-            }
-            return b;
+        boolean equal = beanList.stream().anyMatch(bean -> {
+            Map<String, Object> nameValueBean = BeanUtils.PropertyDescriptors.getNameValue(bean);
+
+            boolean itemEqual = equals(nameValueMatch, nameValueBean);
+            return itemEqual;
         });
         return equal;
     }
 
+    private static <SUB> boolean equals(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
+        Set<String> nameList = nameValueMatch.keySet();
+        return nameList.stream().allMatch(key -> {
+            Boolean b;
+            SUB subMatch = (SUB) nameValueMatch.get(key);
+            SUB subBean = (SUB) nameValueBean.get(key);
+            if (subMatch == null)
+                b = true;
+            else if (subBean == null)
+                b = false;
+            else {
+                Class<SUB> subClazz = (Class<SUB>) subMatch.getClass();
+                if (ClassUtils.isSimpleValueType(subClazz))
+                    b = Objects.equals(subMatch, subBean);
+                else if ((List.class).isAssignableFrom(subClazz))
+                    b = matchList((List) subMatch, (List) subBean);
+                else
+                    b = match(subMatch, subBean);
+            }
+            return b;
+        });
+    }
 
 
 

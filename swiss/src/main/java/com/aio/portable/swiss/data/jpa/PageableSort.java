@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.data.jpa;
 
-import com.aio.portable.swiss.bean.BeanUtils;
+import com.aio.portable.swiss.bean.BeanWorld;
 import com.aio.portable.swiss.data.jpa.annotation.order.Order;
 import org.springframework.data.domain.Sort;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class PageableSort {
 
     public final static Sort buildSort(Class<?> clazz) {
-        List<Field> fieldList = BeanUtils.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(Order.class)).collect(Collectors.toList());
+        List<Field> fieldList = BeanWorld.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(Order.class)).collect(Collectors.toList());
         fieldList.stream().sorted(Comparator.comparing((Field c) -> c.getAnnotation(Order.class).priority()));
         List<Sort.Order> orderList = fieldList.stream().map(c -> {
             Order annotation = c.getAnnotation(Order.class);

@@ -17,7 +17,7 @@ import java.security.ProtectionDomain;
 import java.util.Date;
 import java.util.Locale;
 
-public class ClassUtils {
+public abstract class ClassWorld {
     /**
      * 获取类所有的路径
      *
@@ -65,7 +65,7 @@ public class ClassUtils {
      */
     public static boolean exist(String className) throws IOException {
         String resource = convertClassName2ResourcePath(className);
-        return ResourceUtils.ByClassLoader.existResource(resource);
+        return ResourceWorld.ByClassLoader.existResource(resource);
     }
 
 
@@ -141,9 +141,9 @@ public class ClassUtils {
 
     private static class BlahUnit {
         private static void todo() throws IOException {
-            String ss = ClassUtils.getPath(AA.class);
-            boolean b1 = ClassUtils.exist("Wood");
-            boolean b2 = ClassUtils.exist("Wood");
+            String ss = ClassWorld.getPath(AA.class);
+            boolean b1 = ClassWorld.exist("Wood");
+            boolean b2 = ClassWorld.exist("Wood");
 
 
             if (existJackson())
@@ -164,11 +164,11 @@ public class ClassUtils {
         }
 
         private static boolean existJackson() throws IOException {
-            return ClassUtils.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
+            return ClassWorld.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
         }
 
         private static boolean existGson() throws IOException {
-            return ClassUtils.exist(("com.google.gson.Gson"));
+            return ClassWorld.exist(("com.google.gson.Gson"));
         }
     }
 }

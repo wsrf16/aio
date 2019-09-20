@@ -5,13 +5,12 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class CollectionUtils {
+public abstract class CollectionWorld {
     /**
      * 判断集合为空
      *
@@ -209,7 +208,7 @@ public abstract class CollectionUtils {
     private static void taolu() {
         {
             Iterator<String> iterator = java.util.Collections.emptyIterator();
-            List<String> list = CollectionUtils.toList(iterator);
+            List<String> list = CollectionWorld.toList(iterator);
         }
         {
             Enumeration<String> enumeration = java.util.Collections.emptyEnumeration();

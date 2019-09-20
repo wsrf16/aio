@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.global;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -42,7 +41,7 @@ public class Constant {
 
     // \
     public final static String FILE_SEPARATOR = File.separator;
-    public final static String EMPTY = StringUtils.EMPTY;
+    public final static String EMPTY = "";
 
     public static class OriginEnum {
         public final static Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;

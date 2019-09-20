@@ -3,7 +3,6 @@ package com.aio.portable.swiss.middleware.mq.rabbitmq;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
 import com.rabbitmq.client.Channel;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,6 +10,7 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -31,7 +31,7 @@ public class RabbitMQUtil {
                 binding = BindingBuilder.bind(new Queue(rabbitMQBindingProperty.getQueue())).to(new DirectExchange(rabbitMQBindingProperty.getExchange())).with(rabbitMQBindingProperty.getRoutingKey());
                 break;
             case Exchange.TOPIC:
-                if (StringUtils.isNotBlank(rabbitMQBindingProperty.getExchange()) && rabbitMQBindingProperty.getRoutingKey() != null)
+                if (StringUtils.hasText(rabbitMQBindingProperty.getExchange()) && rabbitMQBindingProperty.getRoutingKey() != null)
                     binding = BindingBuilder.bind(new Queue(rabbitMQBindingProperty.getQueue())).to(new TopicExchange(rabbitMQBindingProperty.getExchange())).with(rabbitMQBindingProperty.getRoutingKey());
                 else
                     throw new IllegalArgumentException(

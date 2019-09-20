@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.middleware.mq.kafka;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.LoggingProducerListener;
 import org.springframework.kafka.support.ProducerListener;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public class KafkaBuilder {
             kafkaTemplate.setProducerListener(kafkaProducerListener);
         }
 
-        if (properties != null && properties.getTemplate() != null && StringUtils.isNotBlank(properties.getTemplate().getDefaultTopic())) {
+        if (properties != null && properties.getTemplate() != null && StringUtils.hasText(properties.getTemplate().getDefaultTopic())) {
             String defaultTopic = properties.getTemplate().getDefaultTopic();
             kafkaTemplate.setDefaultTopic(defaultTopic);
         }

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.lang.Object;
 
 @TestComponent
-public class BeanUtilsTest {
+public class BeanWorldTest {
     public class People {
         private int age;
         private String name;

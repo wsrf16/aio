@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.systeminfo.OSInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class PathUtils {
+public abstract class PathWorld {
     final static String[] intervals = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
 
     public final static Path concatBySysteom(String first, String... more) {
@@ -23,16 +23,16 @@ public abstract class PathUtils {
     }
 
     public final static String concat(String... parts) {
-        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringUtils.replaceEach(c, intervals, new String[]{File.separator, File.separator, File.separator, File.separator, File.separator, File.separator}));
+        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringWorld.replaceEach(c, intervals, new String[]{File.separator, File.separator, File.separator, File.separator, File.separator, File.separator}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
-            String _a = StringUtils.removeStart(c, File.separator);
-            String _b = StringUtils.removeEnd(_a, File.separator);
+            String _a = StringWorld.removeStart(c, File.separator);
+            String _b = StringWorld.removeEnd(_a, File.separator);
             return _b;
         }).toArray(String[]::new);
         String combined = String.join(File.separator, fixParts);
-        String start = fixPartList.get(0).startsWith(File.separator) ? File.separator : StringUtils.EMPTY;
-        String end = fixPartList.get(parts.length - 1).endsWith(File.separator) ? File.separator : StringUtils.EMPTY;
+        String start = fixPartList.get(0).startsWith(File.separator) ? File.separator : Constant.EMPTY;
+        String end = fixPartList.get(parts.length - 1).endsWith(File.separator) ? File.separator : Constant.EMPTY;
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
@@ -40,7 +40,7 @@ public abstract class PathUtils {
     public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
-            urlPath = StringUtils.removeStart(urlPath, INTERVAL_CHAR);
+            urlPath = StringWorld.removeStart(urlPath, INTERVAL_CHAR);
         }
         return urlPath;
     }
@@ -60,7 +60,7 @@ public abstract class PathUtils {
         private static void todo() {
             String[] directories = new String[]{"/a/\\1\\", "/b/\\2", "c\\3\\", "d",
                     "//e\\\\", "\\/f", "g/\\", "h//"};
-            String concat = PathUtils.concat(directories);
+            String concat = PathWorld.concat(directories);
         }
     }
 }

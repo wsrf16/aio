@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class StreamClassLoaders extends ClassLoader {
+public class StreamClassLoader extends ClassLoader {
 
     String file;
 
-    private StreamClassLoaders(String file) {
+    private StreamClassLoader(String file) {
         this.file = file;
     }
 
@@ -21,9 +21,9 @@ public class StreamClassLoaders extends ClassLoader {
      * @param name : com/art/Book.class
      * @return
      */
-    public static StreamClassLoaders buildByResource(String name) {
-        URL url = StreamClassLoaders.class.getClassLoader().getResource(name);
-        return new StreamClassLoaders(url.getPath());
+    public static StreamClassLoader buildByResource(String name) {
+        URL url = StreamClassLoader.class.getClassLoader().getResource(name);
+        return new StreamClassLoader(url.getPath());
     }
 
     /**
@@ -32,8 +32,8 @@ public class StreamClassLoaders extends ClassLoader {
      * @param file : target/classes/com/art/Book.class  |  art-1.0-SNAPSHOT.jar
      * @return
      */
-    public static StreamClassLoaders buildByFile(String file) {
-        return new StreamClassLoaders(file);
+    public static StreamClassLoader buildByFile(String file) {
+        return new StreamClassLoader(file);
     }
 
     public Class loadClassByBinary(String className) throws ClassNotFoundException {

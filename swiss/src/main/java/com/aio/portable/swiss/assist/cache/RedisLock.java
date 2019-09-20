@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.assist.cache;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.types.Expiration;
+import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -42,7 +42,7 @@ public class RedisLock {
      * @return
      */
     private String acquireLock(String key, long expireMillisecond, long timeout) {
-        if (StringUtils.isBlank(key))
+        if (!StringUtils.hasText(key))
             throw new IllegalArgumentException(key);
 
         String identifier = UUID.randomUUID().toString();
@@ -80,11 +80,10 @@ public class RedisLock {
      * 释放锁
      *
      * @param key
-     * @param identifier
      * @return
      */
     public boolean releaseLock(String key) {
-        if (StringUtils.isBlank(key))
+        if (!StringUtils.hasText(key))
             throw new IllegalArgumentException(key);
 
         String lockKey = getKeyName(key);

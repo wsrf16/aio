@@ -10,9 +10,6 @@ import com.aio.portable.swiss.systeminfo.HostInfo;
 import com.aio.portable.swiss.global.Constant;
 
 import java.net.UnknownHostException;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -21,7 +18,7 @@ public abstract class AbstractLogger extends LogBody {
     final static String NEWLINE = Constant.LINE_SEPARATOR;
 //    protected final static String INTERVAL_CHAR = " => ";
     protected final static String INTERVAL_CHAR = " ";
-    protected final static Supplier<String> EMPTY_PREFIX = () -> StringUtils.EMPTY;
+    protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
     protected final static String DEFAULT_NAME = AbstractLogger.class.getTypeName();
 
 
@@ -690,7 +687,7 @@ public abstract class AbstractLogger extends LogBody {
     }
 
     protected static String getLocalIp() {
-        String ip = StringUtils.EMPTY;
+        String ip = Constant.EMPTY;
         try {
             ip = HostInfo.getLocalHostLANAddress().getHostAddress();
         } catch (UnknownHostException e) {

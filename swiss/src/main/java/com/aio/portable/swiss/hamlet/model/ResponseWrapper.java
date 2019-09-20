@@ -1,8 +1,7 @@
 package com.aio.portable.swiss.hamlet.model;
 
-import io.swagger.annotations.ApiModel;
+import com.aio.portable.swiss.global.Constant;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
@@ -40,12 +39,12 @@ public class ResponseWrapper<T> {
 
 
     protected ResponseWrapper() {
-        this.uniqueId = UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
+        this.uniqueId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         this.timeStamp = System.currentTimeMillis();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
-        this.uniqueId = UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
+        this.uniqueId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         this.code = code;
         this.message = message;
         this.data = data;

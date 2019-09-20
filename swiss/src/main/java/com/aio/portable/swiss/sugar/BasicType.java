@@ -1,10 +1,9 @@
 package com.aio.portable.swiss.sugar;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by York on 2017/11/23.
@@ -59,7 +58,7 @@ public class BasicType {
                     latestDateTime = now;
                 } else
                     countInSecond = (countInSecond + 1) > MAX_COUNT ? MIN_COUNT : (countInSecond + 1);
-                id = latestDateTime + StringUtils.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
+                id = latestDateTime + org.apache.commons.lang3.StringUtils.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
             } finally {
                 lock.unlock();
             }

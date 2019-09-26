@@ -14,7 +14,7 @@ public class ResourceUtilTest {
     @Test
     public void getClassName() throws IOException {
         String packageName = StackTraceInfos.Current.getClassName();
-        List<String> list = PackageWorld.getClassName(packageName);
+        List<String> list = PackageWorld.getQualifiedClassName(packageName);
     }
 
 }

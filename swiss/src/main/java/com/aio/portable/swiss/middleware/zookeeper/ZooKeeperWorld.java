@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class ZooKeeperWorld {
     public static ZooKeeper build(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
@@ -211,8 +212,29 @@ public class ZooKeeperWorld {
         zookeeper.multi(ops, cb, ctx);
     }
 
-//    public static synchronized void close() throws InterruptedException {
-//        zookeeper.close();
+
+
+//    public static synchronized void lock(ZooKeeper zookeeper, String path, byte[] data, List<ACL> acl, CreateMode createMode, AsyncCallback.Create2Callback cb, Object ctx, long ttl) throws InterruptedException {
+//        zookeeper.create(path, data, acl, createMode, cb, ctx, ttl);
+//
+//        CountDownLatch countDownLatch = new CountDownLatch(1);
+//    }
+//
+//
+//    class ZooKeeperWatcher implements Watcher {
+//        CountDownLatch countDownLatch;
+//        public ZooKeeperWatcher(CountDownLatch countDownLatch) {
+//            this.countDownLatch = countDownLatch;
+//        }
+//        public ZooKeeperWatcher() {
+//            this(new CountDownLatch(1));
+//        }
+//        @Override
+//        public synchronized void process(WatchedEvent watchedEvent) {
+//            if (this.countDownLatch != null) {
+//                this.countDownLatch.countDown();
+//            }
+//        }
 //    }
 }
 

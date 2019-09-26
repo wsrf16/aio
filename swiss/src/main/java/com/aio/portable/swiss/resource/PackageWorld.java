@@ -18,6 +18,11 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public abstract class PackageWorld {
+    /**
+     * getImplementationVersion
+     * @param clazz
+     * @return
+     */
     public static String getImplementationVersion(Class clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
@@ -35,7 +40,7 @@ public abstract class PackageWorld {
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public static List<String> getClassName(String packageName) throws IOException {
+    public static List<String> getQualifiedClassName(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
         List<URL> urlList = ResourceWorld.ByClassLoader.getResources(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
@@ -44,12 +49,13 @@ public abstract class PackageWorld {
                 String path = URLDecoder.decode(url.getPath(), "utf-8");
                 if (url.getProtocol().equals(ProtocolType.file)) {
                     // "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
-                    _classList = getClassNameByPath(path);
+                    _classList = getQualifiedClassNameByPath(path);
                 } else if (url.getProtocol().equals(ProtocolType.jar)) {
                     // "jar:file:/E:/Users/PPC/IdeaProjects/swiss/target/main.java.com.aio.solomid-0.0.1-SNAPSHOT.jar!/com/aio/com.aio.solomid"
-                    _classList = getClassNameByJar(path);
+                    _classList = getQualifiedClassNameByJar(path);
                 }
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             return _classList.stream();
@@ -62,7 +68,7 @@ public abstract class PackageWorld {
      * @param packagePath : "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
      * @return List<String>
      */
-    private static List<String> getClassNameByPath(String packagePath) {
+    private static List<String> getQualifiedClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -70,7 +76,7 @@ public abstract class PackageWorld {
             return classList;
         for (File childFile : childFiles) {
             if (childFile.isDirectory()) {
-                classList.addAll(getClassNameByPath(childFile.getPath()));
+                classList.addAll(getQualifiedClassNameByPath(childFile.getPath()));
             } else {
                 String childFilePath = childFile.getPath();
                 String _srcDirectory = MessageFormat.format("{0}classes{0}", Constant.FILE_SEPARATOR);
@@ -89,7 +95,7 @@ public abstract class PackageWorld {
      * @return
      * @throws IOException
      */
-    private static List<String> getClassNameByJar(String packageURLInJar) throws IOException {
+    private static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
         String[] jarInfo = packageURLInJar.split("!");
         String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);
@@ -116,7 +122,7 @@ public abstract class PackageWorld {
 
     public static class BlahUnit {
         public void todo() throws IOException, ClassNotFoundException {
-            List<String> list = PackageWorld.getClassName(this.getClass().getPackage().getName());
+            List<String> list = PackageWorld.getQualifiedClassName(this.getClass().getPackage().getName());
             for (String name : list) {
 //            Class<?> clazz = Class.forName(name);
                 Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);

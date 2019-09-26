@@ -7,15 +7,13 @@ import com.aio.portable.swiss.sugar.StringWorld;
 import com.google.common.base.Function;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class SpecificationWorld {
     static class Util {
@@ -95,9 +93,15 @@ public class SpecificationWorld {
         Specification<R> specification = (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicateList = SpecificationWorld.buildPredicate(bean, root, criteriaBuilder);
             Predicate predicate;
-            predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
-//            predicate = query.where(predicateList.toArray(new Predicate[predicateList.size()])).getRestriction();
 
+            if (true) {
+                predicate = criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+            } else {
+                CriteriaQuery<Object> _criteriaQuery = criteriaBuilder.createQuery();
+                Root<Object> _root = _criteriaQuery.from(Object.class);
+                _criteriaQuery.where(predicateList.toArray(new Predicate[predicateList.size()]));
+                predicate = _criteriaQuery.getRestriction();
+            }
             return predicate;
         };
         return specification;
@@ -112,7 +116,7 @@ public class SpecificationWorld {
      */
     public final static <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
         Map<String, PropertyItem> properties = Util.getNamePropertyItem(bean);
-        List<Predicate> predicateList = new ArrayList<>();
+        List<Predicate> predicateList = ((Supplier<ArrayList>)ArrayList::new).get();
         fillPredicateWithAllCriteria(properties, predicateList, root, criteriaBuilder);
         return predicateList;
     }
@@ -132,7 +136,7 @@ public class SpecificationWorld {
             Object value = property.getValue();
             if (value != null) {
                 if (value instanceof String) {
-                    CriteriaUtil.LevelOne.fillPredicateWithLikesCriteria(criteriaBuilder, root, String.class, property, predicateList);
+                    CriteriaUtil.LevelOne.fillPredicateWithEqualsCriteria(criteriaBuilder, root, String.class, property, predicateList);
 //                    predicateList.add(criteriaBuilder.like(root.get(name).as(String.class), (String) value));
                 } else if (value instanceof Boolean) {
                     CriteriaUtil.LevelOne.fillPredicateWithEqualsCriteria(criteriaBuilder, root, Boolean.class, property, predicateList);
@@ -272,6 +276,10 @@ public class SpecificationWorld {
                     LevelTwo.fillPredicateWithNotLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
                 }
 
+
+                else {
+                    LevelTwo.fillPredicateWithLikeCriteria(criteriaBuilder, root, name, (Class<String>) clazz, property, predicateList);
+                }
             }
 
             /**
@@ -302,6 +310,11 @@ public class SpecificationWorld {
                     name = StringWorld.removeEnd(name, "NotEqual");
                     LevelTwo.fillPredicateWithNotEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
                 }
+
+                else {
+                    LevelTwo.fillPredicateWithEqualCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                    }
+
             }
 
 

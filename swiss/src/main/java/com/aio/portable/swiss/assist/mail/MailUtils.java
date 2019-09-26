@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.assist.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

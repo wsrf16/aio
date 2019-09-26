@@ -3,6 +3,7 @@ package com.aio.portable.swiss.sugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -137,16 +138,22 @@ public abstract class CollectionWorld {
      * @param <T>
      * @return
      */
-    public final static <S, T> List<T> copyPropertiesToNewList(List<S> src, Class target) {
+    public final static <S, T> List<T> copyPropertiesToNewList(List<S> src, Class<T> target) {
         List<T> dest = new ArrayList<>();
         for (S s : src) {
             T t = null;
             try {
-                t = (T) target.newInstance();
+                t = (T) target.getConstructor().newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
@@ -189,6 +196,10 @@ public abstract class CollectionWorld {
 
     public final static <T> Enumeration<T> toEnumeration(final Collection<T> c) {
         return java.util.Collections.enumeration(c);
+    }
+
+    public final static Object[] toArray(List<?> list) {
+        return list.stream().toArray();
     }
 
     public final static <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {

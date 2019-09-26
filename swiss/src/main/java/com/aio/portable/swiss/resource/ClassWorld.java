@@ -24,7 +24,7 @@ public abstract class ClassWorld {
      * @param clazz
      * @return
      */
-    public static String getPath(final Class clazz) throws MalformedURLException {
+    public static String getPath(final Class<?> clazz) throws MalformedURLException {
         final String clazzAsResource = convertClassName2ResourcePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
@@ -59,28 +59,49 @@ public abstract class ClassWorld {
     /**
      * hasClassByCurrentThreadClassLoader 判断是否存在某一个类
      *
-     * @param className eg. com.art.Book
+     * @param qualifiedClassName eg. com.art.Book
      * @return
      * @throws IOException
      */
-    public static boolean exist(String className) throws IOException {
-        String resource = convertClassName2ResourcePath(className);
+    public static boolean exist(String qualifiedClassName) throws IOException {
+        String resource = convertClassName2ResourcePath(qualifiedClassName);
         return ResourceWorld.ByClassLoader.existResource(resource);
     }
 
 
     /**
      * getShortName -> org.springframework.util.ClassUtils.getShortName
-     * @param className
+     * @param qualifiedClassName
      * @return
      */
-    public static String getShortName(String className) {
-        String shortClassName = org.springframework.util.ClassUtils.getShortName(className);
+    public static String getShortName(String qualifiedClassName) {
+        String shortClassName = org.springframework.util.ClassUtils.getShortName(qualifiedClassName);
         return shortClassName;
     }
 
     /**
-     * getBeanName
+     * getClassFileName -> org.springframework.util.ClassUtils.getClassFileName
+     * @param clazz
+     * @return
+     */
+    public static String getClassFileName(Class<?> clazz) {
+        String classFileName = org.springframework.util.ClassUtils.getClassFileName(clazz);
+        return classFileName;
+    }
+
+    /**
+     * getPackageName -> org.springframework.util.ClassUtils.getPackageName
+     * @param clazz
+     * @return
+     */
+    public static String getPackageName(Class<?> clazz) {
+        String classFileName = org.springframework.util.ClassUtils.getPackageName(clazz);
+        return classFileName;
+    }
+
+
+    /**
+     * getBeanName -> Introspector.decapitalize
      * @param shortClassName
      * @return
      */
@@ -103,12 +124,12 @@ public abstract class ClassWorld {
     }
 
     /**
-     * newInstance
+     * newDeclaredInstance
      * @param clazz
      * @param <T>
      * @return
      */
-    public synchronized final static <T> T newInstance(Class<T> clazz) {
+    public synchronized final static <T> T newDeclaredInstance(Class<T> clazz) {
         try {
             return clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
@@ -126,6 +147,30 @@ public abstract class ClassWorld {
         }
     }
 
+
+    /**
+     * newInstance
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public synchronized final static <T> T newInstance(Class<T> clazz) {
+        try {
+            return clazz.getConstructor().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * isSimpleValueType

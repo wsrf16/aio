@@ -57,6 +57,7 @@
         <!--<elasticsearch.version>6.4.3</elasticsearch.version>-->
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <zookeeper.version>3.5.5</zookeeper.version>
+        <java-jwt.version>3.8.2</java-jwt.version>
     </properties>
 
     <dependencies>
@@ -345,6 +346,19 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

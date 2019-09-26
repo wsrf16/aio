@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.autoconfigure;
 
-import com.aio.portable.swiss.sugar.MailUtils;
+import com.aio.portable.swiss.assist.mail.MailUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

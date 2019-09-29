@@ -4,6 +4,7 @@ import com.aio.portable.swiss.assist.log.base.parts.LevelEnum;
 import com.aio.portable.swiss.assist.log.base.parts.LogException;
 import com.aio.portable.swiss.assist.log.base.parts.LogNote;
 import com.aio.portable.swiss.bean.serializer.ISerializerSelector;
+import com.aio.portable.swiss.bean.serializer.SerializerEnum;
 import com.aio.portable.swiss.bean.serializer.SerializerSelector;
 import com.aio.portable.swiss.systeminfo.HostInfo;
 //import com.aio.portable.swiss.assist.log.base.parts.LogThreadPool;
@@ -30,7 +31,7 @@ public abstract class AbstractLogger extends LogBody {
         this.prefixSupplier = EMPTY_PREFIX;
     }
 
-    protected ISerializerSelector serializer = new SerializerSelector();
+    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_JACKSON_FORCE);
 //    public ISerializerSelector getSerializer() {
 //        return serializer;
 //    }

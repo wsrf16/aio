@@ -7,12 +7,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import java.nio.charset.StandardCharsets;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Base64;
 
 public abstract class JWTWorld {
     /**
@@ -24,6 +22,7 @@ public abstract class JWTWorld {
     public final static String sign(JWTCreator.Builder builder, Algorithm algorithm) {
         return builder.sign(algorithm);
     }
+
 
     /**
      * parseByHMAC
@@ -38,6 +37,7 @@ public abstract class JWTWorld {
         return jwt;
     }
 
+
     /**
      * parseByECDSA
      * @param token
@@ -51,6 +51,7 @@ public abstract class JWTWorld {
         DecodedJWT jwt = newDecodedJWT(token, algorithm);
         return jwt;
     }
+
 
     /**
      * parseByRSA
@@ -78,4 +79,25 @@ public abstract class JWTWorld {
         return verifier.verify(token);
 //        return verifier.verify(new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8));
     }
+
+
+    /**
+     * verify
+     * @param token
+     * @param algorithm
+     * @return
+     */
+    public final static Boolean verify(String token, Algorithm algorithm) {
+        Boolean verify;
+        try {
+            newDecodedJWT(token, algorithm);
+            verify = true;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            verify = false;
+        }
+        return verify;
+    }
+
+
 }

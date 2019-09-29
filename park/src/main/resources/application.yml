@@ -22,6 +22,18 @@ spring:
     debugHost: 127.0.0.1
     debugPort: 8888
 
+  ldap:
+    urls: ldap://dc-01.qdingnet.cn:389
+    base: dc=qdingnet,dc=cn
+    username: itadmin
+    password: Aa123456789
+    baseEnvironment:
+      java:
+        naming:
+          referral: follow
+
+
+
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
@@ -48,4 +60,6 @@ business:
 
 #mybatis:
 #  mapper-locations: classpath:mapper/*.xml
+
+
 

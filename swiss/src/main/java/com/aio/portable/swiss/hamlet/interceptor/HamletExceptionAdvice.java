@@ -29,7 +29,7 @@ public class HamletExceptionAdvice {
         if (logger != null) {
             logger.e(GLOBAL_BUSINESS_EXCEPTION, e);
         }
-        ResponseWrapper responseWrapper = ResponseWrapper.build(e.getCode(), e.toString());
+        ResponseWrapper responseWrapper = ResponseWrapper.build(e.getCode(), e.getMessage());
         return responseWrapper;
     }
 
@@ -42,14 +42,14 @@ public class HamletExceptionAdvice {
         }
         ResponseWrapper responseWrapper;
 //        responseWrapper = e instanceof org.springframework.web.servlet.NoHandlerFoundException ?
-//                        ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.toString())
-//                        : ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.toString());
+//                        ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage())
+//                        : ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
         if (e instanceof org.springframework.web.servlet.NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.toString());
+            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
         else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(BizStatusEnum.PARAM_INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.toString());
+            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
 
         return responseWrapper;
     }

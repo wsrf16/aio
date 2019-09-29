@@ -51,7 +51,9 @@ public class SerializerSelector implements ISerializerSelector {
     private final void inital() {
 //        classicSerializers = new HashMap<>();
         classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON, bean -> JacksonUtil.obj2Json(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON, bean -> JacksonUtil.obj2ShortJson(bean));
+        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON, bean -> JacksonUtil.obj2Json(bean));
+        classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON_FORCE, bean -> JacksonUtil.obj2Json(bean, false));
+        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON_FORCE, bean -> JacksonUtil.obj2ShortJson(bean, false));
         classicSerializers.put(SerializerEnum.SERIALIZE_JACKXML, bean -> XmlUtil.obj2Xml(bean));
         classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKXML, bean -> XmlUtil.obj2ShortXml(bean));
         classicSerializers.put(SerializerEnum.SERIALIZE_GSON, bean -> GsonUtil.obj2Json(bean));

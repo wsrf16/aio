@@ -42,6 +42,27 @@ public class JacksonUtil {
         return obj2Json(obj, false, false);
     }
 
+
+    /**
+     * obj2LongJson
+     * @param obj
+     * @param throwException
+     * @return
+     */
+    public static String obj2ShortJson(Object obj, Boolean throwException) {
+        if (throwException)
+            return obj2ShortJson(obj);
+        else {
+            try {
+                return obj2ShortJson(obj);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+
     /**
      * obj2LongJson
      *
@@ -51,6 +72,27 @@ public class JacksonUtil {
     public static String obj2LongJson(Object obj) {
         return obj2Json(obj, true, true);
     }
+
+
+    /**
+     * obj2LongJson
+     * @param obj
+     * @param throwException
+     * @return
+     */
+    public static String obj2LongJson(Object obj, Boolean throwException) {
+        if (throwException)
+            return obj2LongJson(obj);
+        else {
+            try {
+                return obj2LongJson(obj);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
 
     /**
      * obj2Json
@@ -62,9 +104,28 @@ public class JacksonUtil {
         return obj2Json(obj, false, true);
     }
 
+
     /**
      * obj2Json
      *
+     * @param obj
+     * @return
+     */
+    public static String obj2Json(Object obj, Boolean throwException) {
+        if (throwException)
+            return obj2Json(obj, false, true);
+        else {
+            try {
+                return obj2Json(obj, false, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    /**
+     * obj2Json
      * @param obj
      * @param indent
      * @param includeNullAndEmpty
@@ -76,6 +137,7 @@ public class JacksonUtil {
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return json;
@@ -192,6 +254,7 @@ public class JacksonUtil {
             return mapper.readValue(jsonStr, new TypeReference<T>() {
             });
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -213,6 +276,7 @@ public class JacksonUtil {
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper.readValue(jsonStr, valueTypeRef);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

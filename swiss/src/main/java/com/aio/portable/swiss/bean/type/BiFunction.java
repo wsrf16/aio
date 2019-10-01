@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.type;
+package com.aio.portable.swiss.bean.type;
 
 import java.util.function.Function;
 

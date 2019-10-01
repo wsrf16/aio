@@ -3,16 +3,16 @@ package com.aio.portable.swiss.resource;
 import com.aio.portable.swiss.sandbox.a中文.Flag;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.ProtocolType;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -47,10 +47,12 @@ public abstract class PackageWorld {
             List<String> _classList = new ArrayList<>();
             try {
                 String path = URLDecoder.decode(url.getPath(), "utf-8");
-                if (url.getProtocol().equals(ProtocolType.file)) {
+                if (ResourceUtils.isFileURL(url)) {
+//                if (url.getProtocol().equals(ProtocolType.file)) {
                     // "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
                     _classList = getQualifiedClassNameByPath(path);
-                } else if (url.getProtocol().equals(ProtocolType.jar)) {
+                } else if (ResourceUtils.isJarURL(url)) {
+//                } else if (url.getProtocol().equals(ProtocolType.jar)) {
                     // "jar:file:/E:/Users/PPC/IdeaProjects/swiss/target/main.java.com.aio.solomid-0.0.1-SNAPSHOT.jar!/com/aio/com.aio.solomid"
                     _classList = getQualifiedClassNameByJar(path);
                 }
@@ -63,12 +65,20 @@ public abstract class PackageWorld {
         return classList;
     }
 
+    private final static String DOT = ".";
+    private final static String EXT_CLASS = "class";
+    private final static String EXT_DOT_CLASS = DOT + "class";
+    private final static String EXT_JAR = "jar";
+    private final static String EXT_DOT_JAR = DOT + "jar";
+    private final static String DIR_CLASSES = "classes";
+
+
     /**
      * getClassNameByPath
-     * @param packagePath : "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
+     * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    private static List<String> getQualifiedClassNameByPath(String packagePath) {
+    public static List<String> getQualifiedClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -79,11 +89,25 @@ public abstract class PackageWorld {
                 classList.addAll(getQualifiedClassNameByPath(childFile.getPath()));
             } else {
                 String childFilePath = childFile.getPath();
-                String _srcDirectory = MessageFormat.format("{0}classes{0}", Constant.FILE_SEPARATOR);
-                String _suffix = ".class";
-                childFilePath = childFilePath.substring(childFilePath.indexOf(_srcDirectory) + _srcDirectory.length(), childFilePath.lastIndexOf(_suffix));
-                childFilePath = childFilePath.replace(Constant.FILE_SEPARATOR, ".");
-                classList.add(childFilePath);
+//                String extension = StringUtils.getFilenameExtension(childFilePath);
+                if (childFilePath.endsWith(EXT_DOT_CLASS)) {
+                    String _srcDirectory = MessageFormat.format("{0}" + DIR_CLASSES + "{0}", Constant.FILE_SEPARATOR);
+                    childFilePath = childFilePath.substring(childFilePath.indexOf(_srcDirectory) + _srcDirectory.length(), childFilePath.lastIndexOf(EXT_DOT_CLASS));
+                    childFilePath = childFilePath.replace(Constant.FILE_SEPARATOR, ".");
+                    classList.add(childFilePath);
+                } else if (childFilePath.endsWith(EXT_DOT_JAR)) {
+                    try {
+                        List<URL> resourcesInJar = ResourceWorld.getResourcesInJar(childFilePath);
+                        List<String> classNameList = resourcesInJar.stream()
+                                .filter(c -> c.toString().endsWith(EXT_DOT_CLASS))
+                                .map(c -> ResourceWorld.convert2QualifiedClassName(c.toString()))
+                                .collect(Collectors.toList());
+
+                        classList.addAll(classNameList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         return classList;
@@ -95,7 +119,7 @@ public abstract class PackageWorld {
      * @return
      * @throws IOException
      */
-    private static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
+    public static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
         String[] jarInfo = packageURLInJar.split("!");
         String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);
@@ -106,16 +130,35 @@ public abstract class PackageWorld {
         List<JarEntry> jarEntryList = Collections.list(jarEntryEnumeration);
         List<String> classList = jarEntryList.stream().filter(c -> {
             String entryName = c.getName();
-            return entryName.endsWith(".class") && entryName.startsWith(packagePath);
+            return entryName.endsWith(EXT_DOT_CLASS) && entryName.startsWith(packagePath);
         }).map(c -> {
             String entryName = c.getName();
-            String className = entryName.substring(0, entryName.lastIndexOf(".class")).replace("/", ".");
+            String className = entryName.substring(0, entryName.lastIndexOf(EXT_DOT_CLASS)).replace("/", ".");
             return className;
         }).collect(Collectors.toList());
 
         return classList;
     }
 
+    /**
+     * scan
+     * @param basePackages
+     * @param annotations
+     * @return
+     */
+    public final static List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
+        return ClassScaner.scan(basePackages, annotations);
+    }
+
+    /**
+     * scan
+     * @param basePackages com.aio.portable.parkdb.dao.master.model
+     * @param annotations
+     * @return
+     */
+    public final static List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
+        return ClassScaner.scan(basePackages, annotations);
+    }
 
 
 

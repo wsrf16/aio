@@ -165,7 +165,11 @@ public class SpecificationWorld {
                 } else if (value instanceof Byte) {
                     CriteriaUtil.LevelOne.fillPredicateWithComparableCriteria(criteriaBuilder, root, Byte.class, property, predicateList);
 //                    fillPredicateWithComparableCriteria(root, criteriaBuilder, name, (Byte) value, predicateList);
+                } else if (value instanceof Collection) {
+                    CriteriaUtil.LevelOne.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
+//                    fillPredicateWithComparableCriteria(root, criteriaBuilder, name, (Byte) value, predicateList);
                 }
+
             }
         });
     }
@@ -184,7 +188,7 @@ public class SpecificationWorld {
                 predicateList.add(biFunction.apply(root.get(name).as(clazz), (T) value));
             }
 
-            public final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
+            public final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
                 Collection<T> value = (Collection<T>) property.getValue();
                 CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
                 value.stream().forEach(c -> predicate.value(c));
@@ -193,8 +197,8 @@ public class SpecificationWorld {
         }
 
         static class LevelTwo {
-            public final static <T> void fillPredicateWithInCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
-                LevelThree.fillPredicate(criteriaBuilder::in, root, name, clazz, property, predicateList);
+            public final static <T> void fillPredicateWithInCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
+                LevelThree.fillPredicate(criteriaBuilder::in, root, name, property, predicateList);
             }
 
 
@@ -327,19 +331,19 @@ public class SpecificationWorld {
              * @param predicateList
              * @param <T>
              */
-            public final static <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, Class<Collection<T>> clazz, PropertyItem property, List<Predicate> predicateList) {
+            public final static <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
                 Field field = property.getField();
                 String name = property.getName();
                 if (field.isAnnotationPresent(IgnoreSQL.class))
                     return;
                 if (field.isAnnotationPresent(In.class)) {
-                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, property, predicateList);
                 }
 
 
                 else if (!field.isAnnotationPresent(In.class) && name.endsWith("In")) {
                     name = StringWorld.removeEnd(name, "In");
-                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, clazz, property, predicateList);
+                    LevelTwo.fillPredicateWithInCriteria(criteriaBuilder, root, name, property, predicateList);
                 }
             }
 

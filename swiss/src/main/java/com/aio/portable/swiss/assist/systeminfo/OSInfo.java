@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.systeminfo;
+package com.aio.portable.swiss.assist.systeminfo;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.systeminfo;
+package com.aio.portable.swiss.assist.systeminfo;
 
 import java.io.IOException;
 import java.net.InetAddress;

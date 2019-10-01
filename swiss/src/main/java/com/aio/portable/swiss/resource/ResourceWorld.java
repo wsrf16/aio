@@ -42,7 +42,7 @@ public abstract class ResourceWorld {
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      * @throws MalformedURLException
      */
-    public static URL spellResourceInJar(final String jarPath, final String resourceLocation) throws MalformedURLException {
+    public final static URL spellResourceInJar(final String jarPath, final String resourceLocation) throws MalformedURLException {
         File jarFile = new File(jarPath);
         URL jarURL = jarFile.toURI().toURL();
         String resourceInJarChanged = resourceLocation.startsWith("/") ? resourceLocation : "/" + resourceLocation;
@@ -59,7 +59,7 @@ public abstract class ResourceWorld {
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      * @throws MalformedURLException
      */
-    public static URL getResourceInJar(final String jarPath, final String resourceLocation) throws IOException {
+    public final static URL getResourceInJar(final String jarPath, final String resourceLocation) throws IOException {
         URL url = getResourcesInJar(jarPath).stream().filter(c -> c.getPath().endsWith(resourceLocation)).findFirst().get();
         return url;
     }
@@ -72,22 +72,22 @@ public abstract class ResourceWorld {
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      * @throws MalformedURLException
      */
-    public static InputStream getResourceInJarAsStream(final String jarPath, final String resourceLocation) throws IOException {
+    public final static InputStream getResourceInJarAsStream(final String jarPath, final String resourceLocation) throws IOException {
         return spellResourceInJar(jarPath, resourceLocation).openStream();
     }
 
     /**
      * getResourcesInJar 从Jar中获得所有资源集合
      *
-     * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
+     * @param jar eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return
      * @throws IOException
      */
-    public static List<URL> getResourcesInJar(final String jarPath) throws IOException {
-        File file = new File(jarPath);
+    public final static List<URL> getResourcesInJar(final String jar) throws IOException {
+        File file = new File(jar);
         URL jarURL = file.toURI().toURL();
 
-        JarFile jarFile = new JarFile(jarPath);
+        JarFile jarFile = new JarFile(jar);
         Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
         List<JarEntry> jarEntryList = Collections.list(jarEntryEnumeration);
         List<URL> urlList = jarEntryList.stream().map(c -> {
@@ -109,7 +109,7 @@ public abstract class ResourceWorld {
      * @param path className/packageName eg. com/company/biz | com/company/biz/Book
      * @return com.company.biz | com.company.biz.Book
      */
-    public static String path2FullName(String path) {
+    public final static String path2FullName(String path) {
         path = StringWorld.removeEnd(path, ".class");
         String fullName = path.replace("/", ".");
         fullName = StringWorld.removeStart(fullName, ".");
@@ -125,7 +125,7 @@ public abstract class ResourceWorld {
      * @param parts
      * @return
      */
-    public static String concat(String... parts) {
+    public final static String concat(String... parts) {
         Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringWorld.replaceEach(c, intervals, new String[]{interval, interval}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
@@ -139,17 +139,33 @@ public abstract class ResourceWorld {
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
-//    public static void ff() throws FileNotFoundException {
+//    public final static void ff() throws FileNotFoundException {
 //        org.springframework.util.ResourceUtils.getFile(
 //                org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX + "static/excel/userTemplate.xlsx");
 //    }
 
+    /**
+     * convert2QualifiedClassName
+     * @param resourcePath jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
+     * @return
+     */
+    public final static String convert2QualifiedClassName(String resourcePath) {
+        // jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
+        // ->
+        // /BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
+        String resourceRelative = resourcePath.split("!")[1];
+        // -> com/aio/portable/park/config/BeanConfig.class
+        String classFilePath = resourceRelative.contains("classes/") ? resourceRelative.split("classes/")[1] : resourceRelative;
+        // -> com.aio.portable.park.config.BeanConfig
+        String qualifiedClassName = StringWorld.removeEnd(classFilePath, ".class").replace("/", ".");
+        return qualifiedClassName;
+    }
 
     /**
      * getResource
      */
-    public static class ByClass {
-        public static URL getResource(Class clazz, String resourceRelationPath) {
+    public final static class ByClass {
+        public final static URL getResource(Class clazz, String resourceRelationPath) {
             return clazz.getResource(resourceRelationPath);
         }
 
@@ -160,13 +176,14 @@ public abstract class ResourceWorld {
          * @param clazz
          * @return
          */
-        public static URL getCodeSourceLocation(Class clazz) {
+        public final static URL getCodeSourceLocation(Class clazz) {
             URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
             return location;
         }
+
     }
 
-    public static class ByClassLoader {
+    public final static class ByClassLoader {
         /**
          * getResourceByClassLoader 利用ClassLoader通过资源相对位置获取其URL完整位置，包括“指定classes目录及指定jar包（如lib中）”中的“.class文件、jar文件、文件夹”
          *
@@ -175,7 +192,7 @@ public abstract class ResourceWorld {
          * @return eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/sandbox/console/Book.class"
          * @throws IOException
          */
-        public static List<URL> getResources(ClassLoader classLoader, String resourceLocation) throws IOException {
+        public final static List<URL> getResources(ClassLoader classLoader, String resourceLocation) throws IOException {
             Enumeration<URL> urlEnumeration = classLoader.getResources(resourceLocation);
             List<URL> urlList = Collections.list(urlEnumeration);
             return urlList;
@@ -188,7 +205,7 @@ public abstract class ResourceWorld {
          * @return                 eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/com/aio/portable/swiss/sandbox/Wood.class"
          * @throws IOException
          */
-        public static List<URL> getResources(String resourceLocation) throws IOException {
+        public final static List<URL> getResources(String resourceLocation) throws IOException {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             return getResources(classLoader, resourceLocation);
         }
@@ -199,7 +216,7 @@ public abstract class ResourceWorld {
          * @return
          * @throws IOException
          */
-        public static boolean existResource(String resourceLocation) throws IOException {
+        public final static boolean existResource(String resourceLocation) throws IOException {
             List<URL> urlList = ResourceWorld.ByClassLoader.getResources(resourceLocation);
             boolean exist = urlList != null && urlList.size() > 0;
             return exist;
@@ -212,7 +229,7 @@ public abstract class ResourceWorld {
          * @return
          * @throws IOException
          */
-        public static List<URL> getResourcesByClass(final Class clazz) throws IOException {
+        public final static List<URL> getResourcesByClass(final Class clazz) throws IOException {
             return getResourcesByClassName(clazz.getTypeName());
         }
 
@@ -223,8 +240,8 @@ public abstract class ResourceWorld {
          * @return
          * @throws IOException
          */
-        public static List<URL> getResourcesByClassName(final String className) throws IOException {
-            final String resourceRelationPath = ClassWorld.convertClassName2ResourcePath(className);
+        public final static List<URL> getResourcesByClassName(final String className) throws IOException {
+            final String resourceRelationPath = ClassWorld.convertQualifiedName2ResourcePath(className);
             return getResources(resourceRelationPath);
         }
     }

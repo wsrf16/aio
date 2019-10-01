@@ -6,7 +6,7 @@ import com.aio.portable.swiss.assist.log.base.parts.LogNote;
 import com.aio.portable.swiss.bean.serializer.ISerializerSelector;
 import com.aio.portable.swiss.bean.serializer.SerializerEnum;
 import com.aio.portable.swiss.bean.serializer.SerializerSelector;
-import com.aio.portable.swiss.systeminfo.HostInfo;
+import com.aio.portable.swiss.assist.systeminfo.HostInfo;
 //import com.aio.portable.swiss.assist.log.base.parts.LogThreadPool;
 import com.aio.portable.swiss.global.Constant;
 

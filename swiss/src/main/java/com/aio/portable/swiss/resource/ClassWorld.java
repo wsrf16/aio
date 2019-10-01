@@ -25,7 +25,7 @@ public abstract class ClassWorld {
      * @return
      */
     public static String getPath(final Class<?> clazz) throws MalformedURLException {
-        final String clazzAsResource = convertClassName2ResourcePath(clazz.getTypeName());
+        final String clazzFile = convertQualifiedName2ResourceFilePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
@@ -36,17 +36,17 @@ public abstract class ClassWorld {
                     if (location.toExternalForm().endsWith(".jar") ||
                             location.toExternalForm().endsWith(".zip"))
                         location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
-                                .concat("!/").concat(clazzAsResource));
+                                .concat("!/").concat(clazzFile));
                     else if (new File(location.getFile()).isDirectory())
-                        location = new URL(location, clazzAsResource);
+                        location = new URL(location, clazzFile);
                 }
             }
         }
         if (location == null) {
             final ClassLoader clsLoader = clazz.getClassLoader();
             location = clsLoader != null ?
-                    clsLoader.getResource(clazzAsResource) :
-                    ClassLoader.getSystemResource(clazzAsResource);
+                    clsLoader.getResource(clazzFile) :
+                    ClassLoader.getSystemResource(clazzFile);
         }
         return location.toString();
     }
@@ -64,13 +64,13 @@ public abstract class ClassWorld {
      * @throws IOException
      */
     public static boolean exist(String qualifiedClassName) throws IOException {
-        String resource = convertClassName2ResourcePath(qualifiedClassName);
+        String resource = convertQualifiedName2ResourcePath(qualifiedClassName);
         return ResourceWorld.ByClassLoader.existResource(resource);
     }
 
 
     /**
-     * getShortName -> org.springframework.util.ClassUtils.getShortName
+     * getShortName -> org.springframework.util.ClassUtils
      * @param qualifiedClassName
      * @return
      */
@@ -80,7 +80,7 @@ public abstract class ClassWorld {
     }
 
     /**
-     * getClassFileName -> org.springframework.util.ClassUtils.getClassFileName
+     * getClassFileName -> org.springframework.util.ClassUtils
      * @param clazz
      * @return
      */
@@ -111,17 +111,32 @@ public abstract class ClassWorld {
 
 
     /**
-     * fullName2Name
+     * convertQualifiedName2ResourcePath
      *
-     * @param fullName className/packageName eg. com.company.biz | com.company.biz.Book
+     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
      * @return com/company/biz | com/company/biz/Book
      */
-    public static String convertClassName2ResourcePath(String fullName) {
+    public static String convertQualifiedName2ResourcePath(String qualifiedName) {
         String path;
 //        path = fullName.replace('.', '/').concat(".class");
-        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(fullName).concat(".class");
+        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName);
         return path;
     }
+
+
+    /**
+     * convertQualifiedName2ResourceFilePath
+     *
+     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
+     * @return com/company/biz | com/company/biz/Book
+     */
+    public static String convertQualifiedName2ResourceFilePath(String qualifiedName) {
+        String path;
+//        path = fullName.replace('.', '/').concat(".class");
+        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName).concat(".class");
+        return path;
+    }
+
 
     /**
      * newDeclaredInstance

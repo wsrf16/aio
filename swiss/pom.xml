@@ -53,7 +53,7 @@
         <druid.version>1.1.18</druid.version>
 <!--        <mssql-jdbc.version>4.0</mssql-jdbc.version>-->
 <!--        <mysql.version>8.0.16</mysql.version>-->
-        <mybatis.version>2.0.0</mybatis.version>
+        <mybatis.version>2.1.0</mybatis.version>
         <!--<elasticsearch.version>6.4.3</elasticsearch.version>-->
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <zookeeper.version>3.5.5</zookeeper.version>

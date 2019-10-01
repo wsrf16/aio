@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.systeminfo.OSInfo;
+import com.aio.portable.swiss.assist.systeminfo.OSInfo;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;

@@ -120,8 +120,8 @@ public class ClassScaner implements ResourceLoaderAware {
         return false;
     }
 
-    public static void main(String[] args) {
-        ClassScaner.scan("com.hjzgg.test.thirdjar.config,com.hjzgg.test.thirdjar.web", null)
+    private static void main(String[] args) {
+        ClassScaner.scan("com.hjzgg.test.thirdjar.config,com.hjzgg.test.thirdjar.web", (Class<? extends Annotation>)null)
                 .forEach(clazz -> System.out.println(clazz));
     }
 }

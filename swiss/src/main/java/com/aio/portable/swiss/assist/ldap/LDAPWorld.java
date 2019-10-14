@@ -40,8 +40,23 @@ public abstract class LDAPWorld {
         return b;
     }
 
+
     /**
      * search
+     * @param ldapTemplate
+     * @param containerCriteria
+     * @param mapper
+     * @param <T>
+     * @return
+     */
+    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, AttributesMapper<T> mapper) {
+        List<T> list = ldapTemplate.search(containerCriteria, mapper);
+        return list;
+    }
+
+    /**
+     * search
+     *
      * @param ldapTemplate
      * @param containerCriteria
      * @param clazz

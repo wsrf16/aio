@@ -131,19 +131,19 @@ public abstract class CollectionWorld {
     }
 
     /**
-     * copyProperties
-     * @param src
-     * @param target
+     * cloneByProperties
+     * @param srcCollection
+     * @param targetItem
      * @param <S>
      * @param <T>
      * @return
      */
-    public final static <S, T> List<T> copyPropertiesToNewList(List<S> src, Class<T> target) {
+    public final static <S, T> List<T> cloneByProperties(Collection<S> srcCollection, Class<T> targetItem) {
         List<T> dest = new ArrayList<>();
-        for (S s : src) {
+        for (S s : srcCollection) {
             T t = null;
             try {
-                t = (T) target.getConstructor().newInstance();
+                t = (T) targetItem.getConstructor().newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);

@@ -92,6 +92,7 @@ class AbstractWebLogAspect {
             }
         } catch (Exception e) {
             logger.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, uniqueId), requestRecord, e);
+            throw e;
         }
         return responseRecord;
     }

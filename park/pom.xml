@@ -351,6 +351,15 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>/static/**</include>
+                    <include>/templates/**</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
                 <targetPath>${project.deploy.directoryName.profile}</targetPath>
                 <filtering>true</filtering>
                 <includes>

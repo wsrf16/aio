@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ public class RestTemplateAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(RestTemplateProperties.class)
     @ConfigurationProperties("spring.rest")
+    @ConditionalOnProperty("spring.rest.agent.port")
     public RestTemplateProperties restTemplateConfig() {
         return new RestTemplateProperties();
     }
@@ -27,12 +29,12 @@ public class RestTemplateAutoConfiguration {
     @ConditionalOnBean({RestTemplateProperties.class, RestTemplateBuilder.class})
     @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
-        boolean httpDebug = restTemplateProperties.isHttpDebug();
-        String debugHost = restTemplateProperties.getDebugHost();
-        int debugPort = restTemplateProperties.getDebugPort();
+        boolean agent = restTemplateProperties.getAgent().isEnable();
+        String agentHost = restTemplateProperties.getAgent().getHost();
+        int agentPort = restTemplateProperties.getAgent().getPort();
         RestTemplate restTemplate;
-        if (httpDebug)
-            restTemplate = RestTemplater.buildProxyRestTemplate(restTemplateBuilder, debugHost, debugPort);
+        if (agent)
+            restTemplate = RestTemplater.Build.buildProxyRestTemplate(restTemplateBuilder, agentHost, agentPort);
         else
             restTemplate = restTemplateBuilder.build();
         return restTemplate;

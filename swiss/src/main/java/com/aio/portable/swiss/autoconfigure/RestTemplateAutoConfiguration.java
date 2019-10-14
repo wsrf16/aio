@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.autoconfigure;
 
-import com.aio.portable.swiss.autoconfigure.properties.RestTemplateProperties;
+import com.aio.portable.swiss.autoconfigure.properties.resttemplate.RestTemplateProperties;
 import com.aio.portable.swiss.net.http.RestTemplater;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

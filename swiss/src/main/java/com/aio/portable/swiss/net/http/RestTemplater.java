@@ -23,25 +23,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RestTemplater {
-    public static RestTemplate buildProxyRestTemplate(String host, int port, String username, String password) {
-        HttpComponentsClientHttpRequestFactory factory = buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
+    public static class Http {
+        public final static HttpHeaders jsonHttpHead() {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
+            return headers;
+        }
 
-        return new RestTemplate(factory);
+        public final static HttpHeaders formHttpHead() {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+            return headers;
+        }
     }
 
-    public static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
-        SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+    public static class Build {
+        public static RestTemplate buildProxyRestTemplate(String host, int port, String username, String password) {
+            HttpComponentsClientHttpRequestFactory factory = buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
 
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        restTemplate.setRequestFactory(factory);
-        return restTemplate;
+            return new RestTemplate(factory);
+        }
+
+        public static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
+            SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+
+            RestTemplate restTemplate = restTemplateBuilder.build();
+            restTemplate.setRequestFactory(factory);
+            return restTemplate;
+        }
+
+        public static RestTemplate buildProxyRestTemplate(String host, int port) {
+            SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+
+            return new RestTemplate(factory);
+        }
     }
 
-    public static RestTemplate buildProxyRestTemplate(String host, int port) {
-        SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
 
-        return new RestTemplate(factory);
-    }
     public static Map.Entry buildAuthorizationHead(String username, int password) {
         final String plainCreds = MessageFormat.format("{0}:{1}", username, password);
 

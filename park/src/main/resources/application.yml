@@ -18,9 +18,10 @@ spring:
     enableautoconfiguration: true
 
   rest:
-    httpDebug: false
-    debugHost: 127.0.0.1
-    debugPort: 8888
+    agent:
+      enable: false
+      host: 127.0.0.1
+      port: 8888
 
   ldap:
     urls: ldap://dc-01.qdingnet.cn:389

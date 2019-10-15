@@ -3,8 +3,10 @@ package com.aio.portable.swiss.data.jpa;
 import com.aio.portable.swiss.bean.BeanWorld;
 import com.aio.portable.swiss.data.jpa.annotation.IgnoreSQL;
 import com.aio.portable.swiss.data.jpa.annotation.where.*;
+import com.aio.portable.swiss.sugar.CollectionWorld;
 import com.aio.portable.swiss.sugar.StringWorld;
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -165,9 +167,16 @@ public class SpecificationWorld {
                 } else if (value instanceof Byte) {
                     CriteriaUtil.LevelOne.fillPredicateWithComparableCriteria(criteriaBuilder, root, Byte.class, property, predicateList);
 //                    fillPredicateWithComparableCriteria(root, criteriaBuilder, name, (Byte) value, predicateList);
-                } else if (value instanceof Collection) {
-                    CriteriaUtil.LevelOne.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
+                } else if (value instanceof Collection<?>) {
+                    if (!CollectionWorld.isEmpty((Collection<?>) value)) {
+                        CriteriaUtil.LevelOne.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
 //                    fillPredicateWithComparableCriteria(root, criteriaBuilder, name, (Byte) value, predicateList);
+                    }
+                } else if (value instanceof Object[]) {
+                    if (!CollectionWorld.isEmpty((Object[]) value)) {
+                        CriteriaUtil.LevelOne.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
+//                    fillPredicateWithComparableCriteria(root, criteriaBuilder, name, (Byte) value, predicateList);
+                    }
                 }
 
             }
@@ -189,10 +198,23 @@ public class SpecificationWorld {
             }
 
             public final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
-                Collection<T> value = (Collection<T>) property.getValue();
-                CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
-                value.stream().forEach(c -> predicate.value(c));
-                predicateList.add(predicate);
+                if (property.getValue() instanceof Collection<?>) {
+                    Collection<T> value = (Collection<T>) property.getValue();
+                    if (!CollectionWorld.isEmpty(value)) {
+                        CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
+                        value.stream().forEach(c -> predicate.value(c));
+                        predicateList.add(predicate);
+                    }
+                } else if (property.getValue() instanceof Object[]) {
+                    T[] value = (T[]) property.getValue();
+                    if (!CollectionWorld.isEmpty(value)) {
+                        CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
+                        Arrays.asList(value).stream().forEach(c -> predicate.value(c));
+                        predicateList.add(predicate);
+                    }
+                }
+
+
             }
         }
 
@@ -326,7 +348,6 @@ public class SpecificationWorld {
              * fillPredicateWithInsCriteria
              * @param criteriaBuilder
              * @param root
-             * @param clazz
              * @param property
              * @param predicateList
              * @param <T>

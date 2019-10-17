@@ -35,9 +35,9 @@ public class MonitorInterceptor {
 
     @RuntimeType
     public static Object staticIntercept(@AllArguments Object[] arguments,
-                                   @Origin Class clazz,
-                                   @Origin Method method,
-                                   @SuperCall Callable<?> callable) throws Exception {
+                                         @Origin Class clazz,
+                                         @Origin Method method,
+                                         @SuperCall Callable<?> callable) throws Exception {
         long start = System.currentTimeMillis();
         try {
             return callable.call();

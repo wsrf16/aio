@@ -3,7 +3,7 @@ package com.aio.portable;
 import com.aio.portable.swiss.assist.bytecode.bytebuddy.AgentBuilderWorld;
 import com.aio.portable.swiss.assist.bytecode.bytebuddy.MethodInterceptorPoint;
 import com.aio.portable.swiss.assist.bytecode.bytebuddy.TypeInterceptorPoint;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.MonitorInterceptorAnnotation;
+import com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.JavaAgentInterceptor;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -25,7 +25,7 @@ public class PreMain {
         Collection<MethodInterceptorPoint> methodInterceptorPointCollection = new ArrayList<>();
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), MethodDelegation.to(CustomInterceptor.class)));
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>named("statichello"), MethodDelegation.to(CustomInterceptor.class)));
-        AgentBuilder.Transformer transformer = AgentBuilderWorld1.buildTransformer(methodInterceptorPointCollection);
+        AgentBuilder.Transformer transformer = AgentBuilderWorld.buildTransformer(methodInterceptorPointCollection);
 
         // step two
         Collection<TypeInterceptorPoint> typeInterceptorCollection = new ArrayList<>();
@@ -35,7 +35,7 @@ public class PreMain {
         typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("com.aio.portable.park.runner"), transformer));
 
 
-        AgentBuilderWorld1.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
+        AgentBuilderWorld.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
                 .installOn(inst);
     }
 
@@ -59,7 +59,7 @@ public class PreMain {
                 ElementMatchers.named("java.sql.DriverManager"),
                 ElementMatchers.nameStartsWith("java.sql"),
                 ElementMatchers.nameStartsWith("com.sandbox.console.buddy.sample"),
-                ElementMatchers.isAnnotatedWith(MonitorInterceptorAnnotation.class)
+                ElementMatchers.isAnnotatedWith(JavaAgentInterceptor.class)
         );
     }
 

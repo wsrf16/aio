@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.assist.bytecode.bytebuddy;
+package com.aio.portable.swiss.assist.bytecode.bytebuddy.interceptorpoint;
 
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.implementation.Implementation;

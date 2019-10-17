@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.assist.bytecode.bytebuddy.sample;
+package com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.delegation;
 
 import net.bytebuddy.implementation.bind.annotation.*;
 
@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 
-public class SampleInterceptor {
+public class SampleInterceptDelegation {
     @RuntimeType
     public static Object dynamicIntercept(@This Object proxy,
                                    @AllArguments Object[] arguments,
@@ -65,15 +65,10 @@ public class SampleInterceptor {
     }
 
     @RuntimeType
-    public Object intercept1() throws Exception {
+    public void intercept() throws Exception {
         long start = System.currentTimeMillis();
-        try {
-            if (1 == 1)
-                return null;
-        } finally {
-//                System.out.println(method + ": took " + (System.currentTimeMillis() - start) + "ms");
-            return null;
-        }
+        if (1 == 1)
+            return;
     }
 
 

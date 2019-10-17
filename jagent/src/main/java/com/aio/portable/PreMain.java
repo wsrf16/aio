@@ -1,9 +1,9 @@
 package com.aio.portable;
 
 import com.aio.portable.swiss.assist.bytecode.bytebuddy.AgentBuilderWorld;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.MethodInterceptorPoint;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.TypeInterceptorPoint;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.JavaAgentInterceptor;
+import com.aio.portable.swiss.assist.bytecode.bytebuddy.interceptorpoint.MethodInterceptorPoint;
+import com.aio.portable.swiss.assist.bytecode.bytebuddy.interceptorpoint.TypeInterceptorPoint;
+import com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.annotation.JavaAgentInterceptor;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.implementation.MethodDelegation;

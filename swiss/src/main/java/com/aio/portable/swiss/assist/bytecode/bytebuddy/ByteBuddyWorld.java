@@ -25,13 +25,12 @@ final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 //    }
 
     /**
-     * fake
-     *
+     * redefineClass
      * @param sourceClazz
      * @param targetQualifiedClassName "com.sandbox.console.Foo1"
      * @param <S>
      */
-    public final static <S> void rewriteClass(String targetQualifiedClassName, Class<S> sourceClazz) throws ClassNotFoundException {
+    public final static <S> void redefineClass(String targetQualifiedClassName, Class<S> sourceClazz) throws ClassNotFoundException {
         ClassReloadingStrategy fromInstalledAgent = ClassReloadingStrategy.fromInstalledAgent();
 
         DynamicType.Builder<S> builder = new ByteBuddy()
@@ -49,23 +48,23 @@ final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
     }
 
     /**
-     * fake
+     * redefineClass
      * @param sourceClazz
      * @param targetClazz
      * @param <S>
      * @param <T>
      */
-    public final static <S, T> void rewriteClass(Class<T> targetClazz, Class<S> sourceClazz) throws ClassNotFoundException {
-        rewriteClass(targetClazz.getName(), sourceClazz);
+    public final static <S, T> void redefineClass(Class<T> targetClazz, Class<S> sourceClazz) throws ClassNotFoundException {
+        redefineClass(targetClazz.getName(), sourceClazz);
     }
 
 
     /**
-     * rewrite
+     * redefineMethod
      * @param method ElementMatchers.named("toString")
      * @param implementation FixedValue.value("Hello World!")   MethodDelegation.to(Log4j.class)
      */
-    public final static void rewriteMethod(Class<?> clazz, ElementMatcher<? super MethodDescription> method, Implementation implementation) {
+    public final static void redefineMethod(Class<?> clazz, ElementMatcher<? super MethodDescription> method, Implementation implementation) {
         ClassReloadingStrategy fromInstalledAgent = ClassReloadingStrategy.fromInstalledAgent();
         Class<?> dynamicType = new ByteBuddy()
                 .redefine(clazz)
@@ -88,10 +87,10 @@ final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         }
 
         private static void todo() throws ClassNotFoundException {
-            ByteBuddyWorld.rewriteMethod(Foo.class, ElementMatchers.named("m"), MethodDelegation.to(Bar.class));
+            ByteBuddyWorld.redefineMethod(Foo.class, ElementMatchers.named("m"), MethodDelegation.to(Bar.class));
             System.out.println(new Foo().m());
 
-            ByteBuddyWorld.rewriteClass(Foo.class, Bar.class);
+            ByteBuddyWorld.redefineClass(Foo.class, Bar.class);
             System.out.println(new Foo().m());
         }
     }

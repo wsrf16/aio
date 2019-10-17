@@ -27,6 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
 //@Import({MasterDataSourceConfiguration.class, SlaveDataSourceConfiguration.class})
 //@Import({ThirdDataSourceConfiguration.class})
+// -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Premain-Class: com.aio.portable.PreMain
+Can-Redefine-Classes: true
+

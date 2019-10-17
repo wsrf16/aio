@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.assist.bytecode.bytebuddy;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.method.MethodDescription;

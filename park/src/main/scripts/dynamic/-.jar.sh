@@ -77,8 +77,9 @@ function isRunning() {
 
 function run() {
   touch ${log_file_absolute_path}
-  tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
-  mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
+#  tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
+#  mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
+  tail -n ${log_remain_line} ${log_file_absolute_path} > ${log_file_absolute_path}
   if [[ $operate == "once" ]]; then
     java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 2>&1 | tee ${log_file_absolute_path}
   elif [[ $operate == "start" ]]; then

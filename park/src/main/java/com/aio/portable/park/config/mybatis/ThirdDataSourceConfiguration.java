@@ -1,6 +1,6 @@
 package com.aio.portable.park.config.mybatis;
 
-import com.aio.portable.swiss.data.jpa.multidatasource.JpaBaseDataSourceConfiguration;
+import com.aio.portable.swiss.structure.database.jpa.multidatasource.JpaBaseDataSourceConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

@@ -1,9 +1,9 @@
 package com.aio.portable;
 
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.AgentBuilderWorld;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.interceptorpoint.MethodInterceptorPoint;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.interceptorpoint.TypeInterceptorPoint;
-import com.aio.portable.swiss.assist.bytecode.bytebuddy.sample.annotation.JavaAgentInterceptor;
+import com.aio.portable.swiss.structure.bytecode.bytebuddy.AgentBuilderSugar;
+import com.aio.portable.swiss.structure.bytecode.bytebuddy.interceptorpoint.MethodInterceptorPoint;
+import com.aio.portable.swiss.structure.bytecode.bytebuddy.interceptorpoint.TypeInterceptorPoint;
+import com.aio.portable.swiss.structure.bytecode.bytebuddy.sample.annotation.JavaAgentInterceptor;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -25,7 +25,7 @@ public class PreMain {
         Collection<MethodInterceptorPoint> methodInterceptorPointCollection = new ArrayList<>();
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), MethodDelegation.to(CustomInterceptor.class)));
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>named("statichello"), MethodDelegation.to(CustomInterceptor.class)));
-        AgentBuilder.Transformer transformer = AgentBuilderWorld.buildTransformer(methodInterceptorPointCollection);
+        AgentBuilder.Transformer transformer = AgentBuilderSugar.buildTransformer(methodInterceptorPointCollection);
 
         // step two
         Collection<TypeInterceptorPoint> typeInterceptorCollection = new ArrayList<>();
@@ -35,7 +35,7 @@ public class PreMain {
         typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("com.aio.portable.park.runner"), transformer));
 
 
-        AgentBuilderWorld.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
+        AgentBuilderSugar.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
                 .installOn(inst);
     }
 
@@ -53,7 +53,7 @@ public class PreMain {
 
 //        inst.addTransformer(new MyTransformer());
 
-        AgentBuilderWorld.interceptorToAnyMethod(MethodDelegation.to(CustomInterceptor.class).andThen(MethodDelegation.to(MonitorInterceptor.class)), inst,
+        AgentBuilderSugar.interceptorToAnyMethod(MethodDelegation.to(CustomInterceptor.class).andThen(MethodDelegation.to(MonitorInterceptor.class)), inst,
 //        AgentBuilderWorld.interceptorToAnyMethod(MethodDelegation.to(CustomInterceptor.class), inst,
                 ElementMatchers.named("com.mysql.cj.jdbc.ConnectionImpl"),
                 ElementMatchers.named("java.sql.DriverManager"),

@@ -9,7 +9,7 @@
         <id property="id" column="id"></id>
         <result property="name" column="name"></result>
         <result property="author" column="author"></result>
-        <result property="description" column="description" typeHandler="com.aio.portable.swiss.data.mybatis.BlobToStringTypeHandler"></result>
+        <result property="description" column="description" typeHandler="com.aio.portable.swiss.structure.database.mybatis.BlobToStringTypeHandler"></result>
     </resultMap>
 
     <select id="getAll" resultType="com.aio.portable.parkdb.dao.slave.model.Book">

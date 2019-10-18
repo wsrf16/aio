@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit.swiss.node;
 
-import com.aio.portable.swiss.bean.node.next.tiled.AbstractTiledNextNode;
+import com.aio.portable.swiss.structure.bean.node.next.tiled.AbstractTiledNextNode;
 
 public class TiledNextNodeSample extends AbstractTiledNextNode {
     private String name;

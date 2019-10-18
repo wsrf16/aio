@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-import com.aio.portable.swiss.bean.type.BiFunction;
+import com.aio.portable.swiss.structure.bean.type.BiFunction;
 import org.springframework.cglib.proxy.InvocationHandler;
 import org.springframework.cglib.proxy.Proxy;
 

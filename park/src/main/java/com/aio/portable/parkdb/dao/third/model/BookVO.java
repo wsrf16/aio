@@ -1,6 +1,6 @@
 package com.aio.portable.parkdb.dao.third.model;
 
-import com.aio.portable.swiss.data.jpa.annotation.where.Like;
+import com.aio.portable.swiss.structure.database.jpa.annotation.where.Like;
 
 public class BookVO extends Book {
     private Long id;

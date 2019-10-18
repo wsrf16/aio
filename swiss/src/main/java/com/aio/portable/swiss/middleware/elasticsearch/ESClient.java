@@ -42,7 +42,7 @@ public abstract class ESClient {
 
         Map<String, String> keyValueMap = new HashMap<>();
         keyValueMap.put("dynamic", "strict");
-        XContentBuilder contentBuilder = ElasticsearchUtils.buildMappingXContentBuilder(keyValueMap, clazz);
+        XContentBuilder contentBuilder = ElasticsearchSugar.buildMappingXContentBuilder(keyValueMap, clazz);
 
         CreateIndexRequest createIndexRequest = Requests.createIndexRequest(index)
 //                .settings(settings)

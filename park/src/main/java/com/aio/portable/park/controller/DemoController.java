@@ -2,7 +2,7 @@ package com.aio.portable.park.controller;
 
 //import com.aio.portable.park.common.log.InjectedBaseLogger;
 import com.aio.portable.park.config.LogFactory;
-import com.aio.portable.swiss.assist.cache.RedisLock;
+import com.aio.portable.swiss.structure.cache.RedisLock;
 import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

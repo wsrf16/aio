@@ -58,7 +58,7 @@ public class BasicType {
                     latestDateTime = now;
                 } else
                     countInSecond = (countInSecond + 1) > MAX_COUNT ? MIN_COUNT : (countInSecond + 1);
-                id = latestDateTime + StringWorld.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
+                id = latestDateTime + StringSugar.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
             } finally {
                 lock.unlock();
             }

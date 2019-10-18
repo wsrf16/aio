@@ -2,10 +2,10 @@ package com.aio.portable.park.test;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
-import com.aio.portable.swiss.assist.log.hub.LogHub;
-import com.aio.portable.swiss.resource.ResourceWorld;
-import com.aio.portable.swiss.resource.StreamClassLoader;
+import com.aio.portable.swiss.structure.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.structure.log.hub.LogHub;
+import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
 import com.aio.portable.swiss.sandbox.Wood;
 import org.springframework.core.io.ClassPathResource;
 
@@ -124,7 +124,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = ResourceWorld.ByClassLoader.getResources(resourceLocation);
+            List<URL> r1 = ResourceSugar.ByClassLoader.getResources(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,14 +132,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = ResourceWorld.ByClassLoader.getResourcesByClassName(classname);
+            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClassName(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = ResourceWorld.ByClassLoader.getResourcesByClass(clazz);
+            List<URL> r3 = ResourceSugar.ByClassLoader.getResourcesByClass(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,8 +148,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = ResourceWorld.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = ResourceWorld.getResourcesInJar(jarPath);
+            URL url = ResourceSugar.getResourceInJar(jarPath, resourceLocation);
+            List<URL> r4 = ResourceSugar.getResourcesInJar(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

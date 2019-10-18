@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-import com.aio.portable.swiss.assist.cache.CacheRoom;
+import com.aio.portable.swiss.structure.cache.CacheRoom;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;

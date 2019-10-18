@@ -4,6 +4,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.aio.portable.swiss.autoconfigure.RedisAutoConfiguration,\
   com.aio.portable.swiss.autoconfigure.Swagger2AutoConfiguration,\
   com.aio.portable.swiss.autoconfigure.SwissElasticsearchAutoConfiguration,\
-  com.aio.portable.swiss.autoconfigure.MailUtilsAutoConfiguration,\
+  com.aio.portable.swiss.autoconfigure.MailSugarAutoConfiguration,\
   com.aio.portable.swiss.autoconfigure.RestTemplateAutoConfiguration\
   

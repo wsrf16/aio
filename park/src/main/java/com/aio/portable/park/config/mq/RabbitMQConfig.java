@@ -2,7 +2,7 @@ package com.aio.portable.park.config.mq;
 
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
-import com.aio.portable.swiss.middleware.mq.rabbitmq.RabbitMQUtil;
+import com.aio.portable.swiss.middleware.mq.rabbitmq.RabbitMQSugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -28,6 +28,6 @@ public class RabbitMQConfig {
     @Autowired
     public void bindingMain(RabbitMQCachingConnectionFactoryProperties rabbitMQCachingConnectionFactoryProperties) {
         List<RabbitMQBindingProperty> rabbitMQBindingPropertyList = rabbitMQCachingConnectionFactoryProperties.getBindingList();
-        RabbitMQUtil.binding(rabbitMQBindingPropertyList);
+        RabbitMQSugar.binding(rabbitMQBindingPropertyList);
     }
 }

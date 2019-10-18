@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit.swiss;
 
 import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.assist.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.structure.log.classic.properties.LogKafkaProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 

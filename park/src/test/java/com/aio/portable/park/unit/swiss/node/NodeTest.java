@@ -1,12 +1,12 @@
 package com.aio.portable.park.unit.swiss.node;
 
-import com.aio.portable.swiss.bean.node.LinkedNodeWorld;
-import com.aio.portable.swiss.bean.node.next.layered.LayeredNextNode;
-import com.aio.portable.swiss.bean.node.next.layered.LayeredNextNodeBean;
-import com.aio.portable.swiss.bean.node.relation.layered.LayeredRelationNode;
-import com.aio.portable.swiss.bean.node.relation.layered.LayeredRelationNodeBean;
-import com.aio.portable.swiss.bean.node.next.tiled.TiledNextNode;
-import com.aio.portable.swiss.bean.node.relation.tiled.TiledRelationNode;
+import com.aio.portable.swiss.structure.bean.node.LinkedNodeSugar;
+import com.aio.portable.swiss.structure.bean.node.next.layered.LayeredNextNode;
+import com.aio.portable.swiss.structure.bean.node.next.layered.LayeredNextNodeBean;
+import com.aio.portable.swiss.structure.bean.node.relation.layered.LayeredRelationNode;
+import com.aio.portable.swiss.structure.bean.node.relation.layered.LayeredRelationNodeBean;
+import com.aio.portable.swiss.structure.bean.node.next.tiled.TiledNextNode;
+import com.aio.portable.swiss.structure.bean.node.relation.tiled.TiledRelationNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -66,15 +66,15 @@ public class NodeTest {
         @Test
         public void link2TiledNextNode() {
             List<TiledNextNode> source = source2();
-            TiledNextNode node1 = LinkedNodeWorld.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
-            TiledNextNode node2 = LinkedNodeWorld.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode node1 = LinkedNodeSugar.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
+            TiledNextNode node2 = LinkedNodeSugar.Lst.link2TiledNextNode(source, TiledNextNodeSample.class);
         }
 
         @Test
         public void link2LayeredNextNode() {
             List<String> source = source1();
-            LayeredNextNode<String> node1 = LinkedNodeWorld.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
-            LayeredNextNode<String> node2 = LinkedNodeWorld.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            LayeredNextNode<String> node1 = LinkedNodeSugar.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            LayeredNextNode<String> node2 = LinkedNodeSugar.Lst.link2LayeredNextNode(source, LayeredNextNodeBean.class);
         }
     }
 
@@ -99,8 +99,8 @@ public class NodeTest {
         @Test
         public void link2TiledNextNode() {
             List<TiledRelationNode> source = source();
-            List<TiledNextNodeSample> node1 = LinkedNodeWorld.TiledRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
-            List<TiledNextNodeSample> node2 = LinkedNodeWorld.TiledRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node1 = LinkedNodeSugar.TiledRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = LinkedNodeSugar.TiledRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
 //            LogFactory.singletonInstance().build().i(node1);
 //            LogFactory.singletonInstance().build().i(node2);
         }
@@ -108,8 +108,8 @@ public class NodeTest {
         @Test
         public void link2LayeredNextNode() {
             List<TiledRelationNode> source = source();
-            List<LayeredNextNodeBean> node1 = LinkedNodeWorld.TiledRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
-            List<LayeredNextNodeBean> node2 = LinkedNodeWorld.TiledRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node1 = LinkedNodeSugar.TiledRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = LinkedNodeSugar.TiledRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
 //            LogFactory.singletonInstance().build().i(node1);
 //            LogFactory.singletonInstance().build().i(node2);
         }
@@ -135,8 +135,8 @@ public class NodeTest {
         @Test
         public void link2TiledNextNode() {
             List<LayeredRelationNode> source = source();
-            List<TiledNextNodeSample> node1 = LinkedNodeWorld.LayeredRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
-            List<TiledNextNodeSample> node2 = LinkedNodeWorld.LayeredRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node1 = LinkedNodeSugar.LayeredRelation.link2TiledNextNode(source, TiledNextNodeSample.class);
+            List<TiledNextNodeSample> node2 = LinkedNodeSugar.LayeredRelation.link2TiledNextNode(source, Objects::equals, TiledNextNodeSample.class);
 //            LogFactory.singletonInstance().build().i(node1);
 //            LogFactory.singletonInstance().build().i(node2);
         }
@@ -144,8 +144,8 @@ public class NodeTest {
         @Test
         public void link2LayeredNextNode() {
             List<LayeredRelationNode> source = source();
-            List<LayeredNextNodeBean> node1 = LinkedNodeWorld.LayeredRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
-            List<LayeredNextNodeBean> node2 = LinkedNodeWorld.LayeredRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node1 = LinkedNodeSugar.LayeredRelation.link2LayeredNextNode(source, LayeredNextNodeBean.class);
+            List<LayeredNextNodeBean> node2 = LinkedNodeSugar.LayeredRelation.link2LayeredNextNode(source, Objects::equals, LayeredNextNodeBean.class);
 //            LogFactory.singletonInstance().build().i(node1);
 //            LogFactory.singletonInstance().build().i(node2);
         }

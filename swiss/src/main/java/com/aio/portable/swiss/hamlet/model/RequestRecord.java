@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.hamlet.model;
 
+import java.util.Map;
+
 public class RequestRecord {
     public String getRequestURL() {
         return requestURL;
@@ -41,9 +43,18 @@ public class RequestRecord {
         this.arguments = arguments;
     }
 
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
     private String requestURL;
     private String httpMethod;
     private String remoteAddress;
     private String classMethod;
     private Object[] arguments;
+    private Map<String, String> headers;
 }

@@ -9,14 +9,14 @@ import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class AbstractWebLogAspect {
@@ -106,8 +106,9 @@ class AbstractWebLogAspect {
         requestRecord.setRemoteAddress(request.getRemoteAddr());
         String url = !StringUtils.hasText(request.getQueryString()) ? request.getRequestURL().toString() : request.getRequestURL().toString() + "?" + request.getQueryString();
         requestRecord.setRequestURL(url);
-        requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         requestRecord.setHttpMethod(request.getMethod());
+        requestRecord.setHeaders(parseHeader(request));
+        requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
 
         Object[] args = filterArguments(joinPoint.getArgs());
         requestRecord.setArguments(args);
@@ -123,6 +124,18 @@ class AbstractWebLogAspect {
         boolean b = arg != null;
         b = b && !(arg instanceof HttpServletRequest);
         b = b && !(arg instanceof HttpServletResponse);
+        b = b && !(arg instanceof BindingResult);
         return b;
+    }
+
+    private static Map<String, String> parseHeader(HttpServletRequest request) {
+        HashMap<String, String> map = new HashMap<>();
+        Enumeration<String> nameEnumeration = request.getHeaderNames();
+        while(nameEnumeration.hasMoreElements()){
+            String name = nameEnumeration.nextElement();
+            String value = request.getHeader(name);
+            map.put(name, value);
+        }
+        return map;
     }
 }

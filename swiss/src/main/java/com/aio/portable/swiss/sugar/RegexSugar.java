@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.sugar;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +18,7 @@ public abstract class RegexSugar {
         return Pattern.compile(FULL_REGEX_PHONE).matcher(phone).find();
     }
 
-    public final static String fakePhone(String phone) {
+    public final static String sensitivePhone(String phone) {
         if (phone.length() != 11)
             return phone;
         String result = null;
@@ -35,12 +37,42 @@ public abstract class RegexSugar {
 
     /**
      * 正则匹配
-     * @param content
      * @param regex
+     * @param input
      * @return
      */
-    public final static boolean matches(String content, String regex) {
-        return Pattern.compile(regex).matcher(content).find();
+    public final static boolean find(String regex, String input) {
+        return Pattern.compile(regex).matcher(input).find();
+    }
+
+
+    /**
+     * 正则匹配
+     * @param regex
+     * @param input
+     * @return
+     */
+    public final static Matcher matcher(String regex, String input) {
+        return Pattern.compile(regex).matcher(input);
+    }
+
+    /**
+     * 正则匹配
+     * @param regex
+     * @param input
+     * @return
+     */
+    public final static List<List<String>> matches(String regex, String input) {
+        Matcher matcher = Pattern.compile(regex).matcher(input);
+        List<List<String>> matches = new ArrayList<>();
+        while (matcher.find()) {
+            List<String> matchesInOneLine = new ArrayList<>();
+            for (int ii = 1; ii <= matcher.groupCount(); ii++) {
+                matchesInOneLine.add(matcher.group(ii));
+            }
+            matches.add(matchesInOneLine);
+        }
+        return matches;
     }
 
 //    /**
@@ -58,29 +90,60 @@ public abstract class RegexSugar {
 //        return result;
 //    }
 
+
     /**
      * 正则替换
-     * @param content
+     * @param input
      * @param regex
      * @param replacement
      * @return
      */
-    public final static String replaceAll(String content, String regex, String replacement) {
+    public final static String replaceAll(String regex, String input, String replacement) {
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(content);
+        Matcher matcher = pattern.matcher(input);
 
         String result = matcher.find() ? matcher.replaceAll(replacement) : regex;
         return result;
     }
 
+
+    /**
+     * replace
+     * @param regex
+     * @param input
+     * @param replacement
+     * @return
+     */
+    public static String replace(String regex, String input, String... replacement) {
+        Matcher matcher = Pattern.compile(regex).matcher(input);
+        int i = -1;
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, replacement[++i]);
+        }
+        return sb.toString();
+    }
+
     private static class BlahUnit {
         private static void regex() {
-            String ret1 = RegexSugar.fakePhone("12345678901");
-            String ret2 = RegexSugar.replaceAll("12345678901", "4567", "xxxx");
-            boolean ret3 = RegexSugar.matches("12345678901", "456");
+            String ret1 = RegexSugar.sensitivePhone("12345678901");
+            String ret2 = RegexSugar.replaceAll("4567", "12345678901", "xxxx");
+            boolean ret3 = RegexSugar.find("456", "12345678901");
             System.out.println(ret1);
             System.out.println(ret2);
             System.out.println(ret3);
+
+
+
+            String input = "${name}-babalala-${age}-${address}++${name}-babalala";
+            String regex = "\\$\\{(.+?)\\}-(ba.+?)";
+            // .group(0): ${name}-baba
+            // .group(1): name
+            // .group(2): baba
+            List<List<String>> matches = RegexSugar.matches(regex, input);
+
+            String replacement[] = {"1", "2", "3", "4", "5"};
+            RegexSugar.replace(regex, input, replacement);
         }
     }
 }

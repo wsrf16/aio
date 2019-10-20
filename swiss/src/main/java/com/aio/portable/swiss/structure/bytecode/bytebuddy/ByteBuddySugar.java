@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.structure.bytecode.bytebuddy;
 
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
@@ -11,7 +12,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 
 public abstract class ByteBuddySugar {
 //    public final static ClassLoadingStrategy.Default wrapper;
-final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+    final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
 
 
@@ -87,6 +88,7 @@ final static ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         }
 
         private static void todo() throws ClassNotFoundException {
+            ByteBuddyAgent.install();
             ByteBuddySugar.redefineMethod(Foo.class, ElementMatchers.named("m"), MethodDelegation.to(Bar.class));
             System.out.println(new Foo().m());
 

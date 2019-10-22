@@ -2,8 +2,10 @@ package com.aio.portable.swiss.sugar;
 
 import org.springframework.util.StringUtils;
 
+import java.text.MessageFormat;
+
 public class StringSugar {
-    public static String removeEnd(String str, String remove) {
+    public final static String removeEnd(String str, String remove) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(remove)) {
             return str.endsWith(remove) ? str.substring(0, str.length() - remove.length()) : str;
         } else {
@@ -11,7 +13,7 @@ public class StringSugar {
         }
     }
 
-    public static String removeStart(String str, String remove) {
+    public final static String removeStart(String str, String remove) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(remove)) {
             return str.startsWith(remove) ? str.substring(remove.length()) : str;
         } else {
@@ -19,7 +21,7 @@ public class StringSugar {
         }
     }
 
-    public static String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
+    public final static String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
         return replaceEach(text, searchList, replacementList, false, 0);
     }
 
@@ -153,7 +155,7 @@ public class StringSugar {
 
 
 
-    public static String repeat(char ch, int repeat) {
+    public final static String repeat(char ch, int repeat) {
         if (repeat <= 0) {
             return "";
         } else {
@@ -167,7 +169,7 @@ public class StringSugar {
         }
     }
 
-    public static String rightPad(String str, int size, char padChar) {
+    public final static String rightPad(String str, int size, char padChar) {
         if (str == null) {
             return null;
         } else {
@@ -179,8 +181,19 @@ public class StringSugar {
             }
         }
     }
+    
+    public final static String unwrap(String input, String boundary) {
+        String s = removeStart(input, boundary);
+        s = removeEnd(s, boundary);
+        return s;
+    }
 
-    public static String rightPad(String str, int size, String padStr) {
+    public final static String wrap(String input, String boundary) {
+        String s = MessageFormat.format("{1}{0}{1}", input, boundary);
+        return s;
+    }
+
+        public final static String rightPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {
@@ -212,7 +225,7 @@ public class StringSugar {
         }
     }
 
-    public static String leftPad(String str, int size, char padChar) {
+    public final static String leftPad(String str, int size, char padChar) {
         if (str == null) {
             return null;
         } else {
@@ -225,7 +238,7 @@ public class StringSugar {
         }
     }
 
-    public static String leftPad(String str, int size, String padStr) {
+    public final static String leftPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {
@@ -257,7 +270,7 @@ public class StringSugar {
         }
     }
 
-    public static int length(CharSequence cs) {
+    public final static int length(CharSequence cs) {
         return cs == null ? 0 : cs.length();
     }
 

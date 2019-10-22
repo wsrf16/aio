@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class RegexSugar {
     private final static String REGEX_PHONE = "^(1)\\d{10}$";
@@ -41,7 +42,7 @@ public abstract class RegexSugar {
      * @param input
      * @return
      */
-    public final static boolean find(String regex, String input) {
+    public final static boolean match(String regex, String input) {
         return Pattern.compile(regex).matcher(input).find();
     }
 
@@ -62,7 +63,7 @@ public abstract class RegexSugar {
      * @param input
      * @return
      */
-    public final static List<List<String>> matches(String regex, String input) {
+    public final static List<List<String>> findMore(String regex, String input) {
         Matcher matcher = Pattern.compile(regex).matcher(input);
         List<List<String>> matches = new ArrayList<>();
         while (matcher.find()) {
@@ -74,6 +75,21 @@ public abstract class RegexSugar {
         }
         return matches;
     }
+
+    public final static List<String> find(String regex, String input) {
+        Matcher matcher = Pattern.compile(regex).matcher(input);
+        List<List<String>> matches = new ArrayList<>();
+        while (matcher.find()) {
+            List<String> matchesInOneLine = new ArrayList<>();
+            for (int ii = 1; ii <= matcher.groupCount(); ii++) {
+                matchesInOneLine.add(matcher.group(ii));
+            }
+            matches.add(matchesInOneLine);
+        }
+        List<String> eachFirst = matches.stream().map(c -> c.get(0)).collect(Collectors.toList());
+        return eachFirst;
+    }
+
 
 //    /**
 //     * 正则替换
@@ -128,7 +144,7 @@ public abstract class RegexSugar {
         private static void regex() {
             String ret1 = RegexSugar.sensitivePhone("12345678901");
             String ret2 = RegexSugar.replaceAll("4567", "12345678901", "xxxx");
-            boolean ret3 = RegexSugar.find("456", "12345678901");
+            boolean ret3 = RegexSugar.match("456", "12345678901");
             System.out.println(ret1);
             System.out.println(ret2);
             System.out.println(ret3);
@@ -140,7 +156,7 @@ public abstract class RegexSugar {
             // .group(0): ${name}-baba
             // .group(1): name
             // .group(2): baba
-            List<List<String>> matches = RegexSugar.matches(regex, input);
+            List<List<String>> matches = RegexSugar.findMore(regex, input);
 
             String replacement[] = {"1", "2", "3", "4", "5"};
             RegexSugar.replace(regex, input, replacement);

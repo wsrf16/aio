@@ -1,18 +1,18 @@
 #!/bin/bash
 
 function mkdirLog() {
-  if [[ ! -d $log_dir_absolute_path ]];then
+  if [[ ! -d $log_dir_absolute_path ]]; then
     mkdir $log_dir_absolute_path
   else
-    if [[ -f "${log_gclatest_file_absolute_path}" ]];then
-      cat ${log_gclatest_file_absolute_path} >> ${log_gctotal_file_absolute_path}
+    if [[ -f "${log_gclatest_file_absolute_path}" ]]; then
+      cat ${log_gclatest_file_absolute_path} >>${log_gctotal_file_absolute_path}
       rm -f ${log_gclatest_file_absolute_path}
     fi
   fi
 }
 
 function getIpAddr() {
-  ip_addr=$(ip addr  |grep "eth0" |grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | awk -F"/" '{print $1}')
+  ip_addr=$(ip addr | grep "eth0" | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | awk -F"/" '{print $1}')
   echo $ip_addr
 }
 
@@ -49,7 +49,7 @@ function captureProcessLine() {
 function markProcess() {
   process_line=$(captureProcessLine $1)
 
-  echo $process_line >> $log_dir_absolute_path/process.log
+  echo $process_line >>$log_dir_absolute_path/process.log
 }
 
 function getPid() {
@@ -72,18 +72,18 @@ function isRunning() {
   fi
 }
 
-
-
-
 function run() {
   touch ${log_file_absolute_path}
-#  tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
-#  mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
-  tail -n ${log_remain_line} ${log_file_absolute_path} > ${log_file_absolute_path}
-  if [[ $operate == "once" ]]; then
+  #  tail -n ${log_remain_line} ${log_file_absolute_path} > $log_dir_absolute_path/tmp
+  #  mv -f $log_dir_absolute_path/tmp ${log_file_absolute_path}
+  tail -n ${log_remain_line} ${log_file_absolute_path} >${log_file_absolute_path}
+  if [[ $operate == "once" || $operate == "debug" ]]; then
     java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 2>&1 | tee ${log_file_absolute_path}
-  elif [[ $operate == "start" ]]; then
+  elif [[ $operate == "start" || $operate == "restart" ]]; then
     nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
+  elif [[ $operate == "restartlog" ]]; then
+    nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
+    tail -100f ${log_file_absolute_path}
   fi
 
   #nohup java $args -Dloader.path="$dir_path/$dirname_dependency,$dir_path/${dirname_config}" -jar $1 >>${log_file_absolute_path} 2>&1 &
@@ -119,6 +119,10 @@ function status() {
   fi
 }
 
+function once() {
+  start $1
+}
+
 function start() {
   is=$(isRunning $1)
   if [[ ${is} ]]; then
@@ -132,15 +136,19 @@ function start() {
   fi
 }
 
+function debug() {
+  args="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug_port} ${args_app}"
+  start $1
+}
+
 function stop() {
   is=$(isRunning $1)
   while [[ ${is} ]]; do
     status $1
     pid=$(getPid $1)
     if [[ "$pid" ]]; then
-      for p in ${pid[@]}
-      do
-          kill -15 $p >/dev/null 2>&1
+      for p in ${pid[@]}; do
+        kill -15 $p >/dev/null 2>&1
       done
     else
       break
@@ -157,8 +165,7 @@ function forcestop() {
     status $1
     pid=$(getPid $1)
     if [[ "$pid" ]]; then
-      for p in ${pid[@]}
-      do
+      for p in ${pid[@]}; do
         kill -9 $p >/dev/null 2>&1
       done
     else
@@ -173,18 +180,15 @@ function forcestop() {
 function restart() {
   operate="stop"
   stop $1
-  operate="start"
-  start $1
   operate="restart"
+  start $1
 }
 
 function restartlog() {
   operate="stop"
   stop $1
-  operate="start"
-  start $1
   operate="restartlog"
-  tail -100f ${log_file_absolute_path}
+  start $1
 }
 
 function log() {
@@ -198,6 +202,7 @@ function gclog() {
 function help() {
   echo "cp '<jarfile>' to '<jarfile>.sh'"
   echo "<jarfile>.jar.sh once"
+  echo "<jarfile>.jar.sh debug"
   echo "<jarfile>.jar.sh start"
   echo "<jarfile>.jar.sh daemon"
   echo "<jarfile>.jar.sh restart"
@@ -208,6 +213,7 @@ function help() {
   echo "<jarfile>.jar.sh log"
 
   echo "<self>.sh <jarfile> once"
+  echo "<self>.sh <jarfile> debug"
   echo "<self>.sh <jarfile> start"
   echo "<self>.sh <jarfile> daemon"
   echo "<self>.sh <jarfile> restart"
@@ -218,21 +224,13 @@ function help() {
   echo "<self>.sh <jarfile> log"
 }
 
-
-
-
-
-
-
-
-
-
-jdk_version=$(java -version 2>&1 |awk 'NR==1{ gsub(/"/,""); print $3 }'|grep -P '^\d\.\d' -o)
-now="`date +%Y%m%d%H%M%S`"
+jdk_version=$(java -version 2>&1 | awk 'NR==1{ gsub(/"/,""); print $3 }' | grep -P '^\d\.\d' -o)
+now="$(date +%Y%m%d%H%M%S)"
 check_period=2
 daemon_check_period=10
 log_remain_line=100000
 ip_addr=$(getIpAddr)
+debug_port=8088
 
 dirname_dependency=@project.deploy.directoryName.dependency@
 if [[ "${dirname_dependency}" =~ "^@.*@$" ]]; then
@@ -242,17 +240,18 @@ dirname_config=@project.deploy.directoryName.profile@
 if [[ "${dirname_config}" =~ "^@.*@$" ]]; then
   dirname_config=config/
 fi
-dir_absolute_path=$(cd $(dirname $0); pwd)
+dir_absolute_path=$(
+  cd $(dirname $0)
+  pwd
+)
 _self=${0##*/}
 if [[ ${_self} =~ . ]]; then
-    shfilename=${_self}
-    # ext=$(getExt $_self)
+  shfilename=${_self}
+  # ext=$(getExt $_self)
 else
-    echo "sorry! filename is error."
-    exit 0
+  echo "sorry! filename is error."
+  exit 0
 fi
-
-
 
 if [[ ${_self} =~ \..+\.sh ]]; then
   mode="dynamic"
@@ -277,12 +276,11 @@ log_file_absolute_path=$log_dir_absolute_path/service.log
 log_gclatest_file_absolute_path=$log_dir_absolute_path/gc_latest.log
 log_gctotal_file_absolute_path=$log_dir_absolute_path/gc_total.log
 
-if [[ `expr ${jdk_version} \<= 1.8` -eq 1 ]]; then
+if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
   args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
-elif [[ `expr ${jdk_version} \> 1.8` -eq 1 ]]; then
+elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
   args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
 fi
-
 
 operate=$1
 if [[ -z ${operate} ]]; then
@@ -290,7 +288,10 @@ if [[ -z ${operate} ]]; then
 else
   mkdirLog
   if [[ $operate == "once" ]]; then
-    start $file_absolute_path
+    once $file_absolute_path
+  elif [[ $operate == "debug" ]]; then
+    echo "debug: ${args}"
+    debug $file_absolute_path
   elif [[ $operate == "start" ]]; then
     start $file_absolute_path
   elif [[ $operate == "restartlog" ]]; then
@@ -323,4 +324,3 @@ else
     help
   fi
 fi
-

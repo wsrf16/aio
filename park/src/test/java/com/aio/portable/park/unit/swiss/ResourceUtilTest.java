@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit.swiss;
 
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
-import com.aio.portable.swiss.sugar.StackTraceInfos;
+import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -13,7 +13,7 @@ public class ResourceUtilTest {
 
     @Test
     public void getClassName() throws IOException {
-        String packageName = StackTraceInfos.Current.getClassName();
+        String packageName = StackTraceInfoSugar.Current.getClassName();
         List<String> list = PackageSugar.getQualifiedClassName(packageName);
     }
 

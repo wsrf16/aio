@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-public abstract class StackTraceInfos {
+public abstract class StackTraceInfoSugar {
     private final static int CURRENT_STACK_INDEX_THREAD = 3;
     private final static int CURRENT_STACK_INDEX_EXCEPTION = 2;
 
@@ -41,19 +41,19 @@ public abstract class StackTraceInfos {
         }
 
         public static String getFileName() {
-            return StackTraceInfos.getFileName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getFileName(getStackTraceElementByThread());
         }
 
         public static String getClassName() {
-            return StackTraceInfos.getClassName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getClassName(getStackTraceElementByThread());
         }
 
         public static String getMethodName() {
-            return StackTraceInfos.getMethodName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getMethodName(getStackTraceElementByThread());
         }
 
         public static int getLineNumber() {
-            return StackTraceInfos.getLineNumber(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getLineNumber(getStackTraceElementByThread());
         }
     }
 
@@ -67,19 +67,19 @@ public abstract class StackTraceInfos {
         }
 
         public static String getFileName() {
-            return StackTraceInfos.getFileName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getFileName(getStackTraceElementByThread());
         }
 
         public static String getClassName() {
-            return StackTraceInfos.getClassName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getClassName(getStackTraceElementByThread());
         }
 
         public static String getMethodName() {
-            return StackTraceInfos.getMethodName(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getMethodName(getStackTraceElementByThread());
         }
 
         public static int getLineNumber() {
-            return StackTraceInfos.getLineNumber(getStackTraceElementByThread());
+            return StackTraceInfoSugar.getLineNumber(getStackTraceElementByThread());
         }
     }
 }

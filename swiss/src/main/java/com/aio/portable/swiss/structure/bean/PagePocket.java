@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.structure.bean;
 
 import com.aio.portable.swiss.structure.cache.CacheRoom;
 import org.springframework.cglib.beans.BeanCopier;

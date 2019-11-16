@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.structure.log.hub.factory;
 
 import com.aio.portable.swiss.structure.log.hub.LogHub;
-import com.aio.portable.swiss.sugar.StackTraceInfos;
+import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
 
 //@FunctionalInterface
 public interface LogHubFactory {
@@ -22,7 +22,7 @@ public interface LogHubFactory {
     }
 
     default LogHub build() {
-        String className = StackTraceInfos.Previous.getClassName();
+        String className = StackTraceInfoSugar.Previous.getClassName();
         return build(className);
     }
 

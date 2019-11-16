@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.standard;
 
 import org.springframework.util.StringUtils;
 

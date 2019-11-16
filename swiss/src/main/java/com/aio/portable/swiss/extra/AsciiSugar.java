@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.extra;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

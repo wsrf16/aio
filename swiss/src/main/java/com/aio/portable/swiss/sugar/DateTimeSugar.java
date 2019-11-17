@@ -5,6 +5,7 @@ import com.aio.portable.swiss.global.Constant;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -41,8 +42,9 @@ public abstract class DateTimeSugar {
 
         /**
          * add
+         *
          * @param calendar
-         * @param field : Calendar. ERA YEAR MONTH WEEK_OF_YEAR WEEK_OF_MONTH DATE DAY_OF_MONTH DAY_OF_YEAR DAY_OF_WEEK DAY_OF_WEEK_IN_MONTH AM_PM HOUR HOUR_OF_DAY MINUTE SECOND MILLISECOND ZONE_OFFSET DST_OFFSET FIELD_COUNT
+         * @param field    : Calendar. ERA YEAR MONTH WEEK_OF_YEAR WEEK_OF_MONTH DATE DAY_OF_MONTH DAY_OF_YEAR DAY_OF_WEEK DAY_OF_WEEK_IN_MONTH AM_PM HOUR HOUR_OF_DAY MINUTE SECOND MILLISECOND ZONE_OFFSET DST_OFFSET FIELD_COUNT
          * @param amount
          * @return
          */
@@ -92,6 +94,46 @@ public abstract class DateTimeSugar {
         }
     }
 
+    public static class LocalDateTimeUtils {
+        public LocalDateTime plusDays(LocalDateTime localDateTime, long daysToAdd) {
+            return localDateTime.plusDays(daysToAdd);
+        }
+
+        public final static long nowEpochMillli() {
+            long epochMilli = Instant.now().toEpochMilli();
+            return epochMilli;
+        }
+
+        public final static LocalDateTime convertText2LocalDateTime(String format, String text) {
+            LocalDateTime localDateTime = LocalDateTime.parse(text, DateTimeFormatter.ofPattern(format));
+            return localDateTime;
+        }
+
+        public final static String convertLocalDateTime2Text(String format, LocalDateTime localDateTime) {
+            String text = localDateTime.format(DateTimeFormatter.ofPattern(format));
+            return text;
+        }
+
+        public final static Date convertLocalDateTimeToDate(LocalDateTime localDateTime, ZoneId zoneId) {
+            ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+            return Date.from(zonedDateTime.toInstant());
+        }
+
+        public final static Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
+            ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+            return Date.from(zonedDateTime.toInstant());
+        }
+
+        public final static LocalDateTime convertDateToLocalDateTime(Date date, ZoneId zoneId) {
+            Instant instant = date.toInstant();
+            return instant.atZone(zoneId).toLocalDateTime();
+        }
+
+        public final static LocalDateTime convertDateToLocalDateTime(Date date) {
+            Instant instant = date.toInstant();
+            return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+    }
 
 
     public static class Format {
@@ -109,7 +151,7 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Date convertString2Date(String format, String text) throws ParseException {
+        public static Date convertText2Date(String format, String text) throws ParseException {
             Date date = new SimpleDateFormat(format).parse(text);
             return date;
         }
@@ -122,7 +164,7 @@ public abstract class DateTimeSugar {
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static String convertDate2String(String format, Date date) {
+        public static String convertDate2Text(String format, Date date) {
             String text = new SimpleDateFormat(format).format(date);
             return text;
         }
@@ -135,7 +177,7 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Calendar convertString2Calendar(String format, String text) throws ParseException {
+        public static Calendar convertText2Calendar(String format, String text) throws ParseException {
             Date date = new SimpleDateFormat(format).parse(text);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
@@ -145,12 +187,12 @@ public abstract class DateTimeSugar {
         /**
          * 从Calendar转换为String
          *
-         * @param format eg. {@value #FORMAT_ISO8601}
+         * @param format   eg. {@value #FORMAT_ISO8601}
          * @param calendar
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static String convertCalendar2String(String format, Calendar calendar) {
+        public static String convertCalendar2Text(String format, Calendar calendar) {
             Date date = calendar.getTime();
             String text = new SimpleDateFormat(format).format(date);
             return text;
@@ -162,7 +204,7 @@ public abstract class DateTimeSugar {
          * @return
          */
         public static String getDateTimeSerialize() {
-            String serialize = convertDate2String(FORMAT_TIGHT_LONG, new Date());
+            String serialize = convertDate2Text(FORMAT_TIGHT_LONG, new Date());
             return serialize;
         }
     }
@@ -251,9 +293,6 @@ public abstract class DateTimeSugar {
     }
 
 
-
-
-
     private static class BlahUnit {
         private static void todo() {
             long longg = DateTimeSugar.UnixTime.nowUnix();
@@ -267,8 +306,8 @@ public abstract class DateTimeSugar {
             Date first = DateTimeSugar.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
             Date last = DateTimeSugar.CalendarUtils.getLastDayOfMonth(calendar).getTime();
 
-            DateTimeSugar.Format.convertDate2String("yyyy-MM-dd 00:00:00", first);
-            DateTimeSugar.Format.convertDate2String("yyyy-MM-dd 23:59:59", last);
+            DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 00:00:00", first);
+            DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 23:59:59", last);
         }
     }
 

@@ -1,10 +1,5 @@
 package com.aio.portable.swiss.sugar;
 
-//import org.apache.commons.io.IOUtils;
-
-
-import org.springframework.util.StringUtils;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -21,8 +16,8 @@ public abstract class ShellSugar {
                 InputStream errorStream = process.getErrorStream();
                 String feedback = org.springframework.util.StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
                 String error = org.springframework.util.StreamUtils.copyToString(errorStream, StandardCharsets.UTF_8);
-                if (StringUtils.hasText(error))
-                    throw new Exception(error);
+                if (error == null)
+                    throw new NullPointerException(error);
                 return feedback;
             } catch (Exception e) {
                 throw new RuntimeException(e);

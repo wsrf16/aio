@@ -136,7 +136,7 @@ public class KibanaLogNote {
         setException(JacksonSugar.obj2Json(logException));
 
         setEsIndex(esIndex);
-        setTimeStamp(DateTimeSugar.Format.convertDate2String("yyyy-MM-dd'T'HH:mm:ss.SSSZ", new Date()));
+        setTimeStamp(DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd'T'HH:mm:ss.SSSZ", new Date()));
         setServerIp(serverIp);
         //        setHostName(hostName);
         //        setAppEnv(appEnv);
@@ -153,7 +153,7 @@ public class KibanaLogNote {
 
         setEsIndex(esIndex);
         setServerIp(serverIp);
-        setTimeStamp(DateTimeSugar.Format.convertDate2String(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
+        setTimeStamp(DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
     }
 
     //    public KibanaLogNote(LogNote logNote, String esIndex, String serverIp, String hostName, long appId, String appEnv) {

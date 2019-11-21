@@ -4,6 +4,7 @@ import org.springframework.data.util.Streamable;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public abstract class StreamSugar {
      *
      * <pre>
      * {@code
-     * assertThat(StreamUtils.reverse(Stream.of(1,2,3)).collect(CyclopsCollectors.toList())
+     * assertThat(StreamSugar.reverse(Stream.of(1,2,3)).collect(CyclopsCollectors.toList())
      * ,equalTo(Arrays.asList(3,2,1)));
      * }
      * </pre>
@@ -29,20 +30,15 @@ public abstract class StreamSugar {
         return reverseList.stream();
     }
 
-    public static <T> Optional<T> tail(final Stream<T> stream) {
-        long count = stream.count();
-        Optional<T> optional = stream.skip(count-1).findFirst();
-        return optional;
-    }
 
     /**
      * Create a reversed Stream from a List
      * <pre>
      * {@code
-     * StreamUtils.reversedStream(asList(1,2,3))
+     * StreamSugar.reversedStream(asList(1,2,3))
      * .map(i->i*100)
      * .forEach(System.out::println);
-     * assertThat(StreamUtils.reversedStream(Arrays.asList(1,2,3)).collect(CyclopsCollectors.toList())
+     * assertThat(StreamSugar.reversedStream(Arrays.asList(1,2,3)).collect(CyclopsCollectors.toList())
      * ,equalTo(Arrays.asList(3,2,1)));
      *
      * }
@@ -55,21 +51,103 @@ public abstract class StreamSugar {
         return reverse(list.stream());
     }
 
+
     /**
-     * Create a Stream that finitely cycles the provided Streamable, provided number of times
+     * tail
+     * @param stream
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> tail(final Stream<T> stream) {
+        long count = stream.count();
+        Optional<T> optional = stream.skip(count-1).findFirst();
+        return optional;
+    }
+
+    /**
+     * except
+     * @param source
+     * @param target
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> except(final List<T> source, final List<T> target) {
+        Stream<T> stream = source.stream().filter(c -> !target.contains(c));
+        return stream;
+    }
+
+    /**
+     * except
+     * @param source
+     * @param target
+     * @param equalFunction
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> except(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = source.stream().filter(src -> !target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream;
+    }
+
+
+    /**
+     * intersect
+     * @param source
+     * @param target
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> intersect(final List<T> source, final List<T> target) {
+        Stream<T> stream = source.stream().filter(c -> target.contains(c));
+        return stream;
+    }
+
+    /**
+     * intersect
+     * @param source
+     * @param target
+     * @param equalFunction
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> intersect(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = source.stream().filter(src -> target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream;
+    }
+
+    /**
+     * union
+     * @param list1
+     * @param list2
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> union(final List<T> list1, final List<T> list2) {
+        List<T> list = new ArrayList<>();
+        list.addAll(list1);
+        list.addAll(list2);
+        Stream<T> stream = list.stream().distinct();
+        return stream;
+    }
+
+
+
+
+    /**
+     * Create a Stream that finitely repeat the provided Streamable, provided number of times
      *
      * <pre>
      * {@code
-     * assertThat(StreamUtils.cycle(3,Streamable.of(1,2,2))
+     * assertThat(StreamSugar.repeat(3,Streamable.of(1,2,2))
      * .collect(CyclopsCollectors.toList()),
      * equalTo(Arrays.asList(1,2,2,1,2,2,1,2,2)));
      * }
      * </pre>
      *
-     * @param stream Streamable to cycle
+     * @param stream Streamable to repeat
      * @return New cycling stream
      */
-    public static <T> Stream<T> cycle(final Streamable<T> stream, final int times) {
+    public static <T> Stream<T> repeat(final Streamable<T> stream, final int times) {
         return Stream.iterate(stream.stream(), s1 -> stream.stream())
                 .limit(times)
                 .flatMap(Function.identity());
@@ -155,7 +233,7 @@ public abstract class StreamSugar {
             volatile boolean complete = false;
 
             Object lock = new Object();
-            ReentrantLock rlock = new ReentrantLock();
+            ReentrantLock rLock = new ReentrantLock();
 
             @Override
             public Iterator<T> iterator() {
@@ -169,7 +247,7 @@ public abstract class StreamSugar {
 
                         if (concurrent) {
 
-                            rlock.lock();
+                            rLock.lock();
                         }
                         try {
 
@@ -187,7 +265,7 @@ public abstract class StreamSugar {
                             return false;
                         } finally {
                             if (concurrent)
-                                rlock.unlock();
+                                rLock.unlock();
                         }
                     }
 
@@ -196,7 +274,7 @@ public abstract class StreamSugar {
 
                         if (concurrent) {
 
-                            rlock.lock();
+                            rLock.lock();
                         }
                         try {
                             if (current < data.size() && !complete) {
@@ -210,7 +288,7 @@ public abstract class StreamSugar {
                         } finally {
 
                             if (concurrent)
-                                rlock.unlock();
+                                rLock.unlock();
                         }
 
                     }

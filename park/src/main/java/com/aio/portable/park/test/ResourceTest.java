@@ -2,8 +2,8 @@ package com.aio.portable.park.test;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.structure.log.classic.properties.LogKafkaProperties;
-import com.aio.portable.swiss.structure.log.hub.LogHub;
+import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
 import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
 import com.aio.portable.swiss.sandbox.Wood;

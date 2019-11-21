@@ -1,14 +1,13 @@
 package com.aio.portable.swiss.structure.log.base;
 
-import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
-import com.aio.portable.swiss.structure.log.base.parts.LogException;
-import com.aio.portable.swiss.structure.log.base.parts.LogNote;
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.structure.bean.serializer.ISerializerSelector;
 import com.aio.portable.swiss.structure.bean.serializer.SerializerEnum;
 import com.aio.portable.swiss.structure.bean.serializer.SerializerSelector;
+import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
+import com.aio.portable.swiss.structure.log.base.parts.LogException;
+import com.aio.portable.swiss.structure.log.base.parts.LogNote;
 import com.aio.portable.swiss.structure.systeminfo.HostInfo;
-//import com.aio.portable.swiss.assist.log.base.parts.LogThreadPool;
-import com.aio.portable.swiss.global.Constant;
 
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
@@ -17,16 +16,18 @@ import java.util.function.Supplier;
 
 public abstract class AbstractLogger extends LogBody {
     final static String NEWLINE = Constant.LINE_SEPARATOR;
-//    protected final static String INTERVAL_CHAR = " => ";
+    //    protected final static String INTERVAL_CHAR = " => ";
     protected final static String INTERVAL_CHAR = " ";
     protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
     protected final static String DEFAULT_NAME = AbstractLogger.class.getTypeName();
 
 
     protected Supplier<String> prefixSupplier;
+
     public void setPrefix(Supplier<String> prefix) {
         this.prefixSupplier = prefix;
     }
+
     private final void clearPrefix() {
         this.prefixSupplier = EMPTY_PREFIX;
     }
@@ -37,12 +38,15 @@ public abstract class AbstractLogger extends LogBody {
 //    }
 
     protected boolean async = false;
+
     public boolean isAsync() {
         return async;
     }
+
     public void setAsync(boolean async) {
         this.async = async;
     }
+
     public final static ExecutorService executor = Executors.newCachedThreadPool();
 
     protected Printer verbosePrinter;
@@ -58,7 +62,6 @@ public abstract class AbstractLogger extends LogBody {
         clearPrefix();
         initialPrinter();
     }
-
 
 
     protected abstract void initialPrinter();
@@ -84,8 +87,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * verbose
+     *
      * @param verbose
      */
+    @Override
     public void verbose(String verbose) {
         LogNote note = new LogNote();
         {
@@ -98,9 +103,23 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * verbose
+     *
+     * @param verbose
+     * @param arguments
+     */
+//    @Override
+//    public void verbose(String verbose, Object[] arguments) {
+//        verbose = RegexSugar.replace("\\{\\}", verbose, arguments);
+//        verbose(verbose);
+//    }
+
+    /**
+     * verbose
+     *
      * @param summary
      * @param verbose
      */
+    @Override
     public void verbose(String summary, String verbose) {
         LogNote note = new LogNote();
         {
@@ -114,9 +133,24 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * verbose
+     *
+     * @param summary
+     * @param verbose
+     * @param arguments
+     */
+//    @Override
+//    public void verbose(String summary, String verbose, Object[] arguments) {
+//        verbose = RegexSugar.replace("\\{\\}", verbose, arguments);
+//        verbose(summary, verbose);
+//    }
+
+    /**
+     * verbose
+     *
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void verbose(T t) {
         LogNote note = new LogNote();
         {
@@ -129,10 +163,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * verbose
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void verbose(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -146,39 +182,70 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * trace
-     * @param info
+     *
+     * @param trace
      */
-    public void trace(String info) {
+    @Override
+    public void trace(String trace) {
         LogNote note = new LogNote();
         {
             note.name = getName();
             note.level = LevelEnum.TRACE.getName();
-            note.message = info;
+            note.message = trace;
         }
         output(tracePrinter, note);
     }
 
     /**
      * trace
-     * @param summary
-     * @param info
+     *
+     * @param trace
+     * @param arguments
      */
-    public void trace(String summary, String info) {
+//    @Override
+//    public void trace(String trace, Object[] arguments) {
+//        trace = RegexSugar.replace("\\{\\}", trace, arguments);
+//        trace(trace);
+//    }
+
+    /**
+     * trace
+     *
+     * @param summary
+     * @param trace
+     */
+    @Override
+    public void trace(String summary, String trace) {
         LogNote note = new LogNote();
         {
             note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.summary = summary;
-            note.message = info;
+            note.message = trace;
         }
         output(tracePrinter, note);
     }
 
     /**
      * trace
+     *
+     * @param summary
+     * @param trace
+     * @param arguments
+     */
+//    @Override
+//    public void trace(String summary, String trace, Object[] arguments) {
+//        trace = RegexSugar.replace("\\{\\}", trace, arguments);
+//        trace(summary, trace);
+//    }
+
+    /**
+     * trace
+     *
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void trace(T t) {
         LogNote note = new LogNote();
         {
@@ -191,10 +258,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * trace
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void trace(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -208,8 +277,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * info
+     *
      * @param info
      */
+    @Override
     public void info(String info) {
         LogNote note = new LogNote();
         {
@@ -222,9 +293,23 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * info
+     *
+     * @param info
+     * @param arguments
+     */
+//    @Override
+//    public void info(String info, Object[] arguments) {
+//        info = RegexSugar.replace("\\{\\}", info, arguments);
+//        info(info);
+//    }
+
+    /**
+     * info
+     *
      * @param summary
      * @param info
      */
+    @Override
     public void info(String summary, String info) {
         LogNote note = new LogNote();
         {
@@ -238,9 +323,24 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * info
+     *
+     * @param summary
+     * @param info
+     * @param arguments
+     */
+//    @Override
+//    public void info(String summary, String info, Object[] arguments) {
+//        info = RegexSugar.replace("\\{\\}", info, arguments);
+//        info(summary, info);
+//    }
+
+    /**
+     * info
+     *
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void info(T t) {
         LogNote note = new LogNote();
         {
@@ -253,10 +353,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * info
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void info(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -270,8 +372,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * debug
+     *
      * @param debug
      */
+    @Override
     public void debug(String debug) {
         LogNote note = new LogNote();
         {
@@ -284,9 +388,23 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * debug
+     *
+     * @param debug
+     * @param arguments
+     */
+//    @Override
+//    public void debug(String debug, Object[] arguments) {
+//        debug = RegexSugar.replace("\\{\\}", debug, arguments);
+//        debug(debug);
+//    }
+
+    /**
+     * debug
+     *
      * @param summary
      * @param debug
      */
+    @Override
     public void debug(String summary, String debug) {
         LogNote note = new LogNote();
         {
@@ -300,9 +418,24 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * debug
+     *
+     * @param summary
+     * @param debug
+     * @param arguments
+     */
+//    @Override
+//    public void debug(String summary, String debug, Object[] arguments) {
+//        debug = RegexSugar.replace("\\{\\}", debug, arguments);
+//        debug(summary, debug);
+//    }
+
+    /**
+     * debug
+     *
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void debug(T t) {
         LogNote note = new LogNote();
         {
@@ -315,10 +448,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * debug
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void debug(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -332,8 +467,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * warning
+     *
      * @param warning
      */
+    @Override
     public void warn(String warning) {
         LogNote note = new LogNote();
         {
@@ -345,9 +482,22 @@ public abstract class AbstractLogger extends LogBody {
     }
 
     /**
+     * warn
+     * @param warning
+     * @param arguments
+     */
+//    @Override
+//    public void warn(String warning, Object[] arguments) {
+//        warning = RegexSugar.replace("\\{\\}", warning, arguments);
+//        warn(warning);
+//    }
+
+    /**
      * warning
+     *
      * @param e
      */
+    @Override
     public void warn(Exception e) {
         LogNote note = new LogNote();
         {
@@ -360,9 +510,11 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * warning
+     *
      * @param summary
      * @param warning
      */
+    @Override
     public void warn(String summary, String warning) {
         LogNote note = new LogNote();
         {
@@ -375,10 +527,24 @@ public abstract class AbstractLogger extends LogBody {
     }
 
     /**
+     * warn
+     * @param summary
+     * @param warning
+     * @param arguments
+     */
+//    @Override
+//    public void warn(String summary, String warning, Object[] arguments) {
+//        warning = RegexSugar.replace("\\{\\}", warning, arguments);
+//        warn(summary, warning);
+//    }
+
+    /**
      * warning
+     *
      * @param summary
      * @param e
      */
+    @Override
     public void warn(String summary, Exception e) {
         LogNote note = new LogNote();
         {
@@ -392,10 +558,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * warning
+     *
      * @param summary
      * @param warning
      * @param e
      */
+    @Override
     public void warn(String summary, String warning, Exception e) {
         LogNote note = new LogNote();
         {
@@ -410,10 +578,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * warning
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void warn(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -427,11 +597,13 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * warning
+     *
      * @param summary
      * @param t
      * @param e
      * @param <T>
      */
+    @Override
     public <T> void warn(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
@@ -446,8 +618,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     *
      * @param error
      */
+    @Override
     public void error(String error) {
         LogNote note = new LogNote();
         {
@@ -460,8 +634,21 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     * @param error
+     * @param arguments
+     */
+//    @Override
+//    public void error(String error, Object[] arguments) {
+//        error = RegexSugar.replace("\\{\\}", error, arguments);
+//        error(error);
+//    }
+
+    /**
+     * error
+     *
      * @param e
      */
+    @Override
     public void error(Exception e) {
         LogNote note = new LogNote();
         {
@@ -474,9 +661,11 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     *
      * @param summary
      * @param error
      */
+    @Override
     public void error(String summary, String error) {
         LogNote note = new LogNote();
         {
@@ -491,8 +680,22 @@ public abstract class AbstractLogger extends LogBody {
     /**
      * error
      * @param summary
+     * @param error
+     * @param arguments
+     */
+//    @Override
+//    public void error(String summary, String error, Object[] arguments) {
+//        error = RegexSugar.replace("\\{\\}", error, arguments);
+//        error(summary, error);
+//    }
+
+    /**
+     * error
+     *
+     * @param summary
      * @param e
      */
+    @Override
     public void error(String summary, Exception e) {
         LogNote note = new LogNote();
         {
@@ -506,10 +709,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     *
      * @param summary
      * @param error
      * @param e
      */
+    @Override
     public void error(String summary, String error, Exception e) {
         LogNote note = new LogNote();
         {
@@ -524,10 +729,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void error(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -541,11 +748,13 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * error
+     *
      * @param summary
      * @param t
      * @param e
      * @param <T>
      */
+    @Override
     public <T> void error(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
@@ -560,8 +769,10 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     *
      * @param fatal
      */
+    @Override
     public void fatal(String fatal) {
         LogNote note = new LogNote();
         {
@@ -574,8 +785,21 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     * @param fatal
+     * @param arguments
+     */
+//    @Override
+//    public void fatal(String fatal, Object[] arguments) {
+//        fatal = RegexSugar.replace("\\{\\}", fatal, arguments);
+//        fatal(fatal);
+//    }
+
+    /**
+     * fatal
+     *
      * @param e
      */
+    @Override
     public void fatal(Exception e) {
         LogNote note = new LogNote();
         {
@@ -588,9 +812,11 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     *
      * @param summary
      * @param e
      */
+    @Override
     public void fatal(String summary, Exception e) {
         LogNote note = new LogNote();
         {
@@ -604,9 +830,11 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     *
      * @param summary
      * @param fatal
      */
+    @Override
     public void fatal(String summary, String fatal) {
         LogNote note = new LogNote();
         {
@@ -622,8 +850,22 @@ public abstract class AbstractLogger extends LogBody {
      * fatal
      * @param summary
      * @param fatal
+     * @param arguments
+     */
+//    @Override
+//    public void fatal(String summary, String fatal, Object[] arguments) {
+//        fatal = RegexSugar.replace("\\{\\}", fatal, arguments);
+//        fatal(summary, fatal);
+//    }
+
+    /**
+     * fatal
+     *
+     * @param summary
+     * @param fatal
      * @param e
      */
+    @Override
     public void fatal(String summary, String fatal, Exception e) {
         LogNote note = new LogNote();
         {
@@ -638,10 +880,12 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     *
      * @param summary
      * @param t
      * @param <T>
      */
+    @Override
     public <T> void fatal(String summary, T t) {
         LogNote note = new LogNote();
         {
@@ -655,11 +899,13 @@ public abstract class AbstractLogger extends LogBody {
 
     /**
      * fatal
+     *
      * @param summary
      * @param t
      * @param e
      * @param <T>
      */
+    @Override
     public <T> void fatal(String summary, T t, Exception e) {
         LogNote note = new LogNote();
         {
@@ -672,6 +918,7 @@ public abstract class AbstractLogger extends LogBody {
         output(fatalPrinter, note);
     }
 
+    @Override
     public void dispose() {
         if (verbosePrinter != null)
             verbosePrinter.dispose();

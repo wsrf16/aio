@@ -130,12 +130,12 @@ public abstract class RegexSugar {
      * @param replacement
      * @return
      */
-    public static String replace(String regex, String input, String... replacement) {
+    public static String replace(String regex, String input, Object... replacement) {
         Matcher matcher = Pattern.compile(regex).matcher(input);
         int i = -1;
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(sb, replacement[++i]);
+            matcher.appendReplacement(sb, replacement[++i].toString());
         }
         return sb.toString();
     }

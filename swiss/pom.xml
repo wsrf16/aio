@@ -505,13 +505,15 @@
             <!--<id>nexus-snapshot</id>-->
             <!--<url>http://192.168.145.246:8081/nexus/content/repositories/snapshots/</url>-->
         <!--</snapshotRepository>-->
-        <repository>
-            <id>nexus-release</id>
-            <url>http://mvn2.qdingnet.com/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshot</id>
-            <url>http://mvn2.qdingnet.com/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
+
+
+<!--        <repository>-->
+<!--            <id>nexus-release</id>-->
+<!--            <url>http://mvn2.qdingnet.com/nexus/content/repositories/releases/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshot</id>-->
+<!--            <url>http://mvn2.qdingnet.com/nexus/content/repositories/snapshots/</url>-->
+<!--        </snapshotRepository>-->
     </distributionManagement>
 </project>

@@ -1,16 +1,28 @@
 package com.aio.portable.swiss.structure.log.base.action;
 
+import com.aio.portable.swiss.sugar.RegexSugar;
+
 /**
  * Service is degraded or endangered.
  */
 public interface LogWarning {
     void warn(String warning);
 
+    default void warn(String warning, Object[] arguments) {
+        warning = RegexSugar.replace("\\{\\}", warning, arguments);
+        warn(warning);
+    }
+
     void warn(Exception e);
 
     void warn(String summary, Exception e);
 
     void warn(String summary, String warning);
+
+    default void warn(String summary, String warning, Object[] arguments) {
+        warning = RegexSugar.replace("\\{\\}", warning, arguments);
+        warn(summary, warning);
+    }
 
     void warn(String summary, String warning, Exception e);
 
@@ -20,6 +32,10 @@ public interface LogWarning {
 
     default void w(String warning) {
         warn(warning);
+    }
+
+    default void w(String warn, Object[] arguments) {
+        warn(warn, arguments);
     }
 
     default void w(Exception e) {
@@ -32,6 +48,10 @@ public interface LogWarning {
 
     default void w(String summary, String warning) {
         warn(summary, warning);
+    }
+
+    default void w(String summary, String warn, Object[] arguments) {
+        warn(summary, warn, arguments);
     }
 
     default void w(String summary, String warning, Exception e) {

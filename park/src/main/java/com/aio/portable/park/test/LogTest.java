@@ -1,8 +1,8 @@
 package com.aio.portable.park.test;
 
 import com.aio.portable.park.config.LogFactory;
-import com.aio.portable.swiss.structure.log.hub.LogHub;
-import com.aio.portable.swiss.structure.log.hub.factory.LogHubFactory;
+import com.aio.portable.swiss.structure.log.base.LogHub;
+import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 import org.springframework.stereotype.Component;
 
 @Component

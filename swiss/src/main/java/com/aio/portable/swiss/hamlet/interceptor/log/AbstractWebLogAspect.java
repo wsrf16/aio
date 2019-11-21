@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
-import com.aio.portable.swiss.structure.log.hub.LogHub;
-import com.aio.portable.swiss.structure.log.hub.factory.LogHubFactory;
-import com.aio.portable.swiss.structure.log.hub.factory.LogHubPool;
+import com.aio.portable.swiss.structure.log.base.LogHub;
+import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
+import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.hamlet.model.RequestRecord;
 import com.aio.portable.swiss.hamlet.model.ResponseWrapper;

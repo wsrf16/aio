@@ -496,15 +496,15 @@
         </repository>
     </repositories>
 
-    <distributionManagement>
-        <!--<repository>-->
-            <!--<id>nexus-release</id>-->
-            <!--<url>http://192.168.145.246:8081/nexus/content/repositories/releases/</url>-->
-        <!--</repository>-->
-        <!--<snapshotRepository>-->
-            <!--<id>nexus-snapshot</id>-->
-            <!--<url>http://192.168.145.246:8081/nexus/content/repositories/snapshots/</url>-->
-        <!--</snapshotRepository>-->
+<!--    <distributionManagement>-->
+<!--        &lt;!&ndash;<repository>&ndash;&gt;-->
+<!--            &lt;!&ndash;<id>nexus-release</id>&ndash;&gt;-->
+<!--            &lt;!&ndash;<url>http://192.168.145.246:8081/nexus/content/repositories/releases/</url>&ndash;&gt;-->
+<!--        &lt;!&ndash;</repository>&ndash;&gt;-->
+<!--        &lt;!&ndash;<snapshotRepository>&ndash;&gt;-->
+<!--            &lt;!&ndash;<id>nexus-snapshot</id>&ndash;&gt;-->
+<!--            &lt;!&ndash;<url>http://192.168.145.246:8081/nexus/content/repositories/snapshots/</url>&ndash;&gt;-->
+<!--        &lt;!&ndash;</snapshotRepository>&ndash;&gt;-->
 
 
 <!--        <repository>-->
@@ -515,5 +515,5 @@
 <!--            <id>nexus-snapshot</id>-->
 <!--            <url>http://mvn2.qdingnet.com/nexus/content/repositories/snapshots/</url>-->
 <!--        </snapshotRepository>-->
-    </distributionManagement>
+<!--    </distributionManagement>-->
 </project>

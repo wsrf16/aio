@@ -31,26 +31,6 @@ public abstract class StreamSugar {
     }
 
 
-    /**
-     * Create a reversed Stream from a List
-     * <pre>
-     * {@code
-     * StreamSugar.reversedStream(asList(1,2,3))
-     * .map(i->i*100)
-     * .forEach(System.out::println);
-     * assertThat(StreamSugar.reversedStream(Arrays.asList(1,2,3)).collect(CyclopsCollectors.toList())
-     * ,equalTo(Arrays.asList(3,2,1)));
-     *
-     * }
-     * </pre>
-     *
-     * @param list from to create a reversed
-     * @return Reversed Stream
-     */
-    public static <T> Stream<T> reverse(final List<T> list) {
-        return reverse(list.stream());
-    }
-
 
     /**
      * tail
@@ -64,71 +44,7 @@ public abstract class StreamSugar {
         return optional;
     }
 
-    /**
-     * except
-     * @param source
-     * @param target
-     * @param <T>
-     * @return
-     */
-    public static <T> Stream<T> except(final List<T> source, final List<T> target) {
-        Stream<T> stream = source.stream().filter(c -> !target.contains(c));
-        return stream;
-    }
 
-    /**
-     * except
-     * @param source
-     * @param target
-     * @param equalFunction
-     * @param <T>
-     * @return
-     */
-    public static <T> Stream<T> except(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
-        Stream<T> stream = source.stream().filter(src -> !target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
-        return stream;
-    }
-
-
-    /**
-     * intersect
-     * @param source
-     * @param target
-     * @param <T>
-     * @return
-     */
-    public static <T> Stream<T> intersect(final List<T> source, final List<T> target) {
-        Stream<T> stream = source.stream().filter(c -> target.contains(c));
-        return stream;
-    }
-
-    /**
-     * intersect
-     * @param source
-     * @param target
-     * @param equalFunction
-     * @param <T>
-     * @return
-     */
-    public static <T> Stream<T> intersect(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
-        Stream<T> stream = source.stream().filter(src -> target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
-        return stream;
-    }
-
-    /**
-     * union
-     * @param list1
-     * @param list2
-     * @param <T>
-     * @return
-     */
-    public static <T> Stream<T> union(final List<T> list1, final List<T> list2) {
-        List<T> list = new ArrayList<>();
-        list.addAll(list1);
-        list.addAll(list2);
-        Stream<T> stream = list.stream().distinct();
-        return stream;
-    }
 
 
 

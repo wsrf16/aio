@@ -6,6 +6,7 @@ import org.springframework.util.ObjectUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,18 +29,26 @@ public abstract class CollectionSugar {
         return ObjectUtils.isEmpty(array);
     }
 
-
     /**
-     * 交集
+     * Create a reversed Stream from a List
+     * <pre>
+     * {@code
+     * StreamSugar.reversedStream(asList(1,2,3))
+     * .map(i->i*100)
+     * .forEach(System.out::println);
+     * assertThat(StreamSugar.reversedStream(Arrays.asList(1,2,3)).collect(CyclopsCollectors.toList())
+     * ,equalTo(Arrays.asList(3,2,1)));
      *
-     * @param collection1
-     * @param collection2
-     * @return
+     * }
+     * </pre>
+     *
+     * @param list from to create a reversed
+     * @return Reversed Stream
      */
-    public final static List<String> intersect(Collection<String> collection1, Collection<String> collection2) {
-        List<String> list = collection1.stream().filter(item -> collection2.contains(item)).collect(Collectors.toList());
-        return list;
+    public static <T> Stream<T> reverse(final List<T> list) {
+        return StreamSugar.reverse(list.stream());
     }
+
 
     /**
      * 差集，从集合1去除集合2
@@ -48,10 +57,52 @@ public abstract class CollectionSugar {
      * @param collection2
      * @return
      */
-    public final static List<String> except(Collection<String> collection1, Collection<String> collection2) {
-        List<String> list = collection1.stream().filter(item -> !collection2.contains(item)).collect(Collectors.toList());
-        return list;
+    public final static <T> Stream<T> except(final Collection<T> collection1, final Collection<T> collection2) {
+        Stream<T> stream = collection1.stream().filter(item -> !collection2.contains(item));
+        return stream;
     }
+
+
+    /**
+     * except
+     * @param source
+     * @param target
+     * @param equalFunction
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> except(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = source.stream().filter(src -> !target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream;
+    }
+
+
+    /**
+     * intersect
+     * @param source
+     * @param target
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> intersect(final Collection<T> source, final Collection<T> target) {
+        Stream<T> stream = source.stream().filter(c -> target.contains(c));
+        return stream;
+    }
+
+    /**
+     * intersect
+     * @param source
+     * @param target
+     * @param equalFunction
+     * @param <T>
+     * @return
+     */
+    public static <T> Stream<T> intersect(final Collection<T> source, final Collection<T> target, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = source.stream().filter(src -> target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream;
+    }
+
+
 
     /**
      * 并集，不去重
@@ -60,11 +111,11 @@ public abstract class CollectionSugar {
      * @param collection2
      * @return
      */
-    public final static List<String> concat(Collection<String> collection1, Collection<String> collection2) {
-        List<String> _list1 = collection1.stream().collect(Collectors.toList());
-        List<String> _list2 = collection2.stream().collect(Collectors.toList());
+    public final static <T> List<T> concat(Collection<T> collection1, Collection<T> collection2) {
+        List<T> _list1 = collection1.stream().collect(Collectors.toList());
+        List<T> _list2 = collection2.stream().collect(Collectors.toList());
         _list1.addAll(_list2);
-        List<String> list = _list1;
+        List<T> list = _list1;
         return list;
     }
 
@@ -75,8 +126,8 @@ public abstract class CollectionSugar {
      * @param collection2
      * @return
      */
-    public final static List<String> union(Collection<String> collection1, Collection<String> collection2) {
-        List<String> list = concat(collection1, collection2).stream().distinct().collect(Collectors.toList());
+    public final static <T> List<T> union(Collection<T> collection1, Collection<T> collection2) {
+        List<T> list = concat(collection1, collection2).stream().distinct().collect(Collectors.toList());
         return list;
     }
 

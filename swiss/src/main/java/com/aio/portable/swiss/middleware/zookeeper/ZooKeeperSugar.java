@@ -105,6 +105,10 @@ public class ZooKeeperSugar {
         return zookeeper.exists(path, watcher) != null;
     }
 
+//    public static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode, long ttl) throws KeeperException, InterruptedException {
+//        return zookeeper.create(path, bytes, acl, createMode, null, ttl);
+//    }
+
     public static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode) throws KeeperException, InterruptedException {
         return zookeeper.create(path, bytes, acl, createMode);
     }
@@ -195,8 +199,8 @@ public class ZooKeeperSugar {
         return stat.getVersion();
     }
 
-    public static void deleteIfExists(ZooKeeper zookeeper, String groupName, boolean watch) throws KeeperException, InterruptedException {
-        if (exists(zookeeper, groupName, watch))
+    public static void deleteIfExists(ZooKeeper zookeeper, String groupName) throws KeeperException, InterruptedException {
+        if (exists(zookeeper, groupName, false))
             zookeeper.delete(groupName, -1);
     }
 
@@ -214,27 +218,40 @@ public class ZooKeeperSugar {
 
 
 
-//    public static synchronized void lock(ZooKeeper zookeeper, String path, byte[] data, List<ACL> acl, CreateMode createMode, AsyncCallback.Create2Callback cb, Object ctx, long ttl) throws InterruptedException {
-//        zookeeper.create(path, data, acl, createMode, cb, ctx, ttl);
-//
-//        CountDownLatch countDownLatch = new CountDownLatch(1);
-//    }
-//
-//
-//    class ZooKeeperWatcher implements Watcher {
-//        CountDownLatch countDownLatch;
-//        public ZooKeeperWatcher(CountDownLatch countDownLatch) {
-//            this.countDownLatch = countDownLatch;
-//        }
-//        public ZooKeeperWatcher() {
-//            this(new CountDownLatch(1));
-//        }
-//        @Override
-//        public synchronized void process(WatchedEvent watchedEvent) {
-//            if (this.countDownLatch != null) {
-//                this.countDownLatch.countDown();
-//            }
-//        }
-//    }
+
+
+
+
+
+
+
+    public static boolean lock(ZooKeeper zooKeeper, String lockPath) throws KeeperException, InterruptedException {
+        boolean exists = ZooKeeperSugar.exists(zooKeeper, lockPath, false);
+        if (exists)
+            return false;
+        else {
+            String ephemeral = ZooKeeperSugar.create(zooKeeper, lockPath, null , ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+            return true;
+        }
+    }
+
+
+    public static boolean tryLock(ZooKeeper zooKeeper, String lockPath, long tryTimeout) throws KeeperException, InterruptedException {
+        long end = System.currentTimeMillis() + tryTimeout;
+        while (true) {
+            boolean exists = ZooKeeperSugar.exists(zooKeeper, lockPath, false);
+            if (System.currentTimeMillis() > end)
+                return false;
+            else if (!exists)
+                break;
+        }
+        String path = ZooKeeperSugar.create(zooKeeper, lockPath, null , ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        return true;
+    }
+
+
+    public static void unlock(ZooKeeper zooKeeper, String lockPath) throws KeeperException, InterruptedException {
+        deleteIfExists(zooKeeper, lockPath);
+    }
 }
 

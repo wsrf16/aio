@@ -39,6 +39,7 @@
         <shiro.version>1.4.0</shiro.version>
         <cglib-nodep.version>3.2.8</cglib-nodep.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
 
 
         <mysql.version>8.0.11</mysql.version>
@@ -355,6 +356,25 @@
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

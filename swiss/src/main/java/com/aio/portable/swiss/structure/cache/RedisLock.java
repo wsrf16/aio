@@ -25,23 +25,20 @@ public class RedisLock {
         return lockKey;
     }
 
-    public String lock(String lockName, long expireMillisecond, long timeout) {
-        return acquireLock(lockName, expireMillisecond, timeout);
+    public String lock(String lockName, long expireMillisecond) {
+        return tryLock(lockName, expireMillisecond, 1);
     }
 
-    public String tryLock(String lockName, long expireMillisecond) {
-        return acquireLock(lockName, expireMillisecond, -1);
-    }
 
     /**
-     * 获取锁
+     * tryLock
      *
      * @param key
      * @param expireMillisecond
-     * @param timeout
+     * @param tryTimeout
      * @return
      */
-    private String acquireLock(String key, long expireMillisecond, long timeout) {
+    public String tryLock(String key, long expireMillisecond, long tryTimeout) {
         if (!StringUtils.hasText(key))
             throw new IllegalArgumentException(key);
 
@@ -49,7 +46,7 @@ public class RedisLock {
         String lockKey = getKeyName(key);
         byte[] lockKeyBytes = lockKey.getBytes();
         long lockExpire = expireMillisecond / 1000;
-        long end = System.currentTimeMillis() + timeout;
+        long end = System.currentTimeMillis() + tryTimeout;
 
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
         while (true) {

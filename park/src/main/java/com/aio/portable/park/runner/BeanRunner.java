@@ -4,18 +4,16 @@ package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.test.MybatisTest;
-import com.aio.portable.swiss.middleware.zookeeper.ZooKeeperSugar;
+import com.aio.portable.swiss.designpattern.actor.BlahUnit;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import org.apache.zookeeper.ZooKeeper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -32,18 +30,17 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        BlahUnit.todo1();
         try {
-            ZooKeeper zooKeeper = ZooKeeperSugar.build("mecs.com:2181", 120000, null);
-
-            boolean lock1 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-            boolean lock2 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-            boolean lock3 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-
-
-
-        } catch (Exception e) {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.exit(0);
+
+
+
+
 
 
 //        mybatisTest.blah();

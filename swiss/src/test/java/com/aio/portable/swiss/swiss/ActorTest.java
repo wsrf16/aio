@@ -1,13 +1,18 @@
-package com.aio.portable.swiss.designpattern.actor;
+package com.aio.portable.swiss.swiss;
 
+import com.aio.portable.swiss.designpattern.actor.Actor;
+import com.aio.portable.swiss.designpattern.actor.ActorManager;
 import com.aio.portable.swiss.designpattern.actor.message.Message;
 import com.aio.portable.swiss.designpattern.actor.message.MessageReturn;
+import org.junit.Test;
+import org.springframework.boot.test.context.TestComponent;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BlahUnit {
+@TestComponent
+public class ActorTest {
     private static boolean isPrimeNormal(int num) {
         for (int i = 2; i < num; i++) {
             if (num % i == 0) {
@@ -54,6 +59,7 @@ public class BlahUnit {
                 .collect(Collectors.groupingBy(c -> c % 10, Collectors.mapping(c -> c, Collectors.toList())));
     }
 
+    @Test
     public static void todo1() {
         // 产生1到100的正整数，并分组
         Map<Integer, List<Integer>> collect1 = generatePrime();
@@ -83,6 +89,7 @@ public class BlahUnit {
     }
 
 
+    @Test
     public static void todo2() {
         Actor<Integer, Integer> actor1 = Actor
                 .build((Integer integer) -> integer * 2)

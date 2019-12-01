@@ -1,4 +1,4 @@
-package com.aio.portable.park.unit.swiss;
+package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
 import com.aio.portable.swiss.sugar.StackTraceInfoSugar;

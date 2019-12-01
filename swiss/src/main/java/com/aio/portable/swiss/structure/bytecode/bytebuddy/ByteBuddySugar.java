@@ -77,23 +77,5 @@ public abstract class ByteBuddySugar {
 
     }
 
-    private static class BlahUnit {
-        public static class Bar  {
-            public static String name = "bar";
-            public static String m() { return name; }
-        }
-        public static class Foo  {
-            public static String name = "foo";
-            public static String m() { return name; }
-        }
 
-        private static void todo() throws ClassNotFoundException {
-            ByteBuddyAgent.install();
-            ByteBuddySugar.redefineMethod(Foo.class, ElementMatchers.named("m"), MethodDelegation.to(Bar.class));
-            System.out.println(new Foo().m());
-
-            ByteBuddySugar.redefineClass(Foo.class, Bar.class);
-            System.out.println(new Foo().m());
-        }
-    }
 }

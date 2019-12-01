@@ -140,26 +140,5 @@ public abstract class RegexSugar {
         return sb.toString();
     }
 
-    private static class BlahUnit {
-        private static void regex() {
-            String ret1 = RegexSugar.sensitivePhone("12345678901");
-            String ret2 = RegexSugar.replaceAll("4567", "12345678901", "xxxx");
-            boolean ret3 = RegexSugar.match("456", "12345678901");
-            System.out.println(ret1);
-            System.out.println(ret2);
-            System.out.println(ret3);
 
-
-
-            String input = "${name}-babalala-${age}-${address}++${name}-babalala";
-            String regex = "\\$\\{(.+?)\\}-(ba.+?)";
-            // .group(0): ${name}-baba
-            // .group(1): name
-            // .group(2): baba
-            List<List<String>> matches = RegexSugar.findMore(regex, input);
-
-            String replacement[] = {"1", "2", "3", "4", "5"};
-            RegexSugar.replace(regex, input, replacement);
-        }
-    }
 }

@@ -255,19 +255,5 @@ public class ZooKeeperSugar {
         deleteIfExists(zooKeeper, lockPath);
     }
 
-
-    public static class BlahUnit {
-        public static void todo() {
-            try {
-                ZooKeeper zooKeeper = ZooKeeperSugar.build("mecs.com:2181", 120000, null);
-
-                boolean lock1 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-                boolean lock2 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-                boolean lock3 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
 

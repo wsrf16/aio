@@ -160,19 +160,4 @@ public abstract class PackageSugar {
 
 
 
-
-    public static class BlahUnit {
-        public void todo() throws IOException, ClassNotFoundException {
-            List<String> list = PackageSugar.getQualifiedClassName(this.getClass().getPackage().getName());
-            for (String name : list) {
-//            Class<?> clazz = Class.forName(name);
-                Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);
-                if (clazz.isAnnotationPresent(Flag.class)) {
-                    Flag flag = clazz.getAnnotation(Flag.class);
-                    int age = flag.age();
-                    System.out.println(name);
-                }
-            }
-        }
-    }
 }

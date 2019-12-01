@@ -25,9 +25,9 @@ class AbstractWebLogAspect {
     }
 
     protected static LogHubPool loggerPool;
-    protected static String REQUEST_SUMMARY = "切面记录请求";
-    protected static String RESPONSE_SUMMARY = "切面记录返回";
-    protected static String EXCEPTION_SUMMARY = "切面记录异常";
+    protected static String REQUEST_SUMMARY = "接口请求";
+    protected static String RESPONSE_SUMMARY = "接口响应";
+    protected static String EXCEPTION_SUMMARY = "接口异常";
 
     protected final static String POINTCUT_CONTROLLER = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
@@ -75,23 +75,23 @@ class AbstractWebLogAspect {
         RequestRecord requestRecord = createRequestRecord(request, joinPoint);
 
         LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
-        String uniqueId = generateUniqueId();
+        String traceId = generateUniqueId();
         if (logger != null) {
-            logger.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, uniqueId), requestRecord);
+            logger.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, traceId), requestRecord);
         }
 
         Object responseRecord = null;
         try {
             responseRecord = joinPoint.proceed();
             if (responseRecord instanceof ResponseWrapper) {
-                ((ResponseWrapper) responseRecord).setUniqueId(uniqueId);
+                ((ResponseWrapper) responseRecord).setTraceId(traceId);
             }
 
             if (logger != null) {
-                logger.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, uniqueId), responseRecord);
+                logger.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, traceId), responseRecord);
             }
         } catch (Exception e) {
-            logger.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, uniqueId), requestRecord, e);
+            logger.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, traceId), requestRecord, e);
             throw e;
         }
         return responseRecord;
@@ -104,7 +104,7 @@ class AbstractWebLogAspect {
     private static RequestRecord createRequestRecord(HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
         requestRecord.setRemoteAddress(request.getRemoteAddr());
-        String url = !StringUtils.hasText(request.getQueryString()) ? request.getRequestURL().toString() : request.getRequestURL().toString() + "?" + request.getQueryString();
+        String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY :  "?" + request.getQueryString());
         requestRecord.setRequestURL(url);
         requestRecord.setHttpMethod(request.getMethod());
         requestRecord.setHeaders(parseHeader(request));

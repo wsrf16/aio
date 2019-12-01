@@ -293,23 +293,6 @@ public abstract class DateTimeSugar {
     }
 
 
-    private static class BlahUnit {
-        private static void todo() {
-            long longg = DateTimeSugar.UnixTime.nowUnix();
-            long longgg = DateTimeSugar.UnixTime.convertDateTime2Unix(LocalDateTime.now());
-            LocalDateTime time = DateTimeSugar.UnixTime.convertUnix2DateTime(longg);
-            long longggg = DateTimeSugar.UnixTime.convertUTC2Unix(time);
-
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -3);
-            Date first = DateTimeSugar.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
-            Date last = DateTimeSugar.CalendarUtils.getLastDayOfMonth(calendar).getTime();
-
-            DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 00:00:00", first);
-            DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 23:59:59", last);
-        }
-    }
 
 }
 

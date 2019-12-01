@@ -56,11 +56,5 @@ public abstract class PathSugar {
 
 
 
-    private static class BlahUnit {
-        private static void todo() {
-            String[] directories = new String[]{"/a/\\1\\", "/b/\\2", "c\\3\\", "d",
-                    "//e\\\\", "\\/f", "g/\\", "h//"};
-            String concat = PathSugar.concat(directories);
-        }
-    }
+
 }

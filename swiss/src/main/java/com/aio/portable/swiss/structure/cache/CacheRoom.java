@@ -5,6 +5,7 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.structure.io.FileSugar;
 import com.aio.portable.swiss.sugar.PathSugar;
 import org.springframework.util.SerializationUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -23,7 +24,7 @@ public class CacheRoom {
     final static String EXTENSION = ".cache";
     //System.Text.Encoding CahceFileEncoding = System.Text.Encoding.UTF8;
 
-    static Hashtable<String, CacheRoom> CacheRooms;
+    static Hashtable<String, CacheRoom> cacheRooms;
     static Lock constructionLock = new ReentrantLock();
     static Lock ioLock = new ReentrantLock();
 
@@ -33,47 +34,43 @@ public class CacheRoom {
      * @param key
      * @return
      */
-    public static CacheRoom CacheRoomFactory(String key) {
+    public static CacheRoom cacheRoomFactory(String key) {
         CacheRoom val = null;
         //lock(constructionLock)
-        constructionLock.lock();
-        {
-            if (CacheRooms.keySet().contains(key))
-                val = CacheRooms.get(key);
-            else {
-                try {
-                    val = new CacheRoom(key);
-                    CacheRooms.put(key, val);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (cacheRooms.keySet().contains(key)) {
+            val = cacheRooms.get(key);
+        } else {
+            try {
+                constructionLock.lock();
+                val = new CacheRoom(key);
+                cacheRooms.put(key, val);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                constructionLock.unlock();
             }
         }
-        constructionLock.unlock();
+
         return val;
     }
 
-    public static Set<String> Keys() {
-        return CacheRooms.keySet();
+    public static Set<String> keys() {
+        return cacheRooms.keySet();
     }
 
 
     static {
-        //Directory.GetFiles(CacheDirectorPath).Where(c => c.EndsWith(EXTENSION));
-        //Directory.CreateDirectory(CacheDirectorPath);
-        File dir = new File(CacheDirectorPath());
+        File dir = new File(cacheDirectorPath());
         if (!dir.exists())
             dir.mkdir();
-//        Stream<File> aa = Arrays.stream(dir.listFiles()).filter(c -> c.getName().split("\\.")[1].toLowerCase().equals(EXTENSION));
-//        List<File> aa1 = aa.collect(Collectors.toList());
-//        Stream<String> bb = aa.map(c -> c.getName().replace(EXTENSION, Constant.EMPTY));
-//        List<String> bb1 = bb.collect(Collectors.toList());
-        List<String> keys = Arrays.stream(dir.listFiles()).filter(c -> c.getName().split("\\.")[1].toLowerCase().equals(EXTENSION)).
-                map(c -> c.getName().replace(EXTENSION, Constant.EMPTY)).collect(Collectors.toList());
-        CacheRooms = new Hashtable<>();
+        List<String> keys = Arrays.stream(dir.listFiles())
+                .filter(c -> c.getName().split("\\.")[1].toLowerCase().equals(EXTENSION))
+                .map(c -> c.getName().replace(EXTENSION, Constant.EMPTY))
+                .collect(Collectors.toList());
+        cacheRooms = new Hashtable<>();
         keys.forEach(key -> {
             try {
-                CacheRooms.put(key, new CacheRoom(key));
+                cacheRooms.put(key, new CacheRoom(key));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -86,36 +83,38 @@ public class CacheRoom {
     }
 
     protected CacheRoom(String key) throws Exception {
-        if (key == null || key.isEmpty()) throw new Exception(KEYISNULL);
+        if (!StringUtils.hasLength(key))
+            throw new IllegalArgumentException(KEYISNULL);
         this.key = key;
     }
 
-    public String CacheFilePath() {
+    public String cacheFilePath() {
         return PathSugar.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME, this.key + EXTENSION);
     }
 
-    public static String CacheDirectorPath() {
+    public static String cacheDirectorPath() {
         return PathSugar.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME);
     }
 
     public Boolean exist() {
-        return CacheRooms.keySet().contains(this.key);
+        return cacheRooms.keySet().contains(this.key);
     }
 
     public static Boolean exist(String key) {
-        return CacheRoom.CacheRooms.keySet().contains(key);
+        return cacheRooms.keySet().contains(key);
     }
 
 
     public void saveByJson(Object cache) throws IOException {
         String content = JacksonSugar.obj2Json(cache);
-        constructionLock.lock();
-        {
-            //File.WriteAllText(this.CacheFilePath, content, CahceFileEncoding);
-            //new FileWriter(this.CacheFilePath()).write(content);
-            FileSugar.writeFile(this.CacheFilePath(), content);
+        try {
+            constructionLock.lock();
+            {
+                FileSugar.writeFile(this.cacheFilePath(), content);
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
     }
 
 //    public void SaveByProtobuf(Object cache) {
@@ -129,12 +128,15 @@ public class CacheRoom {
     public void saveByByte(Object cache) throws IOException {
 //        byte[] content = ByteUtils.obj2Byte(cache);
         byte[] content = SerializationUtils.serialize(cache);
-        constructionLock.lock();
-        {
-            //File.WriteAllBytes(this.CacheFilePath, content);
-            FileSugar.writeFile(this.CacheFilePath(), content);
+        try {
+            constructionLock.lock();
+            {
+                //File.WriteAllBytes(this.CacheFilePath, content);
+                FileSugar.writeFile(this.cacheFilePath(), content);
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
     }
 
 //    public static void SaveByProtobuf(String key, Object cache) {
@@ -143,7 +145,7 @@ public class CacheRoom {
 
     public static void saveByJson(String key, Object cache) {
         try {
-            CacheRoomFactory(key).saveByJson(cache);
+            cacheRoomFactory(key).saveByJson(cache);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,19 +153,22 @@ public class CacheRoom {
 
 
     public static void saveByByte(String key, Object cache) throws IOException {
-        CacheRoomFactory(key).saveByByte(cache);
+        cacheRoomFactory(key).saveByByte(cache);
     }
 
 
     public <T> T loadByJson(Class<T> clazz)// where T : class
     {
         String content = null;
-        constructionLock.lock();
-        {
-            //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
-            content = FileSugar.readFileForText(this.CacheFilePath());
+        try {
+            constructionLock.lock();
+            {
+                //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
+                content = FileSugar.readFileForText(this.cacheFilePath());
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
         return JacksonSugar.json2T(content, clazz);
     }
 
@@ -180,18 +185,21 @@ public class CacheRoom {
 
     public Object loadByByte() throws IOException {
         byte[] content;
-        constructionLock.lock();
-        {
-            //content = File.ReadAllBytes(this.CacheFilePath);
-            content = FileSugar.readFileForByte(this.CacheFilePath());
+        try {
+            constructionLock.lock();
+            {
+                //content = File.ReadAllBytes(this.CacheFilePath);
+                content = FileSugar.readFileForByte(this.cacheFilePath());
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
 //        return ByteUtils.byte2Obj(content);
         return SerializationUtils.deserialize(content);
     }
 
     public static <T> T loadByJson(String key, Class<T> clazz) {
-        return CacheRoomFactory(key).loadByJson(clazz);
+        return cacheRoomFactory(key).loadByJson(clazz);
     }
 
 //    public static <T> T LoadByProtobuf(String key) {
@@ -199,20 +207,23 @@ public class CacheRoom {
 //    }
 
     public static Object loadByByte(String key) throws IOException {
-        return CacheRoomFactory(key).loadByByte();
+        return cacheRoomFactory(key).loadByByte();
     }
 
     public <T> T popByJson(Class<T> clazz) {
         String content;
-        constructionLock.lock();
-        {
-            //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
-            content = FileSugar.readFileForText(this.CacheFilePath());
-            new File(this.CacheFilePath()).delete();
-            CacheRooms.remove(this.key);
-            this.key = null;
+        try {
+            constructionLock.lock();
+            {
+                //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
+                content = FileSugar.readFileForText(this.cacheFilePath());
+                new File(this.cacheFilePath()).delete();
+                cacheRooms.remove(this.key);
+                this.key = null;
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
         return JacksonSugar.json2T(content, clazz);
     }
 
@@ -231,21 +242,24 @@ public class CacheRoom {
 
     public <T> T popByByte() throws IOException {
         byte[] content;
-        constructionLock.lock();
-        {
-            //content = File.ReadAllBytes(this.CacheFilePath());
-            content = FileSugar.readFileForByte(this.CacheFilePath());
-            new File(this.CacheFilePath()).delete();
-            CacheRooms.remove(this.key);
-            this.key = null;
+        try {
+            constructionLock.lock();
+            {
+                //content = File.ReadAllBytes(this.CacheFilePath());
+                content = FileSugar.readFileForByte(this.cacheFilePath());
+                new File(this.cacheFilePath()).delete();
+                cacheRooms.remove(this.key);
+                this.key = null;
+            }
+        } finally {
+            constructionLock.unlock();
         }
-        constructionLock.unlock();
         return (T) SerializationUtils.deserialize(content);
 //        return ByteUtils.byte2Obj(content);
     }
 
     public static <T> T popByJson(String key, Class<T> clazz) {
-        return CacheRoomFactory(key).popByJson(clazz);
+        return cacheRoomFactory(key).popByJson(clazz);
     }
 
 //    public static <T> T PopByProtobuf(String key) {
@@ -253,55 +267,51 @@ public class CacheRoom {
 //    }
 
     public static <T> T popByByte(String key) throws IOException {
-        return CacheRoomFactory(key).popByByte();
+        return cacheRoomFactory(key).popByByte();
     }
 
 
     public void drop() {
-        if (new File(this.CacheFilePath()).exists()) {
-            constructionLock.lock();
-            {
-                //File.Move(this.CacheFilePath(), this.CacheFilePath() + "~");
-                File newFile = new File(this.CacheFilePath() + "~");
-                new File(this.CacheFilePath()).renameTo(newFile);
+        if (new File(this.cacheFilePath()).exists()) {
+            try {
+                constructionLock.lock();
+                {
+                    //File.Move(this.CacheFilePath(), this.CacheFilePath() + "~");
+                    File newFile = new File(this.cacheFilePath() + "~");
+                    new File(this.cacheFilePath()).renameTo(newFile);
+                }
+            } finally {
+                constructionLock.unlock();
             }
-            constructionLock.unlock();
-            CacheRooms.remove(this.key);
+            cacheRooms.remove(this.key);
             this.key = null;
         }
     }
 
     public static void drop(String key) {
-        CacheRoom.CacheRoomFactory(key).drop();
+        CacheRoom.cacheRoomFactory(key).drop();
     }
 
 
     public void clear() {
-        File file = new File(this.CacheFilePath());
-        if (file.exists()) {
-            constructionLock.lock();
-            {
-                file.delete();
+        try {
+            File file = new File(this.cacheFilePath());
+            if (file.exists()) {
+                constructionLock.lock();
+                {
+                    file.delete();
+                }
+                cacheRooms.remove(this.key);
+                this.key = null;
             }
+        } finally {
             constructionLock.unlock();
-            CacheRooms.remove(this.key);
-            this.key = null;
         }
     }
 
     public static void clear(String key) {
-        CacheRoom.CacheRoomFactory(key).clear();
+        CacheRoom.cacheRoomFactory(key).clear();
     }
 
-    private static class BlahUnit {
-        private static void todo() {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("a", "1");
-            map.put("b", "2");
-            map.put("c", "3");
-            map.put("d", "4");
 
-            CacheRoom.saveByJson("A1", map);
-        }
-    }
 }

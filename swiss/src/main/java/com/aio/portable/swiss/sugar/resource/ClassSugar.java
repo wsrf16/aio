@@ -197,38 +197,4 @@ public abstract class ClassSugar {
     }
 
 
-
-
-    private static class BlahUnit {
-        private static void todo() throws IOException {
-            String ss = ClassSugar.getPath(AA.class);
-            boolean b1 = ClassSugar.exist("Wood");
-            boolean b2 = ClassSugar.exist("Wood");
-
-
-            if (existJackson())
-                System.out.println(JacksonSugar.obj2Json(new Wood() {
-                    {
-                        setA(888);
-                    }
-                }));
-
-            System.out.println();
-
-            if (existGson())
-                System.out.println(GsonSugar.obj2Json(new Wood() {
-                    {
-                        setA(888);
-                    }
-                }));
-        }
-
-        private static boolean existJackson() throws IOException {
-            return ClassSugar.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
-        }
-
-        private static boolean existGson() throws IOException {
-            return ClassSugar.exist(("com.google.gson.Gson"));
-        }
-    }
 }

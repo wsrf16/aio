@@ -4,7 +4,6 @@ package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.test.MybatisTest;
-import com.aio.portable.swiss.designpattern.actor.BlahUnit;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
@@ -30,7 +29,6 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        BlahUnit.todo1();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

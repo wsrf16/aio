@@ -11,7 +11,7 @@ public class ResponseWrapper<T> {
      * 作为一次请求的唯一标识，用于问题定位（不需赋值）
      */
     @ApiModelProperty("唯一id")
-    private String uniqueId;
+    private String traceId;
 
     /**
      * 返回状态码
@@ -39,12 +39,12 @@ public class ResponseWrapper<T> {
 
 
     protected ResponseWrapper() {
-        this.uniqueId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        this.traceId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         this.timeStamp = System.currentTimeMillis();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
-        this.uniqueId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        this.traceId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         this.code = code;
         this.message = message;
         this.data = data;
@@ -135,12 +135,12 @@ public class ResponseWrapper<T> {
     }
 
 
-    public String getUniqueId() {
-        return uniqueId;
+    public String getTraceId() {
+        return traceId;
     }
 
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 
     public int getCode() {

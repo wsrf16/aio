@@ -247,33 +247,4 @@ public abstract class ResourceSugar {
     }
 
 
-    private static class BlahUnit {
-        private static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-            ResourceSugar.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
-            ResourceSugar.ByClassLoader.getResourcesByClassName("Wood");
-            ResourceSugar.ByClassLoader.getResourcesByClass(Book.class);
-
-
-            String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
-            String resourceInJar = "/sandbox/console/Book.class";
-            URL url = ResourceSugar.getResourceInJar(jarPath, resourceInJar);
-            List<URL> urlList = ResourceSugar.getResourcesInJar(jarPath);
-
-            {
-                String className = ResourceSugar.path2FullName(resourceInJar);
-                Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
-                className = "Wood";
-                Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-                Class clazz2 = StreamClassLoader.buildByResource("com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-                Object obj = clazz.getDeclaredConstructor().newInstance();
-                Object obj1 = clazz.getDeclaredConstructor().newInstance();
-            }
-            {
-                URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL("file:/" + jarPath)});
-                Class clazz = urlClassLoader.loadClass("sandbox.console.Book");
-                Object obj = clazz.getDeclaredConstructor().newInstance();
-                Object obj1 = clazz.getDeclaredConstructor().newInstance();
-            }
-        }
-    }
 }

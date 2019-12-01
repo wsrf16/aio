@@ -212,10 +212,5 @@ public abstract class CipheringSugar {
 
 
 
-    private static class BlahUnit {
-        private static void todo() {
-            String a1 = CipheringSugar.ApacheCommon.md5("aaa");
-            String a2 = SpringFrameWorkUtil.encodeBase64("aaa");
-        }
-    }
+
 }

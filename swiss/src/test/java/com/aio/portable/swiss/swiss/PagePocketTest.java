@@ -1,4 +1,4 @@
-package com.aio.portable.park.unit.swiss;
+package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.structure.cache.CacheRoom;
 import com.aio.portable.swiss.structure.bean.PagePocket;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @TestComponent
-public class BlahBlahTest {
+public class PagePocketTest {
 
     @Test
     public void pagePocket() {

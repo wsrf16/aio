@@ -67,13 +67,6 @@ public class BasicType {
         }
     }
 
-    private static class BlahUnit {
-        private static void todo() {
-            SerialNumberBuilder serialNumberBuilder = new BasicType().serialNumberBuilder();
-            String s1 = serialNumberBuilder.build();
-            String s2 = serialNumberBuilder.build();
-        }
-    }
 
     //public static <T> Class<T> T2Class(T)
      //(Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]

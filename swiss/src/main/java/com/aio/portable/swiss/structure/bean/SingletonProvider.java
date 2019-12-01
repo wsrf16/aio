@@ -68,14 +68,5 @@ public abstract class SingletonProvider {
 //    }
 
 
-    private static class BlahUnit {
-        private static void todo() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-            AA aa = SingletonProvider.instance(AA.class);
-            aa.aa = 77;
-            BB bb = SingletonProvider.instance(BB.class);
-            bb.aa = 44;
-            AA aa1 = SingletonProvider.instance(AA.class);
-            BB bb2 = SingletonProvider.instance(BB.class);
-        }
-    }
+
 }

@@ -242,11 +242,6 @@ public abstract class StreamSugar {
         return segments;
     }
 
-    private static class BlahUnit {
-        private static void blah() {
-            List<Integer> list = StreamSugar.increase(1, n -> n + 1, 100).collect(Collectors.toList());
-            StreamSugar.split(list, 8);
-        }
-    }
+
 
 }

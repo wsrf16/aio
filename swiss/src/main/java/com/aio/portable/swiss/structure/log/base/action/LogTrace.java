@@ -7,42 +7,42 @@ import com.aio.portable.swiss.sugar.RegexSugar;
  * The lifeblood of operational intelligence - things happen.
  */
 public interface LogTrace {
-    void trace(String trace);
+    void trace(String message);
 
-    default void trace(String trace, Object[] arguments) {
-        trace = RegexSugar.replace("\\{\\}", trace, arguments);
-        trace(trace);
+    default void trace(String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        trace(message);
     }
 
     <T> void trace(T t);
 
-    void trace(String summary, String trace);
+    void trace(String summary, String message);
 
-    default void trace(String summary, String trace, Object[] arguments) {
-        trace = RegexSugar.replace("\\{\\}", trace, arguments);
-        trace(summary, trace);
+    default void trace(String summary, String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        trace(summary, message);
     }
 
     <T> void trace(String summary, T t);
 
-    default void t(String trace) {
-        trace(trace);
+    default void t(String message) {
+        trace(message);
     }
 
-    default void t(String trace, Object[] arguments) {
-        trace(trace, arguments);
+    default void t(String message, Object[] arguments) {
+        trace(message, arguments);
     }
 
     default <T> void t(T t) {
         trace(t);
     }
 
-    default void t(String summary, String trace) {
-        trace(summary, trace);
+    default void t(String summary, String message) {
+        trace(summary, message);
     }
 
-    default void t(String summary, String trace, Object[] arguments) {
-        trace(summary, trace, arguments);
+    default void t(String summary, String message, Object[] arguments) {
+        trace(summary, message, arguments);
     }
 
     default <T> void t(String summary, T t) {

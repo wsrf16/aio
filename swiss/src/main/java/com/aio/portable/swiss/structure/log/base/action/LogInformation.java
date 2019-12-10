@@ -7,42 +7,42 @@ import com.aio.portable.swiss.sugar.RegexSugar;
  * The lifeblood of operational intelligence - things happen.
  */
 public interface LogInformation {
-    void info(String info);
+    void info(String message);
 
-    default void info(String info, Object[] arguments) {
-        info = RegexSugar.replace("\\{\\}", info, arguments);
-        info(info);
+    default void info(String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        info(message);
     }
 
     <T> void info(T t);
 
-    void info(String summary, String info);
+    void info(String summary, String message);
 
-    default void info(String summary, String info, Object[] arguments) {
-        info = RegexSugar.replace("\\{\\}", info, arguments);
-        info(summary, info);
+    default void info(String summary, String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        info(summary, message);
     }
 
     <T> void info(String summary, T t);
 
-    default void i(String info) {
-        info(info);
+    default void i(String message) {
+        info(message);
     }
 
-    default void i(String info, Object[] arguments) {
-        info(info, arguments);
+    default void i(String message, Object[] arguments) {
+        info(message, arguments);
     }
 
     default <T> void i(T t) {
         info(t);
     }
 
-    default void i(String summary, String info) {
-        info(summary, info);
+    default void i(String summary, String message) {
+        info(summary, message);
     }
 
-    default void i(String summary, String info, Object[] arguments) {
-        info(summary, info, arguments);
+    default void i(String summary, String message, Object[] arguments) {
+        info(summary, message, arguments);
     }
 
     default <T> void i(String summary, T t) {

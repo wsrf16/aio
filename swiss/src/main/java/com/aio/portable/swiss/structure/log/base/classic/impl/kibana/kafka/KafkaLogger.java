@@ -40,7 +40,7 @@ public class KafkaLogger extends AbstractLogger {
         tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
         infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFO.getName(), properties);
         debugPrinter = KafkaPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
-        warningPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
+        warnPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
         errorPrinter = KafkaPrinter.instance(name, LevelEnum.ERROR.getName(), properties);
         fatalPrinter = KafkaPrinter.instance(name, LevelEnum.FATAL.getName(), properties);
     }

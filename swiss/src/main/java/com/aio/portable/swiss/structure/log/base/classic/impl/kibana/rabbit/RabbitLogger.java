@@ -34,7 +34,7 @@ public class RabbitLogger extends AbstractLogger {
         tracePrinter = RabbitPrinter.instance(name, LevelEnum.TRACE.getName(), configuration);
         infoPrinter = RabbitPrinter.instance(name, LevelEnum.INFO.getName(), configuration);
         debugPrinter = RabbitPrinter.instance(name, LevelEnum.DEBUG.getName(), configuration);
-        warningPrinter = RabbitPrinter.instance(name, LevelEnum.WARNING.getName(), configuration);
+        warnPrinter = RabbitPrinter.instance(name, LevelEnum.WARNING.getName(), configuration);
         errorPrinter = RabbitPrinter.instance(name, LevelEnum.ERROR.getName(), configuration);
         fatalPrinter = RabbitPrinter.instance(name, LevelEnum.FATAL.getName(), configuration);
     }

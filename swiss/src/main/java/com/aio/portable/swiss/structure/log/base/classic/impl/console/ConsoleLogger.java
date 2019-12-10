@@ -33,7 +33,7 @@ public class ConsoleLogger extends AbstractLogger {
         tracePrinter = ConsolePrinter.instance(name, LevelEnum.TRACE.getName());
         infoPrinter = ConsolePrinter.instance(name, LevelEnum.INFO.getName());
         debugPrinter = ConsolePrinter.instance(name, LevelEnum.DEBUG.getName());
-        warningPrinter = ConsolePrinter.instance(name, LevelEnum.WARNING.getName());
+        warnPrinter = ConsolePrinter.instance(name, LevelEnum.WARNING.getName());
         errorPrinter = ConsolePrinter.instance(name, LevelEnum.ERROR.getName());
         fatalPrinter = ConsolePrinter.instance(name, LevelEnum.FATAL.getName());
     }

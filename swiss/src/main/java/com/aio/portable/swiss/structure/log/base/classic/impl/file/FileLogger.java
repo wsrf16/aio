@@ -34,7 +34,7 @@ public class FileLogger extends AbstractLogger {
         tracePrinter = FilePrinter.instance(name, LevelEnum.TRACE.getName());
         infoPrinter = FilePrinter.instance(name, LevelEnum.INFO.getName());
         debugPrinter = FilePrinter.instance(name, LevelEnum.DEBUG.getName());
-        warningPrinter = FilePrinter.instance(name, LevelEnum.WARNING.getName());
+        warnPrinter = FilePrinter.instance(name, LevelEnum.WARNING.getName());
         errorPrinter = FilePrinter.instance(name, LevelEnum.ERROR.getName());
         fatalPrinter = FilePrinter.instance(name, LevelEnum.FATAL.getName());
     }

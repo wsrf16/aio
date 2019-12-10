@@ -25,16 +25,21 @@ public class BeanRunner implements ApplicationRunner {
     @Autowired
     MybatisTest mybatisTest;
 
-    LogHub log = LogFactory.singletonInstance().buildAsync();
+    LogHub log = LogFactory.singletonInstance().build().setSamplerRate(1f);
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
+//        Object[] integers = {1, 1, 1};
+//        log.d("a", {1,1,1});
+
+
+
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.exit(0);
 
 
 
@@ -47,12 +52,17 @@ public class BeanRunner implements ApplicationRunner {
         root = "./";
         String file = root + "park/target/park.jar";
 
-        List<String> list = new ArrayList<>();
-        list.add("list");
-        log.info("a", "b");
+        List<String> list = null;
+        try {
+            list = new ArrayList<>();
+            list.add("list");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        log.debug("a", "b");
         log.info("a", list);
         log.info("a{}{}{}", new String[]{"b","c","d"});
-//        log.info("a", "list{}", new Object[]{"aaa"});
+        log.info("a", "list{}", new Object[]{"aaa"});
 
         String info = "list{}-{}-{}";
         Object[] arguments = new Object[]{"aaa", "bbb","ccc"};

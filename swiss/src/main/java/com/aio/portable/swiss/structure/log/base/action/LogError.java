@@ -6,36 +6,36 @@ import com.aio.portable.swiss.sugar.RegexSugar;
  * Functionality is unavailable, invariants are broken or data is lost.
  */
 public interface LogError {
-    void error(String error);
+    void error(String message);
 
-    default void error(String error, Object[] arguments) {
-        error = RegexSugar.replace("\\{\\}", error, arguments);
-        error(error);
+    default void error(String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        error(message);
     }
 
     void error(Exception e);
 
     void error(String summary, Exception e);
 
-    void error(String summary, String error);
+    void error(String summary, String message);
 
-    default void error(String summary, String error, Object[] arguments) {
-        error = RegexSugar.replace("\\{\\}", error, arguments);
-        error(summary, error);
+    default void error(String summary, String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        error(summary, message);
     }
 
-    void error(String summary, String error, Exception e);
+    void error(String summary, String message, Exception e);
 
     <T> void error(String summary, T t, Exception e);
 
     <T> void error(String summary, T t);
 
-    default void e(String error) {
-        error(error);
+    default void e(String message) {
+        error(message);
     }
 
-    default void e(String error, Object[] arguments) {
-        error(error, arguments);
+    default void e(String message, Object[] arguments) {
+        error(message, arguments);
     }
 
     default void e(Exception e) {
@@ -46,16 +46,16 @@ public interface LogError {
         error(summary, e);
     }
 
-    default void e(String summary, String error) {
-        error(summary, error);
+    default void e(String summary, String message) {
+        error(summary, message);
     }
 
-    default void e(String summary, String error, Object[] arguments) {
-        error(summary, error, arguments);
+    default void e(String summary, String message, Object[] arguments) {
+        error(summary, message, arguments);
     }
 
-    default void e(String summary, String error, Exception e) {
-        error(summary, error, e);
+    default void e(String summary, String message, Exception e) {
+        error(summary, message, e);
     }
 
     default <T> void e(String summary, T t, Exception e) {

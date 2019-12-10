@@ -23,7 +23,9 @@ public class Slf4jLogger extends AbstractLogger {
     }
 
     public final static Slf4jLogger build(String name) {
-        return new Slf4jLogger(name);
+        Slf4jLogger slf4jLogger = new Slf4jLogger(name);
+        slf4jLogger.logger = org.slf4j.LoggerFactory.getLogger(name);
+        return slf4jLogger;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class Slf4jLogger extends AbstractLogger {
         };
         infoPrinter = text -> logger.info(text);
         debugPrinter = text -> logger.debug(text);
-        warningPrinter = text -> logger.warn(text);
+        warnPrinter = text -> logger.warn(text);
         errorPrinter = text -> logger.error(text);
         tracePrinter = text -> logger.trace(text);
     }

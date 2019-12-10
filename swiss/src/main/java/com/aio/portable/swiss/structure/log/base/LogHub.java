@@ -1,16 +1,26 @@
 package com.aio.portable.swiss.structure.log.base;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by York on 2017/11/23.
  */
 public class LogHub extends LogHubBody {
+//    private static BiConsumer<Boolean, Supplier<Void>> applyIf = (cond, supplier) -> {if (cond) supplier.get()};
+
     private List<AbstractLogger> loggers;
+
+    private float samplerRate = 1f;
+
+    public float getSamplerRate() {
+        return samplerRate;
+    }
+
+    public LogHub setSamplerRate(float samplerRate) {
+        this.samplerRate = samplerRate;
+        return this;
+    }
 
     public void setAsync(boolean async) {
         loggers.forEach(c -> c.setAsync(async));
@@ -48,6 +58,11 @@ public class LogHub extends LogHubBody {
             throwProviderEmpty();
     }
 
+    private boolean sampling() {
+        float f = new Random().nextFloat();
+        return f <= samplerRate;
+    }
+
     public void dispose() {
         verify();
         loggers.forEach(it ->
@@ -57,189 +72,226 @@ public class LogHub extends LogHubBody {
         });
     }
 
-    public void verbose(String verbose) {
+    public void verbose(String message) {
         verify();
-        loggers.forEach(it -> it.verbose(verbose));
+        if (sampling())
+            loggers.forEach(it -> it.verbose(message));
     }
 
     public <T> void verbose(T t) {
         verify();
-        loggers.forEach(it -> it.verbose(t));
+        if (sampling())
+            loggers.forEach(it -> it.verbose(t));
     }
 
-    public void verbose(String summary, String verbose) {
+    public void verbose(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.verbose(summary, verbose));
+        if (sampling())
+            loggers.forEach(it -> it.verbose(summary, message));
     }
 
     public <T> void verbose(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.verbose(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.verbose(summary, t));
     }
 
-    public void trace(String trace) {
+    public void trace(String message) {
         verify();
-        loggers.forEach(it -> it.trace(trace));
+        if (sampling())
+            loggers.forEach(it -> it.trace(message));
     }
 
     public <T> void trace(T t) {
         verify();
-        loggers.forEach(it -> it.trace(t));
+        if (sampling())
+            loggers.forEach(it -> it.trace(t));
     }
 
-    public void trace(String summary, String trace) {
+    public void trace(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.trace(summary, trace));
+        if (sampling())
+            loggers.forEach(it -> it.trace(summary, message));
     }
 
     public <T> void trace(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.trace(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.trace(summary, t));
     }
 
-    public void info(String info) {
+    public void info(String message) {
         verify();
-        loggers.forEach(it -> it.info(info));
+        if (sampling())
+            loggers.forEach(it -> it.info(message));
     }
 
     public <T> void info(T t) {
         verify();
-        loggers.forEach(it -> it.info(t));
+        if (sampling())
+            loggers.forEach(it -> it.info(t));
     }
 
-    public void info(String summary, String info) {
+    public void info(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.info(summary, info));
+        if (sampling())
+            loggers.forEach(it -> it.info(summary, message));
     }
 
     public <T> void info(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.info(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.info(summary, t));
     }
 
-    public void debug(String debug) {
+    public void debug(String message) {
         verify();
-        loggers.forEach(it -> it.debug(debug));
+        if (sampling())
+            loggers.forEach(it -> it.debug(message));
     }
 
     public <T> void debug(T t) {
         verify();
-        loggers.forEach(it -> it.debug(t));
+        if (sampling())
+            loggers.forEach(it -> it.debug(t));
     }
 
-    public void debug(String summary, String debug) {
+    public void debug(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.debug(summary, debug));
+        if (sampling())
+            loggers.forEach(it -> it.debug(summary, message));
     }
 
     public <T> void debug(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.debug(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.debug(summary, t));
     }
 
-    public void error(String error) {
+    public void error(String message) {
         verify();
-        loggers.forEach(it -> it.error(error));
+        if (sampling())
+            loggers.forEach(it -> it.error(message));
     }
 
     public void error(Exception e) {
         verify();
-        loggers.forEach(it -> it.error(e));
+        if (sampling())
+            loggers.forEach(it -> it.error(e));
     }
 
     public void error(String summary, Exception e) {
         verify();
-        loggers.forEach(it -> it.error(summary, e));
+        if (sampling())
+            loggers.forEach(it -> it.error(summary, e));
     }
 
-    public void error(String summary, String error) {
+    public void error(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.error(summary, error));
+        if (sampling())
+            loggers.forEach(it -> it.error(summary, message));
     }
 
-    public void error(String summary, String error, Exception e) {
+    public void error(String summary, String message, Exception e) {
         verify();
-        loggers.forEach(it -> it.error(summary, error, e));
+        if (sampling())
+            loggers.forEach(it -> it.error(summary, message, e));
     }
 
     public <T> void error(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.error(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.error(summary, t));
     }
 
     public <T> void error(String summary, T t, Exception e) {
         verify();
-        loggers.forEach(it -> it.error(summary, t, e));
+        if (sampling())
+            loggers.forEach(it -> it.error(summary, t, e));
     }
 
-    public void warn(String warning) {
+    public void warn(String message) {
         verify();
-        loggers.forEach(it -> it.warn(warning));
+        if (sampling())
+            loggers.forEach(it -> it.warn(message));
     }
 
     public void warn(Exception e) {
         verify();
-        loggers.forEach(it -> it.warn(e));
+        if (sampling())
+            loggers.forEach(it -> it.warn(e));
     }
 
     public void warn(String summary, Exception e) {
         verify();
-        loggers.forEach(it -> it.warn(summary, e));
+        if (sampling())
+            loggers.forEach(it -> it.warn(summary, e));
     }
 
-    public void warn(String summary, String warning) {
+    public void warn(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.warn(summary, warning));
+        if (sampling())
+            loggers.forEach(it -> it.warn(summary, message));
     }
 
-    public void warn(String summary, String warning, Exception e) {
+    public void warn(String summary, String message, Exception e) {
         verify();
-        loggers.forEach(it -> it.warn(summary, warning, e));
+        if (sampling())
+            loggers.forEach(it -> it.warn(summary, message, e));
     }
 
     public <T> void warn(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.warn(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.warn(summary, t));
     }
 
     public <T> void warn(String summary, T t, Exception e) {
         verify();
-        loggers.forEach(it -> it.warn(summary, t, e));
+        if (sampling())
+            loggers.forEach(it -> it.warn(summary, t, e));
     }
 
-    public void fatal(String warning) {
+    public void fatal(String message) {
         verify();
-        loggers.forEach(it -> it.fatal(warning));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(message));
     }
 
     public void fatal(Exception e) {
         verify();
-        loggers.forEach(it -> it.fatal(e));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(e));
     }
 
     public void fatal(String summary, Exception e) {
         verify();
-        loggers.forEach(it -> it.fatal(summary, e));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(summary, e));
     }
 
-    public void fatal(String summary, String fatal) {
+    public void fatal(String summary, String message) {
         verify();
-        loggers.forEach(it -> it.fatal(summary, fatal));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(summary, message));
     }
 
-    public void fatal(String summary, String fatal, Exception e) {
+    public void fatal(String summary, String message, Exception e) {
         verify();
-        loggers.forEach(it -> it.fatal(summary, fatal, e));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(summary, message, e));
     }
 
     public <T> void fatal(String summary, T t) {
         verify();
-        loggers.forEach(it -> it.fatal(summary, t));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(summary, t));
     }
 
     public <T> void fatal(String summary, T t, Exception e) {
         verify();
-        loggers.forEach(it -> it.fatal(summary, t, e));
+        if (sampling())
+            loggers.forEach(it -> it.fatal(summary, t, e));
     }
 }
 

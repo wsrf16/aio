@@ -6,36 +6,36 @@ import com.aio.portable.swiss.sugar.RegexSugar;
  * Service is degraded or endangered.
  */
 public interface LogWarning {
-    void warn(String warning);
+    void warn(String message);
 
-    default void warn(String warning, Object[] arguments) {
-        warning = RegexSugar.replace("\\{\\}", warning, arguments);
-        warn(warning);
+    default void warn(String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        warn(message);
     }
 
     void warn(Exception e);
 
     void warn(String summary, Exception e);
 
-    void warn(String summary, String warning);
+    void warn(String summary, String message);
 
-    default void warn(String summary, String warning, Object[] arguments) {
-        warning = RegexSugar.replace("\\{\\}", warning, arguments);
-        warn(summary, warning);
+    default void warn(String summary, String message, Object[] arguments) {
+        message = RegexSugar.replace("\\{\\}", message, arguments);
+        warn(summary, message);
     }
 
-    void warn(String summary, String warning, Exception e);
+    void warn(String summary, String message, Exception e);
 
     <T> void warn(String summary, T t);
 
     <T> void warn(String summary, T t, Exception e);
 
-    default void w(String warning) {
-        warn(warning);
+    default void w(String message) {
+        warn(message);
     }
 
-    default void w(String warn, Object[] arguments) {
-        warn(warn, arguments);
+    default void w(String message, Object[] arguments) {
+        warn(message, arguments);
     }
 
     default void w(Exception e) {
@@ -46,16 +46,16 @@ public interface LogWarning {
         warn(summary, e);
     }
 
-    default void w(String summary, String warning) {
-        warn(summary, warning);
+    default void w(String summary, String message) {
+        warn(summary, message);
     }
 
-    default void w(String summary, String warn, Object[] arguments) {
-        warn(summary, warn, arguments);
+    default void w(String summary, String message, Object[] arguments) {
+        warn(summary, message, arguments);
     }
 
-    default void w(String summary, String warning, Exception e) {
-        warn(summary, warning, e);
+    default void w(String summary, String message, Exception e) {
+        warn(summary, message, e);
     }
 
     default <T> void w(String summary, T t) {

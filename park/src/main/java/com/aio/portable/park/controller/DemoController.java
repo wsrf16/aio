@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.Date;
 
@@ -85,18 +86,14 @@ public class DemoController {// extends InjectedBaseLogger {
 
 
 
-    @PostMapping("/upload2data")
+    @PostMapping("/upload")
     @ResponseBody
-    public String uploadapp(@RequestParam("file") MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        int location = StringUtils.lastIndexOf(fileName, "-");
-        String proj = fileName.substring(0, location);
-//        String env = fileName.substring(location + 1).replace(".tar.gz", "");
-
-        String target = MessageFormat.format("/data1/service/{0}/{1}" , proj , fileName);
-//        String cmd = MessageFormat.format("/data1/service/{0}/qpublish.sh {1}" , proj , env);
-        file.transferTo(new File(target));
-        return target;
+    public String uploadapp(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        String fileName = multipartFile.getOriginalFilename();
+        File file = new File(fileName);
+        Path path = file.toPath();
+        multipartFile.transferTo(path);
+        return file.getAbsolutePath();
     }
 
 }

@@ -5,7 +5,7 @@ import com.aio.portable.swiss.structure.log.base.Printer;
 import com.aio.portable.swiss.structure.log.base.classic.impl.LoggerConfig;
 import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.middleware.mq.kafka.KafkaBuilder;
+import com.aio.portable.swiss.module.mq.kafka.KafkaBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.HashMap;

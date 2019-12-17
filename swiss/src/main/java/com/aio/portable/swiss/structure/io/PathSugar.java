@@ -1,7 +1,9 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.structure.io;
 
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.structure.systeminfo.OSInfo;
+import com.aio.portable.swiss.sugar.StringSugar;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -18,7 +20,7 @@ import java.util.stream.Stream;
 public abstract class PathSugar {
     final static String[] intervals = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
 
-    public final static Path concatBySysteom(String first, String... more) {
+    public final static Path concatBySystem(String first, String... more) {
         return Paths.get(first, more);
     }
 
@@ -37,6 +39,7 @@ public abstract class PathSugar {
     }
 
     final static String INTERVAL_CHAR = "/";
+
     public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
@@ -54,7 +57,11 @@ public abstract class PathSugar {
     }
     //Relative
 
+    public final static Path getJarDirectoryPath(Class<?> sourceClass) {
+        return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
+    }
 
-
-
+    public final static Path getClassesDirectoryPath(Class<?> sourceClass) {
+        return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
+    }
 }

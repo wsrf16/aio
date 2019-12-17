@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.mq.rabbitmq.property;
+package com.aio.portable.swiss.module.mq.rabbitmq.property;
 
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;

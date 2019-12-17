@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.zookeeper;
+package com.aio.portable.swiss.module.zookeeper;
 
 import com.aio.portable.swiss.global.Constant;
 import org.apache.zookeeper.*;
@@ -11,7 +11,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class ZooKeeperSugar {
     public static ZooKeeper build(String connectString, int sessionTimeout, Watcher watcher) throws IOException {

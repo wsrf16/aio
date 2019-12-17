@@ -1,7 +1,7 @@
-package com.aio.portable.swiss.middleware.mq.rabbitmq;
+package com.aio.portable.swiss.module.mq.rabbitmq;
 
-import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
-import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
+import com.aio.portable.swiss.module.mq.rabbitmq.property.RabbitMQBindingProperty;
+import com.aio.portable.swiss.module.mq.rabbitmq.property.RabbitMQCachingConnectionFactoryProperties;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

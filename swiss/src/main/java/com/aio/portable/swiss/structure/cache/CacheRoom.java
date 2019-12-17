@@ -2,8 +2,7 @@ package com.aio.portable.swiss.structure.cache;
 
 import com.aio.portable.swiss.structure.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.structure.io.FileSugar;
-import com.aio.portable.swiss.sugar.PathSugar;
+import com.aio.portable.swiss.structure.io.PathSugar;
 import org.springframework.util.SerializationUtils;
 import org.springframework.util.StringUtils;
 
@@ -110,7 +109,7 @@ public class CacheRoom {
         try {
             constructionLock.lock();
             {
-                FileSugar.writeFile(this.cacheFilePath(), content);
+                com.aio.portable.swiss.structure.io.FileSugar.writeFile(this.cacheFilePath(), content);
             }
         } finally {
             constructionLock.unlock();
@@ -132,7 +131,7 @@ public class CacheRoom {
             constructionLock.lock();
             {
                 //File.WriteAllBytes(this.CacheFilePath, content);
-                FileSugar.writeFile(this.cacheFilePath(), content);
+                com.aio.portable.swiss.structure.io.FileSugar.writeFile(this.cacheFilePath(), content);
             }
         } finally {
             constructionLock.unlock();
@@ -164,7 +163,7 @@ public class CacheRoom {
             constructionLock.lock();
             {
                 //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
-                content = FileSugar.readFileForText(this.cacheFilePath());
+                content = com.aio.portable.swiss.structure.io.FileSugar.readFileForText(this.cacheFilePath());
             }
         } finally {
             constructionLock.unlock();
@@ -189,7 +188,7 @@ public class CacheRoom {
             constructionLock.lock();
             {
                 //content = File.ReadAllBytes(this.CacheFilePath);
-                content = FileSugar.readFileForByte(this.cacheFilePath());
+                content = com.aio.portable.swiss.structure.io.FileSugar.readFileForByte(this.cacheFilePath());
             }
         } finally {
             constructionLock.unlock();
@@ -216,7 +215,7 @@ public class CacheRoom {
             constructionLock.lock();
             {
                 //content = File.ReadAllText(this.CacheFilePath, CahceFileEncoding);
-                content = FileSugar.readFileForText(this.cacheFilePath());
+                content = com.aio.portable.swiss.structure.io.FileSugar.readFileForText(this.cacheFilePath());
                 new File(this.cacheFilePath()).delete();
                 cacheRooms.remove(this.key);
                 this.key = null;
@@ -246,7 +245,7 @@ public class CacheRoom {
             constructionLock.lock();
             {
                 //content = File.ReadAllBytes(this.CacheFilePath());
-                content = FileSugar.readFileForByte(this.cacheFilePath());
+                content = com.aio.portable.swiss.structure.io.FileSugar.readFileForByte(this.cacheFilePath());
                 new File(this.cacheFilePath()).delete();
                 cacheRooms.remove(this.key);
                 this.key = null;

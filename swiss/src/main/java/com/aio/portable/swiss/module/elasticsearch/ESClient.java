@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.elasticsearch;
+package com.aio.portable.swiss.module.elasticsearch;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;

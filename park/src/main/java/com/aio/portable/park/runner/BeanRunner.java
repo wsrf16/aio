@@ -11,8 +11,10 @@ import com.aio.portable.swiss.sugar.resource.ResourceSugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -32,7 +34,9 @@ public class BeanRunner implements ApplicationRunner {
 //        Object[] integers = {1, 1, 1};
 //        log.d("a", {1,1,1});
 
-
+        ApplicationHome h = new ApplicationHome(getClass());
+        File jarF = h.getSource();
+        System.out.println(jarF.getParentFile().toString());
 
 //        try {
 //            Thread.sleep(5000);

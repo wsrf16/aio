@@ -1,6 +1,4 @@
-package com.aio.portable.swiss.middleware.mq.rabbitmq.property;
-
-import java.util.List;
+package com.aio.portable.swiss.module.mq.rabbitmq.property;
 
 //public class RabbitMQBindingListProperties {
 //    private List<RabbitMQBindingProperty> bindingList;

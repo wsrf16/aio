@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.elasticsearch;
+package com.aio.portable.swiss.module.elasticsearch;
 
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import org.elasticsearch.index.query.QueryBuilder;

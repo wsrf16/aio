@@ -5,6 +5,11 @@ spring:
   application:
     name: application-name
 
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 300MB
+
   mail:
     host: 1.1.1.1
     username: username

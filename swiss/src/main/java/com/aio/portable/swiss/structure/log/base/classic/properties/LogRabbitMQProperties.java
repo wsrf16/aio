@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.structure.log.base.classic.properties;
 
-import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
+import com.aio.portable.swiss.module.mq.rabbitmq.property.RabbitMQBindingProperty;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

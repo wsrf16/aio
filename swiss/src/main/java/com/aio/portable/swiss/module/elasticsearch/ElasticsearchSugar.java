@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.elasticsearch;
+package com.aio.portable.swiss.module.elasticsearch;
 
 import com.aio.portable.swiss.structure.bean.BeanSugar;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;

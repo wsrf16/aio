@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.mq.kafka;
+package com.aio.portable.swiss.module.mq.kafka;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.*;

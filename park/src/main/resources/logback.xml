@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <contextName>ladder-log</contextName>
-    <property name="LOG_HOME" value="logs"/>
+    <property name="LOG_HOME" value="log"/>
     <property name="LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}/log.%d{yyyy-MM-dd}.log"/>
     <property name="LOG_FILENAME" value="${LOG_HOME}/service.log"/>
     <property name="COLOUR_PATTERN"

@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.mq.rabbitmq.property;
+package com.aio.portable.swiss.module.mq.rabbitmq.property;
 
 public class RabbitMQBindingProperty {
     private String type;

@@ -389,6 +389,14 @@
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.odiszapc/nginxparser -->
+        <dependency>
+            <groupId>com.github.odiszapc</groupId>
+            <artifactId>nginxparser</artifactId>
+            <optional>true</optional>
+            <version>0.9.6</version>
+        </dependency>
     </dependencies>
 
 

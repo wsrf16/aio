@@ -1,11 +1,18 @@
 package com.aio.portable.swiss.structure.io;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Created by York on 2017/11/28.
  */
 public abstract class FileSugar {
+    public final static void createDirectoryIfNotExists(Path path) throws IOException {
+        if (Files.notExists(path))
+            Files.createDirectory(path);
+    }
+
     public static String readFileForText(String path) {
         StringBuffer sb = null;
         try {

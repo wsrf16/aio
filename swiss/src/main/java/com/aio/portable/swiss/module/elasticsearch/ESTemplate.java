@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.middleware.elasticsearch;
+package com.aio.portable.swiss.module.elasticsearch;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.data.domain.Page;

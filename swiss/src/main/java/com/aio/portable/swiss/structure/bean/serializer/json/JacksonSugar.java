@@ -7,10 +7,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -21,6 +17,13 @@ public class JacksonSugar {
         Default,
         CamelCase,
     }
+    private final static ObjectMapper shortObjectMapper = getObjectMapper(false, false, null);
+    private final static ObjectMapper longObjectMapper = getObjectMapper(true, true, null);
+    private final static ObjectMapper normalObjectMapper = getObjectMapper(false, true, null);
+    private final static ObjectMapper dumpObjectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+            .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 //    private final static ObjectMapper objectMapper = new ObjectMapper();
 //
@@ -39,7 +42,16 @@ public class JacksonSugar {
      * @return
      */
     public static String obj2ShortJson(Object obj) {
-        return obj2Json(obj, false, false);
+//        return obj2Json(obj, false, false);
+        ObjectMapper mapper = shortObjectMapper;
+        String json;
+        try {
+            json = obj == null ? null : mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return json;
     }
 
 
@@ -70,7 +82,16 @@ public class JacksonSugar {
      * @return
      */
     public static String obj2LongJson(Object obj) {
-        return obj2Json(obj, true, true);
+//        return obj2Json(obj, true, true);
+        ObjectMapper mapper = longObjectMapper;
+        String json;
+        try {
+            json = obj == null ? null : mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return json;
     }
 
 
@@ -101,7 +122,16 @@ public class JacksonSugar {
      * @return
      */
     public static String obj2Json(Object obj) {
-        return obj2Json(obj, false, true);
+//        return obj2Json(obj, false, true);
+        ObjectMapper mapper = normalObjectMapper;
+        String json;
+        try {
+            json = obj == null ? null : mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return json;
     }
 
 
@@ -205,10 +235,7 @@ public class JacksonSugar {
      * @return
      */
     public static <T> T json2T(String jsonStr, Class<T> clazz) {
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = dumpObjectMapper;
         try {
             return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
         } catch (IOException e) {
@@ -224,10 +251,7 @@ public class JacksonSugar {
      * @return
      */
     public static JsonNode json2JsonNode(String jsonStr) {
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = dumpObjectMapper;
         try {
             return mapper.readTree(jsonStr);
         } catch (IOException e) {
@@ -246,10 +270,7 @@ public class JacksonSugar {
      */
     public static <T> T json2Complex(String jsonStr) {
         try {
-            ObjectMapper mapper = new ObjectMapper()
-                    .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                    .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapper mapper = dumpObjectMapper;
 
             return mapper.readValue(jsonStr, new TypeReference<T>() {
             });
@@ -270,10 +291,7 @@ public class JacksonSugar {
      */
     public static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
-            ObjectMapper mapper = new ObjectMapper()
-                    .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                    .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapper mapper = dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
         } catch (Exception e) {
             e.printStackTrace();

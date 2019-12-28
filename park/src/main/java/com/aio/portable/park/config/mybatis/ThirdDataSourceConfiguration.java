@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,20 +23,25 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {ThirdDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = ThirdDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = ThirdDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
+//@EntityScan(basePackages = {ThirdDataSourceConfiguration.ENTITY_BASE_PACKAGES})
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
+    // custom
     public final static String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
     public final static String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
     private final static String SPECIAL_NAME = "third";
-    private final static String PERSISTENCE_UNIT = "persistenceUnit";
 
+    // constant
+    public final static String PERSISTENCE_UNIT = JpaBaseDataSourceConfiguration.PERSISTENCE_UNIT;
+
+    // properties
     protected final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
     protected final static String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
 
+    // bean
     protected final static String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
     protected final static String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
     protected final static String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
-
     protected final static String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
     protected final static String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
     protected final static String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
@@ -44,7 +50,7 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
-//    @Primary
+    @Primary
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }

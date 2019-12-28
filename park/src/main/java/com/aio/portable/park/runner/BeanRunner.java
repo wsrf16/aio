@@ -3,7 +3,7 @@ package com.aio.portable.park.runner;
 //import com.aio.portable.park.common.log.InjectedBaseLogger;
 
 import com.aio.portable.park.config.LogFactory;
-import com.aio.portable.park.test.MybatisTest;
+import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class BeanRunner implements ApplicationRunner {
 
     @Autowired
-    MybatisTest mybatisTest;
+    MyDatabaseTest mybatisTest;
 
     LogHub log = LogFactory.singletonInstance().build().setSamplerRate(1f);
 
@@ -50,8 +50,10 @@ public class BeanRunner implements ApplicationRunner {
 
 
 
-//        mybatisTest.blah();
+        mybatisTest.blah();
 
+//        ResourceSugar.ByClassLoader.getResources("classpath:config/mapper/*.xml")
+        System.exit(0);
         String root = "D:/NutDisk/Program/Resource/Library/Java/_solution/Project/all-in-one/";
         root = "./";
         String file = root + "park/target/park.jar";

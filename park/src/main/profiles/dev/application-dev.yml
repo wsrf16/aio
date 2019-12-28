@@ -8,7 +8,7 @@ spring:
       username: root
       password: 1111
       mybatis:
-        mapper-locations: classpath:mapper/*.xml
+        mapper-locations: classpath:config/mapper/*.xml
 
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
@@ -17,17 +17,15 @@ spring:
       username: root
       password: 1111
       mybatis:
-        mapper-locations: classpath:mapper/*.xml
+        mapper-locations: classpath:config/mapper/*.xml
 
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    #      driver-class-name: com.mysql.jdbc.Driver
 #    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
 #    username: root
 #    password: 1
 
     third:
       driver-class-name: com.mysql.cj.jdbc.Driver
-#      driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1111

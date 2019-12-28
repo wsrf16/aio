@@ -36,6 +36,10 @@ function getDirectory() {
   echo ${1%/*}
 }
 
+function getSelfFilename() {
+  echo ${0##*/}
+}
+
 function captureProcessLine() {
   if [[ $operate == "stop" ]]; then
     #                       show line no   except         except         except
@@ -64,7 +68,7 @@ function getPid() {
 }
 
 function isRunning() {
-  pid=$(getPid $file_absolute_path)
+  pid=$(getPid $jar_file_path)
   if [ "$pid" ]; then
     echo true
   else
@@ -98,10 +102,10 @@ function calldaemon() {
   while [ true ]; do
     is=$(isRunning $1)
     if [[ ! ${is} ]]; then
-      #$sh_file_absolute_path start
+      #$sh_file_path start
       operate="start"
       run $1
-      #nohup $sh_file_absolute_path start >/dev/null 2>&1 &
+      #nohup $sh_file_path start >/dev/null 2>&1 &
       #nohup $0 start >/dev/null 2>&1 &
     fi
     sleep $daemon_check_period
@@ -113,9 +117,9 @@ function status() {
   echo "current running status..."
   is=$(isRunning $1)
   if [[ ${is} ]]; then
-    echo "$filename is running."
+    echo "$jar_filename is running."
   else
-    echo "$filename is not running."
+    echo "$jar_filename is not running."
   fi
 }
 
@@ -128,7 +132,7 @@ function start() {
   if [[ ${is} ]]; then
     #status $1
     echo "nothing happened."
-    echo "$filename has been running."
+    echo "$jar_filename has been running."
   else
     status $1
     run $1
@@ -200,7 +204,7 @@ function gclog() {
 }
 
 function help() {
-  echo "cp '<jarfile>' to '<jarfile>.sh'"
+  echo "cp '-.jar.sh' to '<jarfile>.jar.sh'"
   echo "<jarfile>.jar.sh once"
   echo "<jarfile>.jar.sh debug"
   echo "<jarfile>.jar.sh start"
@@ -212,19 +216,25 @@ function help() {
   echo "<jarfile>.jar.sh status"
   echo "<jarfile>.jar.sh log"
 
-  echo "<self>.sh <jarfile> once"
-  echo "<self>.sh <jarfile> debug"
-  echo "<self>.sh <jarfile> start"
-  echo "<self>.sh <jarfile> daemon"
-  echo "<self>.sh <jarfile> restart"
-  echo "<self>.sh <jarfile> restartlog"
-  echo "<self>.sh <jarfile> stop"
-  echo "<self>.sh <jarfile> forcestop"
-  echo "<self>.sh <jarfile> status"
-  echo "<self>.sh <jarfile> log"
+  echo "- once <jarfile>"
+  echo "- debug <jarfile>"
+  echo "- start <jarfile>"
+  echo "- daemon <jarfile>"
+  echo "- restart <jarfile>"
+  echo "- restartlog <jarfile>"
+  echo "- stop <jarfile>"
+  echo "- forcestop <jarfile>"
+  echo "- status <jarfile>"
+  echo "- log <jarfile>"
 }
 
 jdk_version=$(java -version 2>&1 | awk 'NR==1{ gsub(/"/,""); print $3 }' | grep -P '^\d\.\d' -o)
+
+if [[ -z ${jdk_version} ]]; then
+  echo "sorry! jdk is error."
+  exit 0
+fi
+
 now="$(date +%Y%m%d%H%M%S)"
 check_period=2
 daemon_check_period=10
@@ -233,42 +243,42 @@ ip_addr=$(getIpAddr)
 debug_port=8088
 
 dirname_dependency=@project.deploy.directoryName.dependency@
-if [[ "${dirname_dependency}" =~ "^@.*@$" ]]; then
+if [[ "${dirname_dependency}" =~ ^@.*@$ ]]; then
   dirname_dependency=lib/
 fi
 dirname_config=@project.deploy.directoryName.profile@
-if [[ "${dirname_config}" =~ "^@.*@$" ]]; then
+if [[ "${dirname_config}" =~ ^@.*@$ ]]; then
   dirname_config=config/
 fi
-dir_absolute_path=$(
+dir_path=$(
   cd $(dirname $0)
   pwd
 )
-_self=${0##*/}
-if [[ ${_self} =~ . ]]; then
-  shfilename=${_self}
-  # ext=$(getExt $_self)
+
+self_filename=$(getSelfFilename)
+if [[ ${self_filename} =~ . ]]; then
+  if [[ ${self_filename} =~ \.jar\.sh$ ]]; then
+    mode="dynamic"
+  else
+    mode="static"
+  fi
 else
-  echo "sorry! filename is error."
+  echo "sorry! jar_filename is error."
   exit 0
 fi
 
-if [[ ${_self} =~ \..+\.sh ]]; then
-  mode="dynamic"
-else
-  mode="static"
-fi
 
 if [[ $mode == "dynamic" ]]; then
-  filename=${_self%.*}
-  file_absolute_path=$dir_absolute_path/$filename
-  sh_file_absolute_path=$dir_absolute_path/$shfilename
-  dir_path=${dir_absolute_path}
+  jar_filename=${self_filename%.*}
+  jar_file_path=$dir_path/$jar_filename
+  sh_file_path=$dir_path/$self_filename
+  dir_path=${dir_path}
+  dir_path=$(getDirectory ${jar_file_path})
 else
-  file_absolute_path=($(readlink -f $2))
-  filename=($(getFilename $file_absolute_path))
-  sh_file_absolute_path=$dir_absolute_path/$shfilename
-  dir_path=$(getDirectory ${file_absolute_path})
+  jar_file_path=($(readlink -f $2))
+  jar_filename=($(getFilename $jar_file_path))
+  sh_file_path=$dir_path/$self_filename
+  dir_path=$(getDirectory ${jar_file_path})
 fi
 log_dir_absolute_path=${dir_path}/log
 log_file_absolute_path=/dev/null
@@ -280,6 +290,9 @@ if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
   args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file_absolute_path} ${args_app}"
 elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
   args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
+else
+  echo "no jdk"
+  exit 0
 fi
 
 operate=$1
@@ -288,32 +301,32 @@ if [[ -z ${operate} ]]; then
 else
   mkdirLog
   if [[ $operate == "once" ]]; then
-    once $file_absolute_path
+    once $jar_file_path
   elif [[ $operate == "debug" ]]; then
     echo "debug: ${args}"
-    debug $file_absolute_path
+    debug $jar_file_path
   elif [[ $operate == "start" ]]; then
-    start $file_absolute_path
+    start $jar_file_path
   elif [[ $operate == "restartlog" ]]; then
-    restartlog $file_absolute_path
+    restartlog $jar_file_path
   elif [[ $operate == "daemon" ]]; then
     if [[ $mode == "dynamic" ]]; then
-      nohup $sh_file_absolute_path calldaemon >/dev/null 2>&1 &
+      nohup $sh_file_path calldaemon >/dev/null 2>&1 &
     elif [[ $mode == "static" ]]; then
-      nohup $sh_file_absolute_path calldaemon $file_absolute_path >/dev/null 2>&1 &
+      nohup $sh_file_path calldaemon $jar_file_path >/dev/null 2>&1 &
     fi
     sleep $check_period
-    status $file_absolute_path
+    status $jar_file_path
   elif [[ $operate == "calldaemon" ]]; then
-    calldaemon $file_absolute_path
+    calldaemon $jar_file_path
   elif [[ $operate == "stop" ]]; then
-    stop $file_absolute_path
+    stop $jar_file_path
   elif [[ $operate == "forcestop" ]]; then
-    forcestop $file_absolute_path
+    forcestop $jar_file_path
   elif [[ $operate == "restart" ]]; then
-    restart $file_absolute_path
+    restart $jar_file_path
   elif [[ $operate == "status" ]]; then
-    status $file_absolute_path
+    status $jar_file_path
   elif [[ $operate == "log" ]]; then
     log
   elif [[ $operate == "gclog" ]]; then

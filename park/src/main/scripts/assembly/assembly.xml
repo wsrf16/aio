@@ -69,6 +69,13 @@
         <file>
             <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
             <outputDirectory></outputDirectory>
+            <destName>-</destName>
+            <fileMode>755</fileMode>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
+            <outputDirectory></outputDirectory>
             <destName>${project.build.finalName}.jar.sh</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>

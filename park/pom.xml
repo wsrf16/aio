@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>park</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
+    <version>1.1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>park</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.aio.portable</groupId>
         <artifactId>all-in-one</artifactId>
-        <version>1.1.4-SNAPSHOT</version>
+        <version>1.1.5-SNAPSHOT</version>
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--        <relativePath>../</relativePath>-->
     </parent>
@@ -83,20 +83,11 @@
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>javax.servlet</groupId>-->
-<!--            <artifactId>servlet-api</artifactId>-->
-<!--            <version>2.3</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>provided</scope>
         </dependency>
-
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -121,14 +112,8 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>swiss</artifactId>
-            <version>1.1.4-SNAPSHOT</version>
+            <version>1.1.5-SNAPSHOT</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.github.wsrf16</groupId>-->
-<!--            <artifactId>all-in-one</artifactId>-->
-<!--            <version>1.1.4-SNAPSHOT</version>-->
-<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
         <dependency>
@@ -151,12 +136,6 @@
 <!--        <dependency>-->
 <!--            <groupId>com.aio.portable</groupId>-->
 <!--            <artifactId>park-db</artifactId>-->
-<!--            <version>1.1.4-SNAPSHOT</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.aio.portable</groupId>-->
-<!--            <artifactId>swiss</artifactId>-->
 <!--            <version>1.1.4-SNAPSHOT</version>-->
 <!--        </dependency>-->
 
@@ -206,18 +185,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>io.springfox</groupId>-->
-            <!--<artifactId>springfox-staticdocs</artifactId>-->
-            <!--<version>${springfox-staticdocs.version}</version>-->
-            <!--<exclusions>-->
-                <!--&lt;!&ndash;<exclusion>&ndash;&gt;-->
-                <!--&lt;!&ndash;<groupId>commons-collections</groupId>&ndash;&gt;-->
-                <!--&lt;!&ndash;<artifactId>commons-collections</artifactId>&ndash;&gt;-->
-                <!--&lt;!&ndash;</exclusion>&ndash;&gt;-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>io.github.swagger2markup</groupId>
             <artifactId>swagger2markup</artifactId>
@@ -233,30 +200,6 @@
             <version>2.1.0</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.restdocs</groupId>-->
-            <!--<artifactId>spring-restdocs-mockmvc</artifactId>-->
-            <!--<version>2.0.1.RELEASE</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>tk.mybatis</groupId>-->
-<!--            <artifactId>mapper-spring-boot-starter</artifactId>-->
-<!--            <version>${tk.mybatis.version}</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.mybatis.spring.boot</groupId>-->
-<!--                    <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -281,27 +224,6 @@
             <version>3.6.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
-<!--        <dependency>-->
-<!--            <groupId>net.sourceforge.htmlunit</groupId>-->
-<!--            <artifactId>htmlunit</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>compile</scope>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>cglib</groupId>-->
-<!--            <artifactId>cglib-nodep</artifactId>-->
-<!--            <version>${cglib-nodep.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -315,27 +237,11 @@
 <!--        </dependency>-->
 
 
-
-
-
-
-
-
-
-
-
-
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
 <!--            <version>${mysql.version}</version>-->
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>2.1.6.RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
@@ -424,6 +330,7 @@
                 <includes>
                     <include>/static/**</include>
                     <include>/templates/**</include>
+                    <include>/config/**</include>
                 </includes>
             </resource>
 
@@ -593,7 +500,7 @@
 
         <repository>
             <id>ali-maven</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public//</url>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

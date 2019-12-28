@@ -44,7 +44,7 @@ else
     # $sh_file_path help
     $jarsh_file_path help
   else
-    $sh_file_path help
+    $jarsh_file_path help
   fi
 fi
 

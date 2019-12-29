@@ -1,8 +1,5 @@
-package com.aio.portable.swiss.schedule;
+package com.aio.portable.swiss.schedule.launcher;
 
-import com.aio.portable.swiss.schedule.task.Task;
-import com.aio.portable.swiss.schedule.task.AbstractTask;
-import com.aio.portable.swiss.schedule.task.TaskScheduleProxy;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 public class Launcher {
@@ -42,8 +39,7 @@ public class Launcher {
         Task task;
         switch (mode) {
             case Mode.SCHEDULE:
-                task = new TaskScheduleProxy(abstractTask, scheduler, cron, true);
-                ;
+                task = new TaskScheduleProxy(abstractTask, cron, scheduler, true);
                 break;
             case Mode.ONCE:
             default:

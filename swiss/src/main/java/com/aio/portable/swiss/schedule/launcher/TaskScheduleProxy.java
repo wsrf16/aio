@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.schedule.task;
+package com.aio.portable.swiss.schedule.launcher;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -15,10 +15,10 @@ public class TaskScheduleProxy implements Task {
 
     private boolean runAtOnce = false;
 
-    public TaskScheduleProxy(AbstractTask abstractTask, ThreadPoolTaskScheduler scheduler, String cron, boolean runAtOnce) {
+    public TaskScheduleProxy(AbstractTask abstractTask, String cron, ThreadPoolTaskScheduler scheduler, boolean runAtOnce) {
         this.abstractTask = abstractTask;
-        this.scheduler = scheduler;
         this.cron = cron;
+        this.scheduler = scheduler;
         this.runAtOnce = runAtOnce;
     }
 
@@ -29,14 +29,14 @@ public class TaskScheduleProxy implements Task {
                     , abstractTask.getClass().getSimpleName()));
         if (runAtOnce)
             runAtOnce();
-        runAtTimesAsync();
+        startAlways();
     }
 
     private void runAtOnce() {
         abstractTask.run();
     }
 
-    private void runAtTimesAsync() {
+    private void startAlways() {
         scheduler.schedule(() -> abstractTask.run(), new CronTrigger(cron));
     }
 

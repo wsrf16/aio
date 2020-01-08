@@ -50,5 +50,5 @@
         <!--<appender-ref ref="ROLE_FILE_LOG"/>-->
     </root>
 
-    <logger name="com.taoche.db.master.dao" level="debug"/>
+    <logger name="com.aio.portable.parkdb.dao" level="debug"/>
 </configuration>

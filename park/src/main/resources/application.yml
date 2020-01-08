@@ -3,12 +3,12 @@ server:
 
 spring:
   application:
-    name: application-name
+    name: @project.build.finalName@
 
   servlet:
     multipart:
-      max-file-size: 300MB
-      max-request-size: 300MB
+      max-file-size: 1000MB
+      max-request-size: 1000MB
 
   mail:
     host: 1.1.1.1
@@ -28,6 +28,16 @@ spring:
       host: 127.0.0.1
       port: 8888
 
+#  ldap:
+#    urls: ldap://dc-01.qdingnet.cn:389
+#    base: dc=qdingnet,dc=cn
+#    username: itadmin
+#    password: Aa123456789
+#    baseEnvironment:
+#      java:
+#        naming:
+#          referral: follow
+
   ldap:
     urls: ldap://dc-01.qdingnet.cn:389
     base: dc=qdingnet,dc=cn
@@ -37,7 +47,6 @@ spring:
       java:
         naming:
           referral: follow
-
 
 
 ribbon:

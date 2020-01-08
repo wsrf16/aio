@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,10 +21,17 @@ import java.util.Date;
 @RestController
 @RequestMapping("demo")
 public class DemoController {// extends InjectedBaseLogger {
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private HttpServletResponse response;
 
     static LogHub log = LogFactory.singletonInstance().build();
     @GetMapping("log")
     public String log() {
+        request = request;
+        response = response;
+
         LogFactory.singletonInstance().build(this.getClass()).d("this is debug.");
         return "ok";
     }

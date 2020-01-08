@@ -11,7 +11,7 @@ spring:
         mapper-locations: classpath:config/mapper/*.xml
 
     slave:
-      type: com.alibaba.druid.pool.DruidDataSource
+#      type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
@@ -19,10 +19,10 @@ spring:
       mybatis:
         mapper-locations: classpath:config/mapper/*.xml
 
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
-#    username: root
-#    password: 1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+    username: root
+    password: 1111
 
     third:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -49,67 +49,67 @@ spring:
 
 
 
-  rabbitmq:
-    main:
-      host: mecs.com
-      port: 5672
-      username: admin
-      password: admin
-      virtual-host: yx_mq
-      binding-list:
-        - type: direct
-          routing-key: application-log-queue
-          queue: application-log-queue
-          exchange: application-log-exchange
+#  rabbitmq:
+#    main:
+#      host: mecs.com
+#      port: 5672
+#      username: admin
+#      password: admin
+#      virtual-host: yx_mq
+#      binding-list:
+#        - type: direct
+#          routing-key: application-log-queue
+#          queue: application-log-queue
+#          exchange: application-log-exchange
+#
+#  redis:
+#    host: 192.168.155.150
+#    port: 6379
+#    password: Yixin4redis
 
-  redis:
-    host: 192.168.155.150
-    port: 6379
-    password: Yixin4redis
-
-  log~:
-    rabbitmq:
-      enable: false
-      host: mecs.com
-      port: 5672
-      username: yixincapital
-      password: yixincapital
-      virtual-host: yx_mq
-      es-index: @profiles.active@_@project.build.finalName@_log
-      publisher-confirms: true
-      publisher-returns: true
-      binding-list:
-      - type: direct
-        routing-key: application-log-queue
-        queue: application-log-queue
-        exchange: application-log-exchange
-
-    kafka:
-      enable: false
-      esIndex: @profiles.active@_@project.build.finalName@_log
-      topic: basic_application_log
-      template:
-        defaultTopic: basic_application_log
-      producer:
-        bootstrap-servers: 192.168.177.211:9092
-      properties:
-        linger-ms: 100
-        max-block-ms: 3000
-        request-timeout-ms: 1000
-        transaction-timeout-ms: 1000
-        compression-type: gzip
-        acks: 1
+#  log:
+#    rabbitmq:
+#      enable: false
+#      host: mecs.com
+#      port: 5672
+#      username: yixincapital
+#      password: yixincapital
+#      virtual-host: yx_mq
+#      es-index: @profiles.active@_@project.build.finalName@_log
+#      publisher-confirms: true
+#      publisher-returns: true
+#      binding-list:
+#      - type: direct
+#        routing-key: application-log-queue
+#        queue: application-log-queue
+#        exchange: application-log-exchange
+#
+#    kafka:
+#      enable: false
+#      esIndex: @profiles.active@_@project.build.finalName@_log
+#      topic: basic_application_log
+#      template:
+#        defaultTopic: basic_application_log
+#      producer:
+#        bootstrap-servers: 192.168.177.211:9092
+#      properties:
+#        linger-ms: 100
+#        max-block-ms: 3000
+#        request-timeout-ms: 1000
+#        transaction-timeout-ms: 1000
+#        compression-type: gzip
+#        acks: 1
 
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    hostname: ${spring.cloud.client.ipAddress}:${server.port}
-    lease-expiration-duration-in-seconds: 60        # default value
-    lease-renewal-interval-in-seconds: 30           # default value
-  client:
-    service-url:
-      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
-    register-with-eureka: true
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#    hostname: ${spring.cloud.client.ipAddress}:${server.port}
+#    lease-expiration-duration-in-seconds: 60        # default value
+#    lease-renewal-interval-in-seconds: 30           # default value
+#  client:
+#    service-url:
+#      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
+#    register-with-eureka: true
 
 

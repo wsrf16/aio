@@ -24,16 +24,13 @@ import java.util.stream.Collectors;
 @Component
 public class BeanRunner implements ApplicationRunner {
 
-    @Autowired
-    MyDatabaseTest mybatisTest;
+//    @Autowired
+//    MyDatabaseTest mybatisTest;
 
     LogHub log = LogFactory.singletonInstance().build().setSamplerRate(1f);
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-//        Object[] integers = {1, 1, 1};
-//        log.d("a", {1,1,1});
-
         ApplicationHome h = new ApplicationHome(getClass());
         File jarF = h.getSource();
         System.out.println(jarF.getParentFile().toString());
@@ -46,12 +43,9 @@ public class BeanRunner implements ApplicationRunner {
 //        System.exit(0);
 
 
-
-
-
-
-        mybatisTest.blah();
-
+//        mybatisTest.blah();
+        if (1 == 1)
+            return;
 //        ResourceSugar.ByClassLoader.getResources("classpath:config/mapper/*.xml")
         System.exit(0);
         String root = "D:/NutDisk/Program/Resource/Library/Java/_solution/Project/all-in-one/";
@@ -67,11 +61,11 @@ public class BeanRunner implements ApplicationRunner {
         }
         log.debug("a", "b");
         log.info("a", list);
-        log.info("a{}{}{}", new String[]{"b","c","d"});
+        log.info("a{}{}{}", new String[]{"b", "c", "d"});
         log.info("a", "list{}", new Object[]{"aaa"});
 
         String info = "list{}-{}-{}";
-        Object[] arguments = new Object[]{"aaa", "bbb","ccc"};
+        Object[] arguments = new Object[]{"aaa", "bbb", "ccc"};
         info = RegexSugar.replace("\\{\\}", info, arguments);
         try {
             List<URL> collect = ResourceSugar.getResourcesInJar(file).stream().collect(Collectors.toList());

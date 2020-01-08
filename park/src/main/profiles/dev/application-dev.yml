@@ -49,18 +49,18 @@ spring:
 
 
 
-#  rabbitmq:
-#    main:
-#      host: mecs.com
-#      port: 5672
-#      username: admin
-#      password: admin
-#      virtual-host: yx_mq
-#      binding-list:
-#        - type: direct
-#          routing-key: application-log-queue
-#          queue: application-log-queue
-#          exchange: application-log-exchange
+  rabbitmq:
+    main:
+      host: mecs.com
+      port: 5672
+      username: admin
+      password: admin
+      virtual-host: yx_mq
+      binding-list:
+        - type: direct
+          routing-key: application-log-queue
+          queue: application-log-queue
+          exchange: application-log-exchange
 #
 #  redis:
 #    host: 192.168.155.150

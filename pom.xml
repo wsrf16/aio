@@ -21,7 +21,6 @@
     <modules>
         <module>park</module>
         <module>swiss</module>
-<!--        <module>park-db</module>-->
         <module>jagent</module>
     </modules>
 

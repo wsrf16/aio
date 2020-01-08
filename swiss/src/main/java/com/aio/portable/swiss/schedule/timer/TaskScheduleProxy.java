@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.schedule.launcher;
+package com.aio.portable.swiss.schedule.timer;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;

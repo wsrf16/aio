@@ -228,11 +228,18 @@ function help() {
   echo "- log <jarfile>"
 }
 
+if type -p java > /dev/null; then
+    _java=java
+  else
+    echo "Could not find java executable, please check PATH and JAVA_HOME variables."
+    exit 1
+fi
+
 jdk_version=$(java -version 2>&1 | awk 'NR==1{ gsub(/"/,""); print $3 }' | grep -P '^\d\.\d' -o)
 
 if [[ -z ${jdk_version} ]]; then
   echo "sorry! jdk is error."
-  exit 0
+  exit 1
 fi
 
 now="$(date +%Y%m%d%H%M%S)"
@@ -264,7 +271,7 @@ if [[ ${self_filename} =~ . ]]; then
   fi
 else
   echo "sorry! jar_filename is error."
-  exit 0
+  exit 1
 fi
 
 
@@ -291,8 +298,8 @@ if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
 elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
   args="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file_absolute_path}:time,pid,level,tags ${args_app}"
 else
-  echo "no jdk"
-  exit 0
+  echo "sorry! jdk is error."
+  exit 1
 fi
 
 operate=$1

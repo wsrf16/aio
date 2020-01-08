@@ -7,13 +7,29 @@ import java.nio.file.Path;
 /**
  * Created by York on 2017/11/28.
  */
-public abstract class FileSugar {
+public abstract class IOSugar {
+    public final static File getDirectoryOfFile(File file) {
+        File dir;
+        if (file.isFile()) {
+            dir = file.getParentFile();
+            return dir;
+        } else {
+            throw new RuntimeException(file.getAbsolutePath() + " is not a file.");
+        }
+    }
+
     public final static void createDirectoryIfNotExists(Path path) throws IOException {
         if (Files.notExists(path))
             Files.createDirectory(path);
     }
 
-    public static String readFileForText(String path) {
+    public final static void createDirectoryIfNotExists(File directory) throws IOException {
+        Path path = directory.toPath();
+        if (Files.notExists(path))
+            Files.createDirectory(path);
+    }
+
+    public final static String readFileForText(String path) {
         StringBuffer sb = null;
         try {
             File f = new File(path);
@@ -33,7 +49,7 @@ public abstract class FileSugar {
         return sb.toString();
     }
 
-    public static byte[] readFileForByte(String path) {
+    public final static byte[] readFileForByte(String path) {
         try {
             FileInputStream fis = null;
             fis = new FileInputStream(path);
@@ -47,7 +63,7 @@ public abstract class FileSugar {
         }
     }
 
-    public static void writeFile(String path, String content) {
+    public final static void writeFile(String path, String content) {
         try {
             File f = new File(path);
             if (!f.exists()) {
@@ -64,7 +80,7 @@ public abstract class FileSugar {
         }
     }
 
-    public static void writeFile(String path, byte[] bytes) {
+    public final static void writeFile(String path, byte[] bytes) {
         try {
             File file = new File(path);
             if (!file.exists()) {
@@ -78,7 +94,7 @@ public abstract class FileSugar {
         }
     }
 
-    public static boolean delete(File fileOrDirectory) {
+    public final static boolean delete(File fileOrDirectory) {
         boolean hasDeleted = false;
         if (fileOrDirectory.exists()) {
             if (fileOrDirectory.isDirectory()) {

@@ -1,12 +1,14 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.sugar.ldap;
 
 import com.aio.portable.swiss.structure.bean.BeanSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.ContainerCriteria;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.NamingException;
@@ -67,15 +69,14 @@ public abstract class LDAPSugar {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
             T t = ClassSugar.newInstance(clazz);
             Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.getNameClass(clazz);
-
             nameClass.entrySet().forEach(prop -> {
                 try {
                     String name = prop.getKey();
-                    if (mapper.get(name) == null)
-                        return;
-                    Object val = mapper.get(name).get();
-                    PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(clazz, name);
-                    propertyDescriptor.getWriteMethod().invoke(t, val);
+                    if (mapper.get(name) != null) {
+                        Object val = mapper.get(name).get();
+                        PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(clazz, name);
+                        propertyDescriptor.getWriteMethod().invoke(t, val);
+                    }
                 } catch (NamingException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
@@ -90,6 +91,19 @@ public abstract class LDAPSugar {
             return t;
         });
         return list;
+    }
+
+    public final static <T> List<T> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName, Class<T> clazz) {
+        ContainerCriteria containerCriteria = LdapQueryBuilder.query()
+                .where("sAMAccountName").is(samAccountName);
+
+        List<T> search = LDAPSugar.search(ldapTemplate, containerCriteria, clazz);
+        return search;
+    }
+
+    public final static List<LDAPAccount> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName) {
+        List<LDAPAccount> search = LDAPSugar.searchBySamAccountName(ldapTemplate, samAccountName, LDAPAccount.class);
+        return search;
     }
 
 //    public final static LdapContextSource newLdapContextSource(LdapProperties properties) {

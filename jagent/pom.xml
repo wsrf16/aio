@@ -47,7 +47,7 @@
 
         <dependency>
             <groupId>com.aio.portable</groupId>
-            <artifactId>swiss</artifactId>
+            <artifactId>spring-boot-starter-swiss</artifactId>
             <version>1.1.5-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -5,6 +5,8 @@ import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
 import com.aio.portable.swiss.structure.cache.RedisLock;
 import com.aio.portable.swiss.structure.log.annotation.LogMarker;
 import com.aio.portable.swiss.structure.log.base.LogHub;
+import com.aio.portable.swiss.sugar.DateTimeSugar;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +22,10 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("demo")
-public class DemoController {// extends InjectedBaseLogger {
+public class DemoController {
     @Autowired
     private HttpServletRequest request;
+
     @Autowired
     private HttpServletResponse response;
 
@@ -39,13 +42,17 @@ public class DemoController {// extends InjectedBaseLogger {
     @Autowired(required = false)
     RedisLock redisLock;
 
-//    @Autowired
-//    AmqpTemplate amqpTemplate;
-//    @GetMapping("mqsend")
-//    public void mqsend() {
-//        amqpTemplate.convertAndSend("tc.exchange","", "aaaaaaaaaaaaa");
-//        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
-//    }
+    @Autowired(required = false)
+    AmqpTemplate amqpTemplate;
+    @GetMapping("mqsend")
+    public String mqsend() {
+        amqpTemplate.convertAndSend("tc.exchange","taoche", "aaaaaaaaaaaaa");
+        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
+
+        String msg = MessageFormat.format("现在的时间是{0}", DateTimeSugar.UnixTime.convertUnix2DateTime(DateTimeSugar.UnixTime.nowUnix()));
+        amqpTemplate.convertAndSend("application-log-queue", msg);
+        return msg;
+    }
 
     @GetMapping("date")
     public Date date() {
@@ -57,17 +64,6 @@ public class DemoController {// extends InjectedBaseLogger {
     public ResponseWrapper<String> ok() {
         return ResponseWrapper.build(0, "oookkk");
     }
-
-
-//    @Autowired
-//    private AmqpTemplate rabbitTemplate;
-//
-//    @GetMapping("mq")
-//    public String mq() {
-//        String msg = MessageFormat.format("现在的时间是{0}", DateTimeUtils.UnixTime.convertUnix2DateTime(DateTimeUtils.UnixTime.nowUnix()));
-//        rabbitTemplate.convertAndSend("application-log-queue", msg);
-//        return msg;
-//    }
 
     @GetMapping("lock")
     public String lock() {

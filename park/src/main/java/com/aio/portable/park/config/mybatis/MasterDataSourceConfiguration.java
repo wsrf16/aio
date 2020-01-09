@@ -17,8 +17,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-//@Configuration
-//@MapperScan(basePackages = {MasterDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = MasterDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
+@Configuration
+@MapperScan(basePackages = {MasterDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = MasterDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
 public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public final static String BASE_PACKAGES = "com.aio.portable.parkdb.dao.master.mapper";
     private final static String SPECIAL_NAME = "master";

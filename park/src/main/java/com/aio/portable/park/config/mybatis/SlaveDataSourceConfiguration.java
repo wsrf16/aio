@@ -4,6 +4,7 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.aio.portable.swiss.structure.database.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -11,12 +12,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-//@Configuration
-//@MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
+@Configuration
+@MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
 public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public final static String BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.mapper";
     private final static String SPECIAL_NAME = "slave";

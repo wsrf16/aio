@@ -45,7 +45,7 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
-//    @Primary
+    @Primary
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }
@@ -67,8 +67,6 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
 
     @ConditionalOnBean(name = DATA_SOURCE_BEAN)
     @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
-//    @Primary
-//    @Lazy
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
         return super.localContainerEntityManagerFactoryBean(dataSource, builder, jpaProperties, ENTITY_BASE_PACKAGES, PERSISTENCE_UNIT);
     }

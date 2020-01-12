@@ -20,7 +20,7 @@
 
     <modules>
         <module>park</module>
-        <module>swiss</module>
+        <module>spring-boot-starter-swiss</module>
         <module>jagent</module>
     </modules>
 

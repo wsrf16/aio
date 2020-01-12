@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mybatis;
+package com.aio.portable.park.config.db;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.aio.portable.swiss.structure.database.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;

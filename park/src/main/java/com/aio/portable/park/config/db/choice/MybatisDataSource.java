@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mybatis.choice;
+package com.aio.portable.park.config.db.choice;
 
 //@Configuration
 //@MapperScan(basePackages = {"com.aio.portable.parkdb.dao.master.mapper"})

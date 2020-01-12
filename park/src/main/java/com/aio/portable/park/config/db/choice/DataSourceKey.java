@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mybatis.choice;
+package com.aio.portable.park.config.db.choice;
 
 public class DataSourceKey {
     public final static String DEFAULT = "default";

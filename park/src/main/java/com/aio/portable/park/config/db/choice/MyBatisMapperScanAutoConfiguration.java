@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mybatis.choice;
+package com.aio.portable.park.config.db.choice;
 
 /**
  * MyBatis扫描接口，使用的tk.mybatis.spring.mapper.MapperScannerConfigurer <br/>

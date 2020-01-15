@@ -4,7 +4,7 @@ public enum BizStatusEnum {
     SUCCEED(0, "请求成功"),
     FAILED(1, "请求失败"),
     EXCEPTION(2, "请求异常"),
-    VERIFICATION(3, "未授权"),
+    UNAUTHORIZED(3, "未授权"),
     VALID(4, "请求格式不正确"),
     PARAM_MISSING(103, "缺少参数_appid"),
     PARAM_INVALID(102, "请求参数格式错误"),

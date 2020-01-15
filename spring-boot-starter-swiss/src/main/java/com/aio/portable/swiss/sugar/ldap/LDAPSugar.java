@@ -22,15 +22,15 @@ public abstract class LDAPSugar {
     /**
      * authentication
      * @param ldapTemplate
-     * @param userName
+     * @param userDN
      * @param password
      * @return
      */
-    public final static Boolean authentication(LdapTemplate ldapTemplate, String userName, String password) {
+    public final static Boolean authentication(LdapTemplate ldapTemplate, String userDN, String password) {
         DirContext dirContext = null;
         Boolean b;
         try {
-            dirContext = ldapTemplate.getContextSource().getContext(userName, password);
+            dirContext = ldapTemplate.getContextSource().getContext(userDN, password);
             b = true;
         } catch (AuthenticationException e) {
             e.printStackTrace();

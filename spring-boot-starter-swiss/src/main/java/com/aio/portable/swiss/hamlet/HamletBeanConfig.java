@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 //@Configuration
 public abstract class HamletBeanConfig {
-    @Bean
+//    @Bean
     public static ObjectMapper objectMapper(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
@@ -29,7 +29,7 @@ public abstract class HamletBeanConfig {
         return builder.build();
     }
 
-    @Bean
+//    @Bean
     public static MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(ObjectMapper objectMapper){
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);

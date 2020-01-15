@@ -8,7 +8,7 @@ import javax.naming.Name;
 
 //@Entry(base = "dc=qdingnet,dc=cn", objectClasses = "person")
 @Entry(objectClasses = {"top", "person", "organizationalPerson", "user"})
-public class LDAPAccount {
+class LDAPAccount {
 
     @Id
     private Name id;

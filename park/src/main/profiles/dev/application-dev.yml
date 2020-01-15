@@ -33,19 +33,24 @@ spring:
         database: mysql
         show-sql: true
         open-in-view: false
-        hibernate:
+        generate-ddl: true
+        # hibernate entry to
+#        hibernate:
 #          ddl-auto: update
-    #      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-          naming:
-    #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
-            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    #        implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#          naming:
+#    #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
+#            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#    #        implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        # spring entry one
         properties:
           hibernate:
-            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+            hbm2ddl:
+              auto: update
+            dialect: org.hibernate.dialect.MySQL5Dialect
+            #            dialect: org.hibernate.dialect.MySQL57Dialect
             physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-#            implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  #            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 
 

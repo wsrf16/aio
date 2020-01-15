@@ -1,16 +1,22 @@
 package com.aio.portable.swiss.structure.net.protocol.http.jwt;
 
 import com.aio.portable.swiss.algorithm.AlgorithmSugar;
+import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.ciphering.CipheringSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import java.nio.charset.StandardCharsets;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 
 public abstract class JWTSugar {
     /**
@@ -99,5 +105,85 @@ public abstract class JWTSugar {
         return verify;
     }
 
+    public static boolean verifyByHMAC(String token, String secret) {
+        DecodedJWT parse;
+        Boolean verify;
+        try {
+            parse = Classic.parseByHMAC(token, secret);
+            if (parse != null)
+                verify = new Date().after(parse.getExpiresAt()) ? false : true;
+            else
+                verify = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            verify = false;
+        }
 
+        return verify;
+    }
+
+
+
+    public static class Classic {
+        /**
+         * generateHMACToken
+         * @param builder JWT.create()
+         * @param secret
+         * @return
+         */
+        public final static String generateHMACToken(JWTCreator.Builder builder, String secret) {
+            Algorithm algorithm = AlgorithmSugar.newHMAC(secret, AlgorithmSugar.HMAC.HMAC256);
+            String token = JWTSugar.sign(builder, algorithm);
+            token = CipheringSugar.JavaUtil.encode(token, StandardCharsets.UTF_8);
+            return token;
+        }
+
+        /**
+         * generateRSA256Token
+         * @param userName
+         * @param publicKey
+         * @param privateKey
+         * @param days
+         * @return
+         */
+        public final static String generateRSA256Token(String userName, RSAPublicKey publicKey, RSAPrivateKey privateKey, int days) {
+            Calendar calendar = Calendar.getInstance();
+            Date now = now(calendar);
+            Date expired = getExpiredDate(calendar, days);
+            Algorithm algorithm = AlgorithmSugar.newRSA(publicKey, privateKey, AlgorithmSugar.RSA.RSA256);
+            JWTCreator.Builder builder = com.auth0.jwt.JWT
+                    .create()
+                    .withIssuer(userName)
+                    .withIssuedAt(now)
+                    .withExpiresAt(expired);
+
+            String token = JWTSugar.sign(builder, algorithm);
+            token = new String(Base64.getEncoder().encode(token.getBytes()), StandardCharsets.UTF_8);
+            return token;
+        }
+
+        /**
+         * parseByHMAC
+         * @param token
+         * @param secret
+         * @return
+         */
+        public final static DecodedJWT parseByHMAC(String token, String secret) {
+            token = CipheringSugar.JavaUtil.decode(token, StandardCharsets.UTF_8);
+            return JWTSugar.parseByHMAC(token, secret, AlgorithmSugar.HMAC.HMAC256);
+        }
+
+//    public final static DecodedJWT parseByHMAC(String token, String secret) {
+//        token = CipheringSugar.JavaUtil.decode(token, StandardCharsets.UTF_8);
+//        return JWTSugar.parseByRSA(token, secret, AlgorithmSugar.RSA.RSA256);
+//    }
+
+        public final static Date getExpiredDate(Calendar calendar, int hours) {
+            return DateTimeSugar.CalendarUtils.add(calendar, Calendar.HOUR, hours).getTime();
+        }
+
+        public final static Date now(Calendar calendar) {
+            return calendar.getTime();
+        }
+    }
 }

@@ -5,10 +5,10 @@ import com.aio.portable.swiss.hamlet.model.BizStatusEnum;
 public class VerificationException extends BizException {
 
     public VerificationException() {
-        super(BizStatusEnum.VERIFICATION.getCode(), BizStatusEnum.VERIFICATION.getDescription());
+        super(BizStatusEnum.UNAUTHORIZED.getCode(), BizStatusEnum.UNAUTHORIZED.getDescription());
     }
 
     public VerificationException(String message) {
-        super(BizStatusEnum.VERIFICATION.getCode(), message);
+        super(BizStatusEnum.UNAUTHORIZED.getCode(), message);
     }
 }

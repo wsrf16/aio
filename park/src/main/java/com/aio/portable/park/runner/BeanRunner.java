@@ -4,6 +4,7 @@ package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.park.test.MyDatabaseTest;
+import com.aio.portable.swiss.autoconfigure.LogHubAutoConfiguration;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,16 +25,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Configuration
 public class BeanRunner implements ApplicationRunner {
 
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
 
-    LogHub log = LogFactory.singletonInstance().build().setSamplerRate(1f);
+    LogHub log = LogFactory.singletonInstance().build();//.setSamplerRate(1f);
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        while(true) {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.i("a", "aaaaaaaaaaaaa");
+
+            if (1==2)
+                break;
+        }
+
         ApplicationHome h = new ApplicationHome(getClass());
         File jarF = h.getSource();
         System.out.println(jarF.getParentFile().toString());

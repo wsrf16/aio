@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.log.base.classic.impl.console.ConsoleLogger;
-import com.aio.portable.swiss.structure.log.base.classic.impl.file.FileLogger;
-import com.aio.portable.swiss.structure.log.base.classic.impl.slf4j.Slf4jLogger;
+import com.aio.portable.swiss.structure.log.base.classic.impl.console.ConsoleLog;
+import com.aio.portable.swiss.structure.log.base.classic.impl.file.FileLog;
+import com.aio.portable.swiss.structure.log.base.classic.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -17,14 +17,14 @@ public class LoghubTest {
     public static void sample() {
 
         {
-            ConsoleLogger consoleLogger = ConsoleLogger.build("custom");
+            ConsoleLog consoleLogger = ConsoleLog.build("custom");
 //                consoleLogger.getSerializer().setSerializer(SerializerEnum.JACKXML);
             consoleLogger.d("this is console.");
         }
 
         {
-            LogHub loggerSet = LogHub.build(ConsoleLogger.build(), FileLogger.build());
-            loggerSet = LogHub.build(Slf4jLogger.build());
+            LogHub loggerSet = LogHub.build(ConsoleLog.build(), FileLog.build());
+            loggerSet = LogHub.build(Slf4JLog.build());
             loggerSet.d("this is loghub.");
         }
 //            {
@@ -33,7 +33,7 @@ public class LoghubTest {
 //            }
         {
 //                org.slf4j.Logger loggerBack = org.slf4j.LoggerFactory.getLogger();
-            Slf4jLogger slf4jLogger = Slf4jLogger.build();
+            Slf4JLog slf4jLogger = Slf4JLog.build();
             slf4jLogger.i("this is logback.");
         }
         {
@@ -41,7 +41,7 @@ public class LoghubTest {
                 int a = 0;
                 int b = 1 / a;
             } catch (Exception e) {
-                ConsoleLogger logger = ConsoleLogger.build();
+                ConsoleLog logger = ConsoleLog.build();
                 logger.e(e);
             }
         }
@@ -49,10 +49,10 @@ public class LoghubTest {
 
     @Test
     public static void hubSample() {
-        ConsoleLogger logger1 = ConsoleLogger.build("logDir");
+        ConsoleLog logger1 = ConsoleLog.build("logDir");
         logger1.d("aaaa");
 
-        FileLogger logger2 = FileLogger.build("logDir");
+        FileLog logger2 = FileLog.build("logDir");
         //logger2.openSingleIPPrefix();
         logger2.d("aaaa");
 

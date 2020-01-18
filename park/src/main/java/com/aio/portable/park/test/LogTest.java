@@ -7,16 +7,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LogTest {
-    static LogHub staticLogger = LogFactory.singletonInstance().build();
-
     LogHub dynamicLogger;
 
     public LogTest(LogHubFactory logFactory) {
         dynamicLogger = logFactory.build();
     }
 
+    LogHub logger = LogFactory.singletonInstance().build("随便写哒");
+
     private void logCase1() {
-        LogHub logger = LogFactory.singletonInstance().build("随便写哒");
         logger.i("abcdefghijklmnopqrstuvwxyz1介个是kafka");
         System.out.println("日志执行完成~~~~~~~~~~~~~");
     }

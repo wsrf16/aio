@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.algorithm;
+package com.aio.portable.swiss.sugar.algorithm;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -71,7 +71,6 @@ public abstract class AlgorithmSugar {
         return algorithm;
     }
 
-
     public final static Algorithm newECDSA(ECPublicKey publicKey, ECPrivateKey privateKey, ECDSA ecdsa) {
         Algorithm algorithm;
         switch (ecdsa) {
@@ -91,6 +90,5 @@ public abstract class AlgorithmSugar {
 
         return algorithm;
     }
-
 
 }

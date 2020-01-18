@@ -1,28 +1,28 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.console;
 
-import com.aio.portable.swiss.structure.log.base.AbstractLogger;
+import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
 import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
 
 /**
  * Created by York on 2017/11/23.
  */
-public class ConsoleLogger extends AbstractLogger {
-    public final static ConsoleLogger build() {
+public class ConsoleLog extends LogSingle {
+    public final static ConsoleLog build() {
         String name = StackTraceInfoSugar.Previous.getClassName();
         return build(name);
     }
 
-    public static ConsoleLogger build(String name) {
-        return new ConsoleLogger(name);
+    public static ConsoleLog build(String name) {
+        return new ConsoleLog(name);
     }
 
-    public static ConsoleLogger build(Class clazz) {
+    public static ConsoleLog build(Class clazz) {
         String name = clazz.getTypeName();
         return build(name);
     }
 
-    private ConsoleLogger(String name) {
+    private ConsoleLog(String name) {
         super(name);
     }
 

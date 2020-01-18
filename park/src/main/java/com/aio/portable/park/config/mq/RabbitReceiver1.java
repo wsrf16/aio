@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mq.biz;
+package com.aio.portable.park.config.mq;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

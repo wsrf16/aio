@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar.ciphering;
+package com.aio.portable.swiss.sugar.algorithm.ciphering;
 
 //import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.util.Base64Utils;

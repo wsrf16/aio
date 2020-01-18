@@ -17,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 @MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
 public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public final static String BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.mapper";

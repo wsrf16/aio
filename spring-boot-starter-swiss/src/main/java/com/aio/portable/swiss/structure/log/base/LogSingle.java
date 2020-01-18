@@ -14,12 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
-public abstract class AbstractLogger extends LogBody {
+public abstract class LogSingle extends LogBody {
     final static String NEWLINE = Constant.LINE_SEPARATOR;
     //    protected final static String INTERVAL_CHAR = " => ";
     protected final static String INTERVAL_CHAR = " ";
     protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
-    protected final static String DEFAULT_NAME = AbstractLogger.class.getTypeName();
+    protected final static String DEFAULT_NAME = LogSingle.class.getTypeName();
 
 
     protected Supplier<String> prefixSupplier;
@@ -57,7 +57,7 @@ public abstract class AbstractLogger extends LogBody {
     protected Printer errorPrinter;
     protected Printer fatalPrinter;
 
-    protected AbstractLogger(String name) {
+    protected LogSingle(String name) {
         setName(name);
         clearPrefix();
         initialPrinter();

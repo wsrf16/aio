@@ -1,10 +1,12 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.kibana.rabbit;
 
+import com.aio.portable.swiss.module.mq.rabbitmq.RabbitMQSugar;
 import com.aio.portable.swiss.structure.document.method.PropertiesMapping;
 import com.aio.portable.swiss.structure.log.base.Printer;
 import com.aio.portable.swiss.structure.log.base.classic.impl.LoggerConfig;
 import com.aio.portable.swiss.structure.log.base.classic.properties.LogRabbitMQProperties;
 import com.aio.portable.swiss.global.Constant;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public class RabbitPrinter implements Printer {
         this.logName = logName;
         this.logfilePrefix = logfilePrefix;
         this.configuration = configuration;
-        this.rabbitTemplate = configuration.buildRabbitTemplate();
+        this.rabbitTemplate = RabbitMQSugar.buildRabbitTemplate(configuration);
     }
 
     private static Map<String, RabbitPrinter> instanceMaps = new HashMap<>();
@@ -58,7 +60,11 @@ public class RabbitPrinter implements Printer {
                 String exchange = c.getExchange();
                 String routingKey = c.getRoutingKey();
 
-                rabbitTemplate.convertAndSend(exchange, routingKey, line);
+                try {
+                    rabbitTemplate.convertAndSend(exchange, routingKey, line);
+                } catch (AmqpException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }

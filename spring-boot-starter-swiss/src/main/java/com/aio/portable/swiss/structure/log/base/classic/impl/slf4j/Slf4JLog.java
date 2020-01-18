@@ -1,29 +1,29 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.slf4j;
 
-import com.aio.portable.swiss.structure.log.base.AbstractLogger;
+import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
 
-public class Slf4jLogger extends AbstractLogger {
+public class Slf4JLog extends LogSingle {
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 //    private org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(this.getClass());
 
 
-    private Slf4jLogger(String name) {
+    private Slf4JLog(String name) {
         super(name);
     }
 
-    public final static Slf4jLogger build() {
+    public final static Slf4JLog build() {
         String name = StackTraceInfoSugar.Previous.getClassName();
         return build(name);
     }
 
-    public final static Slf4jLogger build(Class clazz) {
+    public final static Slf4JLog build(Class clazz) {
         String name = clazz.toString();
         return build(name);
     }
 
-    public final static Slf4jLogger build(String name) {
-        Slf4jLogger slf4jLogger = new Slf4jLogger(name);
+    public final static Slf4JLog build(String name) {
+        Slf4JLog slf4jLogger = new Slf4JLog(name);
         slf4jLogger.logger = org.slf4j.LoggerFactory.getLogger(name);
         return slf4jLogger;
     }

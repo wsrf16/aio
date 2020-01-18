@@ -74,7 +74,7 @@ spring:
 
   log:
     rabbitmq:
-      enable: false
+      enable: true
 #      host: mecs.com
       host: 10.124.163.95
       port: 5672

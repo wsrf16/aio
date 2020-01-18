@@ -1,11 +1,11 @@
-package com.aio.portable.swiss.structure.log.base.classic.impl.kibana.rabbit;
+package com.aio.portable.swiss.structure.log.base.classic.impl.es.rabbit;
 
 import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.structure.log.base.Printer;
 import com.aio.portable.swiss.structure.log.base.classic.properties.LogRabbitMQProperties;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
 import com.aio.portable.swiss.structure.log.base.parts.LogNote;
-import com.aio.portable.swiss.structure.log.base.classic.impl.kibana.KibanaLogNote;
+import com.aio.portable.swiss.structure.log.base.classic.impl.es.ESLogNote;
 
 /**
  * Created by York on 2017/11/23.
@@ -43,7 +43,7 @@ public class RabbitLog extends LogSingle {
     protected void output(Printer printer, LogNote logNote) {
         String ip = LogSingle.getLocalIp();
         String esIndex = configuration.getEsIndex();
-        KibanaLogNote kibanaLogNote = new KibanaLogNote(logNote, esIndex, ip);
+        ESLogNote kibanaLogNote = new ESLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);
         super.output(printer, text);
     }

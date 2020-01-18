@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.structure.log.base.classic.impl.kibana.kafka;
+package com.aio.portable.swiss.structure.log.base.classic.impl.es.kafka;
 
 import com.aio.portable.swiss.structure.document.method.PropertiesMapping;
 import com.aio.portable.swiss.structure.log.base.Printer;

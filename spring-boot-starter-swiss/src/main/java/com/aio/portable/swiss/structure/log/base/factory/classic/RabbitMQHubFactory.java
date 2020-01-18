@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.structure.log.base.factory.classic;
 
-import com.aio.portable.swiss.structure.log.base.classic.impl.kibana.rabbit.RabbitLog;
+import com.aio.portable.swiss.structure.log.base.classic.impl.es.rabbit.RabbitLog;
 import com.aio.portable.swiss.structure.log.base.classic.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;

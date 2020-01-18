@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.structure.log.base.classic.impl.kibana;
+package com.aio.portable.swiss.structure.log.base.classic.impl.es;
 
 import com.aio.portable.swiss.structure.log.base.parts.LogException;
 import com.aio.portable.swiss.structure.log.base.parts.LogNote;
@@ -7,7 +7,7 @@ import com.aio.portable.swiss.sugar.DateTimeSugar;
 
 import java.util.Date;
 
-public class KibanaLogNote {
+public class ESLogNote {
     public String getEsIndex() {
         return esIndex;
     }
@@ -129,7 +129,7 @@ public class KibanaLogNote {
     public String exception;
 
 
-    public KibanaLogNote(String message, String esIndex, String level, String className, LogException logException, String serverIp, String hostName, long appId, String appEnv) {
+    public ESLogNote(String message, String esIndex, String level, String className, LogException logException, String serverIp, String hostName, long appId, String appEnv) {
         setLevel(level);
         setName(className);
         setMessage(message);
@@ -143,7 +143,7 @@ public class KibanaLogNote {
         //        setAppId(appId);
     }
 
-    public KibanaLogNote(LogNote logNote, String esIndex, String serverIp) {
+    public ESLogNote(LogNote logNote, String esIndex, String serverIp) {
         setSummary(logNote.getSummary());
         setLevel(logNote.getLevel());
         setName(logNote.getName());

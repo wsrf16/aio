@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.standard;
+package com.aio.portable.swiss.structure.rule;
 
 import org.springframework.util.StringUtils;
 

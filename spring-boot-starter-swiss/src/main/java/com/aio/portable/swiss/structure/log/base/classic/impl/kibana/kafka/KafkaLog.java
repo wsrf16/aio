@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.kibana.kafka;
 
-import com.aio.portable.swiss.structure.log.base.AbstractLogger;
+import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.structure.log.base.Printer;
 import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
@@ -11,22 +11,22 @@ import com.aio.portable.swiss.structure.log.base.classic.impl.kibana.KibanaLogNo
 /**
  * Created by York on 2017/11/23.
  */
-public class KafkaLogger extends AbstractLogger {
-    public final static KafkaLogger build() {
+public class KafkaLog extends LogSingle {
+    public final static KafkaLog build() {
         String name = StackTraceInfoSugar.Previous.getClassName();
         return build(name);
     }
 
-    public static KafkaLogger build(String name) {
-        return new KafkaLogger(name);
+    public static KafkaLog build(String name) {
+        return new KafkaLog(name);
     }
 
-    public static KafkaLogger build(Class clazz) {
+    public static KafkaLog build(Class clazz) {
         String name = clazz.getTypeName();
         return build(name);
     }
 
-    private KafkaLogger(String name) {
+    private KafkaLog(String name) {
         super(name);
     }
 
@@ -47,7 +47,7 @@ public class KafkaLogger extends AbstractLogger {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        String ip = AbstractLogger.getLocalIp();
+        String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
         KibanaLogNote kibanaLogNote = new KibanaLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);

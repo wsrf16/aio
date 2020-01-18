@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.structure.net.protocol.http.jwt;
 
-import com.aio.portable.swiss.algorithm.AlgorithmSugar;
+import com.aio.portable.swiss.sugar.algorithm.AlgorithmSugar;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.sugar.ciphering.CipheringSugar;
+import com.aio.portable.swiss.sugar.algorithm.ciphering.CipheringSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;

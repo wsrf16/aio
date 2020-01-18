@@ -27,7 +27,7 @@ public class LogHubAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty("spring.log.rabbitmq.host")
+//    @ConditionalOnProperty("spring.log.rabbitmq.host")
     @ConfigurationProperties(prefix = "spring.log.rabbitmq")
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
     public LogRabbitMQProperties logRabbitMQProperties() {

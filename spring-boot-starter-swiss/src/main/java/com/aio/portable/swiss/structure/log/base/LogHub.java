@@ -9,7 +9,7 @@ import java.util.*;
 public class LogHub extends LogHubBody {
 //    private static BiConsumer<Boolean, Supplier<Void>> applyIf = (cond, supplier) -> {if (cond) supplier.get()};
 
-    private List<AbstractLogger> loggers;
+    private List<LogSingle> loggers;
 
     private float samplerRate = 1f;
 
@@ -26,21 +26,21 @@ public class LogHub extends LogHubBody {
         loggers.forEach(c -> c.setAsync(async));
     }
 
-    private LogHub(AbstractLogger logger) {
+    private LogHub(LogSingle logger) {
         loggers = new ArrayList<>();
         loggers.add(logger);
     }
 
-    private LogHub(List<AbstractLogger> loggers) {
+    private LogHub(List<LogSingle> loggers) {
         this.loggers = loggers;
     }
 
-    public static LogHub build(List<AbstractLogger> loggers) {
+    public static LogHub build(List<LogSingle> loggers) {
         return new LogHub(loggers);
     }
 
-    public static LogHub build(AbstractLogger... logger) {
-        List<AbstractLogger> loggers = logger == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logger));
+    public static LogHub build(LogSingle... logger) {
+        List<LogSingle> loggers = logger == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logger));
         return new LogHub(loggers);
     }
 

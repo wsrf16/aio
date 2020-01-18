@@ -1,28 +1,28 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.file;
 
-import com.aio.portable.swiss.structure.log.base.AbstractLogger;
+import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
 import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
 
 /**
  * Created by York on 2017/11/27.
  */
-public class FileLogger extends AbstractLogger {
-    public final static FileLogger build() {
+public class FileLog extends LogSingle {
+    public final static FileLog build() {
         String name = StackTraceInfoSugar.Previous.getClassName();
         return build(name);
     }
 
-    public final static FileLogger build(String name) {
-        return new FileLogger(name);
+    public final static FileLog build(String name) {
+        return new FileLog(name);
     }
 
-    public final static FileLogger build(Class clazz) {
+    public final static FileLog build(Class clazz) {
         String name = clazz.toString();
         return build(name);
     }
 
-    private FileLogger(String name) {
+    private FileLog(String name) {
         super(name);
     }
 

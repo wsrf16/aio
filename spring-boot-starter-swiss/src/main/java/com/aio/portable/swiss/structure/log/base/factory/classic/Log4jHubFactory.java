@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.structure.log.base.factory.classic;
 
 import com.aio.portable.swiss.structure.log.base.LogHub;
-import com.aio.portable.swiss.structure.log.base.classic.impl.log4j.Log4jLogger;
+import com.aio.portable.swiss.structure.log.base.classic.impl.log4j.Log4JLog;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 
 public class Log4jHubFactory implements LogHubFactory {
@@ -15,7 +15,7 @@ public class Log4jHubFactory implements LogHubFactory {
     }
 
     public LogHub build(String className) {
-        LogHub logger = LogHub.build(Log4jLogger.build(className));
+        LogHub logger = LogHub.build(Log4JLog.build(className));
         return logger;
     }
 }

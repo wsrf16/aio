@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.structure.log.base.classic.impl.kibana.rabbit;
+package com.aio.portable.swiss.structure.log.base.classic.impl.es.rabbit;
 
 import com.aio.portable.swiss.module.mq.rabbitmq.RabbitMQSugar;
 import com.aio.portable.swiss.structure.document.method.PropertiesMapping;

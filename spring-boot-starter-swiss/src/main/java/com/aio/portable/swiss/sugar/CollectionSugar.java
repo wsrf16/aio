@@ -220,13 +220,13 @@ public abstract class CollectionSugar {
 //        return IteratorUtils.toList(iterator);
 //    }
 
-    private final static List toList(Iterator iterator, int estimatedSize) {
+    private final static <T> List<T> toList(Iterator<T> iterator, int estimatedSize) {
         if (iterator == null) {
             throw new NullPointerException("Iterator must not be null");
         } else if (estimatedSize < 1) {
             throw new IllegalArgumentException("Estimated size must be greater than 0");
         } else {
-            ArrayList list = new ArrayList(estimatedSize);
+            ArrayList<T> list = new ArrayList<T>(estimatedSize);
 
             while(iterator.hasNext()) {
                 list.add(iterator.next());
@@ -236,7 +236,7 @@ public abstract class CollectionSugar {
         }
     }
 
-    public final static List toList(Iterator iterator) {
+    public final static <T> List<T> toList(Iterator<T> iterator) {
         return toList(iterator, 10);
     }
 

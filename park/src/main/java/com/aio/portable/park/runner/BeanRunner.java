@@ -3,24 +3,21 @@ package com.aio.portable.park.runner;
 //import com.aio.portable.park.common.log.InjectedBaseLogger;
 
 import com.aio.portable.park.config.LogFactory;
-import com.aio.portable.park.test.MyDatabaseTest;
-import com.aio.portable.swiss.autoconfigure.LogHubAutoConfiguration;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
+import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +32,16 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        try {
+            String sssssss1 = CipherSugar.md5Hex("1");
+            String sssssss2 = CipherSugar.md5Base64("1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
         while(true) {
             try {
                 Thread.sleep(10000);

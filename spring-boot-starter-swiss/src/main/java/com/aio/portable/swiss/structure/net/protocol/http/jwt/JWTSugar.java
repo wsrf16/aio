@@ -2,7 +2,7 @@ package com.aio.portable.swiss.structure.net.protocol.http.jwt;
 
 import com.aio.portable.swiss.sugar.algorithm.AlgorithmSugar;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.sugar.algorithm.ciphering.CipheringSugar;
+import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -134,7 +134,7 @@ public abstract class JWTSugar {
         public final static String generateHMACToken(JWTCreator.Builder builder, String secret) {
             Algorithm algorithm = AlgorithmSugar.newHMAC(secret, AlgorithmSugar.HMAC.HMAC256);
             String token = JWTSugar.sign(builder, algorithm);
-            token = CipheringSugar.JavaUtil.encode(token, StandardCharsets.UTF_8);
+            token = CipherSugar.JavaUtil.encode(token, StandardCharsets.UTF_8);
             return token;
         }
 
@@ -169,7 +169,7 @@ public abstract class JWTSugar {
          * @return
          */
         public final static DecodedJWT parseByHMAC(String token, String secret) {
-            token = CipheringSugar.JavaUtil.decode(token, StandardCharsets.UTF_8);
+            token = CipherSugar.JavaUtil.decode(token, StandardCharsets.UTF_8);
             return JWTSugar.parseByHMAC(token, secret, AlgorithmSugar.HMAC.HMAC256);
         }
 

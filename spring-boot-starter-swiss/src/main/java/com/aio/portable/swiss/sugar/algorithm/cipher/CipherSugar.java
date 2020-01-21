@@ -30,7 +30,7 @@ public abstract class CipherSugar {
             byte[] bytes = md5(input);
 
             // 把密文转换成十六进制的字符串形式
-            return HexConvert.getHex(bytes);
+            return HexConvert.toString1(bytes);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -47,7 +47,7 @@ public class HamletExceptionAdvice {
         if (e instanceof org.springframework.web.servlet.NoHandlerFoundException)
             responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
         else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.PARAM_INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+            responseWrapper = ResponseWrapper.build(BizStatusEnum.INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else
             responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
 

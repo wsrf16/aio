@@ -5,13 +5,13 @@ public enum BizStatusEnum {
     FAILED(1, "请求失败"),
     EXCEPTION(2, "请求异常"),
     INVALID(3, "请求格式不正确"),
-    UNAUTHORIZED(4, "未授权"),
+    UNAUTHORIZED(4, "无有效授权"),
     ;
 
 
-    BizStatusEnum(int code, String description) {
+    BizStatusEnum(int code, String message) {
         this.code = code;
-        this.description = description;
+        this.message = message;
     }
 
     public int getCode() {
@@ -22,14 +22,14 @@ public enum BizStatusEnum {
         this.code = code;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessage() {
+        return message;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     private int code;
-    private String description;
+    private String message;
 }

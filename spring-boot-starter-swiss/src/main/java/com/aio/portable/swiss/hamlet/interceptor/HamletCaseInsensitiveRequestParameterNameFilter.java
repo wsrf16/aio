@@ -14,9 +14,9 @@ import java.util.Enumeration;
 import java.util.Map;
 
 /**
- * CaseInsensitiveRequestParameterNameFilter 参数忽略大小写
+ * HamletCaseInsensitiveRequestParameterNameFilter 参数忽略大小写
  */
-public abstract class CaseInsensitiveRequestParameterNameFilter extends OncePerRequestFilter {
+public abstract class HamletCaseInsensitiveRequestParameterNameFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

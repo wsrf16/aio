@@ -3,11 +3,13 @@ package com.aio.portable.park.runner;
 //import com.aio.portable.park.common.log.InjectedBaseLogger;
 
 import com.aio.portable.park.config.LogFactory;
+import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
@@ -32,16 +34,6 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        try {
-            String sssssss1 = CipherSugar.md5Hex("1");
-            String sssssss2 = CipherSugar.md5Base64("1");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-
         while(true) {
             try {
                 Thread.sleep(10000);
@@ -58,13 +50,6 @@ public class BeanRunner implements ApplicationRunner {
         File jarF = h.getSource();
         System.out.println(jarF.getParentFile().toString());
 
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        System.exit(0);
-
 
 //        mybatisTest.blah();
         if (1 == 1)
@@ -75,21 +60,7 @@ public class BeanRunner implements ApplicationRunner {
         root = "./";
         String file = root + "park/target/park.jar";
 
-        List<String> list = null;
-        try {
-            list = new ArrayList<>();
-            list.add("list");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        log.debug("a", "b");
-        log.info("a", list);
-        log.info("a{}{}{}", new String[]{"b", "c", "d"});
-        log.info("a", "list{}", new Object[]{"aaa"});
 
-        String info = "list{}-{}-{}";
-        Object[] arguments = new Object[]{"aaa", "bbb", "ccc"};
-        info = RegexSugar.replace("\\{\\}", info, arguments);
         try {
             List<URL> collect = ResourceSugar.getResourcesInJar(file).stream().collect(Collectors.toList());
             String url = collect.get(128).toString();

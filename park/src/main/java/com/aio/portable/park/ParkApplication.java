@@ -1,5 +1,6 @@
 package com.aio.portable.park;
 
+import com.aio.portable.swiss.structure.log.annotation.EnableRabbitMQLog;
 import com.aio.portable.swiss.structure.log.base.classic.properties.PropertyBean;
 //import com.aio.portable.park.beanprocessor.CustomImportBeanDefinitionRegistrar;
 //import com.aio.portable.park.ToMapTest;
@@ -27,7 +28,8 @@ import org.springframework.core.env.Environment;
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
 // -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
 //@Import(LogRabbitMQProperties.class)
-@DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
+//@DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
+@EnableRabbitMQLog
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

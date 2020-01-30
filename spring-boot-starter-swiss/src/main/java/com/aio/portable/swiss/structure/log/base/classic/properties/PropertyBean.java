@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.structure.log.base.classic.properties;
 
-public class PropertyBean {
+public abstract class PropertyBean {
     //Introspector.decapitalize(LogRabbitMQProperties.class.getName());
     public final static String RABBITMQ_PROPERTIES = "logRabbitMQProperties";
 

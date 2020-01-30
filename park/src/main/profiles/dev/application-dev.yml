@@ -75,11 +75,11 @@ spring:
   log:
     rabbitmq:
       enable: true
-#      host: mecs.com
-      host: 10.124.163.95
+      host: mecs.com
+#      host: 10.124.163.95
       port: 5672
       username: admin
-      password: admin
+      password: 1
       virtual-host: /
       es-index: @project.build.finalName@-@profiles.active@-log
       publisher-confirms: true

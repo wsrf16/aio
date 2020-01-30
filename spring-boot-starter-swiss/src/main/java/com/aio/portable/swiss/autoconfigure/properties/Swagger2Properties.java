@@ -26,6 +26,8 @@ public class Swagger2Properties {
 
     private String packageName;
 
+    private String host = "";
+
     public boolean getEnable() {
         return enable;
     }
@@ -73,26 +75,30 @@ public class Swagger2Properties {
         this.packageName = packageName;
     }
 
-    private springfox.documentation.service.ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("CRM接口在线文档")
-                .description("包括C1、C2、拍卖、门店C1、门店C2等业务")
-                .termsOfServiceUrl("www.taoche.com")
-                .contact(new springfox.documentation.service.Contact("crm", "www.taoche.com","yu.zhao@taoche.com"))
-                .license("Apache 2.0")
-                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-//                .version(version)
-                .build();
+    public String getHost() {
+        return host == null ? "" : host;
+    }
+
+    //    private springfox.documentation.service.ApiInfo apiInfo() {
 //        return new ApiInfoBuilder()
-//                .title("FIV(Financial Identity Verification)金融认证基础服务接口在线文档")
-//                .description("提供金融认证基础服务，主要功能包括实名认证、银行卡三要素、手机号三要素、四要素等服务")
+//                .title("CRM接口在线文档")
+//                .description("包括C1、C2、拍卖、门店C1、门店C2等业务")
 //                .termsOfServiceUrl("www.taoche.com")
-//                .contact(new Contact("crm", "www.taoche.com","yu.zhao@taoche.com"))
+//                .contact(new springfox.documentation.service.Contact("crm", "www.taoche.com","yu.zhao@taoche.com"))
 //                .license("Apache 2.0")
 //                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-//                .version(version)
+////                .version(version)
 //                .build();
-    }
+////        return new ApiInfoBuilder()
+////                .title("FIV(Financial Identity Verification)金融认证基础服务接口在线文档")
+////                .description("提供金融认证基础服务，主要功能包括实名认证、银行卡三要素、手机号三要素、四要素等服务")
+////                .termsOfServiceUrl("www.taoche.com")
+////                .contact(new Contact("crm", "www.taoche.com","yu.zhao@taoche.com"))
+////                .license("Apache 2.0")
+////                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+////                .version(version)
+////                .build();
+//    }
 
 
     public static class Contact {

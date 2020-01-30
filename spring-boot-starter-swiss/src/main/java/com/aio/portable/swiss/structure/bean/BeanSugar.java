@@ -2,6 +2,9 @@ package com.aio.portable.swiss.structure.bean;
 
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.CollectionSugar;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
 
 public abstract class BeanSugar {
 
-    public static <T> Boolean match(T match, T bean) {
+    public final static <T> Boolean match(T match, T bean) {
         if (match == null)
             return true;
         else {
@@ -28,9 +31,15 @@ public abstract class BeanSugar {
         }
     }
 
-    public static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
+    /**
+     * matchList : like Objects.deepEquals()
+     * @param matchList
+     * @param beanList
+     * @param <T>
+     * @return
+     */
+    public final static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
         Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.getNameValue(matchList.get(0));
-
         boolean equal = beanList.stream().anyMatch(bean -> {
             Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.getNameValue(bean);
 
@@ -61,6 +70,24 @@ public abstract class BeanSugar {
             }
             return b;
         });
+    }
+
+    public final static String[] getNullProperties(Object src) {
+        //1.获取Bean
+        BeanWrapper srcBean = new BeanWrapperImpl(src);
+        //2.获取Bean的属性描述
+        PropertyDescriptor[] pds = srcBean.getPropertyDescriptors();
+        //3.获取Bean的空属性
+        Set<String> properties = new HashSet<>();
+        for (PropertyDescriptor propertyDescriptor : pds) {
+            String propertyName = propertyDescriptor.getName();
+            Object propertyValue = srcBean.getPropertyValue(propertyName);
+            if (StringUtils.isEmpty(propertyValue)) {
+                srcBean.setPropertyValue(propertyName, null);
+                properties.add(propertyName);
+            }
+        }
+        return properties.toArray(new String[0]);
     }
 
 

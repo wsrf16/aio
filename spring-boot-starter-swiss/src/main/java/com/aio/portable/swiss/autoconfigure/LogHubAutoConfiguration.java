@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.autoconfigure;
 
+import com.aio.portable.swiss.structure.log.base.classic.properties.PropertyBean;
 import com.aio.portable.swiss.structure.log.base.factory.classic.ConsoleHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.classic.KafkaHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.classic.RabbitMQHubFactory;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.DependsOn;
 public class LogHubAutoConfiguration {
     @Bean
     public ConsoleHubFactory consoleHubFactory() {
-        return ConsoleHubFactory.newInstance();
+        return ConsoleHubFactory.singletonInstance();
     }
 
     @Bean
@@ -35,7 +36,7 @@ public class LogHubAutoConfiguration {
     }
 
     @Bean
-    @DependsOn("logRabbitMQProperties")
+    @DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
     @ConditionalOnBean(LogRabbitMQProperties.class)
 //    @ConditionalOnClass({org.springframework.amqp.rabbit.connection.CachingConnectionFactory.class, org.springframework.amqp.rabbit.core.RabbitTemplate.class})
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
@@ -52,7 +53,7 @@ public class LogHubAutoConfiguration {
     }
 
     @Bean
-    @DependsOn("logKafkaProperties")
+    @DependsOn(PropertyBean.KAFKA_PROPERTIES)
     @ConditionalOnBean(LogKafkaProperties.class)
 //    @ConditionalOnClass({org.springframework.kafka.core.KafkaTemplate.class})
     @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})

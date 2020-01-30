@@ -28,6 +28,14 @@ spring:
       host: 127.0.0.1
       port: 8888
 
+  jwt:
+    require: true
+    secret: 123456
+    expiredHours: 12
+    issuer: ladder
+    basePackages:
+      - com.chinaunicom.software.passport.api.controller
+
 #  ldap:
 #    urls: ldap://dc-01.qdingnet.cn:389
 #    base: dc=qdingnet,dc=cn

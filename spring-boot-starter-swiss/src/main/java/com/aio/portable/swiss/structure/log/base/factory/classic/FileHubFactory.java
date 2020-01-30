@@ -7,7 +7,7 @@ import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 public class FileHubFactory implements LogHubFactory {
     protected static FileHubFactory instance = new FileHubFactory();
 
-    public synchronized static FileHubFactory newInstance() {
+    public synchronized static FileHubFactory singletonInstance() {
         return instance == null ? new FileHubFactory() : instance;
     }
 

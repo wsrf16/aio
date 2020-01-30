@@ -4,10 +4,13 @@ import com.aio.portable.swiss.structure.log.base.classic.impl.console.ConsoleLog
 import com.aio.portable.swiss.structure.log.base.classic.impl.file.FileLog;
 import com.aio.portable.swiss.structure.log.base.classic.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.structure.log.base.LogHub;
+import com.aio.portable.swiss.structure.log.base.factory.classic.ConsoleHubFactory;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @TestComponent
@@ -15,7 +18,20 @@ public class LoghubTest {
 
     @Test
     public static void sample() {
-
+        {
+            LogHub log = ConsoleHubFactory.singletonInstance().build();//.setSamplerRate(1f);
+            List<String> list = null;
+            try {
+                list = new ArrayList<>();
+                list.add("list");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            log.debug("a", "b");
+            log.info("a", list);
+            log.info("a{}{}{}", new String[]{"b", "c", "d"});
+            log.info("a", "list{}", new Object[]{"aaa"});
+        }
         {
             ConsoleLog consoleLogger = ConsoleLog.build("custom");
 //                consoleLogger.getSerializer().setSerializer(SerializerEnum.JACKXML);

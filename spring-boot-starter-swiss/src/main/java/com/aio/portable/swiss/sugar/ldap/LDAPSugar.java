@@ -62,17 +62,18 @@ public abstract class LDAPSugar {
      * @param ldapTemplate
      * @param containerCriteria
      * @param clazz
+     * @param t
      * @param <T>
      * @return
      */
-    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz) {
+    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
-            T t = ClassSugar.newInstance(clazz);
             Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.getNameClass(clazz);
             nameClass.entrySet().forEach(prop -> {
                 try {
                     String name = prop.getKey();
                     if (mapper.get(name) != null) {
+//                        Object val = mapper.get(name).get();
                         Object val = mapper.get(name).get();
                         PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(clazz, name);
                         propertyDescriptor.getWriteMethod().invoke(t, val);
@@ -92,6 +93,22 @@ public abstract class LDAPSugar {
         });
         return list;
     }
+
+
+    /**
+     * search
+     *
+     * @param ldapTemplate
+     * @param containerCriteria
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz) {
+        T t = ClassSugar.newInstance(clazz);
+        return search(ldapTemplate, containerCriteria, clazz, t);
+    }
+
 
     public final static <T> List<T> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName, Class<T> clazz) {
         ContainerCriteria containerCriteria = LdapQueryBuilder.query()

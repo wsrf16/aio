@@ -25,8 +25,9 @@ public class Swagger2Config {
         List<ResponseMessage> codes = new ArrayList<>();
         ResponseMessageBuilder builder = new ResponseMessageBuilder();
         for (BizStatusEnum status : BizStatusEnum.values()) {
-            codes.add(builder.code(status.getCode())
-                    .message(status.getDescription())
+            codes.add(builder
+                    .code(status.getCode())
+                    .message(status.getMessage())
                     .build());
         }
         return codes;

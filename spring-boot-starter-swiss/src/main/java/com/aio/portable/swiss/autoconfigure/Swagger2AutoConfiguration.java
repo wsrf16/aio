@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -42,10 +43,10 @@ public class Swagger2AutoConfiguration {
                 // 参数类型支持header, cookie, body, query etc
                 .parameterType("header")
                 // 参数名
-                .name("token")
+                .name(HttpHeaders.AUTHORIZATION)
                 // 默认值
-                .defaultValue("token")
-                .description("token字段")
+                .defaultValue("")
+                .description("Authorization Header")
                 // 指定参数值的类型
                 .modelRef(new ModelRef("string"))
                 // 非必需，这里是全局配置，然而在登陆的时候是不用验证的
@@ -60,6 +61,7 @@ public class Swagger2AutoConfiguration {
                 .globalResponseMessage(RequestMethod.GET, responseMessageList)
                 .globalOperationParameters(parameters)
                 .enable(enable)
+                .host(swagger2Properties.getHost())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(packageName))
                 .paths(PathSelectors.any())

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 
 //RabbitMQHubFactory {
 @Component
-public class LogFactory extends RabbitMQHubFactory {
+public class AppLogHubFactory extends RabbitMQHubFactory {
 }

@@ -114,7 +114,7 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, parameterizedTypeReference, uriVariables);
         return responseEntity;
@@ -126,7 +126,7 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, parameterizedTypeReference, uriVariables);
         return responseEntity;
@@ -138,7 +138,7 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, parameterizedTypeReference, uriVariables);
         return responseEntity;
@@ -149,7 +149,7 @@ public class RestTemplater {
         return get(restTemplate, url, headers, responseType, uriVariables);
     }
 
-    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return get(restTemplate, url, headers, parameterizedTypeReference, uriVariables);
     }
@@ -160,7 +160,7 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         HttpEntity<REQ> httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, parameterizedTypeReference, uriVariables);
         return responseEntity;
@@ -170,7 +170,7 @@ public class RestTemplater {
         return post(restTemplate, url, body, headers, responseType, uriVariables);
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return post(restTemplate, url, body, headers, parameterizedTypeReference, uriVariables);
     }

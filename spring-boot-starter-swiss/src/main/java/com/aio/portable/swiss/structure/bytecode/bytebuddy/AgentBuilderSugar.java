@@ -110,10 +110,10 @@ public abstract class AgentBuilderSugar {
      * interceptorToAnyMethod
      * @param implementation
      * @param inst
-     * @param elementMatcherArray
+     * @param elementMatchers
      */
-    public final static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatcherArray) {
-        Collection<ElementMatcher<? super TypeDescription>> elementMatcherCollection = Arrays.asList(elementMatcherArray);
+    public final static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatchers) {
+        Collection<ElementMatcher<? super TypeDescription>> elementMatcherCollection = Arrays.asList(elementMatchers);
         interceptorToAnyMethod(implementation, inst, elementMatcherCollection);
     }
 

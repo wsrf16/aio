@@ -123,7 +123,7 @@ public class PagePocket<T> {
         List<E> list = new ArrayList<>();
         try {
             for (T item : this.totalItems) {
-                E pojo = target.newInstance();
+                E pojo = target.getConstructor().newInstance();
                 beanCopier.copy(item, pojo, null);
                 list.add(pojo);
             }

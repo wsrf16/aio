@@ -15,7 +15,7 @@ public abstract class CloneableSugar
     {
         try
         {
-            Object clone = obj.getClass().newInstance();
+            Object clone = obj.getClass().getConstructor().newInstance();
 
             BeanCopier copier = _createCopier(obj.getClass());
 

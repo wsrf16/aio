@@ -12,16 +12,16 @@ public class PasswordEncoderFactories {
 
     static {
         encoders.put("bcrypt", new BCryptPasswordEncoder());
-        encoders.put("ldap", new LdapShaPasswordEncoder());
-        encoders.put("MD4", new Md4PasswordEncoder());
-        encoders.put("MD5", new MessageDigestPasswordEncoder("MD5"));
-        encoders.put("noop", NoOpPasswordEncoder.getInstance());
+//        encoders.put("ldap", new LdapShaPasswordEncoder());
+//        encoders.put("MD4", new Md4PasswordEncoder());
+//        encoders.put("MD5", new MessageDigestPasswordEncoder("MD5"));
+//        encoders.put("noop", NoOpPasswordEncoder.getInstance());
         encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
         encoders.put("scrypt", new SCryptPasswordEncoder());
-        encoders.put("SHA-1", new MessageDigestPasswordEncoder("SHA-1"));
-        encoders.put("SHA-256", new MessageDigestPasswordEncoder("SHA-256"));
-        encoders.put("sha256", new StandardPasswordEncoder());
-        encoders.put("MD5Base64", new MD5Base64PasswordEncoder());
+//        encoders.put("SHA-1", new MessageDigestPasswordEncoder("SHA-1"));
+//        encoders.put("SHA-256", new MessageDigestPasswordEncoder("SHA-256"));
+//        encoders.put("sha256", new StandardPasswordEncoder());
+        encoders.put("MD5", new MD5Base64PasswordEncoder());
     }
 
     public final static PasswordEncoder createDelegatingPasswordEncoder(String encodingId) {

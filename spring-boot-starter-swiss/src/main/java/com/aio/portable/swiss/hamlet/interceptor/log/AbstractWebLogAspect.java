@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
+import com.aio.portable.swiss.hamlet.model.exception.HandOverException;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
@@ -92,7 +93,8 @@ class AbstractWebLogAspect {
             }
         } catch (Exception e) {
             logger.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, traceId), requestRecord, e);
-            throw e;
+            HandOverException handOverException = new HandOverException(e, requestRecord, traceId);
+            throw handOverException;
         }
         return responseRecord;
     }

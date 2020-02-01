@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
+@ConditionalOnClass({com.auth0.jwt.JWT.class, com.auth0.jwt.JWTCreator.class})
 public class JWTAutoConfiguration {
 
-    @ConditionalOnClass({com.auth0.jwt.JWT.class, com.auth0.jwt.JWTCreator.class})
     @ConditionalOnProperty(
             prefix = "spring.jwt",
             name = "issuer"

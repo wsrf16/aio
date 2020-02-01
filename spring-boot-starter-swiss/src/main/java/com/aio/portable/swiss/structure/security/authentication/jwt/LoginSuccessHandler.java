@@ -2,7 +2,6 @@ package com.aio.portable.swiss.structure.security.authentication.jwt;
 
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.structure.net.protocol.http.JWTSugar;
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String secret = jwtProperties.getSecret();
         JWTCreator.Builder builder = JWTSugar.createJWTBuilder(jwtProperties);
-        String token = JWTSugar.Classic.generateBase64TokenByHMAC256(builder, secret);
+        String token = JWTSugar.Classic.signForBase64TokenByHMAC256(builder, secret);
         httpServletResponse.setHeader(AUTHORIZATION_HEAD, token);
     }
 }

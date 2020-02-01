@@ -39,7 +39,7 @@ public abstract class JWTSugar {
      */
     public final static DecodedJWT parseByHMAC256(String token, String secret) {
         Algorithm algorithm = AlgorithmSugar.newHMAC(secret, AlgorithmSugar.HMAC.HMAC256);
-        DecodedJWT jwt = newDecodedJWT(token, algorithm);
+        DecodedJWT jwt = parse(token, algorithm);
         return jwt;
     }
 
@@ -54,7 +54,7 @@ public abstract class JWTSugar {
      */
     public final static DecodedJWT parseByHMAC(String token, String secret, AlgorithmSugar.HMAC hmac) {
         Algorithm algorithm = AlgorithmSugar.newHMAC(secret, hmac);
-        DecodedJWT jwt = newDecodedJWT(token, algorithm);
+        DecodedJWT jwt = parse(token, algorithm);
         return jwt;
     }
 
@@ -69,7 +69,7 @@ public abstract class JWTSugar {
      */
     public final static DecodedJWT parseByECDSA(String token, ECPublicKey publicKey, ECPrivateKey privateKey, AlgorithmSugar.ECDSA ecdsa) {
         Algorithm algorithm = AlgorithmSugar.newECDSA(publicKey, privateKey, ecdsa);
-        DecodedJWT jwt = newDecodedJWT(token, algorithm);
+        DecodedJWT jwt = parse(token, algorithm);
         return jwt;
     }
 
@@ -84,7 +84,7 @@ public abstract class JWTSugar {
      */
     public final static DecodedJWT parseByRSA(String token, RSAPublicKey publicKey, RSAPrivateKey privateKey, AlgorithmSugar.RSA rsa) {
         Algorithm algorithm = AlgorithmSugar.newRSA(publicKey, privateKey, rsa);
-        DecodedJWT jwt = newDecodedJWT(token, algorithm);
+        DecodedJWT jwt = parse(token, algorithm);
         return jwt;
     }
 
@@ -95,7 +95,7 @@ public abstract class JWTSugar {
      * @param algorithm
      * @return
      */
-    private final static DecodedJWT newDecodedJWT(String token, Algorithm algorithm) {
+    private final static DecodedJWT parse(String token, Algorithm algorithm) {
         JWTVerifier verifier = JWT.require(algorithm).build();
         return verifier.verify(token);
 //        return verifier.verify(new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8));
@@ -111,7 +111,7 @@ public abstract class JWTSugar {
     public final static Boolean verify(String token, Algorithm algorithm) {
         Boolean verify;
         try {
-            newDecodedJWT(token, algorithm);
+            parse(token, algorithm);
             verify = true;
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -174,7 +174,7 @@ public abstract class JWTSugar {
          * @param secret
          * @return
          */
-        public final static String generateBase64TokenByHMAC256(JWTCreator.Builder builder, String secret) {
+        public final static String signForBase64TokenByHMAC256(JWTCreator.Builder builder, String secret) {
             Algorithm algorithm = AlgorithmSugar.newHMAC(secret, AlgorithmSugar.HMAC.HMAC256);
             String token = JWTSugar.sign(builder, algorithm);
             token = CipherSugar.JavaUtil.encodeBase64(token, StandardCharsets.UTF_8);
@@ -189,7 +189,7 @@ public abstract class JWTSugar {
          * @param days
          * @return
          */
-        public final static String generateRSA256Token(String userName, RSAPublicKey publicKey, RSAPrivateKey privateKey, int days) {
+        public final static String signForRSA256Token(String userName, RSAPublicKey publicKey, RSAPrivateKey privateKey, int days) {
             Calendar calendar = Calendar.getInstance();
             Date now = now(calendar);
             Date expired = getExpiredDate(calendar, days);

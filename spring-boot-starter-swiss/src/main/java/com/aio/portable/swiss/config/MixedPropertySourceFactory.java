@@ -9,7 +9,15 @@ import org.springframework.core.io.support.EncodedResource;
 import java.io.IOException;
 import java.util.Properties;
 
-public class YamlConfigFactory extends DefaultPropertySourceFactory {
+/**
+ * MixedPropertySourceFactory
+ * eg.
+ * @PropertySource(value = {"classpath:clazz1.yml", "classpath:clazz2.properties"}, factory = ResourceFactory.class)
+ * @ConfigurationProperties(prefix = "spring.ip-list")
+ * @Data
+ * public class IPListConfig {}
+ */
+public class MixedPropertySourceFactory extends DefaultPropertySourceFactory {
 
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
@@ -35,13 +43,13 @@ public class YamlConfigFactory extends DefaultPropertySourceFactory {
 
 
 
-//@org.springframework.context.annotation.PropertySource(value = {"classpath:ip-list.yml"},factory = YamlConfigFactory.class)
+//@PropertySource(value = {"classpath:ip-list.yml"},factory = YamlConfigFactory.class)
 //@Component
 //@ConfigurationProperties(prefix = "ip-list")
 //@Data
-class IPListConfig
-{
-    private String appName;
-    private String ip;
-
-}
+//class IPListConfig
+//{
+//    private String appName;
+//    private String ip;
+//
+//}

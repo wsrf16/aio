@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.autoconfigure;
 
-import com.aio.portable.swiss.structure.net.mail.MailSugar;
+import com.aio.portable.swiss.structure.net.mail.MailTo;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -21,12 +21,12 @@ import javax.mail.internet.MimeMessage;
 @ConditionalOnClass({MimeMessage.class, MimeType.class, MailSender.class})
 //@ConditionalOnMissingBean({MailSender.class})
 @EnableConfigurationProperties({MailProperties.class})
-public class MailSugarAutoConfiguration {
+public class MailToAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(JavaMailSender.class)
-    public MailSugar mailUtils(JavaMailSender javaMailSender) {
-        return new MailSugar(javaMailSender);
+    public MailTo mailUtils(JavaMailSender javaMailSender) {
+        return new MailTo(javaMailSender);
     }
 
 }

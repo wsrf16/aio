@@ -40,9 +40,9 @@ public abstract class HamletAuthenticationInterceptor implements HandlerIntercep
             String token = httpServletRequest.getHeader(AUTHORIZATION_HEAD);
             Class<?> declaringClass = method.getDeclaringClass();
 
-            boolean shouldBeHandled = jwtProperties.getBasePackages().stream()
+            boolean requiredByPackage = jwtProperties.getBasePackages().stream()
                     .anyMatch(c -> declaringClass.getPackage().getName().startsWith(c.trim()));
-            if (shouldBeHandled) {
+            if (requiredByPackage) {
                 boolean required;
                 if (method.isAnnotationPresent(RequireToken.class)) {
                     RequireToken annotation = method.getAnnotation(RequireToken.class);
@@ -51,7 +51,7 @@ public abstract class HamletAuthenticationInterceptor implements HandlerIntercep
                     RequireToken annotation = declaringClass.getAnnotation(RequireToken.class);
                     required = annotation.required();
                 } else {
-                    required = true;
+                    required = false;
                 }
 
                 if (required) {

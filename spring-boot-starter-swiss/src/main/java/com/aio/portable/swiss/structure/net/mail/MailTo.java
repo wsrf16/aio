@@ -22,10 +22,10 @@ import java.io.File;
  */
 @Component
 @ConditionalOnBean(JavaMailSender.class)
-public class MailSugar {
+public class MailTo {
     private JavaMailSender javaMailSender;// = new JavaMailSenderImpl();
 
-    public MailSugar(JavaMailSender javaMailSender) {
+    public MailTo(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 

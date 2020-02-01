@@ -19,7 +19,7 @@ public class JWTActionBase64TokenByHMAC256 implements JWTAction {
     @Override
     public String token(String userName) {
         JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithIssuer(jwtProperties, userName);
-        return JWTSugar.Classic.generateBase64TokenByHMAC256(builder, jwtProperties.getSecret());
+        return JWTSugar.Classic.signForBase64TokenByHMAC256(builder, jwtProperties.getSecret());
     }
 
     @Override

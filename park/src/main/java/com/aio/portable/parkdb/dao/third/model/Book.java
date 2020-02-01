@@ -1,10 +1,16 @@
 package com.aio.portable.parkdb.dao.third.model;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 //@Table
 //@Table(name = "book")
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
     public Long getId() {
         return id;
@@ -38,10 +44,30 @@ public class Book {
         this.description = description;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String author;
     private String description;
+    @CreatedDate
+    private Date createTime;
+    @LastModifiedDate
+    private Date updateTime;
 }

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass({com.auth0.jwt.JWT.class, com.auth0.jwt.JWTCreator.class})
 public class JWTAutoConfiguration {
 
+//    @ConditionalOnClass({com.auth0.jwt.JWT.class, com.auth0.jwt.JWTCreator.class})
     @ConditionalOnProperty(
             prefix = "spring.jwt",
             name = "issuer"

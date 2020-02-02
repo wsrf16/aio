@@ -22,7 +22,6 @@ public class LogHubAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(org.slf4j.Logger.class)
     public Slf4jHubFactory slf4jHubFactory() {
         return Slf4jHubFactory.singletonInstance();
     }

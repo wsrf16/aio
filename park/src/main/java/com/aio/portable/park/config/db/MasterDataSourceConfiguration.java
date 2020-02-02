@@ -43,7 +43,8 @@ public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfigur
     @Primary
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
 //    @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
-    @ConditionalOnClass(DruidDataSourceBuilder.class)
+//    @ConditionalOnClass(DruidDataSourceBuilder.class)
+    @ConditionalOnClass(name = {"com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder"})
     public DataSource dataSource() {
 //        return DruidDataSourceBuilder.create().build();
         return super.dataSource();

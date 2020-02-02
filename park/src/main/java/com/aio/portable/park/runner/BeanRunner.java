@@ -2,6 +2,7 @@ package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.LogFactory;
 import com.aio.portable.swiss.structure.log.base.LogHub;
+import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
 import org.springframework.boot.ApplicationArguments;
@@ -15,7 +16,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Configuration
+@Configuration
 public class BeanRunner implements ApplicationRunner {
 
 //    @Autowired
@@ -25,6 +26,8 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        String md5AsBase64 = CipherSugar.SpringFrameWorkUtil.md5AsBase64("1580570851");
+
         while(true) {
             try {
                 Thread.sleep(10000);

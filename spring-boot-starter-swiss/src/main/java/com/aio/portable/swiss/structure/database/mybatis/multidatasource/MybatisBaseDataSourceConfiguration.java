@@ -29,7 +29,6 @@ public abstract class MybatisBaseDataSourceConfiguration {
 //    @Bean
 //    @ConfigurationProperties(prefix = "spring.datasource")
 //    @ConditionalOnProperty(prefix = "spring.datasource", value = "url")
-//    @ConditionalOnClass(DruidDataSourceBuilder.class)
     @ConditionalOnClass(DataSourceBuilder.class)
     public DataSource dataSource() {
 //        return DruidDataSourceBuilder.create().build();

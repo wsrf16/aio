@@ -30,6 +30,8 @@ public interface LogFatal {
 
     <T> void fatal(String summary, T t, Exception e);
 
+    <T> void fatal(String summary, String message, T t, Exception e);
+
     default void f(String message) {
         fatal(message);
     }
@@ -64,5 +66,9 @@ public interface LogFatal {
 
     default <T> void f(String summary, T t, Exception e) {
         fatal(summary, t, e);
+    }
+
+    default <T> void f(String summary, String message, T t, Exception e) {
+        fatal(summary, message, t, e);
     }
 }

@@ -26,6 +26,8 @@ public interface LogError {
 
     void error(String summary, String message, Exception e);
 
+    <T> void error(String summary, String message, T t, Exception e);
+
     <T> void error(String summary, T t, Exception e);
 
     <T> void error(String summary, T t);
@@ -56,6 +58,10 @@ public interface LogError {
 
     default void e(String summary, String message, Exception e) {
         error(summary, message, e);
+    }
+
+    default <T> void e(String summary, String message, T t, Exception e) {
+        error(summary, message, t, e);
     }
 
     default <T> void e(String summary, T t, Exception e) {

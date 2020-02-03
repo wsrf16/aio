@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.model;
+package com.aio.portable.swiss.hamlet.bean;
 
 public enum BizStatusEnum {
     SUCCEED(0, "请求成功"),

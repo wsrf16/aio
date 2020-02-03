@@ -1,6 +1,6 @@
 package com.aio.portable.park.config;
 
-import com.aio.portable.swiss.hamlet.HamletBeanConfig;
+import com.aio.portable.swiss.hamlet.bean.HamletBeanConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package com.aio.portable.park.config;
 
 import com.aio.portable.park.controller.DemoController;
 import com.aio.portable.swiss.autoconfigure.properties.Swagger2Properties;
-import com.aio.portable.swiss.hamlet.model.BizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

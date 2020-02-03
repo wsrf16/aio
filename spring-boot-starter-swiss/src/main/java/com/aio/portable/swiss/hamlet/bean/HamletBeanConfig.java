@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet;
+package com.aio.portable.swiss.hamlet.bean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;

@@ -1,7 +1,7 @@
 package com.aio.portable.park.controller;
 
 import com.aio.portable.park.config.LogFactory;
-import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.structure.cache.RedisLock;
 import com.aio.portable.swiss.structure.log.annotation.LogMarker;
 import com.aio.portable.swiss.sugar.DateTimeSugar;

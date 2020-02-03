@@ -1,6 +1,6 @@
-package com.aio.portable.swiss.hamlet.model.exception;
+package com.aio.portable.swiss.hamlet.exception;
 
-import com.aio.portable.swiss.hamlet.model.RequestRecord;
+import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 
 public class HandOverException extends RuntimeException {
 //    public int getCode() {

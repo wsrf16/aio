@@ -30,6 +30,8 @@ public interface LogWarning {
 
     <T> void warn(String summary, T t, Exception e);
 
+    <T> void warn(String summary, String message, T t, Exception e);
+
     default void w(String message) {
         warn(message);
     }
@@ -64,5 +66,9 @@ public interface LogWarning {
 
     default <T> void w(String summary, T t, Exception e) {
         warn(summary, t, e);
+    }
+
+    default <T> void w(String summary, String message, T t, Exception e) {
+        warn(summary, message, t, e);
     }
 }

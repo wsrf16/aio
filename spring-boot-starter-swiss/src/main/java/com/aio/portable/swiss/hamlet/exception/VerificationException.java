@@ -1,6 +1,6 @@
-package com.aio.portable.swiss.hamlet.model.exception;
+package com.aio.portable.swiss.hamlet.exception;
 
-import com.aio.portable.swiss.hamlet.model.BizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 
 public class VerificationException extends BizException {
 

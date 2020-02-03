@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
-import com.aio.portable.swiss.hamlet.model.exception.HandOverException;
+import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.hamlet.model.RequestRecord;
-import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.RequestRecord;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.util.StringUtils;

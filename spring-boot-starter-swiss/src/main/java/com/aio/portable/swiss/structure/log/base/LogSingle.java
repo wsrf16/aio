@@ -617,6 +617,29 @@ public abstract class LogSingle extends LogBody {
     }
 
     /**
+     * warn
+     *
+     * @param summary
+     * @param message
+     * @param t
+     * @param e
+     * @param <T>
+     */
+    @Override
+    public <T> void warn(String summary, String message, T t, Exception e) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.WARNING.getName();
+            note.summary = summary;
+            note.message = message;
+            note.data = t;
+            note.exception = LogException.buildLogException(e);
+        }
+        output(errorPrinter, note);
+    }
+
+    /**
      * error
      *
      * @param message
@@ -768,6 +791,29 @@ public abstract class LogSingle extends LogBody {
     }
 
     /**
+     * error
+     *
+     * @param summary
+     * @param message
+     * @param t
+     * @param e
+     * @param <T>
+     */
+    @Override
+    public <T> void error(String summary, String message, T t, Exception e) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.ERROR.getName();
+            note.summary = summary;
+            note.message = message;
+            note.data = t;
+            note.exception = LogException.buildLogException(e);
+        }
+        output(errorPrinter, note);
+    }
+
+    /**
      * fatal
      *
      * @param message
@@ -895,6 +941,29 @@ public abstract class LogSingle extends LogBody {
             note.data = t;
         }
         output(fatalPrinter, note);
+    }
+
+    /**
+     * fatal
+     *
+     * @param summary
+     * @param message
+     * @param t
+     * @param e
+     * @param <T>
+     */
+    @Override
+    public <T> void fatal(String summary, String message, T t, Exception e) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.FATAL.getName();
+            note.summary = summary;
+            note.message = message;
+            note.data = t;
+            note.exception = LogException.buildLogException(e);
+        }
+        output(errorPrinter, note);
     }
 
     /**

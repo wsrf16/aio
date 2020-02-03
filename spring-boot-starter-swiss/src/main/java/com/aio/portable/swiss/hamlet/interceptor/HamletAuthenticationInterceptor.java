@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
-import com.aio.portable.swiss.hamlet.model.BizStatusEnum;
-import com.aio.portable.swiss.hamlet.model.exception.BizException;
+import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.structure.security.authentication.jwt.RequireToken;
 import com.aio.portable.swiss.structure.security.authentication.jwt.JWTAction;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,13 +1,13 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
-import com.aio.portable.swiss.hamlet.model.RequestRecord;
-import com.aio.portable.swiss.hamlet.model.exception.HandOverException;
+import com.aio.portable.swiss.hamlet.bean.RequestRecord;
+import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
-import com.aio.portable.swiss.hamlet.model.BizStatusEnum;
-import com.aio.portable.swiss.hamlet.model.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.model.exception.BizException;
+import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,7 +41,7 @@ public abstract class HamletExceptionAdvice {
         else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(BizStatusEnum.INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
+            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), BizStatusEnum.EXCEPTION.getMessage());
         String traceId = inpute.getTraceId();
         responseWrapper.setTraceId(traceId);
 
@@ -83,7 +83,7 @@ public abstract class HamletExceptionAdvice {
         else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(BizStatusEnum.INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
+            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), BizStatusEnum.EXCEPTION);
         String traceId = responseWrapper.getTraceId();
 
         LogHub logger = loggerPool.putIfAbsent(e);

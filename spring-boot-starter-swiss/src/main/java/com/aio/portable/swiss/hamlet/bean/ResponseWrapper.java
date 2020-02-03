@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.model;
+package com.aio.portable.swiss.hamlet.bean;
 
 import com.aio.portable.swiss.global.Constant;
 import io.swagger.annotations.ApiModelProperty;

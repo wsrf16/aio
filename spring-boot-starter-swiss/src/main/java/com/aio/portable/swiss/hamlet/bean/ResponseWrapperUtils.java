@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.model;
+package com.aio.portable.swiss.hamlet.bean;
 
 public class ResponseWrapperUtils extends ResponseWrapper {
 

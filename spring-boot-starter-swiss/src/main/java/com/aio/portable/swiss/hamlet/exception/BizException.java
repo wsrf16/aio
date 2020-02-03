@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.model.exception;
+package com.aio.portable.swiss.hamlet.exception;
 
 public class BizException extends RuntimeException {
     public int getCode() {

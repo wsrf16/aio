@@ -3,7 +3,7 @@ package com.aio.portable.swiss.hamlet.interceptor;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.structure.security.authentication.jwt.RequireToken;
+import com.aio.portable.swiss.structure.security.authentication.jwt.Credentials;
 import com.aio.portable.swiss.structure.security.authentication.jwt.JWTAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -24,7 +24,7 @@ public abstract class HamletAuthenticationInterceptor implements HandlerIntercep
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        JWTProperties jwtProperties = jwtAction.getJwtProperties();
+        JWTProperties jwtProperties = jwtAction.toJwtProperties();
 
         Method method;
         if (!(object instanceof HandlerMethod)) {
@@ -44,11 +44,11 @@ public abstract class HamletAuthenticationInterceptor implements HandlerIntercep
                     .anyMatch(c -> declaringClass.getPackage().getName().startsWith(c.trim()));
             if (requiredByPackage) {
                 boolean required;
-                if (method.isAnnotationPresent(RequireToken.class)) {
-                    RequireToken annotation = method.getAnnotation(RequireToken.class);
+                if (method.isAnnotationPresent(Credentials.class)) {
+                    Credentials annotation = method.getAnnotation(Credentials.class);
                     required = annotation.required();
-                } else if (declaringClass.isAnnotationPresent(RequireToken.class)) {
-                    RequireToken annotation = declaringClass.getAnnotation(RequireToken.class);
+                } else if (declaringClass.isAnnotationPresent(Credentials.class)) {
+                    Credentials annotation = declaringClass.getAnnotation(Credentials.class);
                     required = annotation.required();
                 } else {
                     required = false;

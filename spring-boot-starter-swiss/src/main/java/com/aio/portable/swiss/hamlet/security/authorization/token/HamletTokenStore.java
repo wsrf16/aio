@@ -1,5 +1,8 @@
-package com.aio.portable.swiss.structure.security.authorization;
+package com.aio.portable.swiss.hamlet.security.authorization.token;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -16,7 +19,12 @@ import java.util.Collection;
  * 4、RedisTokenStore
  * 5、JwkTokenStore
  */
-public class CustomTokenStore implements TokenStore {
+//@Configuration
+public class HamletTokenStore implements TokenStore {
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
     @Override
     public OAuth2Authentication readAuthentication(OAuth2AccessToken oAuth2AccessToken) {
         return null;

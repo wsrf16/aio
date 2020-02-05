@@ -8,17 +8,23 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class JWTActionBase64TokenByHMAC256 implements JWTAction {
+public abstract class JWTActionBase64TokenByHMAC256 implements JWTAction {
     @Autowired
-    private JWTProperties jwtProperties;
-
-    public JWTProperties getJwtProperties() {
-        return jwtProperties;
-    }
+    protected JWTProperties jwtProperties;
 
     @Override
-    public String token(String userName) {
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithIssuer(jwtProperties, userName);
+    public JWTProperties toJwtProperties() {
+        return jwtProperties.toJwtProperties();
+    }
+
+//    @Override
+//    public String token(String userName) {
+//        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithIssuer(jwtProperties, userName);
+//        return token(builder);
+//    }
+
+    @Override
+    public String token(JWTCreator.Builder builder) {
         return JWTSugar.Classic.signForBase64TokenByHMAC256(builder, jwtProperties.getSecret());
     }
 

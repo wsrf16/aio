@@ -421,6 +421,14 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.yaml/snakeyaml &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.yaml</groupId>-->
+<!--            <artifactId>snakeyaml</artifactId>-->
+<!--            <version>1.25</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 

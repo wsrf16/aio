@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.structure.security.authentication.jwt;
 
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.http.HttpHeaders;
 
@@ -10,9 +11,11 @@ public interface JWTAction {
     //"Authorization";
     String AUTHORIZATION_HEAD = HttpHeaders.AUTHORIZATION;
 
-    JWTProperties getJwtProperties();
+    JWTProperties toJwtProperties();
 
-    String token(String userName);
+//    String token(String userName);
+
+    String token(JWTCreator.Builder builder);
 
     DecodedJWT getJWT(String token);
 

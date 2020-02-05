@@ -24,7 +24,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
 
-        JWTProperties jwtProperties = jwtAction.getJwtProperties();
+        JWTProperties jwtProperties = jwtAction.toJwtProperties();
 
         String secret = jwtProperties.getSecret();
         JWTCreator.Builder builder = JWTSugar.createJWTBuilder(jwtProperties);

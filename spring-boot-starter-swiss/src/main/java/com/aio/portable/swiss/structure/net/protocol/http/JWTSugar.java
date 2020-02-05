@@ -122,8 +122,8 @@ public abstract class JWTSugar {
 
     public final static JWTCreator.Builder createJWTBuilder(JWTProperties jwtProperties) {
         JWTCreator.Builder builder = JWT.create();
-        if (jwtProperties.getKeyId() != null)
-            builder.withKeyId(jwtProperties.getKeyId());
+//        if (jwtProperties.getKeyId() != null)
+//            builder.withKeyId(jwtProperties.getKeyId());
         if (jwtProperties.getIssuer() != null)
             builder.withIssuer(jwtProperties.getIssuer());
         if (jwtProperties.getSubject() != null)
@@ -144,8 +144,8 @@ public abstract class JWTSugar {
     public final static JWTCreator.Builder createJWTBuilderWithIssuer(JWTProperties jwtProperties,
                                                                       String issuer) {
         JWTCreator.Builder builder = JWT.create();
-        if (jwtProperties.getKeyId() != null)
-            builder.withKeyId(jwtProperties.getKeyId());
+//        if (jwtProperties.getKeyId() != null)
+//            builder.withKeyId(jwtProperties.getKeyId());
         if (jwtProperties.getIssuer() != null)
             builder.withIssuer(issuer);
         if (jwtProperties.getSubject() != null)

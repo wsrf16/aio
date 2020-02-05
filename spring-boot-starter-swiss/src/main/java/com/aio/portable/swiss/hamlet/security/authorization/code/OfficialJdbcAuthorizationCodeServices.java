@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.structure.security.authentication;
+package com.aio.portable.swiss.hamlet.security.authorization.code;
 
 import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -11,12 +11,12 @@ import javax.sql.DataSource;
  * JdbcAuthorizationCodeServices
  * RandomValueAuthorizationCodeServices
  */
-public class CustomJdbcAuthorizationCodeServices extends JdbcAuthorizationCodeServices {
-    public CustomJdbcAuthorizationCodeServices(DataSource dataSource) {
+public abstract class OfficialJdbcAuthorizationCodeServices extends JdbcAuthorizationCodeServices {
+    public OfficialJdbcAuthorizationCodeServices(DataSource dataSource) {
         super(dataSource);
     }
 
-    private int AUTHORIZATION_CODE_LENGTH = 12;
+    private final static int AUTHORIZATION_CODE_LENGTH = 12;
 
     private RandomValueStringGenerator generator = new RandomValueStringGenerator(AUTHORIZATION_CODE_LENGTH);
 

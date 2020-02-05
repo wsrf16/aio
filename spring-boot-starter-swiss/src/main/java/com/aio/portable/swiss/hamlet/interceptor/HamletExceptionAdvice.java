@@ -22,8 +22,8 @@ public abstract class HamletExceptionAdvice {
     private final static String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
     private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
 
-    public HamletExceptionAdvice(LogHubFactory logFactory) {
-        loggerPool = LogHubPool.getSingleton(logFactory);
+    public HamletExceptionAdvice(LogHubFactory slf4jHubFactory) {
+        loggerPool = LogHubPool.getSingleton(slf4jHubFactory);
     }
 
     protected static LogHubPool loggerPool;

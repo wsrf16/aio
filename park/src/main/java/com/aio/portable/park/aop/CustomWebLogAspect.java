@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class CustomWebLogAspect extends HamletWebLogAspect {
-    public CustomWebLogAspect(LogHubFactory logFactory) {
-        super(logFactory);
+    public CustomWebLogAspect(LogHubFactory appLogHubFactory) {
+        super(appLogHubFactory);
     }
 
     private final static String POINTCUT = "execution(public * com.aio.portable.park.controller..*.*(..)) && (@annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping) || @annotation(org.springframework.web.bind.annotation.RequestMapping))";

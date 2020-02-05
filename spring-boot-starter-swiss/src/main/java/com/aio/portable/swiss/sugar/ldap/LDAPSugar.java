@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.query.ContainerCriteria;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
@@ -19,27 +20,38 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class LDAPSugar {
-    /**
-     * authentication
-     * @param ldapTemplate
-     * @param userDN
-     * @param password
-     * @return
-     */
-    public final static Boolean authentication(LdapTemplate ldapTemplate, String userDN, String password) {
-        DirContext dirContext = null;
-        Boolean b;
-        try {
-            dirContext = ldapTemplate.getContextSource().getContext(userDN, password);
-            b = true;
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            b = false;
-        } finally {
-            if (dirContext != null)
-                LdapUtils.closeContext(dirContext);
-        }
-        return b;
+//    /**
+//     * authentication
+//     * @param ldapTemplate
+//     * @param dn
+//     * @param password
+//     * @return
+//     */
+//    public final static Boolean authentication(LdapTemplate ldapTemplate, String dn, String password) {
+//        DirContext dirContext = null;
+//        Boolean b;
+//        try {
+//            dirContext = ldapTemplate.getContextSource().getContext(dn, password);
+//            b = true;
+//        } catch (AuthenticationException e) {
+//            e.printStackTrace();
+//            b = false;
+//        } finally {
+//            if (dirContext != null)
+//                LdapUtils.closeContext(dirContext);
+//        }
+//        return b;
+//    }
+
+    public final static boolean authenticateByUId(LdapTemplate ldapTemplate, String base, String uid, String password) {
+        EqualsFilter filter = new EqualsFilter("uid", uid);
+        boolean authenticate = ldapTemplate.authenticate(base, filter.toString(), password);
+        return authenticate;
+    }
+
+    public final static boolean authenticate(LdapTemplate ldapTemplate, String base, String filter, String password) {
+        boolean authenticate = ldapTemplate.authenticate(base, filter, password);
+        return authenticate;
     }
 
 

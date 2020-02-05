@@ -27,9 +27,10 @@ public class LogHubAutoConfiguration {
     }
 
     @Bean
-//    @ConditionalOnProperty("spring.log.rabbitmq.host")
+    @ConditionalOnProperty("spring.log.rabbitmq.host")
     @ConfigurationProperties(prefix = "spring.log.rabbitmq")
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
+    @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
     public LogRabbitMQProperties logRabbitMQProperties() {
         return LogRabbitMQProperties.singletonInstance();
     }
@@ -40,13 +41,14 @@ public class LogHubAutoConfiguration {
 //    @ConditionalOnClass({org.springframework.amqp.rabbit.connection.CachingConnectionFactory.class, org.springframework.amqp.rabbit.core.RabbitTemplate.class})
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
     @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
-    public RabbitMQHubFactory rabbitHubFactory() {
+    public RabbitMQHubFactory rabbitMQHubFactory() {
         return RabbitMQHubFactory.singletonInstance();
     }
 
     @Bean
     @ConditionalOnProperty("spring.log.kafka.producer.bootstrap-servers")
     @ConfigurationProperties(prefix = "spring.log.kafka")
+    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public LogKafkaProperties logKafkaProperties() {
         return LogKafkaProperties.singletonInstance();
     }

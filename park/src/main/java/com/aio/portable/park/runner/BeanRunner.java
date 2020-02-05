@@ -1,6 +1,6 @@
 package com.aio.portable.park.runner;
 
-import com.aio.portable.park.config.LogFactory;
+import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.sugar.resource.PackageSugar;
@@ -22,7 +22,7 @@ public class BeanRunner implements ApplicationRunner {
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
 
-    LogHub log = LogFactory.singletonInstance().build();//.setSamplerRate(1f);
+    LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
 
     @Override
     public void run(ApplicationArguments applicationArguments) {

@@ -1,6 +1,6 @@
 package com.aio.portable.park.controller;
 
-import com.aio.portable.park.config.LogFactory;
+import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.structure.cache.RedisLock;
 import com.aio.portable.swiss.structure.log.annotation.LogMarker;
@@ -30,7 +30,7 @@ public class DemoController {
         request = request;
         response = response;
 
-        LogFactory.singletonInstance().build(this.getClass()).d("this is debug.");
+        AppLogHubFactory.singletonInstance().build(this.getClass()).d("this is debug.");
         return "ok";
     }
 

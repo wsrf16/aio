@@ -1,53 +1,33 @@
 package com.aio.portable.swiss.autoconfigure.properties;
 
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.structure.net.protocol.http.JWTSugar;
+import com.aio.portable.swiss.sugar.DateTimeSugar;
+import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 //@Configuration
 //@ConfigurationProperties(
 //        prefix = "spring.jwt"
 //)
 public class JWTProperties  {
-//    private Boolean enable = true;
-    private String secret;
-    private Integer expiredHours;
     private Boolean require = true;
+    private String secret;
     private List<String> basePackages;
     private String keyId;
     private String issuer;
     private String subject;
     private String audience;
-//    private Date expiresAt;
-    private Date notBefore;
     private Date issuedAt;
+    private Date expiresAt;
+    private Integer expiredHours;
+    private Date notBefore;
     private String JWTId;
-
-//    public Boolean getEnable() {
-//        return enable;
-//    }
-//
-//    public void setEnable(Boolean enable) {
-//        this.enable = enable;
-//    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public Integer getExpiredHours() {
-        return expiredHours;
-    }
-
-    public void setExpiredHours(Integer expiredHours) {
-        this.expiredHours = expiredHours;
-    }
 
     public Boolean getRequire() {
         return require;
@@ -55,6 +35,14 @@ public class JWTProperties  {
 
     public void setRequire(Boolean require) {
         this.require = require;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public List<String> getBasePackages() {
@@ -97,23 +85,18 @@ public class JWTProperties  {
         this.audience = audience;
     }
 
-    public Date getExpiresAt() {
-        Calendar calendar = Calendar.getInstance();
-        Date now = JWTSugar.Classic.now(calendar);
-        Date expiresAt = JWTSugar.Classic.getExpiredDate(calendar, expiredHours);
-        return expiresAt;
-    }
+    public JWTProperties toJwtProperties() {
+        Calendar now = DateTimeSugar.CalendarUtils.now();
+        String JWTId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        Date issuedAt = now.getTime();
+        Date expiresAt = JWTSugar.Classic.getExpiredDate(now, expiredHours);
 
-//    public void setExpiresAt(Date expiresAt) {
-//        this.expiresAt = expiresAt;
-//    }
-
-    public Date getNotBefore() {
-        return notBefore;
-    }
-
-    public void setNotBefore(Date notBefore) {
-        this.notBefore = notBefore;
+        JWTProperties target = new JWTProperties();
+        BeanUtils.copyProperties(this, target);
+        target.setJWTId(JWTId);
+        target.setIssuedAt(issuedAt);
+        target.setExpiresAt(expiresAt);
+        return target;
     }
 
     public Date getIssuedAt() {
@@ -122,6 +105,30 @@ public class JWTProperties  {
 
     public void setIssuedAt(Date issuedAt) {
         this.issuedAt = issuedAt;
+    }
+
+    public Date getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Date expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public Integer getExpiredHours() {
+        return expiredHours;
+    }
+
+    public void setExpiredHours(Integer expiredHours) {
+        this.expiredHours = expiredHours;
+    }
+
+    public Date getNotBefore() {
+        return notBefore;
+    }
+
+    public void setNotBefore(Date notBefore) {
+        this.notBefore = notBefore;
     }
 
     public String getJWTId() {

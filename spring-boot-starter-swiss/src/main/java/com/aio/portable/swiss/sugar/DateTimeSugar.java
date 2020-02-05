@@ -53,6 +53,11 @@ public abstract class DateTimeSugar {
             return calendar;
         }
 
+        public static Calendar now() {
+            Calendar calendar = Calendar.getInstance();
+            return calendar;
+        }
+
         public static Calendar getFirstDayOf(Calendar calendar, int field) {
             calendar.set(field, calendar.getActualMinimum(field));
             return calendar;
@@ -132,6 +137,10 @@ public abstract class DateTimeSugar {
         public final static LocalDateTime convertDateToLocalDateTime(Date date) {
             Instant instant = date.toInstant();
             return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+
+        public final static LocalDateTime now() {
+            return LocalDateTime.now();
         }
     }
 

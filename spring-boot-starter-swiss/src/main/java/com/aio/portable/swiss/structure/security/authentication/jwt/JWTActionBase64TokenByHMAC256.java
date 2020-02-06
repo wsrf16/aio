@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.structure.security.authentication.jwt;
 
+import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
@@ -10,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class JWTActionBase64TokenByHMAC256 implements JWTAction {
     @Autowired
-    protected JWTProperties jwtProperties;
+    private JWTProperties jwtProperties;
 
     @Override
-    public JWTProperties toJwtProperties() {
-        return jwtProperties.toJwtProperties();
+    public JWTClaims toJWTClaims() {
+        return jwtProperties.toJWTClaims();
     }
 
 //    @Override
@@ -39,7 +40,7 @@ public abstract class JWTActionBase64TokenByHMAC256 implements JWTAction {
         try {
             parse = JWTSugar.Classic.parseBase64TokenByHMAC256(token, jwtProperties.getSecret());
         } catch (Exception e) {
-            throw new BizException(BizStatusEnum.UNAUTHORIZED.getCode(), BizStatusEnum.UNAUTHORIZED.getMessage());
+            throw new BizException(BizStatusEnum.UNAUTHORIZED.getCode(), "解析失败");
         }
 
         return parse;

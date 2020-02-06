@@ -24,7 +24,7 @@ public abstract class HamletAuthenticationInterceptor implements HandlerIntercep
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        JWTProperties jwtProperties = jwtAction.toJwtProperties();
+        JWTProperties jwtProperties = jwtAction.toJWTClaims();
 
         Method method;
         if (!(object instanceof HandlerMethod)) {

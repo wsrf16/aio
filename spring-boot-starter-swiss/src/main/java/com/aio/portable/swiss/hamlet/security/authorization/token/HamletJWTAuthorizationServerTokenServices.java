@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.hamlet.security.authorization.token;
 
+import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.structure.security.authentication.jwt.JWTAction;
 import com.auth0.jwt.JWT;
@@ -26,29 +27,29 @@ public class HamletJWTAuthorizationServerTokenServices implements AuthorizationS
     private TokenStore tokenStore;
 
 
-    private String create(JWTProperties jwtProperties, String issuer) {
+    private String create(JWTClaims jwtClaims, String issuer) {
         JWTCreator.Builder builder = JWT.create();
         builder.withIssuer(issuer);
         builder.withClaim("r", System.currentTimeMillis());
-        builder.withIssuedAt(jwtProperties.getIssuedAt());
-        builder.withExpiresAt(jwtProperties.getExpiresAt());
+        builder.withIssuedAt(jwtClaims.getIssuedAt());
+        builder.withExpiresAt(jwtClaims.getExpiresAt());
 
         String tokenWord = jwtAction.token(builder);
         return tokenWord;
     }
 
-    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTProperties jwtProperties, OAuth2Authentication authentication) {
+    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwtProperties, issuer);
-        Date expiresAt = jwtProperties.getExpiresAt();
+        String value = create(jwtClaims, issuer);
+        Date expiresAt = jwtClaims.getExpiresAt();
         DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(value, expiresAt);
         return refreshToken;
     }
 
-    private DefaultOAuth2AccessToken createAccessToken(JWTProperties jwtProperties, OAuth2Authentication authentication) {
+    private DefaultOAuth2AccessToken createAccessToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwtProperties, issuer);
-        Date expiresAt = jwtProperties.getExpiresAt();
+        String value = create(jwtClaims, issuer);
+        Date expiresAt = jwtClaims.getExpiresAt();
         DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(value);
         accessToken.setExpiration(expiresAt);
         accessToken.setScope(authentication.getOAuth2Request().getScope());
@@ -57,10 +58,10 @@ public class HamletJWTAuthorizationServerTokenServices implements AuthorizationS
 
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        JWTProperties refreshTokenJWTProperties = jwtAction.toJwtProperties();
-        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWTProperties, authentication);
-        JWTProperties accessTokenJWTProperties = jwtAction.toJwtProperties();
-        DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWTProperties, authentication);
+        JWTClaims refreshTokenJWTClaims = jwtAction.toJWTClaims();
+        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWTClaims, authentication);
+        JWTClaims accessTokenJWTClaims = jwtAction.toJWTClaims();
+        DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWTClaims, authentication);
         accessToken.setRefreshToken(refreshToken);
 
         tokenStore.storeAccessToken(accessToken, authentication);

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.structure.net.protocol.http;
 
+import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.sugar.algorithm.AlgorithmSugar;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
@@ -120,46 +121,46 @@ public abstract class JWTSugar {
         return verify;
     }
 
-    public final static JWTCreator.Builder createJWTBuilder(JWTProperties jwtProperties) {
+    public final static JWTCreator.Builder createJWTBuilder(JWTClaims jwtClaims) {
         JWTCreator.Builder builder = JWT.create();
 //        if (jwtProperties.getKeyId() != null)
 //            builder.withKeyId(jwtProperties.getKeyId());
-        if (jwtProperties.getIssuer() != null)
-            builder.withIssuer(jwtProperties.getIssuer());
-        if (jwtProperties.getSubject() != null)
-            builder.withSubject(jwtProperties.getSubject());
-        if (jwtProperties.getAudience() != null)
-            builder.withAudience(jwtProperties.getAudience());
-        if (jwtProperties.getExpiresAt() != null)
-            builder.withExpiresAt(jwtProperties.getExpiresAt());
-        if (jwtProperties.getNotBefore() != null)
-            builder.withNotBefore(jwtProperties.getNotBefore());
-        if (jwtProperties.getIssuedAt() != null)
-            builder.withIssuedAt(jwtProperties.getIssuedAt());
-        if (jwtProperties.getJWTId() != null)
-            builder.withJWTId(jwtProperties.getJWTId());
+        if (jwtClaims.getIssuer() != null)
+            builder.withIssuer(jwtClaims.getIssuer());
+        if (jwtClaims.getSubject() != null)
+            builder.withSubject(jwtClaims.getSubject());
+        if (jwtClaims.getAudience() != null)
+            builder.withAudience(jwtClaims.getAudience());
+        if (jwtClaims.getExpiresAt() != null)
+            builder.withExpiresAt(jwtClaims.getExpiresAt());
+        if (jwtClaims.getNotBefore() != null)
+            builder.withNotBefore(jwtClaims.getNotBefore());
+        if (jwtClaims.getIssuedAt() != null)
+            builder.withIssuedAt(jwtClaims.getIssuedAt());
+        if (jwtClaims.getJWTId() != null)
+            builder.withJWTId(jwtClaims.getJWTId());
         return builder;
     }
 
-    public final static JWTCreator.Builder createJWTBuilderWithIssuer(JWTProperties jwtProperties,
+    public final static JWTCreator.Builder createJWTBuilderWithIssuer(JWTClaims jwtClaims,
                                                                       String issuer) {
         JWTCreator.Builder builder = JWT.create();
 //        if (jwtProperties.getKeyId() != null)
 //            builder.withKeyId(jwtProperties.getKeyId());
-        if (jwtProperties.getIssuer() != null)
+        if (jwtClaims.getIssuer() != null)
             builder.withIssuer(issuer);
-        if (jwtProperties.getSubject() != null)
-            builder.withSubject(jwtProperties.getSubject());
-        if (jwtProperties.getAudience() != null)
-            builder.withAudience(jwtProperties.getAudience());
-        if (jwtProperties.getExpiresAt() != null)
-            builder.withExpiresAt(jwtProperties.getExpiresAt());
-        if (jwtProperties.getNotBefore() != null)
-            builder.withNotBefore(jwtProperties.getNotBefore());
-        if (jwtProperties.getIssuedAt() != null)
-            builder.withIssuedAt(jwtProperties.getIssuedAt());
-        if (jwtProperties.getJWTId() != null)
-            builder.withJWTId(jwtProperties.getJWTId());
+        if (jwtClaims.getSubject() != null)
+            builder.withSubject(jwtClaims.getSubject());
+        if (jwtClaims.getAudience() != null)
+            builder.withAudience(jwtClaims.getAudience());
+        if (jwtClaims.getExpiresAt() != null)
+            builder.withExpiresAt(jwtClaims.getExpiresAt());
+        if (jwtClaims.getNotBefore() != null)
+            builder.withNotBefore(jwtClaims.getNotBefore());
+        if (jwtClaims.getIssuedAt() != null)
+            builder.withIssuedAt(jwtClaims.getIssuedAt());
+        if (jwtClaims.getJWTId() != null)
+            builder.withJWTId(jwtClaims.getJWTId());
         return builder;
     }
 

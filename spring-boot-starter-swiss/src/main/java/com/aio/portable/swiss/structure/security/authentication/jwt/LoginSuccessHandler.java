@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.structure.security.authentication.jwt;
 
+import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.structure.net.protocol.http.JWTSugar;
 import com.auth0.jwt.JWTCreator;
@@ -24,10 +25,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
 
-        JWTProperties jwtProperties = jwtAction.toJwtProperties();
+        JWTClaims jwtClaims = jwtAction.toJWTClaims();
 
-        String secret = jwtProperties.getSecret();
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilder(jwtProperties);
+        String secret = jwtClaims.getSecret();
+        JWTCreator.Builder builder = JWTSugar.createJWTBuilder(jwtClaims);
         String token = JWTSugar.Classic.signForBase64TokenByHMAC256(builder, secret);
         httpServletResponse.setHeader(AUTHORIZATION_HEAD, token);
     }

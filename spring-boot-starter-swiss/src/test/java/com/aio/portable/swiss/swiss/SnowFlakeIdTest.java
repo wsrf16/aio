@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.database.SnowflakeIdWorker;
+import com.aio.portable.swiss.structure.database.identity.SnowflakeIdWorker;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

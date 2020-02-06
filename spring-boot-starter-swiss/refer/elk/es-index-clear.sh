@@ -1,7 +1,7 @@
 #/bin/bash
 
 #指定日期(7天前)
-DATA=`date -d "1 week ago" +%Y.%m.%d`
+DATA=`date -d "-7 days" +%Y.%m.%d`
 
 #当前日期
 time=`date`

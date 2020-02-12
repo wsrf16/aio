@@ -2,6 +2,7 @@ package com.aio.portable.swiss.autoconfigure;
 
 import com.aio.portable.swiss.autoconfigure.properties.resttemplate.RestTemplateProperties;
 import com.aio.portable.swiss.structure.net.protocol.http.RestTemplater;
+import org.apache.http.client.HttpClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 //@Configuration
-@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class})
+@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class, HttpClient.class})
 //@EnableConfigurationProperties(RestTemplateProperties.class)
 @AutoConfigureAfter(org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration.class)
 public class RestTemplateAutoConfiguration {

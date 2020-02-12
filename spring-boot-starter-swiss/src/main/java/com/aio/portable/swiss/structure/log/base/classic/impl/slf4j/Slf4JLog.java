@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.structure.log.base.classic.impl.slf4j;
 
 import com.aio.portable.swiss.structure.log.base.LogSingle;
-import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
+import com.aio.portable.swiss.sugar.StackTraceSugar;
 
 public class Slf4JLog extends LogSingle {
     private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -13,7 +13,7 @@ public class Slf4JLog extends LogSingle {
     }
 
     public final static Slf4JLog build() {
-        String name = StackTraceInfoSugar.Previous.getClassName();
+        String name = StackTraceSugar.Previous.getClassName();
         return build(name);
     }
 

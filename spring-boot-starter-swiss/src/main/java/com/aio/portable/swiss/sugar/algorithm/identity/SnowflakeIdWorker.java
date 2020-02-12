@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.structure.database.identity;
+package com.aio.portable.swiss.sugar.algorithm.identity;
 
 /**
  * Twitter_Snowflake  <br>

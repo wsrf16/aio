@@ -2,14 +2,14 @@ package com.aio.portable.swiss.structure.log.base.classic.impl.console;
 
 import com.aio.portable.swiss.structure.log.base.LogSingle;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
-import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
+import com.aio.portable.swiss.sugar.StackTraceSugar;
 
 /**
  * Created by York on 2017/11/23.
  */
 public class ConsoleLog extends LogSingle {
     public final static ConsoleLog build() {
-        String name = StackTraceInfoSugar.Previous.getClassName();
+        String name = StackTraceSugar.Previous.getClassName();
         return build(name);
     }
 

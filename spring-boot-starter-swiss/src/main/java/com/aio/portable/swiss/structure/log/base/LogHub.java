@@ -101,6 +101,12 @@ public class LogHub extends LogHubBody {
             loggers.forEach(it -> it.verbose(summary, t));
     }
 
+    public <T> void verbose(String summary, String message, T t) {
+        check();
+        if (passing())
+            loggers.forEach(it -> it.verbose(summary, message, t));
+    }
+
     public void trace(String message) {
         check();
         if (passing())
@@ -123,6 +129,12 @@ public class LogHub extends LogHubBody {
         check();
         if (passing())
             loggers.forEach(it -> it.trace(summary, t));
+    }
+
+    public <T> void trace(String summary, String message, T t) {
+        check();
+        if (passing())
+            loggers.forEach(it -> it.trace(summary, message, t));
     }
 
     public void info(String message) {
@@ -149,6 +161,12 @@ public class LogHub extends LogHubBody {
             loggers.forEach(it -> it.info(summary, t));
     }
 
+    public <T> void info(String summary, String message, T t) {
+        check();
+        if (passing())
+            loggers.forEach(it -> it.info(summary, message, t));
+    }
+
     public void debug(String message) {
         check();
         if (passing())
@@ -171,6 +189,12 @@ public class LogHub extends LogHubBody {
         check();
         if (passing())
             loggers.forEach(it -> it.debug(summary, t));
+    }
+
+    public <T> void debug(String summary, String message, T t) {
+        check();
+        if (passing())
+            loggers.forEach(it -> it.debug(summary, message, t));
     }
 
     public void error(String message) {

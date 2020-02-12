@@ -24,6 +24,8 @@ public interface LogVerbose {
 
     <T> void verbose(String summary, T t);
 
+    <T> void verbose(String summary, String message, T t);
+
     default void v(String message) {
         verbose(message);
     }
@@ -46,5 +48,9 @@ public interface LogVerbose {
 
     default <T> void v(String summary, T t) {
         verbose(summary, t);
+    }
+
+    default <T> void v(String summary, String message, T t) {
+        verbose(summary, message, t);
     }
 }

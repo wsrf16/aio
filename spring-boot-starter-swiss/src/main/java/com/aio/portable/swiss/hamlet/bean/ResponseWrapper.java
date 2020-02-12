@@ -1,9 +1,7 @@
 package com.aio.portable.swiss.hamlet.bean;
 
-import com.aio.portable.swiss.global.Constant;
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.util.UUID;
 
 //@ApiModel("返回实体")
 public class ResponseWrapper<T> {
@@ -39,12 +37,12 @@ public class ResponseWrapper<T> {
 
 
     protected ResponseWrapper() {
-        this.traceId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        this.traceId = IDS.uuid();
         this.timeStamp = System.currentTimeMillis();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
-        this.traceId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        this.traceId = IDS.uuid();
         this.code = code;
         this.message = message;
         this.data = data;

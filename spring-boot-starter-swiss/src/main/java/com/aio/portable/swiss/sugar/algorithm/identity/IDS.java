@@ -1,10 +1,10 @@
-package com.aio.portable.swiss.structure.database.identity;
+package com.aio.portable.swiss.sugar.algorithm.identity;
 
 import com.aio.portable.swiss.global.Constant;
 
 import java.util.UUID;
 
-public abstract class ID {
+public abstract class IDS {
     public final static String uuid() {
         String uuid = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         return uuid;

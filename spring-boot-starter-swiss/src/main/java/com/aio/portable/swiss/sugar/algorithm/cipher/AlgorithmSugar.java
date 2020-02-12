@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar.algorithm;
+package com.aio.portable.swiss.sugar.algorithm.cipher;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

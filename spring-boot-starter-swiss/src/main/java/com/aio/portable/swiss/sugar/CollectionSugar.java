@@ -1,6 +1,8 @@
 package com.aio.portable.swiss.sugar;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -234,6 +236,14 @@ public abstract class CollectionSugar {
 
             return list;
         }
+    }
+
+    public final static Object[] toObjectArray(Object source) {
+        return ObjectUtils.toObjectArray(source);
+    }
+
+    public final static <T> List<T> arrayToList(Object source) {
+        return CollectionUtils.arrayToList(source);
     }
 
     public final static <T> List<T> toList(Iterator<T> iterator) {

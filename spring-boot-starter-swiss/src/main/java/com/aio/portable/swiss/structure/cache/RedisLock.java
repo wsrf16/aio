@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.structure.cache;
 
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -9,7 +10,6 @@ import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.UUID;
 
 
 public class RedisLock {
@@ -42,7 +42,7 @@ public class RedisLock {
         if (!StringUtils.hasText(key))
             throw new IllegalArgumentException(key);
 
-        String identifier = UUID.randomUUID().toString();
+        String identifier = IDS.uuid();
         String lockKey = getKeyName(key);
         byte[] lockKeyBytes = lockKey.getBytes();
         long lockExpire = expireMillisecond / 1000;

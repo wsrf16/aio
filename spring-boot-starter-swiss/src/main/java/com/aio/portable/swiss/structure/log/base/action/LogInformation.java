@@ -25,6 +25,8 @@ public interface LogInformation {
 
     <T> void info(String summary, T t);
 
+    <T> void info(String summary, String message, T t);
+
     default void i(String message) {
         info(message);
     }
@@ -47,5 +49,9 @@ public interface LogInformation {
 
     default <T> void i(String summary, T t) {
         info(summary, t);
+    }
+
+    default <T> void i(String summary, String message, T t) {
+        info(summary, message, t);
     }
 }

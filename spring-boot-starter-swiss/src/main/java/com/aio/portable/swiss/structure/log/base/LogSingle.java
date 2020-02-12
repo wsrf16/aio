@@ -181,6 +181,27 @@ public abstract class LogSingle extends LogBody {
     }
 
     /**
+     * verbose
+     *
+     * @param summary
+     * @param message
+     * @param t
+     * @param <T>
+     */
+    @Override
+    public <T> void verbose(String summary, String message, T t) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.VERBOSE.getName();
+            note.summary = summary;
+            note.message = message;
+            note.data = t;
+        }
+        output(verbosePrinter, note);
+    }
+
+    /**
      * trace
      *
      * @param message
@@ -270,6 +291,26 @@ public abstract class LogSingle extends LogBody {
             note.name = getName();
             note.level = LevelEnum.TRACE.getName();
             note.summary = summary;
+            note.data = t;
+        }
+        output(tracePrinter, note);
+    }
+
+    /**
+     * trace
+     * @param summary
+     * @param message
+     * @param t
+     * @param <T>
+     */
+    @Override
+    public <T> void trace(String summary, String message, T t) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.TRACE.getName();
+            note.summary = summary;
+            note.message = message;
             note.data = t;
         }
         output(tracePrinter, note);
@@ -371,6 +412,26 @@ public abstract class LogSingle extends LogBody {
     }
 
     /**
+     * info
+     * @param summary
+     * @param message
+     * @param t
+     * @param <T>
+     */
+    @Override
+    public <T> void info(String summary, String message, T t) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.INFO.getName();
+            note.summary = summary;
+            note.message = message;
+            note.data = t;
+        }
+        output(infoPrinter, note);
+    }
+
+    /**
      * debug
      *
      * @param message
@@ -460,6 +521,26 @@ public abstract class LogSingle extends LogBody {
             note.name = getName();
             note.level = LevelEnum.DEBUG.getName();
             note.summary = summary;
+            note.data = t;
+        }
+        output(debugPrinter, note);
+    }
+
+    /**
+     * debug
+     * @param summary
+     * @param message
+     * @param t
+     * @param <T>
+     */
+    @Override
+    public <T> void debug(String summary, String message, T t) {
+        LogNote note = new LogNote();
+        {
+            note.name = getName();
+            note.level = LevelEnum.DEBUG.getName();
+            note.summary = summary;
+            note.message = message;
             note.data = t;
         }
         output(debugPrinter, note);

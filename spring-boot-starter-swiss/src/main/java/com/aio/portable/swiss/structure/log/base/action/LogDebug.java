@@ -24,6 +24,8 @@ public interface LogDebug {
 
     <T> void debug(String summary, T t);
 
+    <T> void debug(String summary, String message, T t);
+
     default void d(String message) {
         debug(message);
     }
@@ -46,5 +48,9 @@ public interface LogDebug {
 
     default <T> void d(String summary, T t) {
         debug(summary, t);
+    }
+
+    default <T> void d(String summary, String message, T t) {
+        debug(summary, message, t);
     }
 }

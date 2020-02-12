@@ -5,7 +5,7 @@ import com.aio.portable.swiss.structure.log.base.Printer;
 import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
 import com.aio.portable.swiss.structure.log.base.parts.LevelEnum;
 import com.aio.portable.swiss.structure.log.base.parts.LogNote;
-import com.aio.portable.swiss.sugar.StackTraceInfoSugar;
+import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.structure.log.base.classic.impl.es.ESLogNote;
 
 /**
@@ -13,7 +13,7 @@ import com.aio.portable.swiss.structure.log.base.classic.impl.es.ESLogNote;
  */
 public class KafkaLog extends LogSingle {
     public final static KafkaLog build() {
-        String name = StackTraceInfoSugar.Previous.getClassName();
+        String name = StackTraceSugar.Previous.getClassName();
         return build(name);
     }
 

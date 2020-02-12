@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.sugar.algorithm.passwordencoder;
+package com.aio.portable.swiss.sugar.algorithm.cipher.passwordencoder;
 
 import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
 import org.springframework.security.crypto.password.PasswordEncoder;

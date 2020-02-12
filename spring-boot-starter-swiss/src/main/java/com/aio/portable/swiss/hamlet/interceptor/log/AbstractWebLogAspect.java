@@ -4,21 +4,15 @@ import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.structure.log.base.LogHub;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
 import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
-import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import org.aspectj.lang.JoinPoint;
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.stream.Collectors;
 
 class AbstractWebLogAspect {
     public AbstractWebLogAspect(LogHubFactory logHubFactory) {
@@ -55,7 +49,7 @@ class AbstractWebLogAspect {
     public void doBefore(ProceedingJoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        RequestRecord requestRecord = createRequestRecord(request, joinPoint);
+        RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
         LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
         if (logger != null) {
@@ -73,7 +67,7 @@ class AbstractWebLogAspect {
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        RequestRecord requestRecord = createRequestRecord(request, joinPoint);
+        RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
         LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
         String traceId = generateUniqueId();
@@ -100,44 +94,6 @@ class AbstractWebLogAspect {
     }
 
     private static String generateUniqueId() {
-        return UUID.randomUUID().toString().replace("-", Constant.EMPTY);
-    }
-
-    private static RequestRecord createRequestRecord(HttpServletRequest request, JoinPoint joinPoint) {
-        RequestRecord requestRecord = new RequestRecord();
-        requestRecord.setRemoteAddress(request.getRemoteAddr());
-        String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY :  "?" + request.getQueryString());
-        requestRecord.setRequestURL(url);
-        requestRecord.setHttpMethod(request.getMethod());
-        requestRecord.setHeaders(parseHeader(request));
-        requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-
-        Object[] args = filterArguments(joinPoint.getArgs());
-        requestRecord.setArguments(args);
-        return requestRecord;
-    }
-
-    private static Object[] filterArguments(Object[] args) {
-        Object[] newArgs = Arrays.stream(args).filter(c -> filterArgumentsCondition(c)).collect(Collectors.toList()).toArray();
-        return newArgs;
-    }
-
-    private static boolean filterArgumentsCondition(Object arg) {
-        boolean b = arg != null;
-        b = b && !(arg instanceof HttpServletRequest);
-        b = b && !(arg instanceof HttpServletResponse);
-        b = b && !(arg instanceof BindingResult);
-        return b;
-    }
-
-    private static Map<String, String> parseHeader(HttpServletRequest request) {
-        HashMap<String, String> map = new HashMap<>();
-        Enumeration<String> nameEnumeration = request.getHeaderNames();
-        while(nameEnumeration.hasMoreElements()){
-            String name = nameEnumeration.nextElement();
-            String value = request.getHeader(name);
-            map.put(name, value);
-        }
-        return map;
+        return IDS.uuid();
     }
 }

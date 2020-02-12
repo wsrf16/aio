@@ -31,6 +31,10 @@ spring:
       password: 1111
       jpa:
         database: mysql
+        #启动时需要初始化的建表语句
+        schema: classpath:schema-mysql.sql
+        #初始化的数据
+        data: classpath:data-mysql.sql
         show-sql: true
         open-in-view: false
         generate-ddl: true

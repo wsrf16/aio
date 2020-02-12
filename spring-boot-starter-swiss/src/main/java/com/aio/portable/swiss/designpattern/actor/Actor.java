@@ -3,6 +3,7 @@ package com.aio.portable.swiss.designpattern.actor;
 import com.aio.portable.swiss.designpattern.actor.behavior.ActorBehavior;
 import com.aio.portable.swiss.designpattern.actor.message.Message;
 import com.aio.portable.swiss.designpattern.actor.message.MessageReturn;
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -17,7 +18,7 @@ public class Actor<T, R> implements ActorAction {
 
     private static ExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
 
-    private String name = "actor-" + UUID.randomUUID();
+    private String name = "actor-" + IDS.uuid();
 
     Function<Message<T>, MessageReturn<R>> actorBehaviorFunction;
 

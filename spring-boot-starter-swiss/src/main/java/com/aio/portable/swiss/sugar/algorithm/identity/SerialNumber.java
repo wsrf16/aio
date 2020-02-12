@@ -1,4 +1,6 @@
-package com.aio.portable.swiss.sugar;
+package com.aio.portable.swiss.sugar.algorithm.identity;
+
+import com.aio.portable.swiss.sugar.StringSugar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by York on 2017/11/23.
  */
-public class BasicType {
+public class SerialNumber {
 //    private final static Object _serialNumberLock = new Object();
     private final static Lock lock = new ReentrantLock();
     private final static String DATETIME_FORMAT = "yyyyMMddHHmmssSSS";

@@ -1,15 +1,13 @@
 package com.aio.portable.swiss.autoconfigure.properties;
 
-import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.structure.net.protocol.http.JWTSugar;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 import org.springframework.beans.BeanUtils;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 //@Configuration
 //@ConfigurationProperties(
@@ -95,7 +93,7 @@ public class JWTProperties  {
 
     public JWTClaims toJWTClaims() {
         Calendar now = DateTimeSugar.CalendarUtils.now();
-        String JWTId = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
+        String JWTId = IDS.uuid();
         Date issuedAt = now.getTime();
         Date expiresAt = JWTSugar.Classic.getExpiredDate(now, expiredHours);
 

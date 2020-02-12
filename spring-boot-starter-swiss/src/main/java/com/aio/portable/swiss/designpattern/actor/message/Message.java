@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.designpattern.actor.message;
 
 
-import java.util.UUID;
+import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
 
 public class Message<T> {
-    private String traceId = UUID.randomUUID().toString();
+    private String traceId = IDS.uuid();
 
     private T data;
 

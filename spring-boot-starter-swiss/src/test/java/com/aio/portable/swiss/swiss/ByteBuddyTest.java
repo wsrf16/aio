@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.bytecode.bytebuddy.ByteBuddySugar;
+import com.aio.portable.swiss.suite.bytecode.bytebuddy.ByteBuddySugar;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;

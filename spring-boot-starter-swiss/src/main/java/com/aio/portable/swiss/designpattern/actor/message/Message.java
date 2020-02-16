@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.designpattern.actor.message;
 
 
-import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
+import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 
 public class Message<T> {
     private String traceId = IDS.uuid();

@@ -9,14 +9,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @Configuration
 public class BeanConfig extends HamletBeanConfig {
     @Bean
-    public static ObjectMapper objectMapper() {
-        return HamletBeanConfig.objectMapper();
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        return super.threadPoolTaskScheduler();
     }
 
     @Bean
-    public ThreadPoolTaskScheduler migrateThreadPoolTaskScheduler() {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.initialize();
-        return threadPoolTaskScheduler;
+    public ObjectMapper objectMapper() {
+        return super.objectMapper();
     }
 }

@@ -2,9 +2,9 @@ package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
-import com.aio.portable.swiss.structure.log.base.LogHub;
-import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
-import com.aio.portable.swiss.structure.log.base.factory.LogHubPool;
+import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.factory.LogHubPool;
 import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;

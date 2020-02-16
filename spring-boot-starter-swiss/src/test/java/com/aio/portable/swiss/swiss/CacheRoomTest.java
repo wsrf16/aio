@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.cache.CacheRoom;
+import com.aio.portable.swiss.suite.cache.CacheRoom;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

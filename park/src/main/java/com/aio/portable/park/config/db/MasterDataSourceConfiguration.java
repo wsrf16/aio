@@ -1,7 +1,6 @@
 package com.aio.portable.park.config.db;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
-import com.aio.portable.swiss.structure.database.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;
+import com.aio.portable.swiss.suite.database.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;

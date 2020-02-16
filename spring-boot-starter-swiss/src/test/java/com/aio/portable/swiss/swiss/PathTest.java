@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.io.PathSugar;
+import com.aio.portable.swiss.suite.io.PathSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

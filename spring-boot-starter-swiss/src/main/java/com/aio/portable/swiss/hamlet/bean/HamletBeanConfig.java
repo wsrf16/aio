@@ -1,11 +1,13 @@
 package com.aio.portable.swiss.hamlet.bean;
 
+import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -17,9 +19,8 @@ import java.util.TimeZone;
 
 //@Configuration
 public abstract class HamletBeanConfig {
-//    @Bean
-    public static ObjectMapper objectMapper(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public ObjectMapper objectMapper(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateTimeSugar.Format.FORMAT_NORMAL_LONG);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
 
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder()
@@ -29,8 +30,7 @@ public abstract class HamletBeanConfig {
         return builder.build();
     }
 
-//    @Bean
-    public static MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(ObjectMapper objectMapper){
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(ObjectMapper objectMapper){
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
 //        List<MediaType> list = new ArrayList<MediaType>() {{
@@ -38,6 +38,12 @@ public abstract class HamletBeanConfig {
 //        }};
 //        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(list);
         return mappingJackson2HttpMessageConverter;
+    }
+
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.initialize();
+        return threadPoolTaskScheduler;
     }
 
 }

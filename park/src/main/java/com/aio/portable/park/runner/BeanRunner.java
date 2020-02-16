@@ -1,10 +1,10 @@
 package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.AppLogHubFactory;
-import com.aio.portable.swiss.structure.log.base.LogHub;
-import com.aio.portable.swiss.sugar.algorithm.cipher.CipherSugar;
-import com.aio.portable.swiss.sugar.resource.PackageSugar;
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
+import com.aio.portable.swiss.suite.resource.PackageSugar;
+import com.aio.portable.swiss.suite.resource.ResourceSugar;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.module.elasticsearch;
 
-import com.aio.portable.swiss.structure.bean.BeanSugar;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;

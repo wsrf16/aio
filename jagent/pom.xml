@@ -11,7 +11,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>jagent</artifactId>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.1.6-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>spring-boot-starter-swiss</artifactId>
-            <version>1.1.5-SNAPSHOT</version>
+            <version>1.1.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

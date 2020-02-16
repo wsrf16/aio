@@ -1,6 +1,6 @@
 package com.aio.portable.park.aop;
 
-import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.hamlet.interceptor.log.HamletWebLogAspect;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;

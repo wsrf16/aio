@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.document.method.PropertiesMapping;
+import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.io.IOException;

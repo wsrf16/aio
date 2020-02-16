@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
+import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.suite.resource.ResourceSugar;
+import com.aio.portable.swiss.suite.resource.StreamClassLoader;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;

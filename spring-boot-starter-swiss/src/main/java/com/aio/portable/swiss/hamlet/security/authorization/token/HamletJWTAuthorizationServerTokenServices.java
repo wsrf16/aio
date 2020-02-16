@@ -1,8 +1,7 @@
 package com.aio.portable.swiss.hamlet.security.authorization.token;
 
 import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
-import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
-import com.aio.portable.swiss.structure.security.authentication.jwt.JWTAction;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.beans.factory.annotation.Autowired;

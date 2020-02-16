@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 public class Measure {
     public static class Time {
-        public static long timing(Supplier<Void> supplier) {
+        public static long count(Supplier<Void> supplier) {
             long prevTime = System.currentTimeMillis();
             supplier.get();
             long nextTime = System.currentTimeMillis();

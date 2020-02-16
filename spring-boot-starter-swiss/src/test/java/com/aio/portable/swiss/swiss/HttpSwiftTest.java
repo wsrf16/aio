@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.bean.serializer.SerializerEnum;
-import com.aio.portable.swiss.structure.net.protocol.http.HttpSwift;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
+import com.aio.portable.swiss.suite.net.protocol.http.HttpSwift;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;

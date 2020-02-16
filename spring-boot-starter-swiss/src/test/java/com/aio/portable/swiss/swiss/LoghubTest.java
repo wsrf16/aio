@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.log.base.classic.impl.console.ConsoleLog;
-import com.aio.portable.swiss.structure.log.base.classic.impl.file.FileLog;
-import com.aio.portable.swiss.structure.log.base.classic.impl.slf4j.Slf4JLog;
-import com.aio.portable.swiss.structure.log.base.LogHub;
-import com.aio.portable.swiss.structure.log.base.factory.classic.ConsoleHubFactory;
+import com.aio.portable.swiss.suite.log.classic.impl.console.ConsoleLog;
+import com.aio.portable.swiss.suite.log.classic.impl.file.FileLog;
+import com.aio.portable.swiss.suite.log.classic.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.factory.classic.ConsoleHubFactory;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

@@ -1,7 +1,6 @@
 package com.aio.portable.park;
 
-import com.aio.portable.swiss.structure.log.annotation.EnableRabbitMQLog;
-import com.aio.portable.swiss.structure.log.base.classic.properties.PropertyBean;
+import com.aio.portable.swiss.suite.log.annotation.EnableRabbitMQLog;
 //import com.aio.portable.park.beanprocessor.CustomImportBeanDefinitionRegistrar;
 //import com.aio.portable.park.ToMapTest;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
@@ -12,7 +11,6 @@ import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication(exclude = {

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss.node;
 
-import com.aio.portable.swiss.structure.bean.node.relation.tiled.AbstractTiledRelationNode;
+import com.aio.portable.swiss.suite.bean.node.relation.tiled.AbstractTiledRelationNode;
 
 public class TiledRelationNodeSample<ID> extends AbstractTiledRelationNode<ID> {
     String name;

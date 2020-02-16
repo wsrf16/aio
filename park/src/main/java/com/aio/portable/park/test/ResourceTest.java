@@ -2,10 +2,10 @@ package com.aio.portable.park.test;
 
 import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.structure.log.base.classic.properties.LogKafkaProperties;
-import com.aio.portable.swiss.structure.log.base.LogHub;
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
+import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.resource.ResourceSugar;
+import com.aio.portable.swiss.suite.resource.StreamClassLoader;
 import com.aio.portable.swiss.sandbox.Wood;
 import org.springframework.core.io.ClassPathResource;
 

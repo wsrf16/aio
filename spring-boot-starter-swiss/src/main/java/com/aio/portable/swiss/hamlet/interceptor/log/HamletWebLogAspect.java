@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
-import com.aio.portable.swiss.structure.log.base.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

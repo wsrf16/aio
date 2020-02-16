@@ -2,9 +2,9 @@ package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sandbox.Wood;
 import com.aio.portable.swiss.sandbox.a中文.AA;
-import com.aio.portable.swiss.structure.bean.serializer.json.GsonSugar;
-import com.aio.portable.swiss.structure.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.GsonSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

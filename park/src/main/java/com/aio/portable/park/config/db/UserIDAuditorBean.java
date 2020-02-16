@@ -1,6 +1,6 @@
 package com.aio.portable.park.config.db;
 
-import com.aio.portable.swiss.structure.database.jpa.config.UserIDAuditorAware;
+import com.aio.portable.swiss.suite.database.jpa.config.UserIDAuditorAware;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

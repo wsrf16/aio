@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sandbox.a中文.Flag;
-import com.aio.portable.swiss.sugar.resource.PackageSugar;
+import com.aio.portable.swiss.suite.resource.PackageSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.autoconfigure;
 
-import com.aio.portable.swiss.structure.cache.RedisLock;
+import com.aio.portable.swiss.suite.cache.RedisLock;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

@@ -44,6 +44,7 @@
 <!--        </filter>-->
 <!--    </appender>-->
 
+    <!-- 日志级别：TRACE < DEBUG < INFO < WARN < ERROR < FATAL -->
     <root level="INFO">
         <appender-ref ref="STD_OUT"/>
         <appender-ref ref="FILE_LOG"/>

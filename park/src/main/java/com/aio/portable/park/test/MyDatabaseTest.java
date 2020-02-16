@@ -4,13 +4,12 @@ import com.aio.portable.parkdb.dao.master.mapper.BookMasterMapper;
 import com.aio.portable.parkdb.dao.slave.mapper.BookSlaveMapper;
 import com.aio.portable.parkdb.dao.third.mapper.BookThirdRepository;
 import com.aio.portable.parkdb.dao.third.model.Book;
-import com.aio.portable.swiss.structure.database.jpa.SpecificationSugar;
+import com.aio.portable.swiss.suite.database.jpa.SpecificationSugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
-import java.util.Optional;
 
 @Configuration
 public class MyDatabaseTest {

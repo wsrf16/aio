@@ -34,7 +34,7 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 
 
 //        converters.add(new ByteArrayHttpMessageConverter());
-//        converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+//        converters.add(new StringHttpyMessageConverter(Charset.forName("UTF-8")));
 //        converters.add(new ResourceHttpMessageConverter());
 //        converters.add(new SourceHttpMessageConverter());
 //        converters.add(new AllEncompassingFormHttpMessageConverter());

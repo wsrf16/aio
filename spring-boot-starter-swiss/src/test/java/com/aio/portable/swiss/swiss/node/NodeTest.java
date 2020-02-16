@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.swiss.node;
 
-import com.aio.portable.swiss.structure.bean.node.LinkedNodeSugar;
-import com.aio.portable.swiss.structure.bean.node.next.layered.LayeredNextNode;
-import com.aio.portable.swiss.structure.bean.node.next.layered.LayeredNextNodeBean;
-import com.aio.portable.swiss.structure.bean.node.relation.layered.LayeredRelationNode;
-import com.aio.portable.swiss.structure.bean.node.relation.layered.LayeredRelationNodeBean;
-import com.aio.portable.swiss.structure.bean.node.next.tiled.TiledNextNode;
-import com.aio.portable.swiss.structure.bean.node.relation.tiled.TiledRelationNode;
+import com.aio.portable.swiss.suite.bean.node.LinkedNodeSugar;
+import com.aio.portable.swiss.suite.bean.node.next.layered.LayeredNextNode;
+import com.aio.portable.swiss.suite.bean.node.next.layered.LayeredNextNodeBean;
+import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
+import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNodeBean;
+import com.aio.portable.swiss.suite.bean.node.next.tiled.TiledNextNode;
+import com.aio.portable.swiss.suite.bean.node.relation.tiled.TiledRelationNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.bean;
 
-import com.aio.portable.swiss.sugar.algorithm.identity.IDS;
+import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import io.swagger.annotations.ApiModelProperty;
 
 //@ApiModel("返回实体")

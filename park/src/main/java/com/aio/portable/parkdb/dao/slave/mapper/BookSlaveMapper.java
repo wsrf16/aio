@@ -1,7 +1,7 @@
 package com.aio.portable.parkdb.dao.slave.mapper;
 
 import com.aio.portable.parkdb.dao.slave.model.Book;
-import com.aio.portable.swiss.structure.database.freedatasource.TargetDataSource;
+import com.aio.portable.swiss.suite.database.freedatasource.TargetDataSource;
 
 import java.util.List;
 

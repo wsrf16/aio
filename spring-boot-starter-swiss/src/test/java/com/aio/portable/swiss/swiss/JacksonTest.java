@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.structure.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

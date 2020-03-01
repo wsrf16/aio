@@ -73,11 +73,13 @@ public class RequestRecord {
 
     public static RequestRecord newInstance(HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
-        requestRecord.setRemoteAddress(request.getRemoteAddr());
-        String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY :  "?" + request.getQueryString());
-        requestRecord.setRequestURL(url);
-        requestRecord.setHttpMethod(request.getMethod());
-        requestRecord.setHeaders(parseHeader(request));
+        if (request != null) {
+            requestRecord.setRemoteAddress(request.getRemoteAddr());
+            String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY : "?" + request.getQueryString());
+            requestRecord.setRequestURL(url);
+            requestRecord.setHttpMethod(request.getMethod());
+            requestRecord.setHeaders(parseHeader(request));
+        }
         requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
 
         Object[] args = filterArguments(joinPoint.getArgs());

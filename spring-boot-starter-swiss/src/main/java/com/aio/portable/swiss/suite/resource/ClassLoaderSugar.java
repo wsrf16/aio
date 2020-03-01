@@ -16,7 +16,7 @@ public abstract class ClassLoaderSugar {
      * @throws ClassNotFoundException
      * @throws NoSuchMethodException
      */
-    public static boolean hasLoaded(String className, ClassLoader classLoader) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
+    public final static boolean hasLoaded(String className, ClassLoader classLoader) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
         final String classLoaderClassName = "java.lang.ClassLoader";
         Class<?> cl = Class.forName(classLoaderClassName, false, Thread.currentThread().getContextClassLoader());
         Method method = cl.getDeclaredMethod("findLoadedClass", new Class[]{String.class});
@@ -42,7 +42,7 @@ public abstract class ClassLoaderSugar {
      * @throws ClassNotFoundException
      * @throws NoSuchMethodException
      */
-    public static boolean hasLoadedInCurrentThread(String className) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
+    public final static boolean hasLoadedInCurrentThread(String className) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
         return hasLoaded(className, Thread.currentThread().getContextClassLoader());
     }
 
@@ -52,7 +52,7 @@ public abstract class ClassLoaderSugar {
      * @param className
      * @return
      */
-    public static boolean load(String className) {
+    public final static boolean load(String className) {
         boolean b = false;
         try {
             Class.forName(className);

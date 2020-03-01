@@ -1,24 +1,52 @@
 package com.aio.portable.park.controller;
 
+import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.swiss.suite.io.IOSugar;
+import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 @RestController
 @RequestMapping("tool")
 public class ToolController {
+    LogHub log = AppLogHubFactory.singletonInstance().buildAsync();
+
+
+//    @PostMapping("/upload")
+//    @ResponseBody
+//    public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+//        String fileName = multipartFile.getOriginalFilename();
+//        File file = new File(fileName);
+//        Path path = file.toPath();
+//        multipartFile.transferTo(path);
+//        return file.getAbsolutePath();
+//    }
+
+    @Autowired
+    private HttpServletRequest request;
     @PostMapping("/upload")
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        Path dir = new File("upload").toPath();
+        IOSugar.createDirectoryIfNotExists(dir);
+
         String fileName = multipartFile.getOriginalFilename();
-        File file = new File(fileName);
-        Path path = file.toPath();
-        multipartFile.transferTo(path);
-        return file.getAbsolutePath();
+        Path file = Paths.get(dir.toString(), fileName);
+        multipartFile.transferTo(file);
+
+        String realIP = HostInfo.getClientIpAddress(request);
+        String ret = realIP + ":" + file.toString();
+        log.info("upload", ret);
+        return ret;
     }
 
     @PostMapping("/uploads")

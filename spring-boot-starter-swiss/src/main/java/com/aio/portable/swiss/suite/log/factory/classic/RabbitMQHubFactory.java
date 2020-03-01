@@ -5,7 +5,7 @@ import com.aio.portable.swiss.suite.log.classic.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 
-public class RabbitMQHubFactory implements LogHubFactory {
+public class RabbitMQHubFactory extends LogHubFactory {
     protected static RabbitMQHubFactory instance = new RabbitMQHubFactory();
 
     public synchronized static RabbitMQHubFactory singletonInstance() {
@@ -17,6 +17,8 @@ public class RabbitMQHubFactory implements LogHubFactory {
 
     public LogHub build(String className) {
         LogHub logger = LogHub.build(Slf4JLog.build(className), RabbitLog.build(className));
+        logger.setEnable(this.isEnable());
+        logger.setLevel(this.getLevel());
         return logger;
     }
 }

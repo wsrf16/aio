@@ -4,7 +4,7 @@ import com.aio.portable.swiss.suite.log.classic.impl.file.FileLog;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 
-public class FileHubFactory implements LogHubFactory {
+public class FileHubFactory extends LogHubFactory {
     protected static FileHubFactory instance = new FileHubFactory();
 
     public synchronized static FileHubFactory singletonInstance() {
@@ -16,6 +16,8 @@ public class FileHubFactory implements LogHubFactory {
 
     public LogHub build(String className) {
         LogHub logger = LogHub.build(FileLog.build(className));
+        logger.setEnable(this.isEnable());
+        logger.setLevel(this.getLevel());
         return logger;
     }
 }

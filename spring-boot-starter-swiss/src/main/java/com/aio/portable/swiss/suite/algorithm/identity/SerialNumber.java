@@ -15,7 +15,7 @@ public class SerialNumber {
     private final static Lock lock = new ReentrantLock();
     private final static String DATETIME_FORMAT = "yyyyMMddHHmmssSSS";
 
-    public static SerialNumberBuilder serialNumberBuilder() {
+    public final static SerialNumberBuilder serialNumberBuilder() {
         String dateTimeFormat = DATETIME_FORMAT;
         int minCount = 1;
         int countDigit = 4;
@@ -29,12 +29,12 @@ public class SerialNumber {
      * @param countDigit 最大位数（默认值：4）
      * @return
      */
-    public static SerialNumberBuilder serialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
+    public final static SerialNumberBuilder serialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
         return new SerialNumberBuilder(dateTimeFormat, minCount, countDigit);
     }
 
 
-    public static class SerialNumberBuilder {
+    public final static class SerialNumberBuilder {
         String dateTimeFormat;
         int countInSecond;
         String latestDateTime;
@@ -70,7 +70,7 @@ public class SerialNumber {
     }
 
 
-    //public static <T> Class<T> T2Class(T)
+    //public final static <T> Class<T> T2Class(T)
      //(Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]
 }
 

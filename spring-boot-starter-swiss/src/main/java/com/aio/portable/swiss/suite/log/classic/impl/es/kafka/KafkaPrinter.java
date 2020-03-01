@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KafkaPrinter implements Printer {
-    public static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
-    public static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
-    public static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
-    public static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
+    public final static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
+    public final static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
+    public final static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
+    public final static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
 
     String logName;
     String logfilePrefix;
@@ -39,7 +39,7 @@ public class KafkaPrinter implements Printer {
      * @param logFilePrefix
      * @return 返回日志格式：[ROOT_LOGFOLDER]\[logName]\[logFilePrefix][SEPARATOR_CHAR][OCCUPY_MAX][SEPARATOR_CHAR][TIMEFORMAT][LOG_EXTENSION]
      */
-    public static synchronized KafkaPrinter instance(String logName, String logFilePrefix, LogKafkaProperties properties) {
+    public final static synchronized KafkaPrinter instance(String logName, String logFilePrefix, LogKafkaProperties properties) {
         String section = String.join(Constant.EMPTY, logName, SECTION_SEPARATOR, logFilePrefix);
         {
             if (instanceMaps.keySet().contains(section))

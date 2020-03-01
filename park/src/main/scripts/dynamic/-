@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function mkdirLog() {
   if [[ ! -d $log_dir_absolute_path ]]; then
     mkdir $log_dir_absolute_path
@@ -21,16 +22,19 @@ function getExt() {
   echo $_ext
 }
 
-function getOnlyfilename() {
-  _tmp=${1##*/}
+function getOnlyFilename() {
+  tmp=${1##*/}
   _onlyfilename=${tmp%.*}
   echo $_onlyfilename
 }
 
-function getFilename() {
+function getFullFilename() {
   _filename=${1##*/}
   echo $_filename
 }
+
+#function getExt() {
+#}
 
 function getDirectory() {
   echo ${1%/*}
@@ -249,6 +253,11 @@ log_remain_line=100000
 ip_addr=$(getIpAddr)
 debug_port=8088
 
+args_app=@args.app@
+if [[ "${args_app}" =~ ^@.*@$ ]]; then
+  args_app=''
+fi
+
 dirname_dependency=@project.deploy.directoryName.dependency@
 if [[ "${dirname_dependency}" =~ ^@.*@$ ]]; then
   dirname_dependency=lib/
@@ -276,14 +285,18 @@ fi
 
 
 if [[ $mode == "dynamic" ]]; then
-  jar_filename=${self_filename%.*}
+#  jar_filename=${self_filename%.*}
+  jar_filename=$(getOnlyFilename $self_filename)
   jar_file_path=$dir_path/$jar_filename
   sh_file_path=$dir_path/$self_filename
-  dir_path=${dir_path}
   dir_path=$(getDirectory ${jar_file_path})
 else
-  jar_file_path=($(readlink -f $2))
-  jar_filename=($(getFilename $jar_file_path))
+  if [[ -z $2 ]]; then
+      jar_file_path=$PWD/$(getFullFilename $PWD).jar
+    else
+      jar_file_path=($(readlink -f $2))
+  fi
+  jar_filename=$(getFullFilename $jar_file_path)
   sh_file_path=$dir_path/$self_filename
   dir_path=$(getDirectory ${jar_file_path})
 fi

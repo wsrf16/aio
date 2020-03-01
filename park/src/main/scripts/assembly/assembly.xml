@@ -2,7 +2,8 @@
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0
           http://maven.apache.org/xsd/assembly-2.0.0.xsd
           http://maven.apache.org/ASSEMBLY/2.0.0 ">
-    <id>${profiles.active}</id>
+<!--    <id>${profiles.active}</id>-->
+    <id>package</id>
     <formats>
         <!--<format>dir</format>-->
         <!--<format>zip</format>-->
@@ -67,21 +68,21 @@
     </fileSets>
     <files>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
             <outputDirectory></outputDirectory>
             <destName>-</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
             <outputDirectory></outputDirectory>
             <destName>${project.build.finalName}.jar.sh</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-.jar.sh</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
             <outputDirectory>bin</outputDirectory>
             <destName>launch.sh</destName>
             <fileMode>755</fileMode>

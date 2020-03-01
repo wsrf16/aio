@@ -19,7 +19,7 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public static String getPath(final Class<?> clazz) throws MalformedURLException {
+    public final static String getPath(final Class<?> clazz) throws MalformedURLException {
         final String clazzFile = convertQualifiedName2ResourceFilePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();

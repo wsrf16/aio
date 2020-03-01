@@ -24,7 +24,7 @@ public abstract class StreamSugar {
      * @param stream Stream to reverse
      * @return Reversed stream
      */
-    public static <T> Stream<T> reverse(final Stream<T> stream) {
+    public final static <T> Stream<T> reverse(final Stream<T> stream) {
         List<T> reverseList = stream.collect(Collectors.toList());
         java.util.Collections.reverse(reverseList);
         return reverseList.stream();

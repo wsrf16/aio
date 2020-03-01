@@ -299,30 +299,34 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
+                <args.app></args.app>
             </properties>
         </profile>
         <profile>
             <id>uat</id>
             <properties>
                 <profiles.active>uat</profiles.active>
+                <args.app></args.app>
             </properties>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
+                <args.app></args.app>
             </properties>
         </profile>
         <profile>
             <id>prod-docker</id>
             <properties>
                 <profiles.active>prod-docker</profiles.active>
+                <args.app></args.app>
             </properties>
         </profile>
     </profiles>
 
     <build>
-        <finalName>${project-build-finalName}</finalName>
+        <finalName>${project-build-finalName}-${profiles.active}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

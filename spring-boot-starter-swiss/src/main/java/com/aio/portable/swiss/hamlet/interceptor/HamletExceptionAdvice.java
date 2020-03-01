@@ -45,14 +45,14 @@ public abstract class HamletExceptionAdvice {
         String traceId = inpute.getTraceId();
         responseWrapper.setTraceId(traceId);
 
-        RequestRecord requestRecord = inpute.getRequestRecord();
-        LogHub logger = loggerPool.putIfAbsent(e);
-        if (logger != null) {
-            if (e instanceof BizException)
-                logger.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, traceId), requestRecord, e);
-            else
-                logger.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, traceId), e.getMessage(), e);
-        }
+//        RequestRecord requestRecord = inpute.getRequestRecord();
+//        LogHub logger = loggerPool.putIfAbsent(e);
+//        if (logger != null) {
+//            if (e instanceof BizException)
+//                logger.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, traceId), requestRecord, e);
+//            else
+//                logger.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, traceId), e.getMessage(), e);
+//        }
         return responseWrapper;
     }
 

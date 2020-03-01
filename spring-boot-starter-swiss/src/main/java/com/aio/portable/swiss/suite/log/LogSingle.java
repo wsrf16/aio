@@ -47,7 +47,7 @@ public abstract class LogSingle extends LogSingleBody {
         this.async = async;
     }
 
-    public final static ExecutorService executor = Executors.newCachedThreadPool();
+    public final static ExecutorService executor = Executors.newFixedThreadPool(2);
 
     protected Printer verbosePrinter;
     protected Printer infoPrinter;

@@ -4,7 +4,7 @@ import com.aio.portable.swiss.suite.log.classic.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 
-public class Slf4jHubFactory implements LogHubFactory {
+public class Slf4jHubFactory extends LogHubFactory {
     protected static Slf4jHubFactory instance = new Slf4jHubFactory();
 
     public synchronized static Slf4jHubFactory singletonInstance() {
@@ -16,6 +16,8 @@ public class Slf4jHubFactory implements LogHubFactory {
 
     public LogHub build(String className) {
         LogHub logger = LogHub.build(Slf4JLog.build(className));
+        logger.setEnable(this.isEnable());
+        logger.setLevel(this.getLevel());
         return logger;
     }
 }

@@ -41,7 +41,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static String obj2ShortJson(Object obj) {
+    public final static String obj2ShortJson(Object obj) {
 //        return obj2Json(obj, false, false);
         ObjectMapper mapper = shortObjectMapper;
         String json;
@@ -61,7 +61,7 @@ public class JacksonSugar {
      * @param throwException
      * @return
      */
-    public static String obj2ShortJson(Object obj, Boolean throwException) {
+    public final static String obj2ShortJson(Object obj, Boolean throwException) {
         if (throwException)
             return obj2ShortJson(obj);
         else {
@@ -81,7 +81,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static String obj2LongJson(Object obj) {
+    public final static String obj2LongJson(Object obj) {
 //        return obj2Json(obj, true, true);
         ObjectMapper mapper = longObjectMapper;
         String json;
@@ -101,7 +101,7 @@ public class JacksonSugar {
      * @param throwException
      * @return
      */
-    public static String obj2LongJson(Object obj, Boolean throwException) {
+    public final static String obj2LongJson(Object obj, Boolean throwException) {
         if (throwException)
             return obj2LongJson(obj);
         else {
@@ -121,7 +121,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static String obj2Json(Object obj) {
+    public final static String obj2Json(Object obj) {
 //        return obj2Json(obj, false, true);
         ObjectMapper mapper = normalObjectMapper;
         String json;
@@ -141,7 +141,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static String obj2Json(Object obj, Boolean throwException) {
+    public final static String obj2Json(Object obj, Boolean throwException) {
         if (throwException)
             return obj2Json(obj, false, true);
         else {
@@ -180,7 +180,7 @@ public class JacksonSugar {
      * @param strategy
      * @return
      */
-    public static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
+    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
         return getObjectMapper(indent, includeNullAndEmpty, strategy, null);
     }
 
@@ -193,7 +193,7 @@ public class JacksonSugar {
      * @param dateFormat
      * @return
      */
-    public static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
+    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
         ObjectMapper mapper = new Jackson2ObjectMapperBuilder().build()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -234,7 +234,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static <T> T json2T(String jsonStr, Class<T> clazz) {
+    public final static <T> T json2T(String jsonStr, Class<T> clazz) {
         ObjectMapper mapper = dumpObjectMapper;
         try {
             return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
@@ -250,7 +250,7 @@ public class JacksonSugar {
      * @param jsonStr
      * @return
      */
-    public static JsonNode json2JsonNode(String jsonStr) {
+    public final static JsonNode json2JsonNode(String jsonStr) {
         ObjectMapper mapper = dumpObjectMapper;
         try {
             return mapper.readTree(jsonStr);
@@ -268,7 +268,7 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public static <T> T json2Complex(String jsonStr) {
+    public final static <T> T json2Complex(String jsonStr) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
 
@@ -289,7 +289,7 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
+    public final static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
@@ -307,7 +307,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static <T> boolean can2T(String jsonStr, Class<T> clazz) {
+    public final static <T> boolean can2T(String jsonStr, Class<T> clazz) {
         boolean can = json2T(jsonStr, clazz) == null ? false : true;
         return can;
     }
@@ -320,7 +320,7 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public static <T> boolean can2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
+    public final static <T> boolean can2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
         boolean can = json2Complex(jsonStr, valueTypeRef) == null ? false : true;
         return can;
     }
@@ -331,7 +331,7 @@ public class JacksonSugar {
      * @param jsonStr {"key" : "value"}
      * @return
      */
-//    public static JSONObject json2JObj(String jsonStr) {
+//    public final static JSONObject json2JObj(String jsonStr) {
 //        return new JSONObject(jsonStr);
 //    }
 
@@ -341,7 +341,7 @@ public class JacksonSugar {
      * @param jsonStr [{"key1" : "value1"}, {"key2" : "value2"}]
      * @return
      */
-//    public static JSONArray json2JArray(String jsonStr) {
+//    public final static JSONArray json2JArray(String jsonStr) {
 //        return new JSONArray(jsonStr);
 //    }
 
@@ -352,7 +352,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static <T> T deepClone(Object source, Class<T> targetClass) {
+    public final static <T> T deepClone(Object source, Class<T> targetClass) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), targetClass);
         return t;
     }

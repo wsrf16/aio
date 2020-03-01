@@ -101,3 +101,33 @@ xxl:
       # 执行器日志保存天数 [选填] ：值大于3时生效，启用执行器Log文件定期清理功能，否则不生效；
       logretentiondays: -1
 
+
+app:
+  id: park
+apollo:
+  bootstrap:
+    enabled: true
+    eagerLoad:
+      enabled: true
+
+---
+spring:
+  profiles: dev
+
+apollo:
+  meta: http://10.124.192.118:8080
+
+
+---
+spring:
+  profiles: uat
+
+apollo:
+  meta: http://10.124.192.118:8082
+
+---
+spring:
+  profiles: prod
+
+apollo:
+  meta: http://10.124.192.118:8081

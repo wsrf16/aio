@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RestTemplater {
-    public static class Http {
+    public final static class Http {
         public final static HttpHeaders jsonHttpHead() {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
@@ -37,14 +37,14 @@ public class RestTemplater {
         }
     }
 
-    public static class Build {
-        public static RestTemplate buildProxyRestTemplate(String host, int port, String username, String password) {
+    public final static class Build {
+        public final static RestTemplate buildProxyRestTemplate(String host, int port, String username, String password) {
             HttpComponentsClientHttpRequestFactory factory = buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
 
             return new RestTemplate(factory);
         }
 
-        public static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
+        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
             SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
 
             RestTemplate restTemplate = restTemplateBuilder.build();
@@ -52,7 +52,7 @@ public class RestTemplater {
             return restTemplate;
         }
 
-        public static RestTemplate buildProxyRestTemplate(String host, int port) {
+        public final static RestTemplate buildProxyRestTemplate(String host, int port) {
             SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
 
             return new RestTemplate(factory);

@@ -21,7 +21,7 @@ public class StreamClassLoader extends ClassLoader {
      * @param name : com/art/Book.class
      * @return
      */
-    public static StreamClassLoader buildByResource(String name) {
+    public final static StreamClassLoader buildByResource(String name) {
         URL url = StreamClassLoader.class.getClassLoader().getResource(name);
         return new StreamClassLoader(url.getPath());
     }
@@ -32,7 +32,7 @@ public class StreamClassLoader extends ClassLoader {
      * @param file : target/classes/com/art/Book.class  |  art-1.0-SNAPSHOT.jar
      * @return
      */
-    public static StreamClassLoader buildByFile(String file) {
+    public final static StreamClassLoader buildByFile(String file) {
         return new StreamClassLoader(file);
     }
 

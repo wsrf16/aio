@@ -14,7 +14,7 @@ public class MonitorInterceptor {
     }
 
     @RuntimeType
-    public static Object intercept(@This Object proxy,
+    public final static Object intercept(@This Object proxy,
                                    @AllArguments Object[] arguments,
                                    @Origin Class clazz,
                                    @Origin Method method,
@@ -34,7 +34,7 @@ public class MonitorInterceptor {
     }
 
     @RuntimeType
-    public static Object staticIntercept(@AllArguments Object[] arguments,
+    public final static Object staticIntercept(@AllArguments Object[] arguments,
                                          @Origin Class clazz,
                                          @Origin Method method,
                                          @SuperCall Callable<?> callable) throws Exception {

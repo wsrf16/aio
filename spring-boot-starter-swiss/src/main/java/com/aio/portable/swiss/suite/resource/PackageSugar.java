@@ -20,12 +20,12 @@ public abstract class PackageSugar {
      * @param clazz
      * @return
      */
-    public static String getImplementationVersion(Class clazz){
+    public final static String getImplementationVersion(Class clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
     }
 
-//    public static String getImplementationVersion(){
+//    public final static String getImplementationVersion(){
 //        String ver = Package.getPackage("java.lang").getImplementationVersion();
 //        return ver;
 //    }
@@ -37,7 +37,7 @@ public abstract class PackageSugar {
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public static List<String> getQualifiedClassName(String packageName) throws IOException {
+    public final static List<String> getQualifiedClassName(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
         List<URL> urlList = ResourceSugar.ByClassLoader.getResources(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
@@ -75,7 +75,7 @@ public abstract class PackageSugar {
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    public static List<String> getQualifiedClassNameByPath(String packagePath) {
+    public final static List<String> getQualifiedClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -116,7 +116,7 @@ public abstract class PackageSugar {
      * @return
      * @throws IOException
      */
-    public static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
+    public final static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
         String[] jarInfo = packageURLInJar.split("!");
         String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);

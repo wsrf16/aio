@@ -1,10 +1,12 @@
 package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.test.LogTest;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.suite.resource.PackageSugar;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.system.ApplicationHome;
@@ -16,7 +18,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Configuration
+//@Configuration
 public class BeanRunner implements ApplicationRunner {
 
 //    @Autowired
@@ -24,25 +26,26 @@ public class BeanRunner implements ApplicationRunner {
 
     LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
 
+    @Autowired
+    LogTest logTest;
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        String md5AsBase64 = CipherSugar.SpringFrameWorkUtil.md5AsBase64("1580570851");
 
-        while(true) {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            log.i("a", "aaaaaaaaaaaaa");
+//        while(true) {
+//            try {
+//                Thread.sleep(10000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            log.i("a", "aaaaaaaaaaaaa");
+//
+//            if (1==2)
+//                break;
+//        }
 
-            if (1==2)
-                break;
-        }
-
-        ApplicationHome h = new ApplicationHome(getClass());
-        File jarF = h.getSource();
-        System.out.println(jarF.getParentFile().toString());
+//        ApplicationHome h = new ApplicationHome(getClass());
+//        File jarF = h.getSource();
+//        System.out.println(jarF.getParentFile().toString());
 
 
 //        mybatisTest.blah();

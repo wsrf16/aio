@@ -2,9 +2,10 @@ package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 
 //@FunctionalInterface
-public interface LogHubFactory {
+public abstract class LogHubFactory {
     class Type {
         public final static String CONSOLE_HUB_FACTORY = "consoleHubFactory";
         public final static String LOG4J2_HUB_FACTORY = "log4j2HubFactory";
@@ -13,32 +14,52 @@ public interface LogHubFactory {
         public final static String RABBITMQ_HUB_FACTORY = "rabbitMQHubFactory";
     }
 
-    LogHub build(String className);
+    boolean enable = true;
 
-    default LogHub build(Class clazz) {
+    LevelEnum level = LevelEnum.VERBOSE;
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public LevelEnum getLevel() {
+        return level;
+    }
+
+    public void setLevel(LevelEnum level) {
+        this.level = level;
+    }
+
+    public abstract LogHub build(String className);
+
+    public LogHub build(Class clazz) {
         String className = clazz.getTypeName();
         LogHub logger = build(className);
         return logger;
     }
 
-    default LogHub build() {
+    public LogHub build() {
         String className = StackTraceSugar.Previous.getClassName();
         return build(className);
     }
 
-    default LogHub buildAsync(String className) {
+    public LogHub buildAsync(String className) {
         LogHub logger = build(className);
         logger.setAsync(true);
         return logger;
     }
 
-    default LogHub buildAsync(Class clazz) {
+    public LogHub buildAsync(Class clazz) {
         LogHub logger = build(clazz);
         logger.setAsync(true);
         return logger;
     }
 
-    default LogHub buildAsync() {
+    public LogHub buildAsync() {
         Throwable throwable = new Throwable();
         int depth = 1;
         String className = throwable.getStackTrace()[depth].getClassName();

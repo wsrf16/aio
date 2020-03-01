@@ -33,17 +33,17 @@ public class FilePrinter implements Printer {
 //    }
 
 
-    public static String PATH_PROGRAM_ROOTFOLDER = PropertiesMapping.instance().getString("PATH_PROGRAM_ROOTFOLDER", LoggerConfig.PATH_PROGRAM_ROOTFOLDER);
-    public static String NAME_LOG_ROOTFOLDER = PropertiesMapping.instance().getString("NAME_LOG_ROOTFOLDER", LoggerConfig.NAME_LOG_ROOTFOLDER);
-    public static String LOG_EXTENSION = PropertiesMapping.instance().getString("LOG_EXTENSION", LoggerConfig.LOG_EXTENSION);
-    public static String ZIP_EXTENSION = PropertiesMapping.instance().getString("ZIP_EXTENSION", LoggerConfig.ZIP_EXTENSION);
-    public static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
-    public static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
-    public static String OCCUPY_SEPARATOR = PropertiesMapping.instance().getString("OCCUPY_SEPARATOR", LoggerConfig.OCCUPY_SEPARATOR);
-    public static String SEPARATOR_CHAR = PropertiesMapping.instance().getString("SEPARATOR_CHAR", LoggerConfig.SEPARATOR_CHAR);
-    public static int OCCUPY_MAX = PropertiesMapping.instance().getInt("OCCUPY_MAX", LoggerConfig.OCCUPY_MAX);
-    public static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
-    public static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
+    public final static String PATH_PROGRAM_ROOTFOLDER = PropertiesMapping.instance().getString("PATH_PROGRAM_ROOTFOLDER", LoggerConfig.PATH_PROGRAM_ROOTFOLDER);
+    public final static String NAME_LOG_ROOTFOLDER = PropertiesMapping.instance().getString("NAME_LOG_ROOTFOLDER", LoggerConfig.NAME_LOG_ROOTFOLDER);
+    public final static String LOG_EXTENSION = PropertiesMapping.instance().getString("LOG_EXTENSION", LoggerConfig.LOG_EXTENSION);
+    public final static String ZIP_EXTENSION = PropertiesMapping.instance().getString("ZIP_EXTENSION", LoggerConfig.ZIP_EXTENSION);
+    public final static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
+    public final static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
+    public final static String OCCUPY_SEPARATOR = PropertiesMapping.instance().getString("OCCUPY_SEPARATOR", LoggerConfig.OCCUPY_SEPARATOR);
+    public final static String SEPARATOR_CHAR = PropertiesMapping.instance().getString("SEPARATOR_CHAR", LoggerConfig.SEPARATOR_CHAR);
+    public final static int OCCUPY_MAX = PropertiesMapping.instance().getInt("OCCUPY_MAX", LoggerConfig.OCCUPY_MAX);
+    public final static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
+    public final static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
 
 
     private OutputStreamWriter sw;
@@ -332,19 +332,19 @@ public class FilePrinter implements Printer {
     }
 
 //    class CustomZip {
-//        public static void Compress(String file) {
+//        public final static void Compress(String file) {
 //            //new SoloMid.Compress.SevenZipper().CompressFile(file);
 //            //Library.Compress.ZipHelper.Compress(file);
 //        }
 //
-//        public static void CompressAsync(String file) {
+//        public final static void CompressAsync(String file) {
 //            //new SoloMid.Compress.SevenZipper().CompressFileAsync(file);
 //        }
 //    }
 }
 
 //public class FilePrinterSample {
-//    public static void Do() {
+//    public final static void Do() {
 //        for (int i = 0; i < 50000; i++) {
 //            FilePrinter logger = FilePrinter.bean("name", "prefix");
 //            logger.println("今天是星期天");

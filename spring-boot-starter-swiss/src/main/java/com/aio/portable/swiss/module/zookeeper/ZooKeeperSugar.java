@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ZooKeeperSugar {
-    public static ZooKeeper build(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
+    public final static ZooKeeper build(String connectString, int sessionTimeout, Watcher watcher) throws IOException {
         return new ZooKeeper(connectString, sessionTimeout, watcher);
     }
 
@@ -43,15 +43,15 @@ public class ZooKeeperSugar {
         return sb.toString();
     }
 
-    public static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+    public final static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
         return getChildrenFull1Path(zookeeper, path, false, true);
     }
 
-    public static List<String> getChildrenFull1Path1(ZooKeeper zookeeper, String path, Watcher watcher, boolean recursive) throws KeeperException, InterruptedException {
+    public final static List<String> getChildrenFull1Path1(ZooKeeper zookeeper, String path, Watcher watcher, boolean recursive) throws KeeperException, InterruptedException {
         return getChildrenFullPath(zookeeper, path, watcher, recursive);
     }
 
-    public static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path, boolean watcher, boolean recursive) throws KeeperException, InterruptedException {
+    public final static List<String> getChildrenFull1Path(ZooKeeper zookeeper, String path, boolean watcher, boolean recursive) throws KeeperException, InterruptedException {
         return getChildrenFullPath(zookeeper, path, watcher, recursive);
     }
 
@@ -59,7 +59,7 @@ public class ZooKeeperSugar {
 
 
 
-    public static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, boolean watch, boolean recursive) throws KeeperException, InterruptedException {
+    public final static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, boolean watch, boolean recursive) throws KeeperException, InterruptedException {
         List<String> children = zookeeper.getChildren(path, watch);
         List<String> result = new ArrayList<>();;
         if (!children.isEmpty()) {
@@ -78,7 +78,7 @@ public class ZooKeeperSugar {
     }
 
 
-    public static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, Watcher watch, boolean recursive) throws KeeperException, InterruptedException {
+    public final static List<String> getChildrenFullPath(ZooKeeper zookeeper, String path, Watcher watch, boolean recursive) throws KeeperException, InterruptedException {
         List<String> children = zookeeper.getChildren(path, watch);
         List<String> result = new ArrayList<>();;
         if (!children.isEmpty()) {
@@ -96,118 +96,118 @@ public class ZooKeeperSugar {
         return result;
     }
 
-    public static boolean exists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
+    public final static boolean exists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
         return zookeeper.exists(path, watch) != null;
     }
 
-    public static boolean exists(ZooKeeper zookeeper, String path, Watcher watcher) throws KeeperException, InterruptedException {
+    public final static boolean exists(ZooKeeper zookeeper, String path, Watcher watcher) throws KeeperException, InterruptedException {
         return zookeeper.exists(path, watcher) != null;
     }
 
-//    public static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode, long ttl) throws KeeperException, InterruptedException {
+//    public final static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode, long ttl) throws KeeperException, InterruptedException {
 //        return zookeeper.create(path, bytes, acl, createMode, null, ttl);
 //    }
 
-    public static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode) throws KeeperException, InterruptedException {
+    public final static String create(ZooKeeper zookeeper, String path, byte[] bytes, List<ACL> acl, CreateMode createMode) throws KeeperException, InterruptedException {
         return zookeeper.create(path, bytes, acl, createMode);
     }
 
-    public static String create(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+    public final static String create(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
         return create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
-    public static String create(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
+    public final static String create(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
         return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
-    public static String createIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
+    public final static String createIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
         return exists(zookeeper, path, watch) ? Constant.EMPTY : create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
-    public static String createIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
+    public final static String createIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
         return exists(zookeeper, path, watch) ? Constant.EMPTY : create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
-    public static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
+    public final static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
         return exists(zookeeper, path, watch) ? Constant.EMPTY : createEphemeral(zookeeper, path);
     }
 
-    public static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
+    public final static String createEphemeralIfNotExists(ZooKeeper zookeeper, String path, byte[] bytes, boolean watch) throws KeeperException, InterruptedException {
         return exists(zookeeper, path, watch) ? Constant.EMPTY : createEphemeral(zookeeper, path, bytes);
     }
 
-    public static String createEphemeral(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+    public final static String createEphemeral(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
         return zookeeper.create(path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
     }
 
-    public static String createEphemeral(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
+    public final static String createEphemeral(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
         return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
     }
 
-    public static String createEphemeralSequential(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+    public final static String createEphemeralSequential(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
         return create(zookeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
-    public static String createEphemeralSequential(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
+    public final static String createEphemeralSequential(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
         return create(zookeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
-    public static byte[] getData(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
+    public final static byte[] getData(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
         return zookeeper.getData(path, watch, null);
     }
 
-    public static String getDataForString(ZooKeeper zookeeper, String path, Charset charset, boolean watch) throws KeeperException, InterruptedException {
+    public final static String getDataForString(ZooKeeper zookeeper, String path, Charset charset, boolean watch) throws KeeperException, InterruptedException {
         byte[] bytes = zookeeper.getData(path, watch, null);
         String result = new String(bytes, charset);
         return result;
     }
 
-    public static String getDataForString(ZooKeeper zookeeper, String path, String charsetName, boolean watch) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+    public final static String getDataForString(ZooKeeper zookeeper, String path, String charsetName, boolean watch) throws KeeperException, InterruptedException, UnsupportedEncodingException {
         byte[] bytes = zookeeper.getData(path, watch, null);
         String result = new String(bytes, charsetName);
         return result;
     }
 
-    public static String getDataForString(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
+    public final static String getDataForString(ZooKeeper zookeeper, String path, boolean watch) throws KeeperException, InterruptedException {
         byte[] bytes = zookeeper.getData(path, watch, null);
         String result = new String(bytes);
         return result;
     }
 
-    public static Stat setData(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
+    public final static Stat setData(ZooKeeper zookeeper, String path, byte[] bytes) throws KeeperException, InterruptedException {
         return zookeeper.setData(path, bytes, -1);
     }
 
-    public static Stat setData(ZooKeeper zookeeper, String path, String data, String charsetName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+    public final static Stat setData(ZooKeeper zookeeper, String path, String data, String charsetName) throws KeeperException, InterruptedException, UnsupportedEncodingException {
         byte[] bytes = data.getBytes(charsetName);
         return zookeeper.setData(path, bytes, -1);
     }
 
-    public static Stat setData(ZooKeeper zookeeper, String path, String data, Charset charset) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+    public final static Stat setData(ZooKeeper zookeeper, String path, String data, Charset charset) throws KeeperException, InterruptedException, UnsupportedEncodingException {
         byte[] bytes = data.getBytes(charset);
         return zookeeper.setData(path, bytes, -1);
     }
 
-    public static Stat setData(ZooKeeper zookeeper, String path, String data) throws KeeperException, InterruptedException {
+    public final static Stat setData(ZooKeeper zookeeper, String path, String data) throws KeeperException, InterruptedException {
         byte[] bytes = data.getBytes();
         return zookeeper.setData(path, bytes, -1);
     }
 
-    public static int generateId(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
+    public final static int generateId(ZooKeeper zookeeper, String path) throws KeeperException, InterruptedException {
         Stat stat = zookeeper.setData(path, new byte[0], -1);
         return stat.getVersion();
     }
 
-    public static void deleteIfExists(ZooKeeper zookeeper, String groupName) throws KeeperException, InterruptedException {
+    public final static void deleteIfExists(ZooKeeper zookeeper, String groupName) throws KeeperException, InterruptedException {
         if (exists(zookeeper, groupName, false))
             zookeeper.delete(groupName, -1);
     }
 
-    public static void delete(ZooKeeper zookeeper, String groupName) throws KeeperException, InterruptedException {
+    public final static void delete(ZooKeeper zookeeper, String groupName) throws KeeperException, InterruptedException {
         zookeeper.delete(groupName, -1);
     }
 
-    public static List<OpResult> multi(ZooKeeper zookeeper, List<Op> ops) throws KeeperException, InterruptedException {
+    public final static List<OpResult> multi(ZooKeeper zookeeper, List<Op> ops) throws KeeperException, InterruptedException {
         return zookeeper.multi(ops);
     }
 

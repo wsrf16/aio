@@ -17,11 +17,11 @@ public class KafkaLog extends LogSingle {
         return build(name);
     }
 
-    public static KafkaLog build(String name) {
+    public final static KafkaLog build(String name) {
         return new KafkaLog(name);
     }
 
-    public static KafkaLog build(Class clazz) {
+    public final static KafkaLog build(Class clazz) {
         String name = clazz.getTypeName();
         return build(name);
     }

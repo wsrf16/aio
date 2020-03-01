@@ -11,11 +11,11 @@ import com.aio.portable.swiss.suite.log.classic.impl.es.ESLogNote;
  * Created by York on 2017/11/23.
  */
 public class RabbitLog extends LogSingle {
-    public static RabbitLog build(String name) {
+    public final static RabbitLog build(String name) {
         return new RabbitLog(name);
     }
 
-    public static RabbitLog build(Class clazz) {
+    public final static RabbitLog build(Class clazz) {
         String name = clazz.getTypeName();
         return build(name);
     }
@@ -43,8 +43,8 @@ public class RabbitLog extends LogSingle {
     protected void output(Printer printer, LogNote logNote) {
         String ip = LogSingle.getLocalIp();
         String esIndex = configuration.getEsIndex();
-        ESLogNote kibanaLogNote = new ESLogNote(logNote, esIndex, ip);
-        String text = serializer.serialize(kibanaLogNote);
+        ESLogNote esLogNote = new ESLogNote(logNote, esIndex, ip);
+        String text = serializer.serialize(esLogNote);
         super.output(printer, text);
     }
 }

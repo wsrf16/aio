@@ -12,7 +12,7 @@ daemon_check_period=20
 package_md5="package_md5"
 package_compare="package_compare"
 
-if [ "$proj_env" == "" ] && [ "$deamon" == "" ];thenHttpComponentsClientHttpRequestFactory
+if [ "$proj_env" == "" ] && [ "$deamon" == "" ];then
   echo argument is empty
   exit 0
 fi

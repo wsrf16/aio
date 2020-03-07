@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: @project.build.finalName@
+    name: @project-build-finalName@
 
   servlet:
     multipart:
@@ -80,6 +80,8 @@ business:
   taskMigrate:
     cron: 0 0 1 1 * ?
 
+config:
+  abc: abc
 
 
 # http://www.xuxueli.com/

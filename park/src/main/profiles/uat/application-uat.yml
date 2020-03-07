@@ -45,7 +45,7 @@ spring:
         exchange: application-log-exchange
     kafka:
       enable: true
-      esIndex: @project.build.finalName@-@profiles.active@-log
+      esIndex: @project-build-finalName@-@profiles.active@-log
       topic: basic_application_log
       producer:
 #        bootstrap-servers: 172.28.3.165:9092,172.28.3.166:9092,172.28.3.167:9092

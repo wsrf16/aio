@@ -58,7 +58,7 @@
         <project-build-finalName>park</project-build-finalName>
         <!--<project.build.finalName>${project.artifactId}${project.version}</project.build.finalName>-->
         <project.deploy.basePath>~/app</project.deploy.basePath>
-        <project.deploy.appPath>${project.deploy.basePath}/${project.build.finalName}</project.deploy.appPath>
+        <project.deploy.appPath>${project.deploy.basePath}/${project-build-finalName}</project.deploy.appPath>
         <project.deploy.directoryName.dependency>lib/</project.deploy.directoryName.dependency>
         <project.deploy.directoryName.profile>config/</project.deploy.directoryName.profile>
         <directory.profile>src/main/profiles</directory.profile>
@@ -283,6 +283,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>1.16.18</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <profiles>

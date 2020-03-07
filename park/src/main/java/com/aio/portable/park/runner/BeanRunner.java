@@ -1,6 +1,7 @@
 package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.config.RootConfig;
 import com.aio.portable.park.test.LogTest;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
@@ -18,13 +19,15 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Configuration
+@Configuration
 public class BeanRunner implements ApplicationRunner {
 
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
 
     LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
+    @Autowired
+    RootConfig rootConfig;
 
     @Autowired
     LogTest logTest;

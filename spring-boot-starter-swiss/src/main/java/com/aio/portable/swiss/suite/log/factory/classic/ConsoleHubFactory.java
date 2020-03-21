@@ -17,7 +17,7 @@ public class ConsoleHubFactory extends LogHubFactory {
     public LogHub build(String className) {
         LogHub logger = LogHub.build(ConsoleLog.build(className));
         logger.setEnable(this.isEnable());
-        logger.setLevel(this.getLevel());
+        logger.setBaseLevel(this.getLevel());
         return logger;
     }
 }

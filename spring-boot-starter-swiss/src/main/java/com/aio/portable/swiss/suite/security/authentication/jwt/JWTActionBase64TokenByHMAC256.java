@@ -19,13 +19,13 @@ public abstract class JWTActionBase64TokenByHMAC256 implements JWTAction {
     }
 
 //    @Override
-//    public String token(String userName) {
-//        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithIssuer(jwtProperties, userName);
+//    public String token(String issuer) {
+//        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithIssuer(jwtProperties, issuer);
 //        return token(builder);
 //    }
 
     @Override
-    public String token(JWTCreator.Builder builder) {
+    public String sign(JWTCreator.Builder builder) {
         return JWTSugar.Classic.signForBase64TokenByHMAC256(builder, jwtProperties.getSecret());
     }
 
@@ -35,14 +35,8 @@ public abstract class JWTActionBase64TokenByHMAC256 implements JWTAction {
     }
 
     @Override
-    public DecodedJWT getJWT(String token) {
-        DecodedJWT parse;
-        try {
-            parse = JWTSugar.Classic.parseBase64TokenByHMAC256(token, jwtProperties.getSecret());
-        } catch (Exception e) {
-            throw new BizException(BizStatusEnum.UNAUTHORIZED.getCode(), "解析失败");
-        }
-
+    public DecodedJWT parse(String token) {
+        DecodedJWT parse = JWTSugar.Classic.parseBase64TokenByHMAC256(token, jwtProperties.getSecret());
         return parse;
     }
 }

@@ -38,7 +38,7 @@ public enum LevelEnum {
     }
 
     public boolean match(LevelEnum levelEnum) {
-        return priority <= levelEnum.getPriority();
+        return levelEnum.getPriority() >= priority;
     }
 }
 

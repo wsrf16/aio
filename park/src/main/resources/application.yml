@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: @project-build-finalName@
+    name: @project.deploy.finalName@
 
   servlet:
     multipart:

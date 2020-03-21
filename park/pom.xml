@@ -55,10 +55,10 @@
         <asciidoctor.directory.output.pdf>${project.build.directory}/asciidoc/pdf</asciidoctor.directory.output.pdf>
 
 
-        <project-build-finalName>park</project-build-finalName>
+        <project.deploy.finalName>park</project.deploy.finalName>
         <!--<project.build.finalName>${project.artifactId}${project.version}</project.build.finalName>-->
         <project.deploy.basePath>~/app</project.deploy.basePath>
-        <project.deploy.appPath>${project.deploy.basePath}/${project-build-finalName}</project.deploy.appPath>
+        <project.deploy.appPath>${project.deploy.basePath}/${project.deploy.finalName}</project.deploy.appPath>
         <project.deploy.directoryName.dependency>lib/</project.deploy.directoryName.dependency>
         <project.deploy.directoryName.profile>config/</project.deploy.directoryName.profile>
         <directory.profile>src/main/profiles</directory.profile>
@@ -333,7 +333,7 @@
     </profiles>
 
     <build>
-        <finalName>${project-build-finalName}-${profiles.active}</finalName>
+        <finalName>${project.deploy.finalName}-${profiles.active}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

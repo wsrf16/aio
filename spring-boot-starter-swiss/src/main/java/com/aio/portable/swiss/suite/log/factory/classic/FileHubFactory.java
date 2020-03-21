@@ -17,7 +17,7 @@ public class FileHubFactory extends LogHubFactory {
     public LogHub build(String className) {
         LogHub logger = LogHub.build(FileLog.build(className));
         logger.setEnable(this.isEnable());
-        logger.setLevel(this.getLevel());
+        logger.setBaseLevel(this.getLevel());
         return logger;
     }
 }

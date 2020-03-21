@@ -10,6 +10,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
@@ -141,7 +143,7 @@ public abstract class JWTSugar {
         return builder;
     }
 
-    public final static JWTCreator.Builder createJWTBuilderWithIssuer(JWTClaims jwtClaims,
+    public final static JWTCreator.Builder createJWTBuilderWithNewIssuer(JWTClaims jwtClaims,
                                                                       String issuer) {
         JWTCreator.Builder builder = JWT.create();
 //        if (jwtProperties.getKeyId() != null)
@@ -163,7 +165,18 @@ public abstract class JWTSugar {
         return builder;
     }
 
-
+    public final static JWTCreator.Builder withClaim(JWTCreator.Builder builder, String name, Object value) {
+        Class<JWTCreator.Builder> clazz = JWTCreator.Builder.class;
+        try {
+            Method method = clazz.getDeclaredMethod("addClaim", new Class[]{String.class, Object.class});
+            method.setAccessible(true);
+            Object invoke = method.invoke(builder, new Object[]{name, value});
+            return builder;
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
 
 

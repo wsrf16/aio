@@ -18,7 +18,7 @@ public class KafkaHubFactory extends LogHubFactory {
     public LogHub build(String className) {
         LogHub logger = LogHub.build(Slf4JLog.build(className), KafkaLog.build(className));
         logger.setEnable(this.isEnable());
-        logger.setLevel(this.getLevel());
+        logger.setBaseLevel(this.getLevel());
         return logger;
     }
 }

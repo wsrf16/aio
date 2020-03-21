@@ -3,7 +3,6 @@ package com.aio.portable.park.test;
 import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,7 +16,10 @@ public class LogTest {
         dynamicLogger = appLogHubFactory.build();
     }
 
-    LogHub logger = AppLogHubFactory.singletonInstance().build("随便写哒");
+//    LogHub logger = AppLogHubFactory.singletonInstance()
+//            .build("随便写哒")
+//            .setBaseLevel(LevelEnum.DEBUG);
+    LogHub logger = AppLogHubFactory.logHub();
 
     public void logCase1() {
         logger.i("abcdefghijklmnopqrstuvwxyz1介个是kafka");
@@ -32,7 +34,6 @@ public class LogTest {
     }
 
     public void logStyle() {
-        logger.setLevel(LevelEnum.DEBUG);
         logger.i("info日志", "这里是待记录的日志内容");
         logger.info("info日志", "这里是待记录的日志内容，info与i方法两者相同");
         logger.d("debug日志", "这里是待记录的日志内容");

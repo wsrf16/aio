@@ -36,24 +36,48 @@ public abstract class StackTraceSugar {
             return Thread.currentThread().getStackTrace()[CURRENT_STACK_INDEX_THREAD];
         }
 
+        private static StackTraceElement getStackTraceElementByThread(int previous) {
+            return Thread.currentThread().getStackTrace()[CURRENT_STACK_INDEX_THREAD + previous];
+        }
+
         private static StackTraceElement getStackTraceByException() {
             return new Exception().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION];
+        }
+
+        private static StackTraceElement getStackTraceByException(int previous) {
+            return new Exception().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION + previous];
         }
 
         public static String getFileName() {
             return StackTraceSugar.getFileName(getStackTraceElementByThread());
         }
 
+        public static String getFileName(int previous) {
+            return StackTraceSugar.getFileName(getStackTraceElementByThread(previous));
+        }
+
         public static String getClassName() {
             return StackTraceSugar.getClassName(getStackTraceElementByThread());
+        }
+
+        public static String getClassName(int previous) {
+            return StackTraceSugar.getClassName(getStackTraceElementByThread(previous));
         }
 
         public static String getMethodName() {
             return StackTraceSugar.getMethodName(getStackTraceElementByThread());
         }
 
+        public static String getMethodName(int previous) {
+            return StackTraceSugar.getMethodName(getStackTraceElementByThread(previous));
+        }
+
         public static int getLineNumber() {
             return StackTraceSugar.getLineNumber(getStackTraceElementByThread());
+        }
+
+        public static int getLineNumber(int previous) {
+            return StackTraceSugar.getLineNumber(getStackTraceElementByThread(previous));
         }
     }
 
@@ -62,24 +86,48 @@ public abstract class StackTraceSugar {
             return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_INDEX_THREAD];
         }
 
+        private static StackTraceElement getStackTraceElementByThread(int previous) {
+            return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_INDEX_THREAD + previous];
+        }
+
         private static StackTraceElement getStackTraceByException() {
             return new Exception().getStackTrace()[PREVIOUS_STACK_INDEX_EXCEPTION];
+        }
+
+        private static StackTraceElement getStackTraceByException(int previous) {
+            return new Exception().getStackTrace()[PREVIOUS_STACK_INDEX_EXCEPTION + previous];
         }
 
         public static String getFileName() {
             return StackTraceSugar.getFileName(getStackTraceElementByThread());
         }
 
+        public static String getFileName(int previous) {
+            return StackTraceSugar.getFileName(getStackTraceElementByThread(previous));
+        }
+
         public static String getClassName() {
             return StackTraceSugar.getClassName(getStackTraceElementByThread());
+        }
+
+        public static String getClassName(int previous) {
+            return StackTraceSugar.getClassName(getStackTraceElementByThread(previous));
         }
 
         public static String getMethodName() {
             return StackTraceSugar.getMethodName(getStackTraceElementByThread());
         }
 
+        public static String getMethodName(int previous) {
+            return StackTraceSugar.getMethodName(getStackTraceElementByThread(previous));
+        }
+
         public static int getLineNumber() {
             return StackTraceSugar.getLineNumber(getStackTraceElementByThread());
+        }
+
+        public static int getLineNumber(int previous) {
+            return StackTraceSugar.getLineNumber(getStackTraceElementByThread(previous));
         }
     }
 }

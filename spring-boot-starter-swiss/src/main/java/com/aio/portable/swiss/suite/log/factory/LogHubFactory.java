@@ -47,6 +47,11 @@ public abstract class LogHubFactory {
         return build(className);
     }
 
+    public LogHub build(int previous) {
+        String className = StackTraceSugar.Previous.getClassName(previous);
+        return build(className);
+    }
+
     public LogHub buildAsync(String className) {
         LogHub logger = build(className);
         logger.setAsync(true);
@@ -60,9 +65,15 @@ public abstract class LogHubFactory {
     }
 
     public LogHub buildAsync() {
-        Throwable throwable = new Throwable();
-        int depth = 1;
-        String className = throwable.getStackTrace()[depth].getClassName();
+//        Throwable throwable = new Throwable();
+//        int depth = 1;
+//        String className = throwable.getStackTrace()[depth].getClassName();
+        String className = StackTraceSugar.Previous.getClassName();
+        return buildAsync(className);
+    }
+
+    public LogHub buildAsync(int previous) {
+        String className = StackTraceSugar.Previous.getClassName(previous);
         return buildAsync(className);
     }
 

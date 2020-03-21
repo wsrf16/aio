@@ -18,7 +18,7 @@ public class RabbitMQHubFactory extends LogHubFactory {
     public LogHub build(String className) {
         LogHub logger = LogHub.build(Slf4JLog.build(className), RabbitLog.build(className));
         logger.setEnable(this.isEnable());
-        logger.setLevel(this.getLevel());
+        logger.setBaseLevel(this.getLevel());
         return logger;
     }
 }

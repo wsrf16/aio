@@ -4,8 +4,8 @@ public enum BizStatusEnum {
     SUCCEED(0, "请求成功"),
     FAILED(1, "请求失败"),
     EXCEPTION(2, "请求异常"),
-    INVALID(3, "请求格式不正确"),
-    UNAUTHORIZED(4, "无有效授权"),
+    INVALID(3, "请求参数有误"),
+    UNAUTHORIZED(4, "无效授权"),
     ;
 
 

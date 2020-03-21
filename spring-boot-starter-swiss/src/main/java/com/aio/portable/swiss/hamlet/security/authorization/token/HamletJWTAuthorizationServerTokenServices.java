@@ -33,7 +33,7 @@ public class HamletJWTAuthorizationServerTokenServices implements AuthorizationS
         builder.withIssuedAt(jwtClaims.getIssuedAt());
         builder.withExpiresAt(jwtClaims.getExpiresAt());
 
-        String tokenWord = jwtAction.token(builder);
+        String tokenWord = jwtAction.sign(builder);
         return tokenWord;
     }
 

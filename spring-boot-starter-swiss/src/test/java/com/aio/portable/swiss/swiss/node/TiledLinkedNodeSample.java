@@ -1,13 +1,13 @@
 package com.aio.portable.swiss.swiss.node;
 
-import com.aio.portable.swiss.suite.bean.node.next.tiled.AbstractTiledNextNode;
+import com.aio.portable.swiss.suite.bean.node.linked.tiled.TiledLinkedNode;
 
-public class TiledNextNodeSample extends AbstractTiledNextNode {
+public class TiledLinkedNodeSample extends TiledLinkedNode {
     private String name;
 
-    public TiledNextNodeSample() {}
+    public TiledLinkedNodeSample() {}
 
-    public TiledNextNodeSample(String name) {
+    public TiledLinkedNodeSample(String name) {
         this.name = name;
     }
 

@@ -277,6 +277,12 @@ public abstract class CollectionSugar {
         return list;
     }
 
+    public final static <T> Map<T, Long> groupCount(List<T> list) {
+        Map<T, Long> map = list.stream().
+                collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        return map;
+    }
+
     private static void taolu() {
         {
             Iterator<String> iterator = java.util.Collections.emptyIterator();

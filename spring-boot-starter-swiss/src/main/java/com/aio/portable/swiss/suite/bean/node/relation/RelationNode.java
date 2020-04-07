@@ -13,7 +13,7 @@ public interface RelationNode<ID> {
 
     void setNextNodeId(ID nextNodeId);
 
-    default boolean tail() {
+    default boolean beTail() {
         return getNextNodeId() == null;
     }
 

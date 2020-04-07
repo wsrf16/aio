@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.suite.bean.node.relation.tiled;
 
-import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
 import com.aio.portable.swiss.suite.bean.node.relation.RelationNode;
+import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 
-public interface TiledRelationNode<ID> extends RelationNode<ID> {
-    String[] IGNORE_PROPERTIES = {"nodeId", "nextNodeId"};
+public abstract class TiledRelationNode<ID> implements RelationNode<ID> {
+    private final static String[] IGNORE_PROPERTIES = {"nodeId", "nextNodeId"};
 
     static <T extends TiledRelationNode> T newInstance(Class<T> clazz, Object item) {
         T t = ClassSugar.newInstance(clazz);
@@ -20,4 +20,37 @@ public interface TiledRelationNode<ID> extends RelationNode<ID> {
         return returnT;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    ID nodeId;
+    ID nextNodeId;
+
+    @Override
+    public ID getNodeId() {
+        return nodeId;
+    }
+
+    @Override
+    public void setNodeId(ID nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    @Override
+    public ID getNextNodeId() {
+        return nextNodeId;
+    }
+
+    @Override
+    public void setNextNodeId(ID nextNodeId) {
+        this.nextNodeId = nextNodeId;
+    }
 }

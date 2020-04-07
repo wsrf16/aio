@@ -26,14 +26,16 @@ public class BeanRunner implements ApplicationRunner {
 //    MyDatabaseTest mybatisTest;
 
     LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
+
     @Autowired
     RootConfig rootConfig;
 
     @Autowired
     LogTest logTest;
+
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        logTest.logStyle();
+//        logTest.logStyle();
 //        while(true) {
 //            try {
 //                Thread.sleep(10000);
@@ -46,15 +48,10 @@ public class BeanRunner implements ApplicationRunner {
 //                break;
 //        }
 
-//        ApplicationHome h = new ApplicationHome(getClass());
-//        File jarF = h.getSource();
-//        System.out.println(jarF.getParentFile().toString());
+    }
 
-
-//        mybatisTest.blah();
-        if (1 == 1)
-            return;
-//        ResourceSugar.ByClassLoader.getResources("classpath:config/mapper/*.xml")
+    private void aa() {
+        //        ResourceSugar.ByClassLoader.getResources("classpath:config/mapper/*.xml")
         System.exit(0);
         String root = "D:/NutDisk/Program/Resource/Library/Java/_solution/Project/all-in-one/";
         root = "./";
@@ -89,10 +86,5 @@ public class BeanRunner implements ApplicationRunner {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-        if (1 == 1)
-            return;
-
-
     }
 }

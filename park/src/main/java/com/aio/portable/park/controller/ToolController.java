@@ -4,7 +4,9 @@ import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.suite.io.IOSugar;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("tool")
@@ -44,26 +48,41 @@ public class ToolController {
         multipartFile.transferTo(file);
 
         String realIP = HostInfo.getClientIpAddress(request);
-        String ret = realIP + ":" + file.toString();
+        String ret = realIP + ":" + file.toAbsolutePath();
         log.info("upload", ret);
         return ret;
     }
 
-    @PostMapping("/uploads")
+//    @ApiOperation(value = "上传文件接口",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @ApiResponses({
+//            @ApiResponse(code = 601,message = "上传文件发生异常")
+//    })
+//    @PostMapping(value = "/uploads", headers = "Content-Type=multipart/form-data")
+
+    @PostMapping(value = "/uploads", headers = "Content-Type=multipart/form-data")
     @ResponseBody
-    public Boolean uploads(@RequestParam("file") MultipartFile[] multipartFiles) throws IOException {
+    public String uploads(@RequestParam(value = "files") MultipartFile[] multipartFiles) throws IOException {
+        Path dir = new File("upload").toPath();
+        IOSugar.createDirectoryIfNotExists(dir);
+
+        List<String> sb = new ArrayList<String>();
         Arrays.stream(multipartFiles).forEach(multipartFile -> {
             String fileName = multipartFile.getOriginalFilename();
-            File file = new File(fileName);
-            Path path = file.toPath();
+
             try {
-                multipartFile.transferTo(path);
+                Path file = Paths.get(dir.toString(), fileName);
+                multipartFile.transferTo(file);
+
+                String realIP = HostInfo.getClientIpAddress(request);
+                sb.add(realIP + ":" + file.toAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });
-        return true;
+        String ret = String.join(", ", sb);
+        log.info("upload", ret);
+        return ret;
     }
 
 

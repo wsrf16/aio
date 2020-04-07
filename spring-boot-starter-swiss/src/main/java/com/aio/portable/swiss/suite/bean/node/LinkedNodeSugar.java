@@ -1,9 +1,11 @@
 package com.aio.portable.swiss.suite.bean.node;
 
-import com.aio.portable.swiss.suite.bean.node.next.layered.LayeredNextNode;
-import com.aio.portable.swiss.suite.bean.node.next.tiled.TiledNextNode;
+import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.suite.bean.node.linked.layered.LayeredLinkedNode;
+import com.aio.portable.swiss.suite.bean.node.linked.tiled.TiledLinkedNode;
 import com.aio.portable.swiss.suite.bean.node.relation.RelationEquals;
 import com.aio.portable.swiss.suite.bean.node.relation.RelationNode;
+//import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
 import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
 import com.aio.portable.swiss.suite.bean.node.relation.tiled.TiledRelationNode;
 
@@ -20,11 +22,11 @@ public class LinkedNodeSugar {
          * @param <T extends TileNextNode>
          * @return
          */
-        public final static <T, R extends TiledNextNode> R link2TiledNextNode(List<T> list, Class<R> clazz) {
+        public final static <T, R extends TiledLinkedNode> R link2TiledNextNode(List<T> list, Class<R> clazz) {
             R first;
             if (list.size() > 0) {
                 T firstItem = list.get(0);
-                first = TiledNextNode.newInstance(clazz, firstItem);
+                first = TiledLinkedNode.newInstance(clazz, firstItem);
 
                 R current = first;
                 for (int i = 0; i < list.size() - 1; i++) {
@@ -33,7 +35,7 @@ public class LinkedNodeSugar {
                         continue;
                     }
                     else {
-                        R next = TiledNextNode.newInstance(clazz, nextItem);
+                        R next = TiledLinkedNode.newInstance(clazz, nextItem);
 
                         current.setNext(next);
                         next.setPrev(current);
@@ -55,11 +57,11 @@ public class LinkedNodeSugar {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <T, R extends LayeredNextNode<T>> R link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <T, R extends LayeredLinkedNode<T>> R link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
             R first;
             if (list.size() > 0) {
                 T firstItem = list.get(0);
-                first = LayeredNextNode.newInstance(returnClazz, firstItem);
+                first = LayeredLinkedNode.newInstance(returnClazz, firstItem);
 //            first = NextNode.newInstance1.apply(clazz);
 
                 R current = first;
@@ -69,7 +71,7 @@ public class LinkedNodeSugar {
                         continue;
                     }
                     else {
-                        R next = LayeredNextNode.newInstance(returnClazz, nextItem);
+                        R next = LayeredLinkedNode.newInstance(returnClazz, nextItem);
 //                        next.setItem(nextItem);
 
                         current.setNext(next);
@@ -79,7 +81,7 @@ public class LinkedNodeSugar {
                     }
                 }
             } else
-                first = LayeredNextNode.newInstance(returnClazz);
+                first = LayeredLinkedNode.newInstance(returnClazz);
             return first;
         }
     }
@@ -98,7 +100,7 @@ public class LinkedNodeSugar {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredLinkedNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
             return link2LayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
@@ -112,7 +114,7 @@ public class LinkedNodeSugar {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredNextNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends LayeredLinkedNode<ITEM>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -147,7 +149,7 @@ public class LinkedNodeSugar {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledLinkedNode> List<R> link2TiledNextNode(List<T> list, Class<R> returnClazz) {
             return link2TiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
@@ -161,7 +163,7 @@ public class LinkedNodeSugar {
          * @param <R extends LayeredNextNode<T>>
          * @return
          */
-        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, ITEM, T extends LayeredRelationNode<ID, ITEM>, R extends TiledLinkedNode> List<R> link2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
@@ -193,11 +195,11 @@ public class LinkedNodeSugar {
 
 
     public final static class TiledRelation {
-        public final static <ID, T extends TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
+        public final static <ID, T extends TiledRelationNode<ID>, R extends LayeredLinkedNode<T>> List<R> link2LayeredNextNode(List<T> list, Class<R> returnClazz) {
             return link2LayeredNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
-        public final static <ID, T extends TiledRelationNode<ID>, R extends LayeredNextNode<T>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, T extends TiledRelationNode<ID>, R extends LayeredLinkedNode<T>> List<R> link2LayeredNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
@@ -223,11 +225,11 @@ public class LinkedNodeSugar {
             return resultTwoStep;
         }
 
-        public final static <ID, T extends TiledRelationNode<ID>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, Class<R> returnClazz) {
-            return link2TiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
+        public final static <ID, T extends TiledRelationNode<ID>, R extends TiledLinkedNode> List<R> list2TiledNextNode(List<T> list, Class<R> returnClazz) {
+            return list2TiledNextNode(list, RelationEquals.OBJECTS_EQUALS, returnClazz);
         }
 
-        public final static <ID, T extends TiledRelationNode<ID>, R extends TiledNextNode> List<R> link2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
+        public final static <ID, T extends TiledRelationNode<ID>, R extends TiledLinkedNode> List<R> list2TiledNextNode(List<T> list, RelationEquals relationEquals, Class<R> returnClazz) {
             List<T> sourceList = list;
             List<T> tails = Utils.getTailList(sourceList, relationEquals);
             List<LinkedList<T>> resultOneStep = new ArrayList<>(tails.size());
@@ -264,22 +266,24 @@ public class LinkedNodeSugar {
         }
 
         private final static <T extends RelationNode<ID>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
-            List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
-            List<T> candidateHeadList = list.stream().collect(Collectors.toList());
-            List<T> tailList = candidateTailList.stream().filter(tail -> candidateHeadList.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId()))).collect(Collectors.toList());
-            List<T> nextIdList = list.stream().filter(c -> c.tail()).collect(Collectors.toList());
-            tailList.addAll(nextIdList);
+            List<T> nullNextList = list.stream().filter(c -> c.beTail()).collect(Collectors.toList());
+            List<T> aloneNextList = list.stream()
+                    .filter(c -> !c.beTail())
+                    .filter(tail -> list.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId())))
+                    .collect(Collectors.toList());
+            List<T> tailList = CollectionSugar.concat(aloneNextList, nullNextList);
             return tailList;
         }
+        // previous
 
-        private final static <T extends RelationNode<ID>, ID> List<T> getHeadList(List<T> list) {
-            return getHeadList(list, RelationEquals.OBJECTS_EQUALS);
+        private final static <T extends RelationNode<ID>, ID> List<T> getPreviousList(List<T> list) {
+            return getPreviousList(list, RelationEquals.OBJECTS_EQUALS);
         }
 
-        private final static <T extends RelationNode<ID>, ID> List<T> getHeadList(List<T> list, RelationEquals relationEquals) {
-            List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
-            List<T> candidateHeadList = list.stream().collect(Collectors.toList());
-            List<T> headList = candidateHeadList.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId()))).collect(Collectors.toList());
+        private final static <T extends RelationNode<ID>, ID> List<T> getPreviousList(List<T> list, RelationEquals relationEquals) {
+            List<T> full = list.stream().collect(Collectors.toList());
+            List<T> candidateTailList = list.stream().filter(c -> !c.beTail()).collect(Collectors.toList());
+            List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextNodeId(), head.getNodeId()))).collect(Collectors.toList());
             return headList;
         }
 

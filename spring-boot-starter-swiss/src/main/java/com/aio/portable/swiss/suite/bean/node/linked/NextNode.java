@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.bean.node;
+package com.aio.portable.swiss.suite.bean.node.linked;
 
 import java.util.Iterator;
 

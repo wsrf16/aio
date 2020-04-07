@@ -20,7 +20,6 @@ import org.springframework.core.env.Environment;
         KafkaAutoConfiguration.class,
         RabbitAutoConfiguration.class,
 }, scanBasePackages = "com.aio.portable")
-//@EntityScan("com.aio.portable")
 
 //@ComponentScan(lazyInit = true)
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)

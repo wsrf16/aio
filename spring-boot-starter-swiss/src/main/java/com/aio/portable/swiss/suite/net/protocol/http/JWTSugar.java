@@ -122,48 +122,7 @@ public abstract class JWTSugar {
         return verify;
     }
 
-    public final static JWTCreator.Builder createJWTBuilder(JWTClaims jwtClaims) {
-        JWTCreator.Builder builder = JWT.create();
-//        if (jwtProperties.getKeyId() != null)
-//            builder.withKeyId(jwtProperties.getKeyId());
-        if (jwtClaims.getIssuer() != null)
-            builder.withIssuer(jwtClaims.getIssuer());
-        if (jwtClaims.getSubject() != null)
-            builder.withSubject(jwtClaims.getSubject());
-        if (jwtClaims.getAudience() != null)
-            builder.withAudience(jwtClaims.getAudience());
-        if (jwtClaims.getExpiresAt() != null)
-            builder.withExpiresAt(jwtClaims.getExpiresAt());
-        if (jwtClaims.getNotBefore() != null)
-            builder.withNotBefore(jwtClaims.getNotBefore());
-        if (jwtClaims.getIssuedAt() != null)
-            builder.withIssuedAt(jwtClaims.getIssuedAt());
-        if (jwtClaims.getJWTId() != null)
-            builder.withJWTId(jwtClaims.getJWTId());
-        return builder;
-    }
 
-    public final static JWTCreator.Builder createJWTBuilderWithNewIssuer(JWTClaims jwtClaims,
-                                                                      String issuer) {
-        JWTCreator.Builder builder = JWT.create();
-//        if (jwtProperties.getKeyId() != null)
-//            builder.withKeyId(jwtProperties.getKeyId());
-        if (jwtClaims.getIssuer() != null)
-            builder.withIssuer(issuer);
-        if (jwtClaims.getSubject() != null)
-            builder.withSubject(jwtClaims.getSubject());
-        if (jwtClaims.getAudience() != null)
-            builder.withAudience(jwtClaims.getAudience());
-        if (jwtClaims.getExpiresAt() != null)
-            builder.withExpiresAt(jwtClaims.getExpiresAt());
-        if (jwtClaims.getNotBefore() != null)
-            builder.withNotBefore(jwtClaims.getNotBefore());
-        if (jwtClaims.getIssuedAt() != null)
-            builder.withIssuedAt(jwtClaims.getIssuedAt());
-        if (jwtClaims.getJWTId() != null)
-            builder.withJWTId(jwtClaims.getJWTId());
-        return builder;
-    }
 
     public final static JWTCreator.Builder withClaim(JWTCreator.Builder builder, String name, Object value) {
         Class<JWTCreator.Builder> clazz = JWTCreator.Builder.class;
@@ -182,27 +141,26 @@ public abstract class JWTSugar {
 
     public static class Classic {
         /**
-         * generateHMAC256Token
+         * signForTokenByHMAC256
          * @param builder JWT.create()
          * @param secret
          * @return
          */
-        public final static String signForBase64TokenByHMAC256(JWTCreator.Builder builder, String secret) {
+        public final static String signForTokenByHMAC256(JWTCreator.Builder builder, String secret) {
             Algorithm algorithm = AlgorithmSugar.newHMAC(secret, AlgorithmSugar.HMAC.HMAC256);
             String token = JWTSugar.sign(builder, algorithm);
-            token = CipherSugar.JavaUtil.encodeBase64(token, StandardCharsets.UTF_8);
             return token;
         }
 
         /**
-         * generateRSA256Token
+         * signForTokenByRSA256
          * @param userName
          * @param publicKey
          * @param privateKey
          * @param days
          * @return
          */
-        public final static String signForRSA256Token(String userName, RSAPublicKey publicKey, RSAPrivateKey privateKey, int days) {
+        public final static String signForTokenByRSA256(String userName, RSAPublicKey publicKey, RSAPrivateKey privateKey, int days) {
             Calendar calendar = Calendar.getInstance();
             Date now = now(calendar);
             Date expired = getExpiredDate(calendar, days);
@@ -219,33 +177,31 @@ public abstract class JWTSugar {
         }
 
         /**
-         * parseByHMAC
+         * parseTokenByHMAC256
          * @param token
          * @param secret
          * @return
          */
-        public final static DecodedJWT parseBase64TokenByHMAC256(String token, String secret) {
-            token = CipherSugar.JavaUtil.decodeBase64(token, StandardCharsets.UTF_8);
+        public final static DecodedJWT parseTokenByHMAC256(String token, String secret) {
             return JWTSugar.parseByHMAC(token, secret, AlgorithmSugar.HMAC.HMAC256);
         }
 
-//    public final static DecodedJWT parseByRSA256(String token, String secret) {
-//        token = CipherSugar.JavaUtil.decode(token, StandardCharsets.UTF_8);
-//        return JWTSugar.parseByRSA(token, secret, AlgorithmSugar.RSA.RSA256);
-//    }
+    public final static DecodedJWT parseTokenByRSA256(String token, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+        return JWTSugar.parseByRSA(token, publicKey, privateKey, AlgorithmSugar.RSA.RSA256);
+    }
 
 
         /**
-         * verifyByHMAC
+         * verifyByHMAC256
          * @param token
          * @param secret
          * @return
          */
-        public static boolean verifyByHMAC(String token, String secret) {
+        public static boolean verifyByHMAC256(String token, String secret) {
             DecodedJWT parse;
             Boolean verify;
             try {
-                parse = Classic.parseBase64TokenByHMAC256(token, secret);
+                parse = Classic.parseTokenByHMAC256(token, secret);
                 if (parse != null)
                     verify = new Date().after(parse.getExpiresAt()) ? false : true;
                 else

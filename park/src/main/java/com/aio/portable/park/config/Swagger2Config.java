@@ -21,16 +21,8 @@ import java.util.List;
 @Configuration
 @ConditionalOnClass(ApiInfo.class)
 public class Swagger2Config {
-    private final List<ResponseMessage> responseMessageList() {
-        List<ResponseMessage> codes = new ArrayList<>();
-        ResponseMessageBuilder builder = new ResponseMessageBuilder();
-        for (BizStatusEnum status : BizStatusEnum.values()) {
-            codes.add(builder
-                    .code(status.getCode())
-                    .message(status.getMessage())
-                    .build());
-        }
-        return codes;
+    private final static List<ResponseMessage> responseMessageList() {
+        return Swagger2Properties.toResponseMessageList(BizStatusEnum.values());
     }
 
     @Bean

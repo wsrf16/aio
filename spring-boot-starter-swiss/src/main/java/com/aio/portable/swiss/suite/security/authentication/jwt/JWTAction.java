@@ -15,10 +15,9 @@ import java.util.Objects;
 public interface JWTAction {
     //"Authorization";
     String AUTHORIZATION_HEAD = HttpHeaders.AUTHORIZATION;
+    String BEAR_PREFIX = "Bearer ";
 
     JWTClaims toJWTClaims();
-
-//    String token(String issuer);
 
     String sign(JWTCreator.Builder builder);
 
@@ -32,13 +31,18 @@ public interface JWTAction {
         return v;
     }
 
+    default String sign() {
+        JWTCreator.Builder builder = toJWTClaims().createJWTBuilder();
+        return sign(builder);
+    }
+
     default String sign(String issuer) {
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithNewIssuer(toJWTClaims(), issuer);
+        JWTCreator.Builder builder = toJWTClaims().createJWTBuilderWithNewIssuer(issuer);
         return sign(builder);
     }
 
     default String sign(String issuer, Map<String, Object> map) {
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithNewIssuer(toJWTClaims(), issuer);
+        JWTCreator.Builder builder = toJWTClaims().createJWTBuilderWithNewIssuer(issuer);
         map.entrySet().forEach(c -> {
             String key = c.getKey();
             Object value = c.getValue();
@@ -48,7 +52,7 @@ public interface JWTAction {
     }
 
     default String sign(String issuer, int expireMinutes, Map<String, Object> map) {
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilderWithNewIssuer(toJWTClaims(), issuer);
+        JWTCreator.Builder builder = toJWTClaims().createJWTBuilderWithNewIssuer(issuer);
         Calendar now = DateTimeSugar.CalendarUtils.now();
         Date issuedAt = now.getTime();
         Date expiresAt = JWTSugar.Classic.getExpiredDate(now, Calendar.SECOND, expireMinutes * 60);
@@ -61,19 +65,4 @@ public interface JWTAction {
         });
         return sign(builder);
     }
-
-//    Boolean getEnable();
-//    Boolean getRequire();
-//    String getSecret();
-//    List<String> getBasePackages();
-//    Integer getExpiredHours();
-//    String getKeyId();
-//    String getIssuer();
-//    String getSubject();
-//    String getAudience();
-//    Date getExpiresAt();
-//    Date getNotBefore();
-//    Date getIssuedAt();
-//    String getJWTId();
-
 }

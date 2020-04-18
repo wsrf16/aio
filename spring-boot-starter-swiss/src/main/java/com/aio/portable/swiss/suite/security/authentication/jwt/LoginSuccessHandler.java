@@ -25,10 +25,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         User user = (User) authentication.getPrincipal();
 
         JWTClaims jwtClaims = jwtAction.toJWTClaims();
-
-        String secret = jwtClaims.getSecret();
-        JWTCreator.Builder builder = JWTSugar.createJWTBuilder(jwtClaims);
-        String token = JWTSugar.Classic.signForBase64TokenByHMAC256(builder, secret);
+//        String secret = jwtClaims.getSecret();
+        JWTCreator.Builder builder = jwtClaims.createJWTBuilder();
+        String token = jwtAction.sign(builder);
         httpServletResponse.setHeader(AUTHORIZATION_HEAD, token);
     }
 }

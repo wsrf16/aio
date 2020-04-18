@@ -13,19 +13,20 @@ import java.util.List;
 //@ConfigurationProperties(
 //        prefix = "spring.jwt"
 //)
-public class JWTProperties  {
-    private Boolean require = true;
-    private String JWTId;
-    private String secret;
-    private List<String> basePackages;
-    private String keyId;
-    private String issuer;
-    private String subject;
-    private String[] audience;
-//    private Date issuedAt;
-//    private Date expiresAt;
-    private Integer expiredHours;
-    private Date notBefore;
+public class JWTClaimsProperties {
+    protected Boolean require = true;
+    protected String algorithm = "HMAC256";
+    protected String JWTId;
+    protected String secret;
+    protected List<String> basePackages;
+    protected String keyId;
+    protected String issuer;
+    protected String subject;
+    protected String[] audience;
+//    protected Date issuedAt;
+//    protected Date expiresAt;
+    protected Integer expiredHours;
+    protected Date notBefore;
 
     public Boolean getRequire() {
         return require;
@@ -33,6 +34,14 @@ public class JWTProperties  {
 
     public void setRequire(Boolean require) {
         this.require = require;
+    }
+
+    public String getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
     }
 
     public String getJWTId() {

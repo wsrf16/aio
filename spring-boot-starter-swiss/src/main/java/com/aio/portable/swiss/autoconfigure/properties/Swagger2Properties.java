@@ -1,10 +1,12 @@
 package com.aio.portable.swiss.autoconfigure.properties;
 
 
+import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ResponseMessage;
 
@@ -15,6 +17,27 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "swagger.api-info", name = "title")
 @ConfigurationProperties(prefix = "swagger")
 public class Swagger2Properties {
+    public interface SwaggerStatus {
+        int getCode();
+
+        void setCode(int code);
+
+        String getMessage();
+
+        void setMessage(String message);
+    }
+    public final static List<ResponseMessage> toResponseMessageList(SwaggerStatus[] swaggerStatuses) {
+        List<ResponseMessage> codes = new ArrayList<>();
+        ResponseMessageBuilder builder = new ResponseMessageBuilder();
+        for (SwaggerStatus status : swaggerStatuses) {
+            codes.add(builder
+                    .code(status.getCode())
+                    .message(status.getMessage())
+                    .build());
+        }
+        return codes;
+    }
+
     private boolean enable = true;
 
 //    private String version = "1.0";
@@ -79,7 +102,11 @@ public class Swagger2Properties {
         return host == null ? "" : host;
     }
 
-    //    private springfox.documentation.service.ApiInfo apiInfo() {
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+//    private springfox.documentation.service.ApiInfo apiInfo() {
 //        return new ApiInfoBuilder()
 //                .title("CRM接口在线文档")
 //                .description("包括C1、C2、拍卖、门店C1、门店C2等业务")

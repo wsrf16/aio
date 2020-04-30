@@ -35,7 +35,7 @@ spring:
       username: yixincapital
       password: yixincapital
       virtual-host: yx_mq
-      es-index: @project.build.finalName@-@profiles.active@-log
+      es-index: @project.deploy.finalName@-@profiles.active@-log
       publisher-confirms: true
       publisher-returns: true
       binding-list:

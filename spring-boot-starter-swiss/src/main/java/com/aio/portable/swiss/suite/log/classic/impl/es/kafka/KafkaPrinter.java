@@ -3,7 +3,7 @@ package com.aio.portable.swiss.suite.log.classic.impl.es.kafka;
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.suite.log.classic.impl.LoggerConfig;
-import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.module.mq.kafka.KafkaBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -19,10 +19,10 @@ public class KafkaPrinter implements Printer {
 
     String logName;
     String logfilePrefix;
-    LogKafkaProperties properties;
+    KafkaLogProperties properties;
     KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaPrinter(String logName, String logfilePrefix, LogKafkaProperties properties) {
+    public KafkaPrinter(String logName, String logfilePrefix, KafkaLogProperties properties) {
         this.logName = logName;
         this.logfilePrefix = logfilePrefix;
         this.properties = properties;
@@ -39,7 +39,7 @@ public class KafkaPrinter implements Printer {
      * @param logFilePrefix
      * @return 返回日志格式：[ROOT_LOGFOLDER]\[logName]\[logFilePrefix][SEPARATOR_CHAR][OCCUPY_MAX][SEPARATOR_CHAR][TIMEFORMAT][LOG_EXTENSION]
      */
-    public final static synchronized KafkaPrinter instance(String logName, String logFilePrefix, LogKafkaProperties properties) {
+    public final static synchronized KafkaPrinter instance(String logName, String logFilePrefix, KafkaLogProperties properties) {
         String section = String.join(Constant.EMPTY, logName, SECTION_SEPARATOR, logFilePrefix);
         {
             if (instanceMaps.keySet().contains(section))

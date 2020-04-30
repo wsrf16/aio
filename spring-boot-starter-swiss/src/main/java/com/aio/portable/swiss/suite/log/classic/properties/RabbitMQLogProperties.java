@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.log.classic.properties;
 
 import com.aio.portable.swiss.autoconfigure.properties.RabbitMQProperties;
 
-public class LogRabbitMQProperties extends RabbitMQProperties {
+public class RabbitMQLogProperties extends RabbitMQProperties {
     private String esIndex;
 
     public String getEsIndex() {
@@ -13,13 +13,13 @@ public class LogRabbitMQProperties extends RabbitMQProperties {
         this.esIndex = esIndex;
     }
 
-    private static LogRabbitMQProperties instance = new LogRabbitMQProperties();
+    private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
 
-    public synchronized static LogRabbitMQProperties singletonInstance() {
+    public synchronized static RabbitMQLogProperties singletonInstance() {
         return instance;
     }
 
-    protected LogRabbitMQProperties() {
+    protected RabbitMQLogProperties() {
         instance = this;
     }
 
@@ -32,19 +32,19 @@ public class LogRabbitMQProperties extends RabbitMQProperties {
 //        String field;
 //        if (getHost() == null) {
 //            field = "host";
-//            throw new IllegalArgumentException(MessageFormat.format(template, field, LogRabbitMQProperties.class));
+//            throw new IllegalArgumentException(MessageFormat.format(template, field, RabbitMQLogProperties.class));
 //        }
 //        if (getPort() == null) {
 //            field = "port";
-//            throw new IllegalArgumentException(MessageFormat.format(template, field, LogRabbitMQProperties.class));
+//            throw new IllegalArgumentException(MessageFormat.format(template, field, RabbitMQLogProperties.class));
 //        }
 //        if (getUsername() == null) {
 //            field = "username";
-//            throw new IllegalArgumentException(MessageFormat.format(template, field, LogRabbitMQProperties.class));
+//            throw new IllegalArgumentException(MessageFormat.format(template, field, RabbitMQLogProperties.class));
 //        }
 //        if (getPassword() == null) {
 //            field = "password";
-//            throw new IllegalArgumentException(MessageFormat.format(template, field, LogRabbitMQProperties.class));
+//            throw new IllegalArgumentException(MessageFormat.format(template, field, RabbitMQLogProperties.class));
 //        }
 //    }
 

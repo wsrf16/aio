@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.log.classic.impl.es.kafka;
 
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
@@ -30,12 +30,12 @@ public class KafkaLog extends LogSingle {
         super(name);
     }
 
-    LogKafkaProperties properties;
+    KafkaLogProperties properties;
 
     @Override
     protected void initialPrinter() {
         String name = getName();
-        properties = LogKafkaProperties.singletonInstance();
+        properties = KafkaLogProperties.singletonInstance();
         verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
         tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
         infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFO.getName(), properties);

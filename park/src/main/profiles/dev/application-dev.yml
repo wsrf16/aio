@@ -1,16 +1,16 @@
 spring:
   datasource:
     master:
-      type: com.alibaba.druid.pool.DruidDataSource
+#      type: com.alibaba.druid.pool.DruidDataSource
 #      driver-class-name: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1111
       mybatis:
         mapper-locations: classpath:config/mapper/*.xml
 
-    slave:
+    slave1:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
@@ -19,12 +19,12 @@ spring:
       mybatis:
         mapper-locations: classpath:config/mapper/*.xml
 
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
-    username: root
-    password: 1111
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+#    username: root
+#    password: 1111
 
-    third:
+    third1:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
@@ -93,22 +93,24 @@ spring:
         routing-key: application-log-queue
         queue: application-log-queue
         exchange: application-log-exchange
-#
-#    kafka:
-#      enable: false
-#      esIndex: @project.build.finalName@-@profiles.active@-log
-#      topic: basic_application_log
-#      template:
-#        defaultTopic: basic_application_log
-#      producer:
-#        bootstrap-servers: 192.168.177.211:9092
-#      properties:
-#        linger-ms: 100
-#        max-block-ms: 3000
-#        request-timeout-ms: 1000
-#        transaction-timeout-ms: 1000
-#        compression-type: gzip
-#        acks: 1
+
+    kafka:
+      enable: true
+      esIndex: @project.deploy.finalName@-@profiles.active@-log
+      topic: application-log
+#      bootstrap-servers: 192.168.133.133:9092
+      template:
+        defaultTopic: application-log
+      producer:
+#        bootstrap-servers: mecs.com:9092
+        bootstrap-servers: 192.168.133.133:9092
+      properties:
+        linger-ms: 100
+        max-block-ms: 3000
+        request-timeout-ms: 1000
+        transaction-timeout-ms: 1000
+        compression-type: gzip
+        acks: 1
 
 
 #eureka:

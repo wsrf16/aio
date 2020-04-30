@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.log.classic.impl.es.rabbit;
 
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.classic.properties.LogRabbitMQProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.suite.log.classic.impl.es.ESLogNote;
@@ -24,12 +24,12 @@ public class RabbitLog extends LogSingle {
         super(name);
     }
 
-    LogRabbitMQProperties configuration;
+    RabbitMQLogProperties configuration;
 
     @Override
     protected void initialPrinter() {
         String name = getName();
-        configuration = LogRabbitMQProperties.singletonInstance();
+        configuration = RabbitMQLogProperties.singletonInstance();
         verbosePrinter = RabbitPrinter.instance(name, LevelEnum.VERBOSE.getName(), configuration);
         tracePrinter = RabbitPrinter.instance(name, LevelEnum.TRACE.getName(), configuration);
         infoPrinter = RabbitPrinter.instance(name, LevelEnum.INFO.getName(), configuration);

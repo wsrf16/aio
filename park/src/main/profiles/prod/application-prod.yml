@@ -46,7 +46,7 @@ spring:
         exchange: application-log-exchange
     kafka:
       enable: true
-      es-index: @project.build.finalName@-@profiles.active@-log
+      es-index: @project.deploy.finalName@-@profiles.active@-log
       topic: basic_application_log
       template:
         defaultTopic: basic_application_log

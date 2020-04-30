@@ -5,8 +5,8 @@ import com.aio.portable.swiss.suite.log.factory.classic.ConsoleHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.KafkaHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.RabbitMQHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.Slf4jHubFactory;
-import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
-import com.aio.portable.swiss.suite.log.classic.properties.LogRabbitMQProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.RabbitMQLogProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,13 +31,13 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = "spring.log.rabbitmq")
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
     @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
-    public LogRabbitMQProperties logRabbitMQProperties() {
-        return LogRabbitMQProperties.singletonInstance();
+    public RabbitMQLogProperties rabbitMQLogProperties() {
+        return RabbitMQLogProperties.singletonInstance();
     }
 
     @Bean
     @DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
-    @ConditionalOnBean(LogRabbitMQProperties.class)
+    @ConditionalOnBean(RabbitMQLogProperties.class)
 //    @ConditionalOnClass({org.springframework.amqp.rabbit.connection.CachingConnectionFactory.class, org.springframework.amqp.rabbit.core.RabbitTemplate.class})
 //    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
     @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
@@ -49,13 +49,13 @@ public class LogHubAutoConfiguration {
     @ConditionalOnProperty("spring.log.kafka.producer.bootstrap-servers")
     @ConfigurationProperties(prefix = "spring.log.kafka")
     @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
-    public LogKafkaProperties logKafkaProperties() {
-        return LogKafkaProperties.singletonInstance();
+    public KafkaLogProperties kafkaLogProperties() {
+        return KafkaLogProperties.singletonInstance();
     }
 
     @Bean
     @DependsOn(PropertyBean.KAFKA_PROPERTIES)
-    @ConditionalOnBean(LogKafkaProperties.class)
+    @ConditionalOnBean(KafkaLogProperties.class)
 //    @ConditionalOnClass({org.springframework.kafka.core.KafkaTemplate.class})
     @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public KafkaHubFactory kafkaHubFactory() {

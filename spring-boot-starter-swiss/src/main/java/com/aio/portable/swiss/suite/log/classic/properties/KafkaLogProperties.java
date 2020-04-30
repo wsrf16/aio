@@ -2,18 +2,18 @@ package com.aio.portable.swiss.suite.log.classic.properties;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
-public class LogKafkaProperties extends KafkaProperties {
+public class KafkaLogProperties extends KafkaProperties {
     private Boolean enable = true;
     private String topic;
     private String esIndex;
 
-    private static LogKafkaProperties instance = new LogKafkaProperties();
+    private static KafkaLogProperties instance = new KafkaLogProperties();
 
-    public synchronized static LogKafkaProperties singletonInstance() {
+    public synchronized static KafkaLogProperties singletonInstance() {
         return instance;
     }
 
-    public LogKafkaProperties() {
+    public KafkaLogProperties() {
         instance = this;
     }
 

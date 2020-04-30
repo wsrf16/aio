@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.suite.log.classic.properties.LogKafkaProperties;
+import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
 import com.aio.portable.swiss.suite.resource.StreamClassLoader;
 import org.junit.Test;
@@ -73,8 +73,8 @@ public class ResourceTest {
     {
         // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
         try {
-            System.out.println("--LogKafkaProperties.class.getResource(\"/1.properties\").getFile()");
-            String path = LogKafkaProperties.class.getResource("/1.properties").getFile();
+            System.out.println("--KafkaLogProperties.class.getResource(\"/1.properties\").getFile()");
+            String path = KafkaLogProperties.class.getResource("/1.properties").getFile();
             System.out.println(path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,8 +83,8 @@ public class ResourceTest {
     {
         // java.lang.NullPointerException
         try {
-            System.out.println("--LogKafkaProperties.class.getResource(\"1.properties\").getFile()");
-            String path = LogKafkaProperties.class.getResource("1.properties").getFile();
+            System.out.println("--KafkaLogProperties.class.getResource(\"1.properties\").getFile()");
+            String path = KafkaLogProperties.class.getResource("1.properties").getFile();
             System.out.println(path);
         } catch (Exception e) {
             e.printStackTrace();

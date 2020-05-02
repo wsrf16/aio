@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.impl.es;
+package com.aio.portable.swiss.suite.log.impl.es;
 
 import com.aio.portable.swiss.suite.log.parts.LogException;
 import com.aio.portable.swiss.suite.log.parts.LogNote;

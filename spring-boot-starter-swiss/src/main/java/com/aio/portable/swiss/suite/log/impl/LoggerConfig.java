@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.impl;
+package com.aio.portable.swiss.suite.log.impl;
 
 import com.aio.portable.swiss.global.Constant;
 

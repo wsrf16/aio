@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.autoconfigure;
 
-import com.aio.portable.swiss.suite.log.classic.properties.PropertyBean;
+import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import com.aio.portable.swiss.suite.log.factory.classic.ConsoleHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.KafkaHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.RabbitMQHubFactory;
 import com.aio.portable.swiss.suite.log.factory.classic.Slf4jHubFactory;
-import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.classic.properties.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

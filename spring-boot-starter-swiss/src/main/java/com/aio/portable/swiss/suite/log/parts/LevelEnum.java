@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Created by York on 2017/11/22.
  */
 public enum LevelEnum {
+    OFF("off", 00, "off"),
     VERBOSE("verbose", 10, "Anything and everything you might want to know about a running block of code."),
     TRACE("trace", 20, "."),
     DEBUG("debug", 30, "Internal system events that aren't necessarily observable from the outside."),
-    INFO("info", 40, "The lifeblood of operational intelligence - things happen."),
+    INFORMATION("information", 40, "The lifeblood of operational intelligence - things happen."),
     WARNING("warning", 50, "Service is degraded or endangered."),
     ERROR("error", 60, "Functionality is unavailable, invariants are broken or data is lost."),
-    FATAL("fatal", 70, "If you have a pager, it goes off when one of these occurs.");
+    FATAL("fatal", 70, "If you have a pager, it goes off when one of these occurs."),
+    ALL("all", 00, "all");
+
 
     LevelEnum(String name, Integer priority, String description) {
         this.name = name;

@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.properties;
+package com.aio.portable.swiss.suite.log.impl;
 
 public abstract class PropertyBean {
     //Introspector.decapitalize(RabbitMQLogProperties.class.getName());

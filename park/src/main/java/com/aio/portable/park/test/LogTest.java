@@ -34,6 +34,8 @@ public class LogTest {
     }
 
     public void logStyle() {
+        logger.f("fatal日志", "这里是待记录的日志内容");
+        logger.e("error日志", "这里是待记录的日志内容");
         logger.i("info日志", "这里是待记录的日志内容");
         logger.info("info日志", "这里是待记录的日志内容，info与i方法两者相同");
         logger.d("debug日志", "这里是待记录的日志内容");

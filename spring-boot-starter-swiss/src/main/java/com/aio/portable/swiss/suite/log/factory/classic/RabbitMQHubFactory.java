@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.log.factory.classic;
 
-import com.aio.portable.swiss.suite.log.classic.impl.es.rabbit.RabbitLog;
-import com.aio.portable.swiss.suite.log.classic.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 
@@ -15,8 +15,9 @@ public class RabbitMQHubFactory extends LogHubFactory {
     protected RabbitMQHubFactory() {
     }
 
+    @Override
     public LogHub build(String className) {
-        LogHub logger = LogHub.build(Slf4JLog.build(className), RabbitLog.build(className));
+        LogHub logger = LogHub.build(Slf4JLog.build(className), RabbitMQLog.build(className));
         logger.setEnable(this.isEnable());
         logger.setBaseLevel(this.getLevel());
         return logger;

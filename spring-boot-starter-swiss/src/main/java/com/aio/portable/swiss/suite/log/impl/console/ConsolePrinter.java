@@ -1,9 +1,9 @@
-package com.aio.portable.swiss.suite.log.classic.impl.console;
+package com.aio.portable.swiss.suite.log.impl.console;
 
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.log.classic.impl.LoggerConfig;
+import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.*;

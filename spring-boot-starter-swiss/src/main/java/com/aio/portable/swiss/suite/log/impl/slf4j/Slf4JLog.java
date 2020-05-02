@@ -1,5 +1,6 @@
-package com.aio.portable.swiss.suite.log.classic.impl.slf4j;
+package com.aio.portable.swiss.suite.log.impl.slf4j;
 
+import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 
@@ -31,13 +32,16 @@ public class Slf4JLog extends LogSingle {
     @Override
     protected void initialPrinter() {
         verbosePrinter = text -> {
-            throw new UnsupportedOperationException();
+            Global.unsupportedOperationException(this.getClass().getName() + ": verbose");
         };
         infoPrinter = text -> logger.info(text);
         debugPrinter = text -> logger.debug(text);
         warnPrinter = text -> logger.warn(text);
         errorPrinter = text -> logger.error(text);
         tracePrinter = text -> logger.trace(text);
+        fatalPrinter = text -> {
+            Global.unsupportedOperationException(this.getClass().getName() + ": fatal");
+        };
     }
 
 

@@ -12,27 +12,14 @@ public abstract class LogHubFactory {
         public final static String SLF4J_HUB_FACTORY = "slf4jHubFactory";
         public final static String FILE_HUB_FACTORY = "fileHubFactory";
         public final static String RABBITMQ_HUB_FACTORY = "rabbitMQHubFactory";
+        public final static String KAFKA_HUB_FACTORY = "kafkaHubFactory";
     }
 
     boolean enable = true;
 
     LevelEnum level = LevelEnum.VERBOSE;
 
-    public boolean isEnable() {
-        return enable;
-    }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    public LevelEnum getLevel() {
-        return level;
-    }
-
-    public void setLevel(LevelEnum level) {
-        this.level = level;
-    }
 
     public abstract LogHub build(String className);
 
@@ -65,9 +52,6 @@ public abstract class LogHubFactory {
     }
 
     public LogHub buildAsync() {
-//        Throwable throwable = new Throwable();
-//        int depth = 1;
-//        String className = throwable.getStackTrace()[depth].getClassName();
         String className = StackTraceSugar.Previous.getClassName();
         return buildAsync(className);
     }
@@ -77,4 +61,27 @@ public abstract class LogHubFactory {
         return buildAsync(className);
     }
 
+
+
+
+
+
+
+
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public LevelEnum getLevel() {
+        return level;
+    }
+
+    public void setLevel(LevelEnum level) {
+        this.level = level;
+    }
 }

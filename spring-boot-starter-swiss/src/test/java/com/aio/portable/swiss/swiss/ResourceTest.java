@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
 import com.aio.portable.swiss.suite.resource.StreamClassLoader;
 import org.junit.Test;

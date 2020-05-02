@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.impl.file;
+package com.aio.portable.swiss.suite.log.impl.file;
 
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
@@ -32,7 +32,7 @@ public class FileLog extends LogSingle {
         String name = getName();
         verbosePrinter = FilePrinter.instance(name, LevelEnum.VERBOSE.getName());
         tracePrinter = FilePrinter.instance(name, LevelEnum.TRACE.getName());
-        infoPrinter = FilePrinter.instance(name, LevelEnum.INFO.getName());
+        infoPrinter = FilePrinter.instance(name, LevelEnum.INFORMATION.getName());
         debugPrinter = FilePrinter.instance(name, LevelEnum.DEBUG.getName());
         warnPrinter = FilePrinter.instance(name, LevelEnum.WARNING.getName());
         errorPrinter = FilePrinter.instance(name, LevelEnum.ERROR.getName());

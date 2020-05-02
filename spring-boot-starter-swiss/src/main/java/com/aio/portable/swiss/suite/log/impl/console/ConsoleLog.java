@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.impl.console;
+package com.aio.portable.swiss.suite.log.impl.console;
 
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
@@ -31,7 +31,7 @@ public class ConsoleLog extends LogSingle {
         String name = getName();
         verbosePrinter = ConsolePrinter.instance(name, LevelEnum.VERBOSE.getName());
         tracePrinter = ConsolePrinter.instance(name, LevelEnum.TRACE.getName());
-        infoPrinter = ConsolePrinter.instance(name, LevelEnum.INFO.getName());
+        infoPrinter = ConsolePrinter.instance(name, LevelEnum.INFORMATION.getName());
         debugPrinter = ConsolePrinter.instance(name, LevelEnum.DEBUG.getName());
         warnPrinter = ConsolePrinter.instance(name, LevelEnum.WARNING.getName());
         errorPrinter = ConsolePrinter.instance(name, LevelEnum.ERROR.getName());

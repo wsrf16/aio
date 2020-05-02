@@ -35,7 +35,7 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-//        logTest.logStyle();
+        logTest.logStyle();
 //        while(true) {
 //            try {
 //                Thread.sleep(10000);

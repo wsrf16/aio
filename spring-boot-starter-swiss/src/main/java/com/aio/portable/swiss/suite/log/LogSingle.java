@@ -14,7 +14,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
-public abstract class LogSingle extends LogSingleBody {
+public abstract class LogSingle implements LogAction {
+    private String name;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     final static String NEWLINE = Constant.LINE_SEPARATOR;
     //    protected final static String INTERVAL_CHAR = " => ";
     protected final static String INTERVAL_CHAR = " ";
@@ -56,6 +65,10 @@ public abstract class LogSingle extends LogSingleBody {
     protected Printer warnPrinter;
     protected Printer errorPrinter;
     protected Printer fatalPrinter;
+
+//    protected LogSingle() {
+//        this(null);
+//    }
 
     protected LogSingle(String name) {
         setName(name);
@@ -326,7 +339,7 @@ public abstract class LogSingle extends LogSingleBody {
         LogNote note = new LogNote();
         {
             note.name = getName();
-            note.level = LevelEnum.INFO.getName();
+            note.level = LevelEnum.INFORMATION.getName();
             note.message = message;
         }
         output(infoPrinter, note);
@@ -355,7 +368,7 @@ public abstract class LogSingle extends LogSingleBody {
         LogNote note = new LogNote();
         {
             note.name = getName();
-            note.level = LevelEnum.INFO.getName();
+            note.level = LevelEnum.INFORMATION.getName();
             note.summary = summary;
             note.message = message;
         }
@@ -386,7 +399,7 @@ public abstract class LogSingle extends LogSingleBody {
         LogNote note = new LogNote();
         {
             note.name = getName();
-            note.level = LevelEnum.INFO.getName();
+            note.level = LevelEnum.INFORMATION.getName();
             note.data = t;
         }
         output(infoPrinter, note);
@@ -404,7 +417,7 @@ public abstract class LogSingle extends LogSingleBody {
         LogNote note = new LogNote();
         {
             note.name = getName();
-            note.level = LevelEnum.INFO.getName();
+            note.level = LevelEnum.INFORMATION.getName();
             note.summary = summary;
             note.data = t;
         }
@@ -423,7 +436,7 @@ public abstract class LogSingle extends LogSingleBody {
         LogNote note = new LogNote();
         {
             note.name = getName();
-            note.level = LevelEnum.INFO.getName();
+            note.level = LevelEnum.INFORMATION.getName();
             note.summary = summary;
             note.message = message;
             note.data = t;

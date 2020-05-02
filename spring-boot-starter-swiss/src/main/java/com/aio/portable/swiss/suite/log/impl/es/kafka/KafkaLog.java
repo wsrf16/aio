@@ -1,12 +1,11 @@
-package com.aio.portable.swiss.suite.log.classic.impl.es.kafka;
+package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.classic.impl.es.ESLogNote;
+import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
 
 /**
  * Created by York on 2017/11/23.
@@ -38,7 +37,7 @@ public class KafkaLog extends LogSingle {
         properties = KafkaLogProperties.singletonInstance();
         verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
         tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
-        infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFO.getName(), properties);
+        infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFORMATION.getName(), properties);
         debugPrinter = KafkaPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
         warnPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
         errorPrinter = KafkaPrinter.instance(name, LevelEnum.ERROR.getName(), properties);

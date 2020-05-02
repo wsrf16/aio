@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.log.annotation;
 
 
-import com.aio.portable.swiss.suite.log.classic.properties.PropertyBean;
+import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import org.springframework.context.annotation.DependsOn;
 
 import java.lang.annotation.*;

@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.properties;
+package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 

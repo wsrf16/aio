@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.log.classic.properties;
+package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
 import com.aio.portable.swiss.autoconfigure.properties.RabbitMQProperties;
 

@@ -1,9 +1,8 @@
-package com.aio.portable.swiss.suite.log.classic.impl.es.kafka;
+package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.classic.impl.LoggerConfig;
-import com.aio.portable.swiss.suite.log.classic.properties.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.module.mq.kafka.KafkaBuilder;
 import org.springframework.kafka.core.KafkaTemplate;

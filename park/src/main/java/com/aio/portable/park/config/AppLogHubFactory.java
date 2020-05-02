@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 public class AppLogHubFactory extends Slf4jHubFactory {
     public static LogHub logHub(String className) {
         LogHub logger = AppLogHubFactory.singletonInstance()
-                .buildAsync(className)
-                .setBaseLevel(LevelEnum.DEBUG);
+                .buildAsync(className);
+        logger.setBaseLevel(LevelEnum.DEBUG);
         return logger;
     }
 
     public static LogHub logHub() {
         LogHub logger = AppLogHubFactory.singletonInstance()
-                .buildAsync(1)
-                .setBaseLevel(LevelEnum.DEBUG);
+                .buildAsync(1);
+        logger.setBaseLevel(LevelEnum.DEBUG);
         return logger;
     }
 }

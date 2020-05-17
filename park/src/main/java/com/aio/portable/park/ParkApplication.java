@@ -5,7 +5,9 @@ import com.aio.portable.swiss.suite.log.annotation.InitialKafkaLogProperties;
 //import com.aio.portable.park.ToMapTest;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
 //import com.aio.portable.park.task.ThreadLocalTest;
+import com.aio.portable.swiss.suite.log.annotation.InitialLogProperties;
 import com.aio.portable.swiss.suite.log.annotation.InitialRabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
@@ -14,6 +16,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication(exclude = {
@@ -25,14 +28,9 @@ import org.springframework.core.env.Environment;
         KafkaAutoConfiguration.class,
         RabbitAutoConfiguration.class,
 }, scanBasePackages = "com.aio.portable")
-
 //@ComponentScan(lazyInit = true)
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
-// -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
-//@Import(RabbitMQLogProperties.class)
-//@DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
-@InitialRabbitMQLogProperties
-//@InitialKafkaLogProperties
+// VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext
@@ -41,14 +39,6 @@ public class ParkApplication {
         String[] activeProfiles = environment.getActiveProfiles();
         String[] defaultProfiles = environment.getDefaultProfiles();
         String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
-
-//    @Bean(initMethod = "destroy", destroyMethod = "init")
-//    public AutowiredOrderTest ff() {
-//        return new AutowiredOrderTest(null);
-//    }
-
-//    @Autowired
-//    public AutowiredOrderTest autowiredOrderTest;
     }
 
 }

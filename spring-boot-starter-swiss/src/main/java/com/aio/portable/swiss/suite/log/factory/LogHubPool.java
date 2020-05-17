@@ -17,7 +17,7 @@ public class LogHubPool {
     private LogHubPool() {
     }
 
-    public final static LogHubPool getSingleton(LogHubFactory logHubFactory) {
+    public final static LogHubPool singletonInstance(LogHubFactory logHubFactory) {
         if (instance.logHubFactory == null)
             synchronized (LogHubPool.class) {
                 if (instance.logHubFactory == null)

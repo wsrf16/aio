@@ -1,47 +1,70 @@
 package com.aio.portable.parkdb.dao.third.model;
 
-import com.aio.portable.swiss.suite.database.jpa.annotation.where.Like;
+import com.aio.portable.swiss.suite.database.jpa.annotation.order.OrderBy;
+import com.aio.portable.swiss.suite.database.jpa.annotation.where.*;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 public class BookVO extends Book {
-    private Long id;
-    @Like(targetProperty = "name")
-    private String name;
-    private String author;
-    private String description;
+    @GreaterThan(targetProperty = "id")
+    private Long idGreaterThanEqual;
+    @LessThanEqual(targetProperty = "id")
+    private Long idLessThanEqual;
+    @Equal(targetProperty = "name")
+    private String nameLike;
+    @In(targetProperty = "author")
+    private List<String> authorIn;
+    @Like(targetProperty = "description")
+    private String descriptionLike;
+    @OrderBy(targetProperty = "id", direction = Sort.Direction.DESC, priority = 1)
+    private String idOrderBy;
 
-
-
-    public Long getId() {
-        return id;
+    public Long getIdGreaterThanEqual() {
+        return idGreaterThanEqual;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdGreaterThanEqual(Long idGreaterThanEqual) {
+        this.idGreaterThanEqual = idGreaterThanEqual;
     }
 
-    public String getName() {
-        return name;
+    public Long getIdLessThanEqual() {
+        return idLessThanEqual;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIdLessThanEqual(Long idLessThanEqual) {
+        this.idLessThanEqual = idLessThanEqual;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getNameLike() {
+        return nameLike;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setNameLike(String nameLike) {
+        this.nameLike = nameLike;
     }
 
-    public String getDescription() {
-        return description;
+    public List<String> getAuthorIn() {
+        return authorIn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAuthorIn(List<String> authorIn) {
+        this.authorIn = authorIn;
     }
 
+    public String getDescriptionLike() {
+        return descriptionLike;
+    }
 
+    public void setDescriptionLike(String descriptionLike) {
+        this.descriptionLike = descriptionLike;
+    }
+
+    public String getIdOrderBy() {
+        return idOrderBy;
+    }
+
+    public void setIdOrderBy(String idOrderBy) {
+        this.idOrderBy = idOrderBy;
+    }
 }

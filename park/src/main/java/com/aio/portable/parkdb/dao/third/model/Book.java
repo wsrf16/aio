@@ -24,16 +24,16 @@ public class Book {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String nameLike) {
+        this.name = nameLike;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(String authorIn) {
+        this.author = authorIn;
     }
 
     public String getDescription() {

@@ -2,7 +2,14 @@ package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.LogSingle;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {
@@ -60,6 +67,31 @@ public abstract class LogHubFactory {
         String className = StackTraceSugar.Previous.getClassName(previous);
         return buildAsync(className);
     }
+
+
+//    public <T extends LogSingle> LogHub build(List<Class<T>> clazzList, String className) {
+//        List<LogSingle> logSingleList = clazzList.stream().map(clazz -> {
+//            try {
+//                Constructor<T> constructor = clazz.getConstructor(new Class[]{String.class});
+//                LogSingle t = constructor.newInstance(className);
+//                return t;
+//            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+//                e.printStackTrace();
+//                throw new RuntimeException(e);
+//            }
+//        }).collect(Collectors.toList());
+//        LogHub logger = LogHub.build(logSingleList);
+//        logger.setEnable(this.isEnable());
+//        logger.setBaseLevel(this.getLevel());
+//        return logger;
+//    }
+//
+//    public LogHub _build(String className) {
+//        LogHub logger = LogHub.build(new Slf4JLog(className));
+//        logger.setEnable(this.isEnable());
+//        logger.setBaseLevel(this.getLevel());
+//        return logger;
+//    }
 
 
 

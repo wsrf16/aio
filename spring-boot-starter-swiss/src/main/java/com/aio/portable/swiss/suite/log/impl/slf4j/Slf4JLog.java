@@ -5,12 +5,13 @@ import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 
 public class Slf4JLog extends LogSingle {
-    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+//    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 //    private org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(this.getClass());
+    private org.slf4j.Logger logger;
 
-
-    private Slf4JLog(String name) {
+    public Slf4JLog(String name) {
         super(name);
+        logger = org.slf4j.LoggerFactory.getLogger(name);
     }
 
     public final static Slf4JLog build() {
@@ -25,7 +26,6 @@ public class Slf4JLog extends LogSingle {
 
     public final static Slf4JLog build(String name) {
         Slf4JLog slf4jLogger = new Slf4JLog(name);
-        slf4jLogger.logger = org.slf4j.LoggerFactory.getLogger(name);
         return slf4jLogger;
     }
 

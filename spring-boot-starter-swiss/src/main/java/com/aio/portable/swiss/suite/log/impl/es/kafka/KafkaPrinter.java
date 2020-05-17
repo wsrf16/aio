@@ -18,14 +18,14 @@ public class KafkaPrinter implements Printer {
 
     String logName;
     String logfilePrefix;
-    KafkaLogProperties properties;
+    KafkaLogProperties kafkaLogProperties;
     KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaPrinter(String logName, String logfilePrefix, KafkaLogProperties properties) {
+    public KafkaPrinter(String logName, String logfilePrefix, KafkaLogProperties kafkaLogProperties) {
         this.logName = logName;
         this.logfilePrefix = logfilePrefix;
-        this.properties = properties;
-        this.kafkaTemplate = KafkaBuilder.kafkaTemplate(properties);
+        this.kafkaLogProperties = kafkaLogProperties;
+        this.kafkaTemplate = KafkaBuilder.kafkaTemplate(kafkaLogProperties);
     }
 
     private static Map<String, KafkaPrinter> instanceMaps = new HashMap<>();
@@ -53,8 +53,8 @@ public class KafkaPrinter implements Printer {
 
     @Override
     public void println(String line) {
-        if (properties.isEnable()) {
-            kafkaTemplate.send(properties.getTopic(), Thread.currentThread().getName(), line);
+        if (kafkaLogProperties.isEnable()) {
+            kafkaTemplate.send(kafkaLogProperties.getTopic(), Thread.currentThread().getName(), line);
         }
     }
 

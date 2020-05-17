@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log;
 
-import com.aio.portable.swiss.sugar.JDKProxy;
+import com.aio.portable.swiss.sugar.DynamicProxy;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.Enhancer;
@@ -17,7 +17,7 @@ import java.util.*;
 public class LogHub extends LogBundle implements Logger {
     private float samplerRate = 1f;
     private boolean enable = true;
-    private LevelEnum baseLevel = LevelEnum.VERBOSE;
+    private LevelEnum baseLevel = LevelEnum.ALL;
 
     protected LogHub() {
         super();
@@ -59,6 +59,12 @@ public class LogHub extends LogBundle implements Logger {
     public final static LogHub build(LogSingle... logger) {
         List<LogSingle> loggers = logger == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logger));
         return build(loggers);
+    }
+
+    public final static LogHub buildAsync(List<LogSingle> loggers){
+        LogHub logHub = build(loggers);
+        logHub.setAsync(true);
+        return logHub;
     }
 
 
@@ -112,9 +118,7 @@ public class LogHub extends LogBundle implements Logger {
         }
 
         protected static LogHub toCGLIBProxy(LogHub logHub) {
-            Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(LogHub.class);
-            enhancer.setCallbacks(new Callback[]{new MethodInterceptor() {
+            LogHub proxy = DynamicProxy.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws Throwable {
                     final LogHub hub = logHub;
@@ -170,14 +174,14 @@ public class LogHub extends LogBundle implements Logger {
                     }
                     return invoke;
                 }
-            }});
-            enhancer.setInterceptDuringConstruction(false);
-            LogHub proxy = (LogHub) enhancer.create();
+
+            });
             return proxy;
         }
 
         protected static Logger toJDKProxy(LogHub logHub) {
-            Logger proxy = JDKProxy.createProxy((_proxy, _method, _args) -> {
+            Logger proxy = DynamicProxy.jdkProxy(logHub.getClass(),
+                    (_proxy, _method, _args) -> {
                         LogHub hub = logHub;
                         hub.check();
                         Object invoke = null;
@@ -226,8 +230,7 @@ public class LogHub extends LogBundle implements Logger {
                             break;
                         }
                         return invoke;
-                    }
-                    , logHub.getClass());
+                    });
             return proxy;
         }
 

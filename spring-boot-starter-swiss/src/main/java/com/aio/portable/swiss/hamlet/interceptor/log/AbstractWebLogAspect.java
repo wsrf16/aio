@@ -16,7 +16,7 @@ import java.text.MessageFormat;
 
 class AbstractWebLogAspect {
     public AbstractWebLogAspect(LogHubFactory logHubFactory) {
-        loggerPool = LogHubPool.getSingleton(logHubFactory);
+        loggerPool = LogHubPool.singletonInstance(logHubFactory);
     }
 
     protected static LogHubPool loggerPool;

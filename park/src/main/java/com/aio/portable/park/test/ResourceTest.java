@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = AppLogHubFactory.singletonInstance().build();
+    LogHub log = AppLogHubFactory.logHub();
 
     {
         {

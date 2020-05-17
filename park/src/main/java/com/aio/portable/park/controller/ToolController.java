@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("tool")
 public class ToolController {
-    LogHub log = AppLogHubFactory.singletonInstance().buildAsync();
+    LogHub log = AppLogHubFactory.logHub();
 
 
 //    @PostMapping("/upload")

@@ -27,11 +27,6 @@ public class LogTest {
     }
 
 
-    public void logCase2() {
-        LogHub logger = AppLogHubFactory.singletonInstance().buildAsync(getClass().getTypeName());
-        logger.i("abcdefghijklmnopqrstuvwxyz11111111");
-        logger.i("abcdefghijklmnopqrstuvwxyz22222222222");
-    }
 
     public void logStyle() {
         logger.f("fatal日志", "这里是待记录的日志内容");

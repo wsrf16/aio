@@ -1,6 +1,4 @@
-package com.aio.portable.swiss.suite.database.jpa.annotation.order;
-
-import org.springframework.data.domain.Sort;
+package com.aio.portable.swiss.suite.database.jpa.annotation.where;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,10 +7,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Order {
+public @interface LessThanEqual {
     String targetProperty();
-
-    Sort.Direction direction() default Sort.Direction.ASC;
-
-    int priority();
 }

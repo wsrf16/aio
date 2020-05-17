@@ -3,6 +3,7 @@ package com.aio.portable.park.runner;
 import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.park.config.RootConfig;
 import com.aio.portable.park.test.LogTest;
+import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
 import com.aio.portable.swiss.suite.resource.PackageSugar;
@@ -20,12 +21,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-public class BeanRunner implements ApplicationRunner {
+public class AutoRunner implements ApplicationRunner {
 
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
+    @Autowired
+    MyDatabaseTest myDatabaseTest;
 
-    LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
+    LogHub log = AppLogHubFactory.logHub();//.setSamplerRate(1f);
 
     @Autowired
     RootConfig rootConfig;
@@ -35,18 +38,9 @@ public class BeanRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
+        myDatabaseTest.blah();
         logTest.logStyle();
-//        while(true) {
-//            try {
-//                Thread.sleep(10000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            log.i("a", "aaaaaaaaaaaaa");
-//
-//            if (1==2)
-//                break;
-//        }
+
 
     }
 

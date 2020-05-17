@@ -24,7 +24,7 @@ spring:
 #    username: root
 #    password: 1111
 
-    third1:
+    third:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
       username: root
@@ -80,10 +80,11 @@ spring:
     rabbitmq:
       enable: true
       host: mecs.com
+#      host: 192.168.133.133
 #      host: 10.124.163.95
       port: 5672
       username: admin
-      password: 1
+      password: admin
       virtual-host: /
       es-index: @project.deploy.finalName@-@profiles.active@-log
       publisher-confirms: true
@@ -98,12 +99,12 @@ spring:
       enable: true
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       topic: application-log
-#      bootstrap-servers: 192.168.133.133:9092
+      bootstrap-servers: 192.168.133.133:9092
       template:
         defaultTopic: application-log
-      producer:
+#      producer:
 #        bootstrap-servers: mecs.com:9092
-        bootstrap-servers: 192.168.133.133:9092
+#        bootstrap-servers: 192.168.133.133:9092
       properties:
         linger-ms: 100
         max-block-ms: 3000

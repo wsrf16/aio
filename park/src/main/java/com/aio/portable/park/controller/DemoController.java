@@ -30,7 +30,6 @@ public class DemoController {
         request = request;
         response = response;
 
-        AppLogHubFactory.singletonInstance().build(this.getClass()).d("this is debug.");
         return "ok";
     }
 
@@ -42,7 +41,6 @@ public class DemoController {
     @GetMapping("mqsend")
     public String mqsend() {
         amqpTemplate.convertAndSend("tc.exchange","taoche", "aaaaaaaaaaaaa");
-        amqpTemplate.convertAndSend("tc.exchange", "taoche", "bbbbbbbb");
 
         String msg = MessageFormat.format("现在的时间是{0}", DateTimeSugar.UnixTime.convertUnix2DateTime(DateTimeSugar.UnixTime.nowUnix()));
         amqpTemplate.convertAndSend("application-log-queue", msg);
@@ -50,8 +48,8 @@ public class DemoController {
     }
 
     @GetMapping("throwe")
-    public void throwE() {
-        throw new RuntimeException("throw runexception");
+    public void throwe() {
+        throw new RuntimeException("throw exception");
     }
 
     @GetMapping("date")

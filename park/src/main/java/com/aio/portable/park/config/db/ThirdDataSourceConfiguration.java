@@ -18,7 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 @EnableJpaRepositories(basePackages = {ThirdDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = ThirdDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = ThirdDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 //@Import(HibernateJpaAutoConfiguration.class)

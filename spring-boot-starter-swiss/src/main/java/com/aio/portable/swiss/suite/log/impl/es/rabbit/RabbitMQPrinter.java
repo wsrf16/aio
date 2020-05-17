@@ -8,6 +8,7 @@ import com.aio.portable.swiss.global.Constant;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +20,14 @@ public class RabbitMQPrinter implements Printer {
 
     String logName;
     String logfilePrefix;
-    RabbitMQLogProperties configuration;
+    RabbitMQLogProperties rabbitMQLogProperties;
     RabbitTemplate rabbitTemplate;
 
-    private RabbitMQPrinter(String logName, String logfilePrefix, RabbitMQLogProperties configuration) {
+    private RabbitMQPrinter(String logName, String logfilePrefix, RabbitMQLogProperties rabbitMQLogProperties) {
         this.logName = logName;
         this.logfilePrefix = logfilePrefix;
-        this.configuration = configuration;
-        this.rabbitTemplate = RabbitMQSugar.buildRabbitTemplate(configuration);
+        this.rabbitMQLogProperties = rabbitMQLogProperties;
+        this.rabbitTemplate = RabbitMQSugar.buildRabbitTemplate(rabbitMQLogProperties);
     }
 
     private static Map<String, RabbitMQPrinter> instanceMaps = new HashMap<>();
@@ -47,6 +48,7 @@ public class RabbitMQPrinter implements Printer {
             else {
                 RabbitMQPrinter _loc = new RabbitMQPrinter(logName, logFilePrefix, configuration);
                 instanceMaps.put(section, _loc);
+                System.out.println(MessageFormat.format("RabbitMQ Host : {0}", configuration.getHost()));
                 return _loc;
             }
         }
@@ -54,8 +56,8 @@ public class RabbitMQPrinter implements Printer {
 
     @Override
     public void println(String line) {
-        if (configuration.isEnable()) {
-            configuration.getBindingList().forEach(c -> {
+        if (rabbitMQLogProperties.isEnable()) {
+            rabbitMQLogProperties.getBindingList().forEach(c -> {
                 String exchange = c.getExchange();
                 String routingKey = c.getRoutingKey();
 //                String message = MessageBuilder

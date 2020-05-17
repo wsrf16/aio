@@ -1,6 +1,9 @@
 package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.suite.bean.type.BiFunction;
+import com.aio.portable.swiss.suite.log.LogHub;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -8,16 +11,16 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class JDKProxy<T> implements InvocationHandler {
+public class DynamicProxy<T> implements InvocationHandler {
 
     private T t;
     private BiFunction<Object, Method, Object[], Object> aopFunction;
 
-    public JDKProxy(T t) {
+    public DynamicProxy(T t) {
         this.t = t;
     }
 
-    public T createProxy() {
+    public T jdkProxy() {
         T proxy = (T) Proxy.newProxyInstance(t.getClass().getClassLoader(),
                 t.getClass().getInterfaces(),
                 this);
@@ -58,8 +61,17 @@ public class JDKProxy<T> implements InvocationHandler {
 
 
 
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor){
+        Enhancer enhancer = new Enhancer();
+        enhancer.setInterceptDuringConstruction(false);
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallback(methodInterceptor);
+        return (T) enhancer.create();
 
-    public static <T> T createProxy(InvocationHandler handler, Class<T> clazz) {
+    }
+
+
+    public static <T> T jdkProxy(Class<T> clazz, InvocationHandler handler) {
         ClassLoader classLoader = clazz.getClassLoader();
         Class<?>[] selfInterfaces = clazz.getInterfaces();
         Class<?>[] superInterfaces = clazz.getSuperclass().getInterfaces();

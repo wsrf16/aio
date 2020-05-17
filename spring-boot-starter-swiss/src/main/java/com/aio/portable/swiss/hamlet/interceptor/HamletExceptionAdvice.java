@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
-import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
@@ -23,7 +22,7 @@ public abstract class HamletExceptionAdvice {
     private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
 
     public HamletExceptionAdvice(LogHubFactory slf4jHubFactory) {
-        loggerPool = LogHubPool.getSingleton(slf4jHubFactory);
+        loggerPool = LogHubPool.singletonInstance(slf4jHubFactory);
     }
 
     protected static LogHubPool loggerPool;

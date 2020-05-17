@@ -48,6 +48,7 @@ spring:
       enable: true
       es-index: @project.deploy.finalName@-@profiles.active@-log
       topic: basic_application_log
+      bootstrap-servers: 10.4.8.31:9092
       template:
         defaultTopic: basic_application_log
       producer:

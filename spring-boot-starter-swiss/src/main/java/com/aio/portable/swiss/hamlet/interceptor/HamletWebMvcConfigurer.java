@@ -7,6 +7,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -62,6 +63,22 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 //                        .addResourceLocations(c.getValue())
 //        );
 //    }
+
+    /***
+     * 不加提示以下信息
+     * /null/swagger-resources
+     * /null/swagger-resources/configuration/ui
+     * /null/swagger-resources/configuration/security
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
     static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE" };
 

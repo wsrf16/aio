@@ -24,13 +24,14 @@ public interface ProxySugar {
 /*
     {
         ErPrinterImpl erPrinter = new ErPrinterImpl();
-        ErPrinter proxy = JDKInvocationHandler.createProxy((_proxy, _method, _args) -> {
+        ErPrinter proxy = ProxySugar.createProxy(
+                erPrinter.getClass(),
+                (_proxy, _method, _args) -> {
                     System.out.println("before invoke()333!!!!");
                     Object invoke = _method.invoke(erPrinter);
                     System.out.println("after invoke()333!!!!");
                     return invoke;
-                }
-                , erPrinter.getClass());
+                });
         proxy.out();
     }
     */

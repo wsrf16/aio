@@ -254,5 +254,9 @@ public class ZooKeeperSugar {
         deleteIfExists(zooKeeper, lockPath);
     }
 
+//    public static void ff(CuratorFramework client) {
+//        new InterProcessMutex(client, "/curator/lock");
+//    }
+
 }
 

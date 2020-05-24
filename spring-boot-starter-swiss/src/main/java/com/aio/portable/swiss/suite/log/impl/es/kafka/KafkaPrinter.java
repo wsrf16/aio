@@ -5,25 +5,20 @@ import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.module.mq.kafka.KafkaBuilder;
+import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class KafkaPrinter implements Printer {
-    public final static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
-    public final static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
-    public final static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
-    public final static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
-
     String logName;
-    String logfilePrefix;
     KafkaLogProperties kafkaLogProperties;
     KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaPrinter(String logName, String logfilePrefix, KafkaLogProperties kafkaLogProperties) {
+    public KafkaPrinter(String logName, KafkaLogProperties kafkaLogProperties) {
         this.logName = logName;
-        this.logfilePrefix = logfilePrefix;
         this.kafkaLogProperties = kafkaLogProperties;
         this.kafkaTemplate = KafkaBuilder.kafkaTemplate(kafkaLogProperties);
     }
@@ -35,24 +30,23 @@ public class KafkaPrinter implements Printer {
      * 多单例
      *
      * @param logName
-     * @param logFilePrefix
-     * @return 返回日志格式：[ROOT_LOGFOLDER]\[logName]\[logFilePrefix][SEPARATOR_CHAR][OCCUPY_MAX][SEPARATOR_CHAR][TIMEFORMAT][LOG_EXTENSION]
      */
-    public final static synchronized KafkaPrinter instance(String logName, String logFilePrefix, KafkaLogProperties properties) {
-        String section = String.join(Constant.EMPTY, logName, SECTION_SEPARATOR, logFilePrefix);
+    public final static synchronized KafkaPrinter instance(String logName, KafkaLogProperties properties) {
+        String section = String.join(Constant.EMPTY, logName);
         {
             if (instanceMaps.keySet().contains(section))
                 return instanceMaps.get(section);
             else {
-                KafkaPrinter _loc = new KafkaPrinter(logName, logFilePrefix, properties);
+                KafkaPrinter _loc = new KafkaPrinter(logName, properties);
                 instanceMaps.put(section, _loc);
+                System.out.println(MessageFormat.format("Initial Kafka Printer Host: {0}, Name: {1}", properties.getBootstrapServers(), logName));
                 return _loc;
             }
         }
     }
 
     @Override
-    public void println(String line) {
+    public void println(String line, LevelEnum level) {
         if (kafkaLogProperties.isEnable()) {
             kafkaTemplate.send(kafkaLogProperties.getTopic(), Thread.currentThread().getName(), line);
         }

@@ -35,22 +35,25 @@ public class KafkaLog extends LogSingle {
     protected void initialPrinter() {
         String name = getName();
         properties = KafkaLogProperties.singletonInstance();
-        verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
-        tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
-        infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFORMATION.getName(), properties);
-        debugPrinter = KafkaPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
-        warnPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
-        errorPrinter = KafkaPrinter.instance(name, LevelEnum.ERROR.getName(), properties);
-        fatalPrinter = KafkaPrinter.instance(name, LevelEnum.FATAL.getName(), properties);
+//        verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
+//        tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
+//        infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFORMATION.getName(), properties);
+//        debugPrinter = KafkaPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
+//        warnPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
+//        errorPrinter = KafkaPrinter.instance(name, LevelEnum.ERROR.getName(), properties);
+//        fatalPrinter = KafkaPrinter.instance(name, LevelEnum.FATAL.getName(), properties);
+
+        printer = KafkaPrinter.instance(name, properties);
     }
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
+        LevelEnum level = logNote.getLevel();
         ESLogNote kibanaLogNote = new ESLogNote(logNote, esIndex, ip);
         String text = serializer.serialize(kibanaLogNote);
-        super.output(printer, text);
+        super.output(printer, text, level);
     }
 
 

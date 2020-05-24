@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.log.impl.es;
 
+import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogException;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
@@ -56,11 +57,11 @@ public class ESLogNote {
     //        this.hostName = hostName;
     //    }
 
-    public String getLevel() {
+    public LevelEnum getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(LevelEnum level) {
         this.level = level;
     }
 
@@ -116,7 +117,7 @@ public class ESLogNote {
 
     //    private String hostName;
 
-    public String level;
+    public LevelEnum level;
 
     public String name;
 
@@ -129,7 +130,7 @@ public class ESLogNote {
     public String exception;
 
 
-    public ESLogNote(String message, String esIndex, String level, String className, LogException logException, String serverIp, String hostName, long appId, String appEnv) {
+    public ESLogNote(String message, String esIndex, LevelEnum level, String className, LogException logException, String serverIp, String hostName, long appId, String appEnv) {
         setLevel(level);
         setName(className);
         setMessage(message);

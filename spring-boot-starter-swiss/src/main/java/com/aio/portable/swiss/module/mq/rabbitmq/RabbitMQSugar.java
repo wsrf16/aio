@@ -6,14 +6,14 @@ import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.List;
@@ -26,43 +26,58 @@ public abstract class RabbitMQSugar {
         public final static String FANOUT = "fanout";
     }
 
-    private static Binding binding(RabbitMQBindingProperty rabbitMQBindingProperty) {
+    private static Binding binding(RabbitAdmin rabbitAdmin, RabbitMQBindingProperty rabbitMQBindingProperty) {
+        String queueText = rabbitMQBindingProperty.getQueue();
+        Queue queue = new Queue(queueText, true, false, false, null);
+        String exchangeText = rabbitMQBindingProperty.getExchange();
+        String routingKeyText = rabbitMQBindingProperty.getRoutingKey();
+        String type = rabbitMQBindingProperty.getType().toLowerCase();
+
         Binding binding;
-        switch (rabbitMQBindingProperty.getType().toLowerCase()) {
-            case Exchange.DIRECT:
-                binding = BindingBuilder.bind(new Queue(rabbitMQBindingProperty.getQueue())).to(new DirectExchange(rabbitMQBindingProperty.getExchange())).with(rabbitMQBindingProperty.getRoutingKey());
-                break;
-            case Exchange.TOPIC:
-                if (StringUtils.hasText(rabbitMQBindingProperty.getExchange()) && rabbitMQBindingProperty.getRoutingKey() != null)
-                    binding = BindingBuilder.bind(new Queue(rabbitMQBindingProperty.getQueue())).to(new TopicExchange(rabbitMQBindingProperty.getExchange())).with(rabbitMQBindingProperty.getRoutingKey());
-                else
+        rabbitAdmin.declareQueue(queue);
+
+        switch (type) {
+            // BuiltinExchangeType
+            case Exchange.DIRECT: {
+                DirectExchange exchange = new DirectExchange(exchangeText, true, false, null);
+                rabbitAdmin.declareExchange(exchange);
+                binding = BindingBuilder.bind(queue).to(exchange).with(routingKeyText);
+            }
+            break;
+            case Exchange.TOPIC: {
+                if (!StringUtils.hasText(exchangeText) || !StringUtils.hasText(routingKeyText))
                     throw new IllegalArgumentException(
                             MessageFormat.format("exchange : {0}, routingKey : {1}.",
-                                    rabbitMQBindingProperty.getExchange(),
-                                    rabbitMQBindingProperty.getRoutingKey())
+                                    exchangeText,
+                                    routingKeyText)
                     );
-                break;
-            case Exchange.FANOUT:
-                binding = BindingBuilder.bind(new Queue(rabbitMQBindingProperty.getQueue())).to(new FanoutExchange(rabbitMQBindingProperty.getExchange()));
-                break;
+                TopicExchange exchange = new TopicExchange(exchangeText, true, false, null);
+                rabbitAdmin.declareExchange(exchange);
+                binding = BindingBuilder.bind(queue).to(exchange).with(routingKeyText);
+            }
+            break;
+            case Exchange.FANOUT: {
+                FanoutExchange exchange = new FanoutExchange(exchangeText, true, false, null);
+                rabbitAdmin.declareExchange(exchange);
+                binding = BindingBuilder.bind(queue).to(exchange);
+            }
+            break;
             default:
-                throw new IllegalArgumentException(rabbitMQBindingProperty.getType());
+                throw new IllegalArgumentException(type);
         }
+        rabbitAdmin.declareBinding(binding);
         return binding;
+
+
     }
 
-    private final static List<Binding> binding(List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
-        List<Binding> bindingList = rabbitMQBindingPropertyList.stream().map(c -> binding(c)).collect(Collectors.toList());
+    private final static List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
+        List<Binding> bindingList = rabbitMQBindingPropertyList.stream().map(c -> binding(rabbitAdmin, c)).collect(Collectors.toList());
         return bindingList;
     }
 
-//    public final static List<Binding> binding(RabbitMQBindingListProperties rabbitMQBindingListProperties) {
-//        List<Binding> bindingList = rabbitMQBindingListProperties.getBindingList().stream().map(c -> binding(c)).collect(Collectors.toList());
-//        return bindingList;
-//    }
-
-    public final static List<Binding> binding(RabbitMQProperties rabbitMQProperties) {
-        List<Binding> bindingList = rabbitMQProperties.getBindingList() == null ? null : rabbitMQProperties.getBindingList().stream().map(c -> binding(c)).collect(Collectors.toList());
+    public final static List<Binding> binding(RabbitAdmin rabbitAdmin, RabbitMQProperties rabbitMQProperties) {
+        List<Binding> bindingList = rabbitMQProperties.getBindingList() == null ? null : binding(rabbitAdmin, rabbitMQProperties.getBindingList());
         return bindingList;
     }
 
@@ -167,7 +182,13 @@ public abstract class RabbitMQSugar {
                     rabbitTemplate.setEncoding(StandardCharsets.UTF_8.toString());
                     Boolean mandatory = determineMandatoryFlag(properties);
                     rabbitTemplate.setMandatory(mandatory);
-                    RabbitMQSugar.binding(properties);
+                    Channel channel = connectionFactory.createConnection().createChannel(false);
+
+                    boolean autoDeclare = properties.isAutoDeclare();
+                    if (autoDeclare) {
+                        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+                        RabbitMQSugar.binding(rabbitAdmin, properties);
+                    }
 //                    rabbitTemplate.setExchange(false);
 //                    rabbitTemplate.setRoutingKey(false);
 //                    rabbitTemplate.setDefaultReceiveQueue(super.getDefaultReceiveQueue());

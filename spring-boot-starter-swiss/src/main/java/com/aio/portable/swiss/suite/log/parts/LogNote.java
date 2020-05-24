@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class LogNote {
     @JsonProperty("level")
-    public String level;
+    public LevelEnum level;
     @JsonProperty("name")
     public String name;
     @JsonProperty("summary")
@@ -19,11 +19,11 @@ public class LogNote {
     @JsonProperty("exception")
     public LogException exception;
 
-    public String getLevel() {
+    public LevelEnum getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(LevelEnum level) {
         this.level = level;
     }
 

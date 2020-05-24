@@ -29,22 +29,11 @@ public class DynamicProxy<T> implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//        if ("update".equals(method.getName())) {
-//            System.out.println("权限校验");
-//            return method.invoke(t, args);
-//        }
-//        return method.invoke(t, args);
         if (aopFunction == null)
             throw new NullPointerException("JDKProxy::getAopFunction");
         Object apply = aopFunction.apply(proxy, method, args);
         return method.invoke(t, args);
     }
-
-//    public Object set(BiFunction<Object, Method, Object[], Object> aopFunction, Object proxy, Method method, Object[] args) {
-//        BiFunction<Object, Method, Object[], Object> biFunction = aopFunction;
-//        return biFunction.apply(proxy, method, args);
-//    }
-
 
 
 

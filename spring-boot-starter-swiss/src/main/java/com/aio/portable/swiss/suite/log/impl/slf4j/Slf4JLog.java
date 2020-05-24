@@ -3,6 +3,9 @@ package com.aio.portable.swiss.suite.log.impl.slf4j;
 import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.Printer;
+import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+import com.aio.portable.swiss.suite.log.parts.LogNote;
 
 public class Slf4JLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -31,18 +34,45 @@ public class Slf4JLog extends LogSingle {
 
     @Override
     protected void initialPrinter() {
-        verbosePrinter = text -> {
-            Global.unsupportedOperationException(this.getClass().getName() + ": verbose");
-        };
-        infoPrinter = text -> logger.info(text);
-        debugPrinter = text -> logger.debug(text);
-        warnPrinter = text -> logger.warn(text);
-        errorPrinter = text -> logger.error(text);
-        tracePrinter = text -> logger.trace(text);
-        fatalPrinter = text -> {
-            Global.unsupportedOperationException(this.getClass().getName() + ": fatal");
+        String name = this.getClass().getName();
+
+        printer = (text, level) -> {
+            switch (level)
+            {
+                case VERBOSE: {
+                    Global.unsupportedOperationException(name + ": verbose");
+                }
+                break;
+                case TRACE: {
+                    logger.trace(text);
+                }
+                break;
+                case INFORMATION: {
+                    logger.info(text);
+                }
+                break;
+                case DEBUG: {
+                    logger.debug(text);
+                }
+                break;
+                case WARNING: {
+                    logger.warn(text);
+                }
+                break;
+                case ERROR: {
+                    logger.error(text);
+                }
+                break;
+                case FATAL: {
+                    Global.unsupportedOperationException(name + ": fatal");
+                }
+                break;
+                default:{
+                    Global.unsupportedOperationException(name + ": known level");
+                }
+                break;
+            }
         };
     }
-
 
 }

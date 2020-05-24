@@ -16,6 +16,7 @@ spring:
       username: admin
       password: admin
       virtual-host: yx_mq
+      auto-declare: true
       binding-list:
         - type: direct
           routing-key: application-log-queue

@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
-import com.aio.portable.swiss.suite.log.impl.file.FileLog;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.LogHub;
 //import com.aio.portable.swiss.suite.log.factory.classic.ConsoleHubFactory;

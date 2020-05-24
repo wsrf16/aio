@@ -31,6 +31,8 @@ import org.springframework.core.env.Environment;
 //@ComponentScan(lazyInit = true)
 //@DependsOn(PropertyBean.KAFKA_PROPERTIES)
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
+@InitialLogProperties
+//@InitialKafkaLogProperties
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

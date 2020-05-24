@@ -38,8 +38,8 @@ public class AutoRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        myDatabaseTest.blah();
         logTest.logStyle();
+        myDatabaseTest.blah();
 
 
     }

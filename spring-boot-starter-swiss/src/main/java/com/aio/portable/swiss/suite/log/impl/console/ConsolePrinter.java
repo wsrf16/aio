@@ -4,7 +4,9 @@ import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
+import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,7 +59,7 @@ public class ConsolePrinter implements Printer {
     }
 
 
-    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss";
+    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
 
     private static String nowTime() {
         String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());
@@ -70,7 +72,7 @@ public class ConsolePrinter implements Printer {
      * @return
      */
     private static String LINEPRIFIX() {
-        return nowTime();
+        return MessageFormat.format("{0} {1}", nowTime(), Thread.currentThread());
     }
 
     /**
@@ -88,7 +90,8 @@ public class ConsolePrinter implements Printer {
      *
      * @param line
      */
-    public void println(String line) {
+    @Override
+    public void println(String line, LevelEnum level) {
         System.out.println(LINEPRIFIX() + LINE_SEPARATOR + line);
         System.out.print(emptyLines);
     }

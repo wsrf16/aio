@@ -2,7 +2,6 @@ spring:
   datasource:
     master:
 #      type: com.alibaba.druid.pool.DruidDataSource
-#      driver-class-name: com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
@@ -89,6 +88,7 @@ spring:
       es-index: @project.deploy.finalName@-@profiles.active@-log
       publisher-confirms: true
       publisher-returns: true
+      auto-declare: false
       binding-list:
       - type: direct
         routing-key: application-log-queue
@@ -96,7 +96,7 @@ spring:
         exchange: application-log-exchange
 
     kafka:
-      enable: true
+      enable: false
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       topic: application-log
       bootstrap-servers: 192.168.133.133:9092

@@ -12,6 +12,7 @@ import java.util.List;
 
 public class RabbitMQProperties extends RabbitProperties {
     private boolean enable = true;
+    private boolean autoDeclare = true;
     private List<RabbitMQBindingProperty> bindingList = new ArrayList<>();
 
     public boolean isEnable() {
@@ -20,6 +21,14 @@ public class RabbitMQProperties extends RabbitProperties {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public boolean isAutoDeclare() {
+        return autoDeclare;
+    }
+
+    public void setAutoDeclare(boolean autoDeclare) {
+        this.autoDeclare = autoDeclare;
     }
 
     public List<RabbitMQBindingProperty> getBindingList() {

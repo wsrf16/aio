@@ -15,6 +15,7 @@ spring:
       port: 5672
       username: admin
       password: admin
+      auto-declare: true
       binding-list:
         - type: direct
           routing-key: application-log-queue

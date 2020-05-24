@@ -445,6 +445,13 @@
 <!--            <version>1.25</version>-->
 <!--        </dependency>-->
 
+<!--        &lt;!&ndash; zookeeper 分布式锁、注意zookeeper版本  这里对应的是3.4.6&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.curator</groupId>-->
+<!--            <artifactId>curator-recipes</artifactId>-->
+<!--            <version>2.10.0</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
     </dependencies>
 
 

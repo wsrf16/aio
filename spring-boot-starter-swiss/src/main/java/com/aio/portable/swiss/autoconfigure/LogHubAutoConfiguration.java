@@ -28,6 +28,24 @@ public class LogHubAutoConfiguration {
 //    return  new Slf4jHubFactory();
 //    }
 
+
+
+
+//    private static LogHubAutoConfiguration instance;
+//
+//    public synchronized static LogHubAutoConfiguration singletonInstance() {
+//        return instance;
+//    }
+//
+//    public LogHubAutoConfiguration() {
+//        instance = this;
+//    }
+//
+//    @Autowired(required = false)
+//    RabbitMQLogProperties rabbitMQLogProperties;
+//    @Autowired(required = false)
+//    KafkaLogProperties kafkaLogProperties;
+
     @Bean
     @ConditionalOnProperty("spring.log.rabbitmq.host")
     @ConfigurationProperties(prefix = "spring.log.rabbitmq")

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.net.protocol.http;
 
+import com.aio.portable.swiss.suite.net.protocol.http.resttemplate.SkipSSLSimpleClientHttpRequestFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -11,6 +12,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -38,25 +40,81 @@ public class RestTemplater {
     }
 
     public final static class Build {
-        public final static RestTemplate buildProxyRestTemplate(String host, int port, String username, String password) {
-            HttpComponentsClientHttpRequestFactory factory = buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
-
-            return new RestTemplate(factory);
-        }
-
-        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
-            SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port, String username, String password) {
+            HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
 
             RestTemplate restTemplate = restTemplateBuilder.build();
             restTemplate.setRequestFactory(factory);
             return restTemplate;
         }
 
-        public final static RestTemplate buildProxyRestTemplate(String host, int port) {
-            SimpleClientHttpRequestFactory factory = buildProxySimpleClientHttpRequestFactory(host, port);
+        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
+            SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
 
-            return new RestTemplate(factory);
+            RestTemplate restTemplate = restTemplateBuilder.build();
+            restTemplate.setRequestFactory(factory);
+            return restTemplate;
         }
+
+//        public final static RestTemplate buildProxyRestTemplate(String host, int port) {
+//            SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
+//
+//            return new RestTemplate(factory);
+//        }
+
+        public final static RestTemplate buildSkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder, ClientHttpRequestFactory factory){
+            RestTemplate restTemplate = restTemplateBuilder.build();
+            restTemplate.setRequestFactory(factory);
+            return restTemplate;
+        }
+
+        public final static RestTemplate buildSkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder){
+            SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory();
+            return buildSkipSSLRestTemplate(restTemplateBuilder, factory);
+        }
+    }
+
+    public static class HttpRequestFactory {
+        // http://www.it1352.com/215149.html
+        public static HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
+            HttpHost httpHost = new HttpHost(host, port);
+
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(
+                    new AuthScope(host, port),
+                    new UsernamePasswordCredentials(username, password));
+
+            HttpClient httpClient = HttpClientBuilder.create()
+                    .setProxy(httpHost)
+                    .setDefaultCredentialsProvider(credentialsProvider)
+                    .disableCookieManagement()
+                    .build();
+
+            HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+            factory.setHttpClient(httpClient);
+
+            return factory;
+        }
+
+        public static SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
+            SocketAddress address = new InetSocketAddress(host, port);
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
+
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setProxy(proxy);
+//        factory.setReadTimeout(readTimeout);
+//        factory.setConnectTimeout(connectionTimeout);
+
+            return factory;
+        }
+
+        public static SkipSSLSimpleClientHttpRequestFactory buildSkipSSLSimpleClientHttpRequestFactory() {
+            SkipSSLSimpleClientHttpRequestFactory factory = new SkipSSLSimpleClientHttpRequestFactory();
+            factory.setReadTimeout(5000);
+            factory.setConnectTimeout(15000);
+            return factory;
+        }
+
     }
 
 
@@ -73,39 +131,6 @@ public class RestTemplater {
             }
         }.entrySet().stream().findFirst().get();
         return entry;
-    }
-
-    // http://www.it1352.com/215149.html
-    public static HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
-        HttpHost httpHost = new HttpHost(host, port);
-
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(
-                new AuthScope(host, port),
-                new UsernamePasswordCredentials(username, password));
-
-        HttpClient httpClient = HttpClientBuilder.create()
-                .setProxy(httpHost)
-                .setDefaultCredentialsProvider(credentialsProvider)
-                .disableCookieManagement()
-                .build();
-
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
-        factory.setHttpClient(httpClient);
-
-        return factory;
-    }
-
-    public static SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
-        SocketAddress address = new InetSocketAddress(host, port);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setProxy(proxy);
-//        factory.setReadTimeout(readTimeout);
-//        factory.setConnectTimeout(connectionTimeout);
-
-        return factory;
     }
 
     public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, Class<RESP> responseType, Object... uriVariables) {

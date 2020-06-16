@@ -77,7 +77,7 @@ spring:
 
   log:
     rabbitmq:
-      enable: true
+      enable: false
       host: mecs.com
 #      host: 192.168.133.133
 #      host: 10.124.163.95

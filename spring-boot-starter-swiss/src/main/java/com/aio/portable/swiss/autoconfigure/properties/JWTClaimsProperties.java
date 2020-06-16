@@ -104,7 +104,7 @@ public class JWTClaimsProperties {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         String JWTId = IDS.uuid();
         Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.Classic.getExpiredDate(now, expiredHours);
+        Date expiresAt = JWTSugar.getExpiredDate(now, expiredHours);
 
         JWTClaims target = new JWTClaims();
         BeanUtils.copyProperties(this, target);
@@ -118,7 +118,7 @@ public class JWTClaimsProperties {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         String JWTId = IDS.uuid();
         Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.Classic.getExpiredDate(now, calendarField, mount);
+        Date expiresAt = JWTSugar.getExpiredDate(now, calendarField, mount);
 
         JWTClaims target = new JWTClaims();
         BeanUtils.copyProperties(this, target);

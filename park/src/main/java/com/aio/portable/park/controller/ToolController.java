@@ -6,6 +6,7 @@ import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,35 +23,27 @@ import java.util.List;
 @RestController
 @RequestMapping("tool")
 public class ToolController {
-    LogHub log = AppLogHubFactory.logHub();
+    private final static String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
+    private final static String UPLOAD_DIRECTORY = "upload";
 
-
-//    @PostMapping("/upload")
-//    @ResponseBody
-//    public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-//        String fileName = multipartFile.getOriginalFilename();
-//        File file = new File(fileName);
-//        Path path = file.toPath();
-//        multipartFile.transferTo(path);
-//        return file.getAbsolutePath();
-//    }
+    private LogHub log = AppLogHubFactory.logHub();
 
     @Autowired
     private HttpServletRequest request;
-    @PostMapping("/upload")
-    @ResponseBody
-    public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
-        Path dir = new File("upload").toPath();
-        IOSugar.createDirectoryIfNotExists(dir);
 
-        String fileName = multipartFile.getOriginalFilename();
-        Path file = Paths.get(dir.toString(), fileName);
-        multipartFile.transferTo(file);
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
+        IOSugar.createDirectoryIfNotExists(targetDirectory);
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        Path targetFile = Paths.get(targetDirectory.toString(), originalFilename);
+        multipartFile.transferTo(targetFile);
 
         String realIP = HostInfo.getClientIpAddress(request);
-        String ret = realIP + ":" + file.toAbsolutePath();
-        log.info("upload", ret);
-        return ret;
+        String uploadLocation = realIP + ":" + targetFile.toAbsolutePath();
+        log.info(UPLOAD_DIRECTORY, uploadLocation);
+        return uploadLocation;
     }
 
 //    @ApiOperation(value = "上传文件接口",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -59,30 +52,30 @@ public class ToolController {
 //    })
 //    @PostMapping(value = "/uploads", headers = "Content-Type=multipart/form-data")
 
-    @PostMapping(value = "/uploads", headers = "Content-Type=multipart/form-data")
-    @ResponseBody
-    public String uploads(@RequestParam(value = "files") MultipartFile[] multipartFiles) throws IOException {
-        Path dir = new File("upload").toPath();
-        IOSugar.createDirectoryIfNotExists(dir);
 
-        List<String> sb = new ArrayList<String>();
+    @PostMapping(value = "/uploads", headers = UPLOADS_CONTENT_TYPE)
+    public List<String> uploads(@RequestParam(value = "files") MultipartFile[] multipartFiles) throws IOException {
+        Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
+        IOSugar.createDirectoryIfNotExists(targetDirectory);
+
+        List<String> uploadLocationList = new ArrayList<String>();
         Arrays.stream(multipartFiles).forEach(multipartFile -> {
-            String fileName = multipartFile.getOriginalFilename();
+            String originalFilename = multipartFile.getOriginalFilename();
 
             try {
-                Path file = Paths.get(dir.toString(), fileName);
-                multipartFile.transferTo(file);
+                Path targetFile = Paths.get(targetDirectory.toString(), originalFilename);
+                multipartFile.transferTo(targetFile);
 
                 String realIP = HostInfo.getClientIpAddress(request);
-                sb.add(realIP + ":" + file.toAbsolutePath());
+                String uploadLocation = realIP + ":" + targetFile.toAbsolutePath();
+                uploadLocationList.add(uploadLocation);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });
-        String ret = String.join(", ", sb);
-        log.info("upload", ret);
-        return ret;
+        log.info(UPLOAD_DIRECTORY, uploadLocationList);
+        return uploadLocationList;
     }
 
 

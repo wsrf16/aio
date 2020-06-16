@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public interface JWTAction {
     //"Authorization";
-    String AUTHORIZATION_HEAD = HttpHeaders.AUTHORIZATION;
+    String AUTHORIZATION_HEAD = JWTSugar.AUTHORIZATION_HEAD;
     String BEAR_PREFIX = "Bearer ";
 
     JWTClaims toJWTClaims();
@@ -55,7 +55,7 @@ public interface JWTAction {
         JWTCreator.Builder builder = toJWTClaims().createJWTBuilderWithNewIssuer(issuer);
         Calendar now = DateTimeSugar.CalendarUtils.now();
         Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.Classic.getExpiredDate(now, Calendar.SECOND, expireMinutes * 60);
+        Date expiresAt = JWTSugar.getExpiredDate(now, Calendar.SECOND, expireMinutes * 60);
         builder.withExpiresAt(expiresAt);
 
         map.entrySet().forEach(c -> {

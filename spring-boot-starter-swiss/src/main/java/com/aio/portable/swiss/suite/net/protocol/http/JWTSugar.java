@@ -9,6 +9,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.http.HttpHeaders;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +23,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public abstract class JWTSugar {
+    public final static String AUTHORIZATION_HEAD = HttpHeaders.AUTHORIZATION;
+
+
     /**
      * sign
      * @param builder JWT.create().xx().xx()
@@ -186,9 +190,9 @@ public abstract class JWTSugar {
             return JWTSugar.parseByHMAC(token, secret, AlgorithmSugar.HMAC.HMAC256);
         }
 
-    public final static DecodedJWT parseTokenByRSA256(String token, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
-        return JWTSugar.parseByRSA(token, publicKey, privateKey, AlgorithmSugar.RSA.RSA256);
-    }
+        public final static DecodedJWT parseTokenByRSA256(String token, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+            return JWTSugar.parseByRSA(token, publicKey, privateKey, AlgorithmSugar.RSA.RSA256);
+        }
 
 
         /**
@@ -203,7 +207,8 @@ public abstract class JWTSugar {
             try {
                 parse = Classic.parseTokenByHMAC256(token, secret);
                 if (parse != null)
-                    verify = new Date().after(parse.getExpiresAt()) ? false : true;
+                    // TokenExpiredException
+                    verify = isExpire(parse.getExpiresAt());
                 else
                     verify = true;
             } catch (Exception e) {
@@ -215,16 +220,26 @@ public abstract class JWTSugar {
         }
 
 
-        public final static Date getExpiredDate(Calendar calendar, int hours) {
-            return DateTimeSugar.CalendarUtils.add(calendar, Calendar.HOUR, hours).getTime();
-        }
+    }
 
-        public final static Date getExpiredDate(Calendar calendar, int calendarField, int mount) {
-            return DateTimeSugar.CalendarUtils.add(calendar, calendarField, mount).getTime();
-        }
 
-        public final static Date now(Calendar calendar) {
-            return calendar.getTime();
-        }
+    public final static Date getExpiredDate(Calendar calendar, int hours) {
+        return DateTimeSugar.CalendarUtils.add(calendar, Calendar.HOUR, hours).getTime();
+    }
+
+    public final static Date getExpiredDate(Calendar calendar, int calendarField, int mount) {
+        return DateTimeSugar.CalendarUtils.add(calendar, calendarField, mount).getTime();
+    }
+
+    public final static boolean isExpire(Date expiresAt) {
+        return isExpire(expiresAt, new Date());
+    }
+
+    public final static boolean isExpire(Date expiresAt, Date now) {
+        return now.after(expiresAt) ? false : true;
+    }
+
+    public final static Date now(Calendar calendar) {
+        return calendar.getTime();
     }
 }

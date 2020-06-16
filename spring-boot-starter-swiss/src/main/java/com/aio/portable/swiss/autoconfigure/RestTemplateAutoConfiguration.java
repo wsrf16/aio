@@ -44,7 +44,7 @@ public class RestTemplateAutoConfiguration {
     @Bean
     @ConditionalOnBean({RestTemplateBuilder.class})
     @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate rawRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+    public RestTemplate officialRestTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         return restTemplate;
     }

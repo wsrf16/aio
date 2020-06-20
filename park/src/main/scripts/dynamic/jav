@@ -59,7 +59,7 @@ function captureProcessLine() {
     #                       show line no   except         except         except
     process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename forcestop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once")
   else
-    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename forcestop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once" | grep -v "$shfilename calldaemon")
+    process_line=$(ps -ef | grep -n "$1" | grep -v grep | grep -v kill | grep -v "$shfilename stop" | grep -v "$shfilename forcestop" | grep -v "$shfilename start" | grep -v "$shfilename status" | grep -v "$shfilename restart" | grep -v "$shfilename once" | grep -v "$shfilename callservice")
   fi
   echo $process_line
 }
@@ -97,7 +97,7 @@ function run() {
   tail -n ${log_remain_line} ${log_file} >${log_file}
 
   echo -e "$ \033[33mjava $param -jar $1 \033[0m"
-  if [[ $operate == "once" || $operate == "debug" ]]; then
+  if [[ $operate == "once" ]]; then
     java $param -jar $1 2>&1 | tee ${log_file}
   elif [[ $operate == "start" || $operate == "restart" ]]; then
     nohup java $param -jar $1 >>${log_file} 2>&1 &
@@ -110,8 +110,12 @@ function run() {
   markProcess $1
 }
 
-function calldaemon() {
-#  echo "current running status..."
+function callservice() {
+#  is=$(isRunning $1)
+#  if [[ -n ${is} ]]; then
+#    echo "nothing happened."
+#    echo -e "$jar_filename current status: \033[33mhas been running \033[0m"
+#  fi
   while [ true ]; do
     is=$(isRunning $1)
     if [[ ! ${is} ]]; then
@@ -121,18 +125,25 @@ function calldaemon() {
       #nohup $sh_file start >/dev/null 2>&1 &
       #nohup $0 start >/dev/null 2>&1 &
     fi
-    sleep $daemon_check_period
+    sleep $service_check_period
   done
   status $1
 }
 
+function watch() {
+  while [ true ]; do
+    status $1
+    sleep $service_check_period
+  done
+}
+
 function status() {
-#  echo "current running status..."
   is=$(isRunning $1)
+  pid=$(getPid $jar_file)
   if [[ ${is} ]]; then
-    echo -e "$jar_filename current running status...: \033[32m running \033[0m"
+    echo -e "$jar_filename current status: \033[32mrunning \033[0m    pid: \033[32m ${pid} \033[0m"
   else
-    echo -e "$jar_filename current running status...: \033[31m stopped \033[0m"
+    echo -e "$jar_filename current status: \033[31mstopped \033[0m"
   fi
 }
 
@@ -142,15 +153,19 @@ function once() {
 
 function start() {
   is=$(isRunning $1)
+  status $1
   if [[ ${is} ]]; then
-    #status $1
-    echo "nothing happened."
-    echo -e "$jar_filename current running status...: \033[33m has been running \033[0m"
-#    echo "$jar_filename has been running."
+    echo -e "\033[33mnothing happened. \033[0m"
   else
-    status $1
     run $1
     status $1
+  fi
+}
+
+function echoPid() {
+  pid=$(getPid $jar_file)
+  if [[ -n $pid ]]; then
+    echo -e "pid: \033[32m${pid} \033[0m"
   fi
 }
 
@@ -160,8 +175,9 @@ function debug() {
 
 function stop() {
   is=$(isRunning $1)
+  status $1
+  killed=false
   while [[ ${is} ]]; do
-    status $1
     pid=$(getPid $1)
     if [[ "$pid" ]]; then
       for p in ${pid[@]}; do
@@ -172,8 +188,10 @@ function stop() {
     fi
     sleep $check_period
     is=$(isRunning $1)
+    if [[ -z ${is} ]]; then
+      status $1
+    fi
   done
-  status $1
 }
 
 function forcestop() {
@@ -197,6 +215,7 @@ function forcestop() {
 function restart() {
   operate="stop"
   stop $1
+  echo "---"
   operate="restart"
   start $1
 }
@@ -221,30 +240,38 @@ function help() {
   _sh='./-'
   _jar='<jar>'
   if [[ $mode == "dynamic" ]]; then
+    echo "command:"
+    echo "  once debug start service restart restartlog stop forcestop status log"
+    echo "option:"
+    echo "  -p(--param) \"\" "
+    echo "  --debug \"\" "
+    echo "eg."
     echo "$ $jar_file.sh once"
-    echo "$ $jar_file.sh debug"
+#    echo "$ $jar_file.sh debug"
     echo "$ $jar_file.sh start"
-    echo "$ $jar_file.sh daemon"
+    echo "$ $jar_file.sh service"
     echo "$ $jar_file.sh restart"
     echo "$ $jar_file.sh restartlog"
     echo "$ $jar_file.sh stop"
     echo "$ $jar_file.sh forcestop"
     echo "$ $jar_file.sh status"
     echo "$ $jar_file.sh log"
+    echo "$ $jar_file.sh gclog"
     echo "or"
     echo "$ cp $jar_file.sh $_sh"
     echo "$ $_sh help"
   else
     echo "$ $sh_file once $_jar"
-    echo "$ $sh_file debug $_jar"
+#    echo "$ $sh_file debug $_jar"
     echo "$ $sh_file start $_jar"
-    echo "$ $sh_file daemon $_jar"
+    echo "$ $sh_file service $_jar"
     echo "$ $sh_file restart $_jar"
     echo "$ $sh_file restartlog $_jar"
     echo "$ $sh_file stop $_jar"
     echo "$ $sh_file forcestop $_jar"
     echo "$ $sh_file status $_jar"
     echo "$ $sh_file log $_jar"
+    echo "$ $sh_file gclog $_jar"
     echo "or"
     echo "$ cp $sh_file <jar>.sh"
     echo "$ <jar>.sh help"
@@ -272,20 +299,8 @@ function get_param_app() {
   if [[ "${param_app}" =~ ^@.*@$ ]]; then
     param_app=''
   fi
-  echo $param_app
+  echo ${param_app}
 }
-
-
-operate=$1
-now="$(date +%Y%m%d%H%M%S)"
-ip_addr=$(getIpAddr)
-jdk_version=$(get_jdk_version)
-param_app=$(get_param_app)
-check_period=2
-daemon_check_period=10
-log_remain_line=100000
-debug_port=8088
-param_debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug_port}"
 
 function get_param_dep() {
   dirname_dependency=@project.deploy.directoryName.dependency@
@@ -299,6 +314,33 @@ function get_param_dep() {
   param_dep="-Dloader.path=$jar_dir/$dirname_dependency,$jar_dir/$dirname_config"
   echo $param_dep
 }
+
+function get_param_jvm() {
+  param_jvm="-XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+  if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
+    param_jvm="$param_jvm -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file}"
+  elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
+    param_jvm="$param_jvm -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file}:time,pid,level,tags"
+  else
+    echo "sorry! jdk is error."
+    exit 1
+  fi
+  echo $param_jvm
+}
+
+
+
+operate=$1
+now="$(date +%Y%m%d%H%M%S)"
+ip_addr=$(getIpAddr)
+jdk_version=$(get_jdk_version)
+param_app=$(get_param_app)
+check_period=2
+service_check_period=10
+log_remain_line=100000
+debug_port=8088
+PARAM_DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${debug_port}"
+
 
 sh_dir=$(
   cd $(dirname $0)
@@ -338,18 +380,6 @@ log_file=$log_dir/service.log
 log_gclatest_file=$log_dir/gc_latest.log
 log_gctotal_file=$log_dir/gc_total.log
 
-function get_param_jvm() {
-  param_jvm="-Xms512m -Xmx768m -XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
-  if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file}"
-  elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file}:time,pid,level,tags"
-  else
-    echo "sorry! jdk is error."
-    exit 1
-  fi
-  echo $param_jvm
-}
 
 param_jvm=$(get_param_jvm)
 #param_dep="-Dloader.path=$jar_dir/$dirname_dependency,$jar_dir/$dirname_config"
@@ -370,12 +400,20 @@ else
              exit 0
          fi
          ;;
-#      *) exit 1
-#         ;;
+      '--compact')
+         shift
+         param_jvm_memory_compact="-Xms512m -Xmx768m"
+         ;;
+      '--debug'|-d)
+         shift
+         param_debug=${PARAM_DEBUG}
+         ;;
+      *)
+         ;;
     esac
     shift
   done
-  param="${param_jvm} ${param_dep} ${param_app} ${param_cmd}"
+  param="${param_jvm_memory_compact} ${param_jvm} ${param_dep} ${param_app} ${param_cmd} ${param_debug}"
 
 
 
@@ -383,23 +421,20 @@ else
   echo -e "java sdk verion: \033[33m$jdk_version\033[0m"
   if [[ $operate == "once" ]]; then
     once $jar_file
-  elif [[ $operate == "debug" ]]; then
-    param="${param_jvm} ${param_dep} ${param_app} ${param_debug} ${param_cmd}"
-    debug $jar_file
   elif [[ $operate == "start" ]]; then
     start $jar_file
   elif [[ $operate == "restartlog" ]]; then
     restartlog $jar_file
-  elif [[ $operate == "daemon" ]]; then
+  elif [[ $operate == "service" ]]; then
     if [[ $mode == "dynamic" ]]; then
-      nohup $sh_file calldaemon >/dev/null 2>&1 &
+      nohup $sh_file callservice >/dev/null 2>&1 &
     elif [[ $mode == "static" ]]; then
-      nohup $sh_file calldaemon $jar_file >/dev/null 2>&1 &
+      nohup $sh_file callservice $jar_file >/dev/null 2>&1 &
     fi
     sleep $check_period
     status $jar_file
-  elif [[ $operate == "calldaemon" ]]; then
-    calldaemon $jar_file
+  elif [[ $operate == "callservice" ]]; then
+    callservice $jar_file
   elif [[ $operate == "stop" ]]; then
     stop $jar_file
   elif [[ $operate == "forcestop" ]]; then
@@ -408,6 +443,8 @@ else
     restart $jar_file
   elif [[ $operate == "status" ]]; then
     status $jar_file
+  elif [[ $operate == "watch" ]]; then
+    watch $jar_file
   elif [[ $operate == "log" ]]; then
     log
   elif [[ $operate == "gclog" ]]; then

@@ -208,7 +208,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>20.0</version>
+            <version>[24.1.1,)</version>
             <scope>compile</scope>
         </dependency>
 
@@ -460,14 +460,14 @@
                     <!--<skipTests>true</skipTests>-->
                     <!--<skipAfterFailureCount>1</skipAfterFailureCount>-->
                     <!--<rerunFailingTestsCount>1</rerunFailingTestsCount>-->
-                    <systemPropertyVariables>
-                        <test.swagger2markup.swaggerOutput>${swagger2markup.swaggerOutput}</test.swagger2markup.swaggerOutput>
-                        <!--<test.asciidoctor.directory.output.snippet>${asciidoctor.directory.output.snippet}</test.asciidoctor.directory.output.snippet>-->
-                        <test.asciidoctor.directory.input>${asciidoctor.directory.input}</test.asciidoctor.directory.input>
-                        <test.asciidoctor.directory.input.generated>${asciidoctor.directory.input.generated}</test.asciidoctor.directory.input.generated>
-                        <test.asciidoctor.directory.output.html>${asciidoctor.directory.output.html}</test.asciidoctor.directory.output.html>
-                        <test.asciidoctor.directory.output.seveletpdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.seveletpdf>
-                    </systemPropertyVariables>
+<!--                    <systemPropertyVariables>-->
+<!--                        <test.swagger2markup.swaggerOutput>${swagger2markup.swaggerOutput}</test.swagger2markup.swaggerOutput>-->
+<!--                        &lt;!&ndash;<test.asciidoctor.directory.output.snippet>${asciidoctor.directory.output.snippet}</test.asciidoctor.directory.output.snippet>&ndash;&gt;-->
+<!--                        <test.asciidoctor.directory.input>${asciidoctor.directory.input}</test.asciidoctor.directory.input>-->
+<!--                        <test.asciidoctor.directory.input.generated>${asciidoctor.directory.input.generated}</test.asciidoctor.directory.input.generated>-->
+<!--                        <test.asciidoctor.directory.output.html>${asciidoctor.directory.output.html}</test.asciidoctor.directory.output.html>-->
+<!--                        <test.asciidoctor.directory.output.seveletpdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.seveletpdf>-->
+<!--                    </systemPropertyVariables>-->
                 </configuration>
             </plugin>
             <plugin>

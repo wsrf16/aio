@@ -5,9 +5,9 @@ function mkdirLog() {
   if [[ ! -d $log_dir ]]; then
     mkdir $log_dir
   else
-    if [[ -f "${log_gclatest_file}" ]]; then
-      cat ${log_gclatest_file} >>${log_gctotal_file}
-      rm -f ${log_gclatest_file}
+    if [[ -f "${log_file_gc_latest}" ]]; then
+      cat ${log_file_gc_latest} >>${log_file_gc_total}
+      rm -f ${log_file_gc_latest}
     fi
   fi
 }
@@ -232,7 +232,7 @@ function log() {
 }
 
 function gclog() {
-  tail -100f ${log_gctotal_file}
+  tail -100f ${log_file_gc_total}
 }
 
 function help() {
@@ -318,9 +318,9 @@ function get_param_dep() {
 function get_param_jvm() {
   param_jvm="-XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
   if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_gclatest_file}"
+    param_jvm="$param_jvm -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_file_gc_latest}"
   elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_gclatest_file}:time,pid,level,tags"
+    param_jvm="$param_jvm -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_file_gc_latest}:time,pid,level,tags"
   else
     echo "sorry! jdk is error."
     exit 1
@@ -377,8 +377,8 @@ jar_dir=$(getDirectory ${jar_file})
 log_dir=${jar_dir}/log
 log_file=/dev/null
 log_file=$log_dir/service.log
-log_gclatest_file=$log_dir/gc_latest.log
-log_gctotal_file=$log_dir/gc_total.log
+log_file_gc_latest=$log_dir/gc_latest.log
+log_file_gc_total=$log_dir/gc_total.log
 
 
 param_jvm=$(get_param_jvm)

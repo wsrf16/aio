@@ -263,6 +263,10 @@ public abstract class CollectionSugar {
         return list.stream().toArray();
     }
 
+//    public final static <T> T[] toArray(List<T> list) {
+//        return (T[])(list.stream().toArray());
+//    }
+
     public final static <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
         HashMap<K, V> map = stream.collect(HashMap::new, (_map, _entity) -> _map.put(keyMapper.apply(_entity), valueMapper.apply(_entity)), HashMap::putAll);
         return map;

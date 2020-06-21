@@ -20,7 +20,7 @@ public class AppLogHubFactory extends LogHubFactory {
     }
 
     public static LogHub logHub(String className) {
-        LogHub logger = instance.buildAsync(className);
+        LogHub logger = instance.build(className);
         return logger;
     }
 

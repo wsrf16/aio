@@ -62,16 +62,16 @@ public abstract class PackageSugar {
         return classList;
     }
 
-    private final static String DOT = ".";
-    private final static String EXT_CLASS = "class";
-    private final static String EXT_DOT_CLASS = DOT + "class";
+//    private final static String DOT = ".";
+//    private final static String EXT_CLASS = "class";
+    private final static String EXT_DOT_CLASS = ".class";
     private final static String EXT_JAR = "jar";
-    private final static String EXT_DOT_JAR = DOT + "jar";
+    private final static String EXT_DOT_JAR = ".jar";
     private final static String DIR_CLASSES = "classes";
 
 
     /**
-     * getClassNameByPath
+     * getClassNameByPath(包括".class"和".jar中的.class"里面的类)
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
@@ -94,10 +94,10 @@ public abstract class PackageSugar {
                     classList.add(childFilePath);
                 } else if (childFilePath.endsWith(EXT_DOT_JAR)) {
                     try {
-                        List<URL> resourcesInJar = ResourceSugar.getResourcesInJar(childFilePath);
+                        List<URL> resourcesInJar = ResourceSugar.listResourcesInJar(childFilePath);
                         List<String> classNameList = resourcesInJar.stream()
                                 .filter(c -> c.toString().endsWith(EXT_DOT_CLASS))
-                                .map(c -> ResourceSugar.convert2QualifiedClassName(c.toString()))
+                                .map(c -> ResourceSugar.toQualifiedClassName(c.toString()))
                                 .collect(Collectors.toList());
 
                         classList.addAll(classNameList);

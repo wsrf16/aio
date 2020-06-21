@@ -57,7 +57,7 @@ public abstract class ResourceSugar {
      * @throws MalformedURLException
      */
     public final static URL getResourceInJar(final String jarPath, final String resourceLocation) throws IOException {
-        URL url = getResourcesInJar(jarPath).stream().filter(c -> c.getPath().endsWith(resourceLocation)).findFirst().get();
+        URL url = listResourcesInJar(jarPath).stream().filter(c -> c.getPath().endsWith(resourceLocation)).findFirst().get();
         return url;
     }
 
@@ -76,17 +76,13 @@ public abstract class ResourceSugar {
     /**
      * getResourcesInJar 从Jar中获得所有资源集合
      *
-     * @param jar eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
+     * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return
      * @throws IOException
      */
-    public final static List<URL> getResourcesInJar(final String jar) throws IOException {
-        File file = new File(jar);
-        URL jarURL = file.toURI().toURL();
-
-        JarFile jarFile = new JarFile(jar);
-        Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
-        List<JarEntry> jarEntryList = Collections.list(jarEntryEnumeration);
+    public final static List<URL> listResourcesInJar(final String jarPath) throws IOException {
+        URL jarURL = new File(jarPath).toURI().toURL();
+        List<JarEntry> jarEntryList = new JarFile(jarPath).stream().collect(Collectors.toList());
         List<URL> urlList = jarEntryList.stream().map(c -> {
             String resourceInJar = "/" + c.getName();
             try {
@@ -106,7 +102,7 @@ public abstract class ResourceSugar {
      * @param path className/packageName eg. com/company/biz | com/company/biz/Book
      * @return com.company.biz | com.company.biz.Book
      */
-    public final static String path2FullName(String path) {
+    public final static String path2QualifiedClassName(String path) {
         path = StringSugar.removeEnd(path, ".class");
         String fullName = path.replace("/", ".");
         fullName = StringSugar.removeStart(fullName, ".");
@@ -142,19 +138,20 @@ public abstract class ResourceSugar {
 //    }
 
     /**
-     * convert2QualifiedClassName
-     * @param resourcePath jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
+     * toQualifiedClassName
+     * @param resource jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
      * @return
      */
-    public final static String convert2QualifiedClassName(String resourcePath) {
+    public final static String toQualifiedClassName(String resource) {
         // jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
         // ->
         // /BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
-        String resourceRelative = resourcePath.split("!")[1];
+        String resourceRelative = resource.split("!")[1];
         // -> com/aio/portable/park/config/BeanConfig.class
         String classFilePath = resourceRelative.contains("classes/") ? resourceRelative.split("classes/")[1] : resourceRelative;
         // -> com.aio.portable.park.config.BeanConfig
         String qualifiedClassName = StringSugar.removeEnd(classFilePath, ".class").replace("/", ".");
+        qualifiedClassName = StringSugar.removeStart(qualifiedClassName, ".");
         return qualifiedClassName;
     }
 
@@ -182,10 +179,10 @@ public abstract class ResourceSugar {
 
     public final static class ByClassLoader {
         /**
-         * getResourceByClassLoader 利用ClassLoader通过资源相对位置获取其URL完整位置，包括“指定classes目录及指定jar包（如lib中）”中的“.class文件、jar文件、文件夹”
+         * getResources 利用ClassLoader通过资源相对位置获取其URL完整位置，包括“指定classes目录及指定jar包（如lib中）”中的“.class文件、jar文件、文件夹”
          *
          * @param classLoader          eg. Thread.currentThread().getContextClassLoader()
-         * @param resourceLocation     eg. "/com/art/Book.class"
+         * @param resourceLocation     eg. "com/art/Book.class"
          * @return eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/sandbox/console/Book.class"
          * @throws IOException
          */
@@ -196,9 +193,9 @@ public abstract class ResourceSugar {
         }
 
         /**
-         * getResourcesByClassLoaderInCurrentThread 利用当前ClassLoader通过资源相对位置获取其URL完整位置，包括“指定classes目录及指定jar包（如lib中）”中的“.class文件、jar文件、文件夹”
+         * getResources 利用当前ClassLoader通过资源相对位置获取其URL完整位置，包括“指定classes目录及指定jar包（如lib中）”中的“.class文件、jar文件、文件夹”
          *
-         * @param resourceLocation eg. "/com/art/Book.class"
+         * @param resourceLocation eg. "com/art/Book.class"
          * @return                 eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/com/aio/portable/swiss/sandbox/Wood.class"
          * @throws IOException
          */
@@ -209,7 +206,7 @@ public abstract class ResourceSugar {
 
         /**
          * existResource
-         * @param resourceLocation
+         * @param resourceLocation eg. "com/art/Book.class"
          * @return
          * @throws IOException
          */
@@ -227,17 +224,17 @@ public abstract class ResourceSugar {
          * @throws IOException
          */
         public final static List<URL> getResourcesByClass(final Class clazz) throws IOException {
-            return getResourcesByClassName(clazz.getTypeName());
+            return getResourcesByClass(clazz.getTypeName());
         }
 
         /**
-         * getResourcesByClassName
+         * getResourcesByClass
          *
          * @param className eg. com.art.Book
          * @return
          * @throws IOException
          */
-        public final static List<URL> getResourcesByClassName(final String className) throws IOException {
+        public final static List<URL> getResourcesByClass(final String className) throws IOException {
             final String resourceRelationPath = ClassSugar.convertQualifiedName2ResourcePath(className);
             return getResources(resourceRelationPath);
         }

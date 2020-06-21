@@ -1,8 +1,8 @@
-package com.aio.portable.swiss.suite.log.impl;
+package com.aio.portable.swiss.suite.log.impl.console;
 
 import com.aio.portable.swiss.global.Constant;
 
-public class LoggerConfig {
+public class ConsoleConfig {
 //    public static String PATH_PROGRAM_ROOTFOLDER = Constant.CURRENT_DIRECTORY;
 //    public static String SECTION_SEPARATOR = Constant.FILE_SEPARATOR;
 //    public static String LINE_SEPARATOR = " : ";

@@ -20,6 +20,9 @@ public class ResourceTest {
 
     {
         {
+
+        }
+        {
             // 只能用于从非jar包中获取资源
             // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
             try {
@@ -132,7 +135,7 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClassName(classname);
+            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClass(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,7 +152,7 @@ public class ResourceTest {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
             URL url = ResourceSugar.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = ResourceSugar.getResourcesInJar(jarPath);
+            List<URL> r4 = ResourceSugar.listResourcesInJar(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

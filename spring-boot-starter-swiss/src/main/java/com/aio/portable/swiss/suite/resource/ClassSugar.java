@@ -20,7 +20,7 @@ public abstract class ClassSugar {
      * @return
      */
     public final static String getPath(final Class<?> clazz) throws MalformedURLException {
-        final String clazzFile = convertQualifiedName2ResourceFilePath(clazz.getTypeName());
+        final String clazzFile = convertQualifiedName2ResourcePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
@@ -113,24 +113,25 @@ public abstract class ClassSugar {
      */
     public static String convertQualifiedName2ResourcePath(String qualifiedName) {
         String path;
-//        path = fullName.replace('.', '/').concat(".class");
+//        path = qualifiedName.replace('.', '/').concat(".class");
         path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName);
+        path = path.concat(".class");
         return path;
     }
 
 
-    /**
-     * convertQualifiedName2ResourceFilePath
-     *
-     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
-     * @return com/company/biz | com/company/biz/Book
-     */
-    public static String convertQualifiedName2ResourceFilePath(String qualifiedName) {
-        String path;
-//        path = fullName.replace('.', '/').concat(".class");
-        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName).concat(".class");
-        return path;
-    }
+//    /**
+//     * convertQualifiedName2ResourceFilePath
+//     *
+//     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
+//     * @return com/company/biz | com/company/biz/Book
+//     */
+//    private static String convertQualifiedName2ResourceFilePath(String qualifiedName) {
+//        String path;
+////        path = fullName.replace('.', '/').concat(".class");
+//        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName).concat(".class");
+//        return path;
+//    }
 
 
     /**

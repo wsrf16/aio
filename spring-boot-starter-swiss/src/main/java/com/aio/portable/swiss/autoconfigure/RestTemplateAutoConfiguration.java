@@ -28,7 +28,7 @@ public class RestTemplateAutoConfiguration {
 
     @Bean
     @ConditionalOnBean({RestTemplateProperties.class, RestTemplateBuilder.class})
-    @ConditionalOnMissingBean(RestTemplate.class)
+//    @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
         boolean agent = restTemplateProperties.getAgent().isEnable();
         String agentHost = restTemplateProperties.getAgent().getHost();
@@ -40,6 +40,14 @@ public class RestTemplateAutoConfiguration {
             restTemplate = restTemplateBuilder.build();
         return restTemplate;
     }
+
+    @Bean
+//    @ConditionalOnMissingBean(RestTemplate.class)
+    public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+        RestTemplate restTemplate = RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder);
+        return restTemplate;
+    }
+
 
     @Bean
     @ConditionalOnBean({RestTemplateBuilder.class})

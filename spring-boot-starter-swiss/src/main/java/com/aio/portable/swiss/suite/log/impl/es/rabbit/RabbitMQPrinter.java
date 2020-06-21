@@ -3,7 +3,6 @@ package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 import com.aio.portable.swiss.module.mq.rabbitmq.RabbitMQSugar;
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import org.springframework.amqp.AmqpException;

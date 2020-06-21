@@ -3,7 +3,6 @@ package com.aio.portable.swiss.suite.log.impl.console;
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.log.impl.LoggerConfig;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 
 import java.text.MessageFormat;
@@ -16,10 +15,10 @@ import java.util.stream.Stream;
  * Created by York on 2017/11/23.
  */
 public class ConsolePrinter implements Printer {
-    public static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", LoggerConfig.SECTION_SEPARATOR);
-    public static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", LoggerConfig.LINE_SEPARATOR);
-    public static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", LoggerConfig.TIME_FORMAT);
-    public static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", LoggerConfig.EMPTY_LINES);
+    public static String SECTION_SEPARATOR = PropertiesMapping.instance().getString("SECTION_SEPARATOR", ConsoleConfig.SECTION_SEPARATOR);
+    public static String LINE_SEPARATOR = PropertiesMapping.instance().getString("LINE_SEPARATOR", ConsoleConfig.LINE_SEPARATOR);
+    public static String TIME_FORMAT = PropertiesMapping.instance().getString("TIME_FORMAT", ConsoleConfig.TIME_FORMAT);
+    public static int EMPTYLINES = PropertiesMapping.instance().getInt("EMPTY_LINES", ConsoleConfig.EMPTY_LINES);
 
 
     private String emptyLines = String.join(Constant.EMPTY, Stream.of(Constant.LINE_SEPARATOR).limit(EMPTYLINES).collect(Collectors.toList()));

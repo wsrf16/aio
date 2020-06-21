@@ -1,6 +1,11 @@
 package com.aio.portable.swiss.swiss;
 
+import com.aio.portable.swiss.sandbox.Wood;
+import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.suite.resource.PackageSugar;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
 import com.aio.portable.swiss.suite.resource.StreamClassLoader;
 import org.junit.Test;
@@ -17,7 +22,34 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 public class ResourceTest {
+    LogHub log = LogHub.build(Slf4JLog.build());
 
+    {
+        try {
+            String jar = "./spring-boot-starter-swiss/target/spring-boot-starter-swiss-1.1.9-SNAPSHOT.jar";
+            String resource = "com/aio/portable/swiss/sandbox/Wood.class";
+
+            List<URL> resources0 = ResourceSugar.ByClassLoader.getResources(resource);
+            List<URL> resources1 = ResourceSugar.ByClassLoader.getResourcesByClass(Wood.class.getTypeName());
+            List<URL> resources2 = ResourceSugar.ByClassLoader.getResourcesByClass(Wood.class);
+
+            List<URL> urls = ResourceSugar.listResourcesInJar(jar);
+            URL resourceInJar = ResourceSugar.getResourceInJar(jar, resource);
+
+            URL url = urls.get(156);
+            Class<?> clazz1 = ClassLoaderSugar.loadedClass(url);
+            String className = ResourceSugar.toQualifiedClassName(url.toString());
+            Class<?> clazz2 = ClassLoaderSugar.loadedClass(urls, className);
+
+            List<String> qualifiedClassNameList = PackageSugar.getQualifiedClassNameByPath("./park/target");
+//            List<String> qualifiedClassNameByJar = PackageSugar.getQualifiedClassNameByJar(jar);
+
+            List<String> qualifiedClassName = PackageSugar.getQualifiedClassName("com.aio.portable.swiss.global");
+            Thread.sleep(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     {
         // 只能用于从非jar包中获取资源
         // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
@@ -102,17 +134,17 @@ public class ResourceTest {
     @Test
     public static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         ResourceSugar.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
-        ResourceSugar.ByClassLoader.getResourcesByClassName("Wood");
+        ResourceSugar.ByClassLoader.getResourcesByClass("Wood");
         ResourceSugar.ByClassLoader.getResourcesByClass(Book.class);
 
 
         String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
         String resourceInJar = "/sandbox/console/Book.class";
         URL url = ResourceSugar.getResourceInJar(jarPath, resourceInJar);
-        List<URL> urlList = ResourceSugar.getResourcesInJar(jarPath);
+        List<URL> urlList = ResourceSugar.listResourcesInJar(jarPath);
 
         {
-            String className = ResourceSugar.path2FullName(resourceInJar);
+            String className = ResourceSugar.path2QualifiedClassName(resourceInJar);
             Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
             className = "Wood";
             Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
@@ -126,5 +158,73 @@ public class ResourceTest {
             Object obj = clazz.getDeclaredConstructor().newInstance();
             Object obj1 = clazz.getDeclaredConstructor().newInstance();
         }
+    }
+
+    {
+        String resourceLocation = "/com/aio/portable/swiss/sandbox/Wood.class";
+        String resourceLocation2 = "/com/aio/portable/swiss/sandbox/a中文/AA.class";
+        String classname = "Wood";
+        Class clazz = Wood.class;
+
+
+
+        String jarPath;
+        File file;
+        file = new File("swiss/target/swiss-1.1.4-SNAPSHOT.jar");
+        jarPath = file.exists() ? file.getAbsolutePath() : "";
+
+        file = new File("lib/swiss-1.1.4-SNAPSHOT.jar");
+        jarPath = jarPath == "" ? (file.exists() ? file.getAbsolutePath() : jarPath) : jarPath;
+
+
+
+
+        try {
+            System.out.println(resourceLocation);
+            List<URL> r1 = ResourceSugar.ByClassLoader.getResources(resourceLocation);
+            log.i("r1！！！！！", r1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(classname);
+            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClass(classname);
+            log.i("r2！！！！！", r2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            List<URL> r3 = ResourceSugar.ByClassLoader.getResourcesByClass(clazz);
+            log.i("r3！！！！！", r3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(jarPath);
+            System.out.println(resourceLocation);
+            URL url = ResourceSugar.getResourceInJar(jarPath, resourceLocation);
+            List<URL> r4 = ResourceSugar.listResourcesInJar(jarPath);
+            log.i("r4！！！！！", url);
+            log.i("r4！！！！！", r4);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//            String className = ResourceUtils.path2FullName(resourceInJar);
+//            Class clazz1 = StreamClassLoader.buildByFile(jarPath).loadClassByBinary(className);
+
+//            String ss = "jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/";
+        try {
+            System.out.println(jarPath);
+            Class r5 = StreamClassLoader.buildByFile(jarPath).loadClassByBinary(classname);
+            clazz = r5;
+            log.i("r5！！！！！", r5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -13,9 +13,9 @@ public interface LogFatal {
         fatal(message);
     }
 
-    void fatal(Exception e);
+    void fatal(Throwable e);
 
-    void fatal(String summary, Exception e);
+    void fatal(String summary, Throwable e);
 
     void fatal(String summary, String message);
 
@@ -24,13 +24,13 @@ public interface LogFatal {
         fatal(summary, message);
     }
 
-    void fatal(String summary, String message, Exception e);
+    void fatal(String summary, String message, Throwable e);
 
     <T> void fatal(String summary, T t);
 
-    <T> void fatal(String summary, T t, Exception e);
+    <T> void fatal(String summary, T t, Throwable e);
 
-    <T> void fatal(String summary, String message, T t, Exception e);
+    <T> void fatal(String summary, String message, T t, Throwable e);
 
     default void f(String message) {
         fatal(message);
@@ -40,11 +40,11 @@ public interface LogFatal {
         fatal(message, arguments);
     }
 
-    default void f(Exception e) {
+    default void f(Throwable e) {
         fatal(e);
     }
 
-    default void f(String summary, Exception e) {
+    default void f(String summary, Throwable e) {
         fatal(summary, e);
     }
 
@@ -56,7 +56,7 @@ public interface LogFatal {
         fatal(summary, message, arguments);
     }
 
-    default void f(String summary, String message, Exception e) {
+    default void f(String summary, String message, Throwable e) {
         fatal(summary, message, e);
     }
 
@@ -64,11 +64,11 @@ public interface LogFatal {
         fatal(summary, t);
     }
 
-    default <T> void f(String summary, T t, Exception e) {
+    default <T> void f(String summary, T t, Throwable e) {
         fatal(summary, t, e);
     }
 
-    default <T> void f(String summary, String message, T t, Exception e) {
+    default <T> void f(String summary, String message, T t, Throwable e) {
         fatal(summary, message, t, e);
     }
 }

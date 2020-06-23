@@ -611,7 +611,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void warn(Exception e) {
+    public void warn(Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -658,7 +658,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void warn(String summary, Exception e) {
+    public void warn(String summary, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -677,7 +677,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void warn(String summary, String message, Exception e) {
+    public void warn(String summary, String message, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -717,7 +717,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void warn(String summary, T t, Exception e) {
+    public <T> void warn(String summary, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -739,7 +739,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void warn(String summary, String message, T t, Exception e) {
+    public <T> void warn(String summary, String message, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -785,7 +785,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void error(Exception e) {
+    public void error(Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -832,7 +832,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void error(String summary, Exception e) {
+    public void error(String summary, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -851,7 +851,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void error(String summary, String message, Exception e) {
+    public void error(String summary, String message, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -891,7 +891,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void error(String summary, T t, Exception e) {
+    public <T> void error(String summary, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -913,7 +913,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void error(String summary, String message, T t, Exception e) {
+    public <T> void error(String summary, String message, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -959,7 +959,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void fatal(Exception e) {
+    public void fatal(Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -976,7 +976,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void fatal(String summary, Exception e) {
+    public void fatal(String summary, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -1025,7 +1025,7 @@ public abstract class LogSingle implements LogAction {
      * @param e
      */
     @Override
-    public void fatal(String summary, String message, Exception e) {
+    public void fatal(String summary, String message, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -1066,7 +1066,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void fatal(String summary, String message, T t, Exception e) {
+    public <T> void fatal(String summary, String message, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;
@@ -1088,7 +1088,7 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void fatal(String summary, T t, Exception e) {
+    public <T> void fatal(String summary, T t, Throwable e) {
         LogNote note = new LogNote();
         {
             note.name = name;

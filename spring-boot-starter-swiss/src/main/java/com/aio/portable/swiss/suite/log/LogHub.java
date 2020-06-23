@@ -378,13 +378,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.error(message));
     }
 
-    public void error(Exception e) {
+    public void error(Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.ERROR))
             logList.forEach(it -> it.error(e));
     }
 
-    public void error(String summary, Exception e) {
+    public void error(String summary, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.ERROR))
             logList.forEach(it -> it.error(summary, e));
@@ -396,7 +396,7 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.error(summary, message));
     }
 
-    public void error(String summary, String message, Exception e) {
+    public void error(String summary, String message, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.ERROR))
             logList.forEach(it -> it.error(summary, message, e));
@@ -408,13 +408,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.error(summary, t));
     }
 
-    public <T> void error(String summary, T t, Exception e) {
+    public <T> void error(String summary, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.ERROR))
             logList.forEach(it -> it.error(summary, t, e));
     }
 
-    public <T> void error(String summary, String message, T t, Exception e) {
+    public <T> void error(String summary, String message, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.ERROR))
             logList.forEach(it -> it.error(summary, message, t, e));
@@ -426,13 +426,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.warn(message));
     }
 
-    public void warn(Exception e) {
+    public void warn(Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.WARNING))
             logList.forEach(it -> it.warn(e));
     }
 
-    public void warn(String summary, Exception e) {
+    public void warn(String summary, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.WARNING))
             logList.forEach(it -> it.warn(summary, e));
@@ -444,7 +444,7 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.warn(summary, message));
     }
 
-    public void warn(String summary, String message, Exception e) {
+    public void warn(String summary, String message, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.WARNING))
             logList.forEach(it -> it.warn(summary, message, e));
@@ -456,13 +456,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.warn(summary, t));
     }
 
-    public <T> void warn(String summary, T t, Exception e) {
+    public <T> void warn(String summary, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.WARNING))
             logList.forEach(it -> it.warn(summary, t, e));
     }
 
-    public <T> void warn(String summary, String message, T t, Exception e) {
+    public <T> void warn(String summary, String message, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.WARNING))
             logList.forEach(it -> it.warn(summary, message, t, e));
@@ -474,13 +474,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.fatal(message));
     }
 
-    public void fatal(Exception e) {
+    public void fatal(Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.FATAL))
             logList.forEach(it -> it.fatal(e));
     }
 
-    public void fatal(String summary, Exception e) {
+    public void fatal(String summary, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.FATAL))
             logList.forEach(it -> it.fatal(summary, e));
@@ -492,7 +492,7 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.fatal(summary, message));
     }
 
-    public void fatal(String summary, String message, Exception e) {
+    public void fatal(String summary, String message, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.FATAL))
             logList.forEach(it -> it.fatal(summary, message, e));
@@ -504,13 +504,13 @@ public class LogHub extends LogBundle implements Logger {
             logList.forEach(it -> it.fatal(summary, t));
     }
 
-    public <T> void fatal(String summary, T t, Exception e) {
+    public <T> void fatal(String summary, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.FATAL))
             logList.forEach(it -> it.fatal(summary, t, e));
     }
 
-    public <T> void fatal(String summary, String message, T t, Exception e) {
+    public <T> void fatal(String summary, String message, T t, Throwable e) {
         check();
         if (passing() && baseLevel.match(LevelEnum.FATAL))
             logList.forEach(it -> it.fatal(summary, message, t, e));

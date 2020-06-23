@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogException {
-    public LogException(Exception e) {
+    public LogException(Throwable e) {
         setException(e);
     }
 
-    public final static LogException buildLogException(Exception e) {
+    public final static LogException buildLogException(Throwable e) {
         return new LogException(e);
     }
 
-    public void setException(Exception e) {
+    public void setException(Throwable e) {
         this.message = e.toString();
         this.stackTrace = Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
     }

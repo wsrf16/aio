@@ -13,9 +13,9 @@ public interface LogError {
         error(message);
     }
 
-    void error(Exception e);
+    void error(Throwable e);
 
-    void error(String summary, Exception e);
+    void error(String summary, Throwable e);
 
     void error(String summary, String message);
 
@@ -24,11 +24,11 @@ public interface LogError {
         error(summary, message);
     }
 
-    void error(String summary, String message, Exception e);
+    void error(String summary, String message, Throwable e);
 
-    <T> void error(String summary, String message, T t, Exception e);
+    <T> void error(String summary, String message, T t, Throwable e);
 
-    <T> void error(String summary, T t, Exception e);
+    <T> void error(String summary, T t, Throwable e);
 
     <T> void error(String summary, T t);
 
@@ -40,11 +40,11 @@ public interface LogError {
         error(message, arguments);
     }
 
-    default void e(Exception e) {
+    default void e(Throwable e) {
         error(e);
     }
 
-    default void e(String summary, Exception e) {
+    default void e(String summary, Throwable e) {
         error(summary, e);
     }
 
@@ -56,15 +56,15 @@ public interface LogError {
         error(summary, message, arguments);
     }
 
-    default void e(String summary, String message, Exception e) {
+    default void e(String summary, String message, Throwable e) {
         error(summary, message, e);
     }
 
-    default <T> void e(String summary, String message, T t, Exception e) {
+    default <T> void e(String summary, String message, T t, Throwable e) {
         error(summary, message, t, e);
     }
 
-    default <T> void e(String summary, T t, Exception e) {
+    default <T> void e(String summary, T t, Throwable e) {
         error(summary, t, e);
     }
 

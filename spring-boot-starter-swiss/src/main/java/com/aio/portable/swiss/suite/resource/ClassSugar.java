@@ -143,16 +143,7 @@ public abstract class ClassSugar {
     public synchronized final static <T> T newDeclaredInstance(Class<T> clazz) {
         try {
             return clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -168,16 +159,7 @@ public abstract class ClassSugar {
     public synchronized final static <T> T newInstance(Class<T> clazz) {
         try {
             return clazz.getConstructor().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

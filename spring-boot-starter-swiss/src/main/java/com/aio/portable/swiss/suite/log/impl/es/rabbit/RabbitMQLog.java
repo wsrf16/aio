@@ -30,14 +30,6 @@ public class RabbitMQLog extends LogSingle {
     protected void initialPrinter() {
         String name = getName();
         properties = RabbitMQLogProperties.singletonInstance();
-//        verbosePrinter = RabbitMQPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
-//        tracePrinter = RabbitMQPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
-//        infoPrinter = RabbitMQPrinter.instance(name, LevelEnum.INFORMATION.getName(), properties);
-//        debugPrinter = RabbitMQPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
-//        warnPrinter = RabbitMQPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
-//        errorPrinter = RabbitMQPrinter.instance(name, LevelEnum.ERROR.getName(), properties);
-//        fatalPrinter = RabbitMQPrinter.instance(name, LevelEnum.FATAL.getName(), properties);
-
         printer = RabbitMQPrinter.instance(name, properties);
     }
 

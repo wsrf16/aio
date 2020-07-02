@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.suite.net.protocol.http;
 
+import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.net.protocol.http.resttemplate.SkipSSLSimpleClientHttpRequestFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
@@ -15,6 +17,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.InetSocketAddress;
@@ -23,6 +26,7 @@ import java.net.SocketAddress;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RestTemplater {
     public final static class Http {
@@ -36,6 +40,17 @@ public class RestTemplater {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
             return headers;
+        }
+
+        public final static String toURL(String uri, Object bean) {
+            Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
+            String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
+//            StringSugar.
+
+            while (StringUtils.endsWithIgnoreCase(uri, "/")) {
+                uri = StringSugar.removeEnd(uri, "/");
+            }
+            return MessageFormat.format("{0}?{1}", uri, queryParams);
         }
     }
 
@@ -118,7 +133,7 @@ public class RestTemplater {
     }
 
 
-    public static Map.Entry buildAuthorizationHead(String username, int password) {
+    public static Map.Entry buildBasicAuthorizationHead(String username, int password) {
         final String plainCreds = MessageFormat.format("{0}:{1}", username, password);
 
         final byte[] plainCredsBytes = plainCreds.getBytes();
@@ -133,27 +148,38 @@ public class RestTemplater {
         return entry;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, Class<RESP> responseType, Object... uriVariables) {
-        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+    public static Map.Entry buildBearerAuthorizationHead(String token) {
+        final String base64Creds = token;
+
+        Map.Entry<String, String> entry = new HashMap<String, String>() {
+            {
+                put(HttpHeaders.AUTHORIZATION, "Bearer " + base64Creds);
+            }
+        }.entrySet().stream().findFirst().get();
+        return entry;
+    }
+
+    public static <RESP, REQ> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseType, Object... uriVariables) {
+        HttpEntity<?> httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
-        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, parameterizedTypeReference, uriVariables);
+    public static <RESP, REQ> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
+        HttpEntity<?> httpEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, Class<RESP> responseType, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseType, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, responseType, uriVariables);
+        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, parameterizedTypeReference, uriVariables);
+        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseType, uriVariables);
         return responseEntity;
     }
 
@@ -163,9 +189,9 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, parameterizedTypeReference, uriVariables);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
@@ -174,30 +200,30 @@ public class RestTemplater {
         return get(restTemplate, url, headers, responseType, uriVariables);
     }
 
-    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return get(restTemplate, url, headers, parameterizedTypeReference, uriVariables);
+        return get(restTemplate, url, headers, responseType, uriVariables);
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, Class<RESP> responseType, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, Class<RESP> responseType, Object... uriVariables) {
         HttpEntity<REQ> httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpEntity<REQ> httpEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, parameterizedTypeReference, uriVariables);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
-    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, Class<RESP> responseType, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body , Class<RESP> responseType, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return post(restTemplate, url, body, headers, responseType, uriVariables);
+        return post(restTemplate, url, headers, body, responseType, uriVariables);
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, HttpHeaders headers, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return post(restTemplate, url, body, headers, parameterizedTypeReference, uriVariables);
+        return post(restTemplate, url, headers, body, responseType, uriVariables);
     }
 
 
@@ -225,31 +251,31 @@ public class RestTemplater {
 
 
 
-    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, Class<RESP> responseType, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
-        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        HttpEntity<?> httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchange(RestTemplate restTemplate, String url, HttpMethod method, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
-        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, parameterizedTypeReference, uriVariables);
+        HttpEntity<?> httpEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, method, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, Class<RESP> responseType, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseType, Object... uriVariables) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseType, uriVariables);
+        return responseEntity;
+    }
+
+    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, responseType, uriVariables);
-        return responseEntity;
-    }
-
-    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, parameterizedTypeReference, uriVariables);
         return responseEntity;
     }
 
@@ -260,10 +286,10 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, parameterizedTypeReference, uriVariables);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
 
@@ -273,10 +299,10 @@ public class RestTemplater {
         return get(restTemplate, url, headers, responseType, uriVariables);
     }
 
-    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return get(restTemplate, url, headers, parameterizedTypeReference, uriVariables);
+        return get(restTemplate, url, headers, responseType, uriVariables);
     }
 
     public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseType, Object... uriVariables) {
@@ -286,21 +312,22 @@ public class RestTemplater {
         return responseEntity;
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> post(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<REQ> httpEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, parameterizedTypeReference, uriVariables);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, responseType, uriVariables);
         return responseEntity;
     }
+
     public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return post(restTemplate, url, body, headers, responseType, uriVariables);
+        return post(restTemplate, url, headers, body, responseType, uriVariables);
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> parameterizedTypeReference, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseType, Object... uriVariables) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return post(restTemplate, url, body, headers, parameterizedTypeReference, uriVariables);
+        return post(restTemplate, url, headers, body, responseType, uriVariables);
     }
 }

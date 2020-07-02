@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * Internal system events that aren't necessarily observable from the outside.
@@ -9,7 +9,7 @@ public interface LogDebug {
     void debug(String message);
 
     default void debug(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         debug(message);
     }
 
@@ -18,7 +18,7 @@ public interface LogDebug {
     void debug(String summary, String message);
 
     default void debug(String summary, String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         debug(summary, message);
     }
 

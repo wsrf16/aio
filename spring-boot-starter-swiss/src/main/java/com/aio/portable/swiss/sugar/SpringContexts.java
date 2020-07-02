@@ -15,7 +15,7 @@ import java.beans.Introspector;
 import java.util.Map;
 
 @Component
-public abstract class SpringContexts implements ApplicationContextAware {
+public class SpringContexts implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
     /**

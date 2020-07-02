@@ -274,4 +274,14 @@ public class StringSugar {
         return cs == null ? 0 : cs.length();
     }
 
+    private final static String PLACE_HOLDER = "\\{\\}";
+    /**
+     * format
+     * @param input
+     * @param replacement
+     * @return
+     */
+    public static String format(String input, Object... replacement) {
+        return RegexSugar.replace(PLACE_HOLDER, input, replacement);
+    }
 }

@@ -35,7 +35,7 @@ public class ElasticsearchSugar {
         }
 
         xContentBuilder.startObject("properties");
-        Set<Map.Entry<String, Class>> propertySet = BeanSugar.PropertyDescriptors.getNameClass(clazz).entrySet();
+        Set<Map.Entry<String, Class>> propertySet = BeanSugar.PropertyDescriptors.toNameClassMap(clazz).entrySet();
         startObject(xContentBuilder, propertySet);
 
         xContentBuilder.endObject().endObject();

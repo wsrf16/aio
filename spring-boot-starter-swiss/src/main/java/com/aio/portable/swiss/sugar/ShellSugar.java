@@ -20,6 +20,7 @@ public abstract class ShellSugar {
                     throw new NullPointerException(error);
                 return feedback;
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());

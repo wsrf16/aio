@@ -25,6 +25,7 @@ public class SkipSSLSimpleClientHttpRequestFactory extends SimpleClientHttpReque
             connection.setSSLSocketFactory(createSslSocketFactory());
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

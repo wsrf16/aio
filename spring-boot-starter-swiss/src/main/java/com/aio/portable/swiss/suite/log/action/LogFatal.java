@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * If you have a pager, it goes off when one of these occurs.
@@ -9,7 +9,7 @@ public interface LogFatal {
     void fatal(String message);
 
     default void fatal(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         fatal(message);
     }
 
@@ -20,7 +20,7 @@ public interface LogFatal {
     void fatal(String summary, String message);
 
     default void fatal(String summary, String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         fatal(summary, message);
     }
 

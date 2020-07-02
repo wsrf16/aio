@@ -76,7 +76,7 @@ public abstract class LDAPSugar {
      */
     public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
-            Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.getNameClass(clazz);
+            Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.toNameClassMap(clazz);
             nameClass.entrySet().forEach(prop -> {
                 try {
                     String name = prop.getKey();
@@ -86,13 +86,7 @@ public abstract class LDAPSugar {
                         PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(clazz, name);
                         propertyDescriptor.getWriteMethod().invoke(t, val);
                     }
-                } catch (NamingException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
+                } catch (NamingException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
                 }

@@ -94,8 +94,6 @@ public class YamlSugar {
                 token = parser.nextToken();
             }
             parser.close();
-
-            System.out.println(lines);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

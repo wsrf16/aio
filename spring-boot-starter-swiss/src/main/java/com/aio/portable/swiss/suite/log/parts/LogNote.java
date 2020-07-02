@@ -17,7 +17,7 @@ public class LogNote {
     @JsonProperty("data")
     public Object data;
     @JsonProperty("exception")
-    public LogException exception;
+    public LogThrowable exception;
 
     public LevelEnum getLevel() {
         return level;
@@ -59,11 +59,11 @@ public class LogNote {
         this.data = data;
     }
 
-    public LogException getException() {
+    public LogThrowable getException() {
         return exception;
     }
 
-    public void setException(LogException exception) {
+    public void setException(LogThrowable exception) {
         this.exception = exception;
     }
 }

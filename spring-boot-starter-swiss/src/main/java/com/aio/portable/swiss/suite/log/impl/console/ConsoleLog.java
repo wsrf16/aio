@@ -29,14 +29,6 @@ public class ConsoleLog extends LogSingle {
     @Override
     protected void initialPrinter() {
         String name = getName();
-//        verbosePrinter = ConsolePrinter.instance(name, LevelEnum.VERBOSE.getName());
-//        tracePrinter = ConsolePrinter.instance(name, LevelEnum.TRACE.getName());
-//        infoPrinter = ConsolePrinter.instance(name, LevelEnum.INFORMATION.getName());
-//        debugPrinter = ConsolePrinter.instance(name, LevelEnum.DEBUG.getName());
-//        warnPrinter = ConsolePrinter.instance(name, LevelEnum.WARNING.getName());
-//        errorPrinter = ConsolePrinter.instance(name, LevelEnum.ERROR.getName());
-//        fatalPrinter = ConsolePrinter.instance(name, LevelEnum.FATAL.getName());
-
         printer = ConsolePrinter.instance(name, "");
     }
 }

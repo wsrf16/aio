@@ -35,14 +35,6 @@ public class KafkaLog extends LogSingle {
     protected void initialPrinter() {
         String name = getName();
         properties = KafkaLogProperties.singletonInstance();
-//        verbosePrinter = KafkaPrinter.instance(name, LevelEnum.VERBOSE.getName(), properties);
-//        tracePrinter = KafkaPrinter.instance(name, LevelEnum.TRACE.getName(), properties);
-//        infoPrinter = KafkaPrinter.instance(name, LevelEnum.INFORMATION.getName(), properties);
-//        debugPrinter = KafkaPrinter.instance(name, LevelEnum.DEBUG.getName(), properties);
-//        warnPrinter = KafkaPrinter.instance(name, LevelEnum.WARNING.getName(), properties);
-//        errorPrinter = KafkaPrinter.instance(name, LevelEnum.ERROR.getName(), properties);
-//        fatalPrinter = KafkaPrinter.instance(name, LevelEnum.FATAL.getName(), properties);
-
         printer = KafkaPrinter.instance(name, properties);
     }
 
@@ -51,8 +43,8 @@ public class KafkaLog extends LogSingle {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
         LevelEnum level = logNote.getLevel();
-        ESLogNote kibanaLogNote = new ESLogNote(logNote, esIndex, ip);
-        String text = serializer.serialize(kibanaLogNote);
+        ESLogNote esLogNote = new ESLogNote(logNote, esIndex, ip);
+        String text = serializer.serialize(esLogNote);
         super.output(printer, text, level);
     }
 

@@ -68,21 +68,21 @@
     </fileSets>
     <files>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/jav</source>
             <outputDirectory></outputDirectory>
-            <destName>-</destName>
+            <destName>jav</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/jav</source>
             <outputDirectory></outputDirectory>
             <destName>${project.build.finalName}.jar.sh</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>${project.build.scriptSourceDirectory}/dynamic/-</source>
+            <source>${project.build.scriptSourceDirectory}/dynamic/jav</source>
             <outputDirectory>bin</outputDirectory>
             <destName>launch.sh</destName>
             <fileMode>755</fileMode>

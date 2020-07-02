@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * Functionality is unavailable, invariants are broken or data is lost.
@@ -9,7 +9,7 @@ public interface LogError {
     void error(String message);
 
     default void error(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         error(message);
     }
 
@@ -20,7 +20,7 @@ public interface LogError {
     void error(String summary, String message);
 
     default void error(String summary, String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         error(summary, message);
     }
 

@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.log.action;
 
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * The lifeblood of operational intelligence - things happen.
@@ -10,7 +10,7 @@ public interface LogInformation {
     void info(String message);
 
     default void info(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         info(message);
     }
 
@@ -19,7 +19,7 @@ public interface LogInformation {
     void info(String summary, String message);
 
     default void info(String summary, String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         info(summary, message);
     }
 

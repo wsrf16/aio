@@ -48,6 +48,7 @@
         <xxl-job-core.version>2.0.2</xxl-job-core.version>
         <nginxparser.version>0.9.6</nginxparser.version>
         <netty-all.version>4.1.44.Final</netty-all.version>
+
 <!--        <commons-lang3.version>3.8.1</commons-lang3.version>-->
 <!--        <httpclient.version>4.5.9</httpclient.version>-->
 <!--        <commons-beanutils.version>1.9.3</commons-beanutils.version>-->

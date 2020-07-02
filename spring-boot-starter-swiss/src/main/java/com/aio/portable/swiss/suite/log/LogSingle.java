@@ -1,13 +1,11 @@
 package com.aio.portable.swiss.suite.log;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.bean.serializer.ISerializerSelector;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import com.aio.portable.swiss.suite.log.parts.LogException;
+import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 
@@ -141,7 +139,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void verbose(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        verbose(message);
 //    }
 
@@ -172,7 +170,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void verbose(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        verbose(summary, message);
 //    }
 
@@ -257,7 +255,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void trace(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        trace(message);
 //    }
 
@@ -288,7 +286,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void trace(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        trace(summary, message);
 //    }
 
@@ -372,7 +370,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void info(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        info(message);
 //    }
 
@@ -403,7 +401,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void info(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        info(summary, message);
 //    }
 
@@ -487,7 +485,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void debug(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        debug(message);
 //    }
 
@@ -518,7 +516,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void debug(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        debug(summary, message);
 //    }
 
@@ -601,7 +599,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void warn(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        warn(warning);
 //    }
 
@@ -616,7 +614,7 @@ public abstract class LogSingle implements LogAction {
         {
             note.name = name;
             note.level = LevelEnum.WARNING;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -647,7 +645,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void warn(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        warn(summary, message);
 //    }
 
@@ -664,7 +662,7 @@ public abstract class LogSingle implements LogAction {
             note.name = name;
             note.level = LevelEnum.WARNING;
             note.summary = summary;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -684,7 +682,7 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.WARNING;
             note.summary = summary;
             note.message = message;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -724,7 +722,7 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.WARNING;
             note.summary = summary;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -747,7 +745,7 @@ public abstract class LogSingle implements LogAction {
             note.summary = summary;
             note.message = message;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -775,7 +773,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void error(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        error(message);
 //    }
 
@@ -790,7 +788,7 @@ public abstract class LogSingle implements LogAction {
         {
             note.name = name;
             note.level = LevelEnum.ERROR;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -821,7 +819,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void error(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        error(summary, message);
 //    }
 
@@ -838,7 +836,7 @@ public abstract class LogSingle implements LogAction {
             note.name = name;
             note.level = LevelEnum.ERROR;
             note.summary = summary;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -858,7 +856,7 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.ERROR;
             note.summary = summary;
             note.message = message;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -898,7 +896,7 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.ERROR;
             note.summary = summary;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -921,7 +919,7 @@ public abstract class LogSingle implements LogAction {
             note.summary = summary;
             note.message = message;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -949,7 +947,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void fatal(String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        fatal(message);
 //    }
 
@@ -964,7 +962,7 @@ public abstract class LogSingle implements LogAction {
         {
             note.name = name;
             note.level = LevelEnum.FATAL;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -982,7 +980,7 @@ public abstract class LogSingle implements LogAction {
             note.name = name;
             note.level = LevelEnum.FATAL;
             note.summary = summary;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -1013,7 +1011,7 @@ public abstract class LogSingle implements LogAction {
      */
 //    @Override
 //    public void fatal(String summary, String message, Object[] arguments) {
-//        message = RegexSugar.replace("\\{\\}", message, arguments);
+//        message = StringSugar.format(message, arguments);
 //        fatal(summary, message);
 //    }
 
@@ -1032,7 +1030,7 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.FATAL;
             note.summary = summary;
             note.message = message;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -1074,7 +1072,7 @@ public abstract class LogSingle implements LogAction {
             note.summary = summary;
             note.message = message;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
@@ -1095,25 +1093,17 @@ public abstract class LogSingle implements LogAction {
             note.level = LevelEnum.FATAL;
             note.summary = summary;
             note.data = t;
-            note.exception = LogException.buildLogException(e);
+            note.exception = LogThrowable.build(e);
         }
         output(printer, note);
     }
 
     @Override
     public void dispose() {
-        if (printer != null)
+        if (printer != null) {
             printer.dispose();
-        if (printer != null)
-            printer.dispose();
-        if (printer != null)
-            printer.dispose();
-        if (printer != null)
-            printer.dispose();
-        if (printer != null)
-            printer.dispose();
-        if (printer != null)
-            printer.dispose();
+            printer = null;
+        }
     }
 
     protected static String getLocalIp() {

@@ -35,6 +35,7 @@
         <springfox-staticdocs.version>2.6.1</springfox-staticdocs.version>
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <knife4j.version>2.0.3</knife4j.version>
+        <guava.version>[24.1.1,)</guava.version>
         <mysql.version>8.0.13</mysql.version>
         <tk.mybatis.version>1.1.3</tk.mybatis.version>
         <shiro.version>1.5.3</shiro.version>
@@ -208,8 +209,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>[24.1.1,)</version>
-            <scope>compile</scope>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>

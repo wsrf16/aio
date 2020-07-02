@@ -28,8 +28,8 @@ public class JacksonTest {
             _model= JacksonSugar.json2T(JacksonSugar.obj2Json(""), JsonModel.class);
             _model = JacksonSugar.json2T(JacksonSugar.obj2Json(null), JsonModel.class);
         }
-        list = JacksonSugar.json2Complex(JacksonSugar.obj2Json(list));
-        map = JacksonSugar.json2Complex(JacksonSugar.obj2Json(map));
+        list = JacksonSugar.json2T(JacksonSugar.obj2Json(list));
+        map = JacksonSugar.json2T(JacksonSugar.obj2Json(map));
 //        String aListJson = JsonUtil.obj2Json(aList);
 //        AA b = JsonUtil.json2Obj(aJson);
 //        List<AA> bList = JsonUtil.json2Obj(aListJson);

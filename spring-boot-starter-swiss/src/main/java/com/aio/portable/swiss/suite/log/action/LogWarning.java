@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * Service is degraded or endangered.
@@ -9,7 +9,7 @@ public interface LogWarning {
     void warn(String message);
 
     default void warn(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         warn(message);
     }
 
@@ -20,7 +20,7 @@ public interface LogWarning {
     void warn(String summary, String message);
 
     default void warn(String summary, String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         warn(summary, message);
     }
 

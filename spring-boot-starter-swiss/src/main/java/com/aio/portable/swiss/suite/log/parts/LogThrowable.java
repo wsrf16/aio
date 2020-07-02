@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LogException {
-    public LogException(Throwable e) {
+public class LogThrowable {
+    public LogThrowable(Throwable e) {
         setException(e);
     }
 
-    public final static LogException buildLogException(Throwable e) {
-        return new LogException(e);
+    public final static LogThrowable build(Throwable e) {
+        return new LogThrowable(e);
     }
 
     public void setException(Throwable e) {

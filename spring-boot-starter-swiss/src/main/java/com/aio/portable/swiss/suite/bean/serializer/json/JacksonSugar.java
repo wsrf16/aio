@@ -197,6 +197,7 @@ public class JacksonSugar {
         ObjectMapper mapper = new Jackson2ObjectMapperBuilder().build()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         if (strategy != null)
             mapper.setPropertyNamingStrategy(strategy);
         if (dateFormat != null)
@@ -268,12 +269,12 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> T json2Complex(String jsonStr) {
+    public final static <T> T json2T(String jsonStr) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
-
-            return mapper.readValue(jsonStr, new TypeReference<T>() {
-            });
+            TypeReference<T> valueTypeRef = new TypeReference<T>() {
+            };
+            return mapper.readValue(jsonStr, valueTypeRef);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -289,7 +290,7 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> T json2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
+    public final static <T> T json2T(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
@@ -320,8 +321,8 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> boolean can2Complex(String jsonStr, TypeReference<T> valueTypeRef) {
-        boolean can = json2Complex(jsonStr, valueTypeRef) == null ? false : true;
+    public final static <T> boolean can2T(String jsonStr, TypeReference<T> valueTypeRef) {
+        boolean can = json2T(jsonStr, valueTypeRef) == null ? false : true;
         return can;
     }
 
@@ -346,17 +347,37 @@ public class JacksonSugar {
 //    }
 
     /**
-     * deepClone
+     * deepCopy
      * @param source
      * @param targetClass
      * @param <T>
      * @return
      */
-    public final static <T> T deepClone(Object source, Class<T> targetClass) {
+    public final static <T> T deepCopy(Object source, Class<T> targetClass) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), targetClass);
         return t;
     }
 
+    /**
+     * deepCopy
+     * @param source
+     * @param valueTypeRef
+     * @param <T>
+     * @return
+     */
+    public final static <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), valueTypeRef);
+        return t;
+    }
 
-
+    /**
+     * deepCopy
+     * @param source
+     * @param <T>
+     * @return
+     */
+    public final static <T> T deepCopy(T source) {
+        T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
+        return t;
+    }
 }

@@ -22,8 +22,8 @@ public abstract class BeanSugar {
             if (bean == null)
                 return false;
             else {
-                Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.getNameValue(match);
-                Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.getNameValue(bean);
+                Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.toNameValueMap(match);
+                Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
 
                 boolean equal = matchNameValueMap(nameValueMatch, nameValueBean);
                 return equal;
@@ -39,9 +39,9 @@ public abstract class BeanSugar {
      * @return
      */
     public final static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
-        Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.getNameValue(matchList.get(0));
+        Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.toNameValueMap(matchList.get(0));
         boolean equal = beanList.stream().anyMatch(bean -> {
-            Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.getNameValue(bean);
+            Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
 
             boolean itemEqual = matchNameValueMap(nameValueMatch, nameValueBean);
             return itemEqual;
@@ -122,7 +122,7 @@ public abstract class BeanSugar {
         }
 
 
-        public final static Map<String, Class> getNameClass(Class clazz) {
+        public final static Map<String, Class> toNameClassMap(Class clazz) {
             Map<String, Class> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                     .filter(c -> !c.getName().equals("class"))
                     .collect(Collectors.toMap(c -> c.getName(), c -> c.getPropertyType()));
@@ -130,8 +130,8 @@ public abstract class BeanSugar {
         }
 
 
-        public final static Map<String, Object> getNameValue(Object bean) {
-            Map<String, Object> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+        public final static Map<String, Object> toNameValueMap(Object bean) {
+            Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !c.getName().equals("class"))
                     //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);

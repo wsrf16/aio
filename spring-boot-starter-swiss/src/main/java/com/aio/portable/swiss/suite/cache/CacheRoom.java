@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public class CacheRoom {
     String key;
     final static String KEYISNULL = "the key can not be empty or null.";
-    final static String ROOTDIRECTORY = Constant.CURRENT_DIRECTORY;
-    final static String CACHEDIRECTORYNAME = "Cache";
-    final static String EXTENSION = ".cache";
+    static String ROOT_DIRECTORY = Constant.CURRENT_DIRECTORY;
+    static String CACHE_DIRECTORY_NAME = "local-cache";
+    static String EXTENSION = ".cache";
     //System.Text.Encoding CahceFileEncoding = System.Text.Encoding.UTF8;
 
     static Hashtable<String, CacheRoom> cacheRooms;
@@ -82,18 +82,18 @@ public class CacheRoom {
         throw new NoSuchMethodException();
     }
 
-    protected CacheRoom(String key) throws Exception {
+    protected CacheRoom(String key) {
         if (!StringUtils.hasLength(key))
             throw new IllegalArgumentException(KEYISNULL);
         this.key = key;
     }
 
     public String cacheFilePath() {
-        return PathSugar.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME, this.key + EXTENSION);
+        return PathSugar.concat(ROOT_DIRECTORY, CACHE_DIRECTORY_NAME, this.key + EXTENSION);
     }
 
     public static String cacheDirectorPath() {
-        return PathSugar.concat(ROOTDIRECTORY, CACHEDIRECTORYNAME);
+        return PathSugar.concat(ROOT_DIRECTORY, CACHE_DIRECTORY_NAME);
     }
 
     public Boolean exist() {
@@ -105,7 +105,7 @@ public class CacheRoom {
     }
 
 
-    public void saveByJson(Object cache) throws IOException {
+    public void saveByJson(Object cache) {
         String content = JacksonSugar.obj2Json(cache);
         try {
             constructionLock.lock();
@@ -125,7 +125,7 @@ public class CacheRoom {
 //        }
 //    }
 
-    public void saveByByte(Object cache) throws IOException {
+    public void saveByByte(Object cache) {
 //        byte[] content = ByteUtils.obj2Byte(cache);
         byte[] content = SerializationUtils.serialize(cache);
         try {
@@ -144,15 +144,11 @@ public class CacheRoom {
 //    }
 
     public static void saveByJson(String key, Object cache) {
-        try {
-            cacheRoomFactory(key).saveByJson(cache);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cacheRoomFactory(key).saveByJson(cache);
     }
 
 
-    public static void saveByByte(String key, Object cache) throws IOException {
+    public static void saveByByte(String key, Object cache) {
         cacheRoomFactory(key).saveByByte(cache);
     }
 
@@ -183,7 +179,7 @@ public class CacheRoom {
 //        return ProtobufSerializerKit.Protobuf2Obj < T > (content);
 //    }
 
-    public Object loadByByte() throws IOException {
+    public Object loadByByte() {
         byte[] content;
         try {
             constructionLock.lock();
@@ -206,7 +202,7 @@ public class CacheRoom {
 //        return CacheRoomFactory(key).LoadByProtobuf();
 //    }
 
-    public static Object loadByByte(String key) throws IOException {
+    public static Object loadByByte(String key) {
         return cacheRoomFactory(key).loadByByte();
     }
 
@@ -240,7 +236,7 @@ public class CacheRoom {
 //        return ProtobufSerializerKit.Protobuf2Obj < T > (content);
 //    }
 
-    public <T> T popByByte() throws IOException {
+    public <T> T popByByte() {
         byte[] content;
         try {
             constructionLock.lock();
@@ -266,7 +262,7 @@ public class CacheRoom {
 //        return CacheRoomFactory(key).PopByProtobuf < T > ();
 //    }
 
-    public static <T> T popByByte(String key) throws IOException {
+    public static <T> T popByByte(String key) {
         return cacheRoomFactory(key).popByByte();
     }
 

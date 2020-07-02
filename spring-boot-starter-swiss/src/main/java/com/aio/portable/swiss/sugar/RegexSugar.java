@@ -1,7 +1,5 @@
 package com.aio.portable.swiss.sugar;
 
-import org.springframework.util.StringUtils;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public abstract class PatternSugar {
+public abstract class RegexSugar {
 //    private final static String REGEX_PHONE = "^(1)\\d{10}$";
     private final static String REGEX_PHONE_BLUR = "(\\^1d{2})\\d{4}(\\d{4})";
     private final static String REGEX_PHONE_BLUR_REPLACE = "$1****$2";
@@ -153,6 +151,5 @@ public abstract class PatternSugar {
         }
         return sb.toString();
     }
-
 
 }

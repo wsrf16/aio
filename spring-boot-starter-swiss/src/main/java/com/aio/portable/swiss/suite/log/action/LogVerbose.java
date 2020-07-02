@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.PatternSugar;
+import com.aio.portable.swiss.sugar.RegexSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 
 /**
  * Anything and everything you might want to know about a running block of code.
@@ -9,7 +10,7 @@ public interface LogVerbose {
     void verbose(String message);
 
     default void verbose(String message, Object[] arguments) {
-        message = PatternSugar.replace("\\{\\}", message, arguments);
+        message = StringSugar.format(message, arguments);
         verbose(message);
     }
 
@@ -18,7 +19,7 @@ public interface LogVerbose {
     void verbose(String summary, String message);
 
     default void verbose(String summary, String verbose, Object[] arguments) {
-        verbose = PatternSugar.replace("\\{\\}", verbose, arguments);
+        verbose = RegexSugar.replace("\\{\\}", verbose, arguments);
         verbose(summary, verbose);
     }
 

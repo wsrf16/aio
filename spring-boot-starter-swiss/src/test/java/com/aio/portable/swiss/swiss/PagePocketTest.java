@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.suite.cache.CacheRoom;
+//import com.aio.portable.swiss.suite.cache.CacheRoom;
 import com.aio.portable.swiss.suite.bean.PagePocket;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -25,6 +25,6 @@ public class PagePocketTest {
         Integer totalCount = pocket.getTotalCount();
 
 
-        PagePocket<Integer> pock111 = CacheRoom.popByJson("A1", PagePocket.class);
+//        PagePocket<Integer> pock111 = CacheRoom.popByJson("A1", PagePocket.class);
     }
 }

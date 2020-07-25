@@ -5,13 +5,13 @@ package com.aio.portable.swiss.suite.bean.serializer;
  */
 public enum SerializerEnum {
     SERIALIZE_JACKSON(0, "Jackson"),
-    SERIALIZE_JACKSON_FORCE(2, "Jackson"),
-    SERIALIZE_SHORTJACKSON(4, "ShortJackson"),
-    SERIALIZE_SHORTJACKSON_FORCE(8, "ShortJackson"),
+    SERIALIZE_FORCE_JACKSON(2, "Jackson"),
+    SERIALIZE_SHORT_JACKSON(4, "ShortJackson"),
+    SERIALIZE_FORCE_SHORT_JACKSON(8, "ShortJackson"),
     SERIALIZE_JACKXML(16, "Xml"),
     SERIALIZE_SHORTJACKXML(32, "ShortXml"),
     SERIALIZE_GSON(64, "Gson"),
-    SERIALIZE_SHORTGSON(128, "ShortGson"),
+    SERIALIZE_SHORT_GSON(128, "ShortGson"),
     SERIALIZE_CUSTOM(256, "Custom");
 
 //    DESERIALIZE_JACKSON(1, "Jackson"),

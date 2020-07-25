@@ -1,6 +1,6 @@
 package com.aio.portable.park.config.db;
 
-import com.aio.portable.swiss.suite.database.jpa.multidatasource.JpaBaseDataSourceConfiguration;
+import com.aio.portable.swiss.suite.storage.rds.jpa.multidatasource.JpaBaseDataSourceConfiguration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,7 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 @EnableJpaRepositories(basePackages = {ThirdDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = ThirdDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = ThirdDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 //@Import(HibernateJpaAutoConfiguration.class)

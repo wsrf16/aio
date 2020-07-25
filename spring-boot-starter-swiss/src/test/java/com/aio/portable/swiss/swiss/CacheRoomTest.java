@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.suite.cache.CacheRoom;
+//import com.aio.portable.swiss.suite.cache.CacheRoom;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -17,6 +17,6 @@ public class CacheRoomTest {
         map.put("c", "3");
         map.put("d", "4");
 
-        CacheRoom.saveByJson("A1", map);
+//        CacheRoom.saveByJson("A1", map);
     }
 }

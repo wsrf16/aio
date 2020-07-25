@@ -5,7 +5,7 @@ import com.aio.portable.parkdb.dao.slave.mapper.BookSlaveMapper;
 import com.aio.portable.parkdb.dao.third.mapper.BookThirdRepository;
 import com.aio.portable.parkdb.dao.third.model.Book;
 import com.aio.portable.parkdb.dao.third.model.BookVO;
-import com.aio.portable.swiss.suite.database.jpa.JPASugar;
+import com.aio.portable.swiss.suite.storage.rds.jpa.JPASugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;

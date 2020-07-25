@@ -41,7 +41,7 @@ public abstract class LogSingle implements LogAction {
         this.prefixSupplier = EMPTY_PREFIX;
     }
 
-    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_JACKSON_FORCE);
+    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
 //    public ISerializerSelector getSerializer() {
 //        return serializer;
 //    }

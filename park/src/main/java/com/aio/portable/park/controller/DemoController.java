@@ -1,8 +1,7 @@
 package com.aio.portable.park.controller;
 
-import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.suite.cache.RedisLock;
+import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 //import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -11,18 +10,10 @@ import com.aio.portable.swiss.sugar.DateTimeSugar;
 //import org.apache.http.impl.client.HttpClients;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 import java.util.Date;
 

@@ -15,6 +15,10 @@ public class ZooKeeperTest {
             boolean lock1 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
             boolean lock2 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
             boolean lock3 = ZooKeeperSugar.tryLock(zooKeeper, "/aaa", 20000);
+
+            ZooKeeperSugar.create(zooKeeper, "/bbb1/bbb2", null);
+            ZooKeeperSugar.clearIfExists(zooKeeper, "/bbb1/bbb2");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

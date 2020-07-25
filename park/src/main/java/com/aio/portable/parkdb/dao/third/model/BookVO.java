@@ -1,7 +1,7 @@
 package com.aio.portable.parkdb.dao.third.model;
 
-import com.aio.portable.swiss.suite.database.jpa.annotation.order.OrderBy;
-import com.aio.portable.swiss.suite.database.jpa.annotation.where.*;
+import com.aio.portable.swiss.suite.storage.rds.jpa.annotation.order.OrderBy;
+import com.aio.portable.swiss.suite.storage.rds.jpa.annotation.where.*;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;

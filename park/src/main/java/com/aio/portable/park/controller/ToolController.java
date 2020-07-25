@@ -1,10 +1,8 @@
 package com.aio.portable.park.controller;
 
 import com.aio.portable.park.config.AppLogHubFactory;
-import com.aio.portable.swiss.suite.io.IOSugar;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
-import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ToolController {
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
-        IOSugar.createDirectoryIfNotExists(targetDirectory);
+        Files.createDirectories(targetDirectory);
 
         String originalFilename = multipartFile.getOriginalFilename();
         Path targetFile = Paths.get(targetDirectory.toString(), originalFilename);
@@ -56,7 +55,7 @@ public class ToolController {
     @PostMapping(value = "/uploads", headers = UPLOADS_CONTENT_TYPE)
     public List<String> uploads(@RequestParam(value = "files") MultipartFile[] multipartFiles) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
-        IOSugar.createDirectoryIfNotExists(targetDirectory);
+        Files.createDirectories(targetDirectory);
 
         List<String> uploadLocationList = new ArrayList<String>();
         Arrays.stream(multipartFiles).forEach(multipartFile -> {

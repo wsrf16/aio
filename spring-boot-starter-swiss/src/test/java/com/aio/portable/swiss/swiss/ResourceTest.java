@@ -26,7 +26,7 @@ public class ResourceTest {
 
     {
         try {
-            String jar = "./spring-boot-starter-swiss/target/spring-boot-starter-swiss-1.1.9-SNAPSHOT.jar";
+            String jar = "./spring-boot-starter-swiss/target/spring-boot-starter-swiss-1.1.10-SNAPSHOT.jar";
             String resource = "com/aio/portable/swiss/sandbox/Wood.class";
 
             List<URL> resources0 = ResourceSugar.ByClassLoader.getResources(resource);

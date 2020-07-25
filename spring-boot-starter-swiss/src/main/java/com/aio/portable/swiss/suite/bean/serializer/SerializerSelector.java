@@ -1,8 +1,6 @@
 package com.aio.portable.swiss.suite.bean.serializer;
 
 import com.aio.portable.swiss.suite.bean.serializer.json.GsonSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.bean.serializer.xml.XmlSugar;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
 
 import java.io.IOException;
@@ -25,7 +23,7 @@ public class SerializerSelector implements ISerializerSelector {
 
     private SerializerEnum serializerType;
 
-    Map<SerializerEnum, Function<Object, String>> classicSerializers = new HashMap<>();
+    Map<SerializerEnum, Serializer> classicSerializers = new HashMap<>();
 
 
 //    public SerializerEnum getCurrentSerializerType() {
@@ -36,7 +34,7 @@ public class SerializerSelector implements ISerializerSelector {
 //        this.serializerType = serializerType;
 //    }
 
-    public Map.Entry<SerializerEnum, Function<Object, String>> getSerializer() {
+    public Map.Entry<SerializerEnum, Serializer> getSerializer() {
         return serializerType == null ? null : classicSerializers.entrySet().stream().filter(c -> c.getKey() == serializerType).findFirst().orElse(null);
     }
 
@@ -44,20 +42,19 @@ public class SerializerSelector implements ISerializerSelector {
         this.serializerType = serializerType;
     }
 
-    public final void putSerializer(SerializerEnum serializerType, Function<Object, String> function) {
-        classicSerializers.put(serializerType, function);
+    public final void putSerializer(SerializerEnum serializerType, Serializer serializer) {
+        classicSerializers.put(serializerType, serializer);
     }
 
     private final void inital() {
-//        classicSerializers = new HashMap<>();
-        classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON, bean -> JacksonSugar.obj2Json(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON, bean -> JacksonSugar.obj2Json(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON_FORCE, bean -> JacksonSugar.obj2Json(bean, false));
-        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKSON_FORCE, bean -> JacksonSugar.obj2ShortJson(bean, false));
-        classicSerializers.put(SerializerEnum.SERIALIZE_JACKXML, bean -> XmlSugar.obj2Xml(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKXML, bean -> XmlSugar.obj2ShortXml(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_GSON, bean -> GsonSugar.obj2Json(bean));
-        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTGSON, bean -> GsonSugar.obj2Json(bean));
+        classicSerializers.put(SerializerEnum.SERIALIZE_JACKSON, new DynamicSerializer.Jackson());
+        classicSerializers.put(SerializerEnum.SERIALIZE_SHORT_JACKSON, new DynamicSerializer.ShortJackson());
+        classicSerializers.put(SerializerEnum.SERIALIZE_FORCE_JACKSON, new DynamicSerializer.ForceJackson());
+        classicSerializers.put(SerializerEnum.SERIALIZE_FORCE_SHORT_JACKSON, new DynamicSerializer.ForceShortJackson());
+        classicSerializers.put(SerializerEnum.SERIALIZE_JACKXML, new DynamicSerializer.JackXml());
+        classicSerializers.put(SerializerEnum.SERIALIZE_SHORTJACKXML, new DynamicSerializer.ShortJackXml());
+        classicSerializers.put(SerializerEnum.SERIALIZE_GSON, new DynamicSerializer.Gson());
+        classicSerializers.put(SerializerEnum.SERIALIZE_SHORT_GSON, new DynamicSerializer.Gson());
         classicSerializers.put(SerializerEnum.SERIALIZE_CUSTOM, null);
 
 //        classicSerializers.put(SerializerEnum.DESERIALIZE_JACKSON, (json, clazz) -> JacksonUtil.json2T(json, clazz));
@@ -67,19 +64,34 @@ public class SerializerSelector implements ISerializerSelector {
     }
 
     public synchronized <T> String serialize(T t) {
-        if (getSerializer() == null && existJackson()) {
+        if (getSerializer() != null) {
+            setSerializer(serializerType);
+        } else if (existJackson()) {
             setSerializer(SerializerEnum.SERIALIZE_JACKSON);
-        } else if (getSerializer() == null && existGson()) {
+        } else if (existGson()) {
             setSerializer(SerializerEnum.SERIALIZE_GSON);
         } else {
-            if (serializerType == null)
-                throw new NullPointerException(serializerType.getClass().getTypeName());
-            else
-                setSerializer(serializerType);
+            throw new NullPointerException(serializerType.getClass().getTypeName());
         }
-        Function<Object, String> serializer = getSerializer().getValue();
-        String ret = serializer.apply(t);
+        Serializer serializer = getSerializer().getValue();
+        String ret = serializer.serialize(t);
         return ret;
+    }
+
+    public synchronized <T> T deserialize(String text, Class<T> clazz) {
+        if (getSerializer() != null) {
+            setSerializer(serializerType);
+        } else if (existJackson()) {
+            setSerializer(SerializerEnum.SERIALIZE_JACKSON);
+        } else if (existGson()) {
+            setSerializer(SerializerEnum.SERIALIZE_GSON);
+        } else {
+            throw new NullPointerException(serializerType.getClass().getTypeName());
+        }
+
+        Serializer serializer = getSerializer().getValue();
+        T t = serializer.deserialize(text, clazz);
+        return t;
     }
 
 

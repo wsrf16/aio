@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import java.io.IOException;
+import java.text.DateFormat;
 
 public abstract class XmlSugar {
     public enum SerializerStyle {
@@ -44,5 +49,32 @@ public abstract class XmlSugar {
         }
     }
 
+    public static <T> T xml2T(String xml, Class<T> clazz) {
+        ObjectMapper mapper = new XmlMapper();
+        try {
+            return mapper.readValue(xml, clazz);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
+
+
+
+
+
+    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
+        ObjectMapper mapper = new Jackson2ObjectMapperBuilder().build()
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        if (strategy != null)
+            mapper.setPropertyNamingStrategy(strategy);
+        if (dateFormat != null)
+            mapper.setDateFormat(dateFormat);
+        if (indent != null)
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, indent);
+        return mapper;
+    }
 }

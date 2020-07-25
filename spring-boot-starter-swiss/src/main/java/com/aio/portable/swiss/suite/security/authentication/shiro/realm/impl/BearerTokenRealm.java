@@ -57,10 +57,10 @@ public abstract class BearerTokenRealm extends TokenAuthorizingRealm {
 
         BearerToken bearerToken = (BearerToken) authenticationToken;
         String token = bearerToken.getToken();
+        valid(token);
+
         principal = getPrincipal(token);
         storeCredentials = getStoreCredentials(principal);
-
-        valid(token);
 
         salt = ByteSource.Util.bytes(principal.hashCode() + salt());
         info = new SimpleAuthenticationInfo(principal,

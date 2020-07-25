@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.9-SNAPSHOT</version>
+    <version>1.1.10-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>
@@ -273,7 +273,7 @@
 <!--        <dependency>-->
 <!--            <groupId>commons-io</groupId>-->
 <!--            <artifactId>commons-io</artifactId>-->
-<!--            <version>2.5</version>-->
+<!--            <version>2.7</version>-->
 <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
@@ -478,6 +478,20 @@
             <version>${shiro.version}</version>
             <optional>true</optional>
         </dependency>
+
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.bouncycastle</groupId>-->
+<!--            <artifactId>bcpkix-jdk15on</artifactId>-->
+<!--            <version>1.66</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk16 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.bouncycastle</groupId>-->
+<!--            <artifactId>bcmail-jdk15on</artifactId>-->
+<!--            <version>1.66</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 

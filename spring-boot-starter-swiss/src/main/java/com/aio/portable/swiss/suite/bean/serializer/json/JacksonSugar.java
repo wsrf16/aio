@@ -380,4 +380,30 @@ public class JacksonSugar {
         T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
         return t;
     }
+
+    /**
+     * instance
+     * @param valueTypeRef
+     * @param <T>
+     * @return
+     */
+    public final static <T> T newInstance(TypeReference<T> valueTypeRef) {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), valueTypeRef);
+        return t;
+    }
+
+    public final static <T> T newInstance(Class<T> clazz) {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), clazz);
+        return t;
+    }
+
+    /**
+     * instance
+     * @param <T>
+     * @return
+     */
+    public final static <T> T newInstance() {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()));
+        return t;
+    }
 }

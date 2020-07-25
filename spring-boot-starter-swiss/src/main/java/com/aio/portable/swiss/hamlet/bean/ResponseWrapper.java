@@ -3,6 +3,8 @@ package com.aio.portable.swiss.hamlet.bean;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 //@ApiModel("返回实体")
 public class ResponseWrapper<T> {
     /**
@@ -29,6 +31,9 @@ public class ResponseWrapper<T> {
     @ApiModelProperty("返回数据")
     private T data;
 
+    @ApiModelProperty("访问时间")
+    private Date accessTime;
+
     /**
      * 标识一次请求的返回时间（不需赋值）
      */
@@ -38,6 +43,7 @@ public class ResponseWrapper<T> {
 
     protected ResponseWrapper() {
         this.traceId = IDS.uuid();
+        this.accessTime = new Date();
         this.timeStamp = System.currentTimeMillis();
     }
 
@@ -46,6 +52,7 @@ public class ResponseWrapper<T> {
         this.code = code;
         this.message = message;
         this.data = data;
+        this.accessTime = new Date();
         this.timeStamp = System.currentTimeMillis();
     }
 
@@ -163,6 +170,14 @@ public class ResponseWrapper<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Date getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(Date accessTime) {
+        this.accessTime = accessTime;
     }
 
     public Long getTimeStamp() {

@@ -1,13 +1,14 @@
 package com.aio.portable.swiss.suite.eventbus.event;
 
-public class Event {
-    private Object source;
+public class Event extends AbstractEvent {
+    private String tag;
 
-    public Object getSource() {
-        return source;
+    public String getTag() {
+        return tag;
     }
 
-    public Event(Object source) {
-        this.source = source;
+    public Event(String tag, Object source) {
+        super(source);
+        this.tag = tag;
     }
 }

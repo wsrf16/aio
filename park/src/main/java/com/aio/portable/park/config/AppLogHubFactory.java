@@ -32,8 +32,9 @@ public class AppLogHubFactory extends LogHubFactory {
 
     @Override
     public LogHub build(String className) {
-        LogHub logger = LogHub.build(KafkaLog.build(className), RabbitMQLog.build(className), Slf4JLog.build(className));
+//        LogHub logger = LogHub.build(KafkaLog.build(className), RabbitMQLog.build(className), Slf4JLog.build(className));
 //        LogHub logger = LogHub.build(ConsoleLog.build(className), Slf4JLog.build(className));
+        LogHub logger = LogHub.build(Slf4JLog.build(className));
         return logger;
     }
 

@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class RestTemplateSubscriber extends SimpleSubscriber {
@@ -63,13 +65,17 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateSubscriber(@NotNull String name, @NotNull String topic, @NotNull HttpAttempt httpAttempt) {
-        super(name, topic);
+    public RestTemplateSubscriber(@NotNull String name, @NotNull List<String> tags, @NotNull HttpAttempt httpAttempt) {
+        super(name, tags);
         this.httpAttempt = httpAttempt;
 
         this.func = this::httpPush;
         this.succeedBack = this::echoBack;
         this.failedBack = this::echoError;
+    }
+
+    public RestTemplateSubscriber(@NotNull String name, @NotNull String tag, @NotNull HttpAttempt httpAttempt) {
+        super(name, new ArrayList<String>(){{add(tag);}});
     }
 
     @Override

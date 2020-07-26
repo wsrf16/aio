@@ -159,12 +159,24 @@ public abstract class CollectionSugar {
     }
 
     /**
+     * containsAll
+     * @param range
+     * @param piece
+     * @param <T>
+     * @return
+     */
+    public static  <T> boolean containsAll(List<T> range, List<T> piece){
+        return (range == piece) || (range != null && range.containsAll(piece));
+    }
+
+    /**
      * falseIfRepeat
+     *
      * @param getPropertyFunction User::getName
      * @param <T>
      * @return
      */
-    private static  <T> Predicate<T> falseIfRepeat(Function<? super T, ?> getPropertyFunction) {
+    private static <T> Predicate<T> falseIfRepeat(Function<? super T, ?> getPropertyFunction) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(getPropertyFunction.apply(t));
     }

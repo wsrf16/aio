@@ -16,6 +16,12 @@ public class KeyValueEventGroupPersistentContainer extends PersistentContainer {
     }
 
     @Override
+    public String joinIntoTable(String... items) {
+        String table = String.join("-", items);
+        return table;
+    }
+
+    @Override
     public String getActualTable(String table) {
         return MessageFormat.format(TABLE, table);
     }

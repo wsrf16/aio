@@ -55,13 +55,14 @@ public class EventBus extends AbstractEventBus {
     }
 
     private String spellTable() {
-        String table;
-        if (persistentContainer instanceof NodeEventBusPersistentContainer) {
-            table = EventBusConfig.EVENT_BUS_TABLE;
-        } else {
-            table = EventBusConfig.EVENT_BUS_TABLE;
-        }
-        return table;
+//        String table;
+//        if (persistentContainer instanceof NodeEventBusPersistentContainer) {
+//            table = EventBusConfig.EVENT_BUS_TABLE;
+//        } else {
+//            table = EventBusConfig.EVENT_BUS_TABLE;
+//        }
+//        return table;
+        return persistentContainer.joinIntoTable(EventBusConfig.EVENT_BUS_TABLE);
     }
 
 
@@ -152,15 +153,16 @@ public class EventBus extends AbstractEventBus {
     @Override
     public <E extends Event> void send(final E event) {
         this.collection().values().stream().filter(eventGroup -> eventGroup.exists()).forEach(eventGroup -> {
-            eventGroup.collection().values().stream().parallel().forEach(listener -> {
-                send(listener, event);
-            });
+//            eventGroup.collection().values().stream().parallel().forEach(listener -> {
+//                send(listener, event);
+//            });
+            eventGroup.send(event);
         });
     }
 
-    private final <E extends Event> void send(EventListener  listener, E event) {
-        listener.onEvent(event);
-    }
+//    private final <E extends Event> void send(EventListener eventListener, E event) {
+//        eventListener.onEvent(event);
+//    }
 
 
     public EventGroup buildEventGroup(String group) {

@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.eventbus.subscriber;
 import com.aio.portable.swiss.suite.eventbus.event.AbstractEvent;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -41,8 +42,8 @@ public class SimpleSubscriber extends Subscriber {
 
     public SimpleSubscriber() {}
 
-    public SimpleSubscriber(@NotNull String name, @NotNull String topic) {
-        super(name, topic);
+    public SimpleSubscriber(@NotNull String name, @NotNull List<String> tags) {
+        super(name, tags);
     }
 
     @Override

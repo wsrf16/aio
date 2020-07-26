@@ -24,6 +24,8 @@ public abstract class PersistentContainer {
         this.keyValuePersistence = keyValuePersistence;
     }
 
+    public abstract String joinIntoTable(String... items);
+
     public abstract String getActualTable(String table);
 
     public abstract String getActualKey(String key);

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.eventbus.group;
 
+import com.aio.portable.swiss.suite.eventbus.event.Event;
 import com.aio.portable.swiss.suite.eventbus.group.persistence.NodeEventGroupPersistentContainer;
 import com.aio.portable.swiss.suite.eventbus.listener.EventListener;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
@@ -41,14 +42,16 @@ public class EventGroup extends AbstractEventGroup {
         setKeyValuePersistence(keyValuePersistence);
     }
 
-    private String spellTable(String group) {
+    private String spellTable() {
+        String group = getGroup();
         String table;
-        if (persistentContainer instanceof NodeEventGroupPersistentContainer) {
-            table = MessageFormat.format("{0}/{1}", EventBusConfig.EVENT_BUS_TABLE, group);
-        } else {
-            table = MessageFormat.format("{0}", group);
-        }
-        return table;
+//        if (persistentContainer instanceof NodeEventGroupPersistentContainer) {
+//            table = MessageFormat.format("{0}/{1}", EventBusConfig.EVENT_BUS_TABLE, group);
+//        } else {
+//            table = MessageFormat.format("{0}", group);
+//        }
+//        return table;
+        return persistentContainer.joinIntoTable(EventBusConfig.EVENT_BUS_TABLE, getGroup());
     }
 
     public void add(String listener) {
@@ -75,7 +78,7 @@ public class EventGroup extends AbstractEventGroup {
         if (StringUtils.isEmpty(this.getGroup())) {
             throw new IllegalArgumentException("eventGroup.group is null.");
         }
-        String table = spellTable(getGroup());
+        String table = spellTable();
         String key = eventListener.getListener();
         persist(eventListener);
         persistentContainer.set(table, key, eventListener);
@@ -102,7 +105,7 @@ public class EventGroup extends AbstractEventGroup {
         EventListener eventListener = get(listener);
         eventListener.clear();
 
-        String table = spellTable(getGroup());
+        String table = spellTable();
         String key = listener;
         persistentContainer.remove(table, key);
     }
@@ -112,7 +115,7 @@ public class EventGroup extends AbstractEventGroup {
         persist(eventListener);
         eventListener.clear();
 
-        String table = spellTable(getGroup());
+        String table = spellTable();
         String key = eventListener.getListener();
         persistentContainer.remove(table, key);
     }
@@ -121,13 +124,13 @@ public class EventGroup extends AbstractEventGroup {
     public void clear() {
         collection().entrySet().forEach(c -> c.getValue().clear());
 
-        String table = spellTable(getGroup());
+        String table = spellTable();
         persistentContainer.clear(table);
     }
 
     @Override
     public EventListener get(String listener) {
-        String table = spellTable(getGroup());
+        String table = spellTable();
         String key = listener;
         EventListener eventListener = persistentContainer.get(table, key, EventListener.class);
         persist(eventListener);
@@ -136,20 +139,20 @@ public class EventGroup extends AbstractEventGroup {
 
     @Override
     public boolean exists(String listener) {
-        String table = spellTable(getGroup());
+        String table = spellTable();
         String key = listener;
         return persistentContainer.exists(table, key);
     }
 
     @Override
     public boolean exists() {
-        String table = spellTable(getGroup());
+        String table = spellTable();
         return persistentContainer.existsTable(table);
     }
 
     @Override
     public Map<String, EventListener> collection() {
-        String table = spellTable(getGroup());
+        String table = spellTable();
         return persistentContainer.getAll(table, EventListener.class)
                 .entrySet()
                 .stream()
@@ -166,4 +169,12 @@ public class EventGroup extends AbstractEventGroup {
         eventListener.setKeyValuePersistence(this.keyValuePersistence);
         return eventListener;
     }
+
+    public final <E extends Event> void send(E event) {
+        this.collection().values().stream().parallel().forEach(eventListener -> {
+            eventListener.onEvent(event);
+        });
+    }
+
+
 }

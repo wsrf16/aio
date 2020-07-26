@@ -16,10 +16,14 @@ public class NodeEventGroupPersistentContainer extends PersistentContainer {
     }
 
     @Override
+    public String joinIntoTable(String... items) {
+        String table = String.join("/", items);
+        return table;
+    }
+
+    @Override
     public String getActualTable(String table) {
         return table;
-//        return MessageFormat.format(TABLE, table);
-//        return EventBusConfig.EVENT_BUS_TABLE + "/" + table;
     }
 
     @Override

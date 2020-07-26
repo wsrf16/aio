@@ -1,14 +1,28 @@
 package com.aio.portable.swiss.suite.eventbus.event;
 
-public class Event extends AbstractEvent {
-    private String tag;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String getTag() {
-        return tag;
+public class Event extends AbstractEvent {
+    private List<String> tags;
+
+    public List<String> getTags() {
+        return tags;
     }
 
-    public Event(String tag, Object source) {
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Event() {
+    }
+
+    public Event(Object source, List<String> tags) {
         super(source);
-        this.tag = tag;
+        this.tags = tags;
+    }
+
+    public Event(Object source, String tag) {
+        this(source, new ArrayList<String>(){{add(tag);}});
     }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 @JsonSubTypes({
@@ -14,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public abstract class Subscriber {
     private String name = IDS.uuid();
 
-    private String tag;
+    private List<String> tags = new ArrayList<>();
 
     private String className;
 
@@ -26,12 +28,12 @@ public abstract class Subscriber {
         this.name = name;
     }
 
-    public String getTag() {
-        return tag;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public String getClassName() {
@@ -45,13 +47,13 @@ public abstract class Subscriber {
     public Subscriber() {
     }
 
-    public Subscriber(String tag) {
-        this.tag = tag;
+    public Subscriber(List<String> tags) {
+        this.tags = tags;
     }
 
-    public Subscriber(@NotNull String name, @NotNull String tag) {
+    public Subscriber(@NotNull String name, @NotNull List<String> tags) {
         this.name = name;
-        this.tag = tag;
+        this.tags = tags;
     }
 
 //    public void subscribe(HashMapEventListener listener) {

@@ -32,7 +32,7 @@ public abstract class BeanSugar {
     }
 
     /**
-     * matchList : like Objects.deepEquals()
+     * matchCollection : like Objects.deepEquals()
      * @param matchList
      * @param beanList
      * @param <T>

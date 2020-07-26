@@ -7,6 +7,13 @@ public class AbstractEvent {
         return source;
     }
 
+    public void setSource(Object source) {
+        this.source = source;
+    }
+
+    public AbstractEvent() {
+    }
+
     public AbstractEvent(Object source) {
         this.source = source;
     }

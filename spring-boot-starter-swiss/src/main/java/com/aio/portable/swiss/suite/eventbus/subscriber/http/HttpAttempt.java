@@ -4,16 +4,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 public class HttpAttempt {
-    private HttpMethod httpMethod;
+    private HttpMethod method;
     private String url;
-    private HttpHeaders httpHeaders;
+    private HttpHeaders headers;
 
-    public HttpMethod getHttpMethod() {
-        return httpMethod;
+    public HttpMethod getMethod() {
+        return method;
     }
 
-    public void setHttpMethod(HttpMethod httpMethod) {
-        this.httpMethod = httpMethod;
+    public void setMethod(HttpMethod method) {
+        this.method = method;
     }
 
     public String getUrl() {
@@ -24,12 +24,12 @@ public class HttpAttempt {
         this.url = url;
     }
 
-    public HttpHeaders getHttpHeaders() {
-        return httpHeaders;
+    public HttpHeaders getHeaders() {
+        return headers;
     }
 
-    public void setHttpHeaders(HttpHeaders httpHeaders) {
-        this.httpHeaders = httpHeaders;
+    public void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
     }
 
 }

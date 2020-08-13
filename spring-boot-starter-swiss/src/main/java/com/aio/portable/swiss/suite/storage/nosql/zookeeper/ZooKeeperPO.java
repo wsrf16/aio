@@ -1,20 +1,27 @@
 package com.aio.portable.swiss.suite.storage.nosql.zookeeper;
 
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.module.zookeeper.ZooKeeperSugar;
+import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
+import com.aio.portable.swiss.suite.io.PathSugar;
+import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
+import com.aio.portable.swiss.suite.storage.rds.jpa.annotation.where.In;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
+import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class ZooKeeperPO implements KeyValuePersistence {
+public class ZooKeeperPO implements NodePersistence {
+    private final static String INTERVAL = "/";
+    private final static String EMPTY = "";
+
     private String database;
 
     public void setDatabase(String database) {
@@ -29,23 +36,39 @@ public class ZooKeeperPO implements KeyValuePersistence {
         return instance = instance == null ? new ZooKeeperPO(zooKeeper) : instance;
     }
 
+    public final static ZooKeeperPO singletonInstance(ZooKeeper zooKeeper, String database) {
+        return instance = instance == null ? new ZooKeeperPO(zooKeeper, database) : instance;
+    }
+
     public ZooKeeperPO(ZooKeeper zooKeeper) {
         this.zooKeeper = zooKeeper;
     }
-    
 
-    private static String join(String... node) {
-        List<String> stringList = Arrays.asList(node);
-        String join = "/" + String.join("/", node);
+    public ZooKeeperPO(ZooKeeper zooKeeper, String database) {
+        this.zooKeeper = zooKeeper;
+        this.database = database;
+    }
+
+
+    @Override
+    public String join(String node, String... nodes) {
+        String join = PathSugar.concatBy(INTERVAL, nodes);
+        join = StringUtils.isEmpty(node) ?
+                PathSugar.concatBy(INTERVAL, join) : PathSugar.concatBy(INTERVAL, join, node);
         return join;
     }
 
+    private String spellPath(String keyOrTable, String... tables) {
+        String joinTable = join(EMPTY, tables);
+        String path = join(keyOrTable, INTERVAL, database, joinTable);
+        return path;
+    }
+
     @Override
-    public void set(String table, String key, Object value) {
-        String json = JacksonSugar.obj2Json(value);
-        byte[] bytes = json.getBytes();
-        String path = join(database, table, key);
+    public void set(String key, Object value, String... tables) {
+        String path = spellPath(key, tables);
         boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
+        byte[] bytes = JacksonSugar.obj2Json(value).getBytes();
         if (exists)
             ZooKeeperSugar.setData(zooKeeper, path, bytes);
         else
@@ -53,20 +76,25 @@ public class ZooKeeperPO implements KeyValuePersistence {
     }
 
     @Override
-    public void createTable(String table) {
-        String path = join(database, table);
-        ZooKeeperSugar.create(zooKeeper, path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+    public void setTable(String table, Object value, String... tables) {
+        String path = spellPath(table, tables);
+        boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
+        byte[] bytes = JacksonSugar.obj2Json(value).getBytes();
+        if (exists)
+            ZooKeeperSugar.setData(zooKeeper, path, bytes);
+        else
+            ZooKeeperSugar.create(zooKeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
     @Override
-    public void remove(String table, String key) {
-        String path = join(database, table, key);
+    public void remove(String key, String... tables) {
+        String path = spellPath(key, tables);
         ZooKeeperSugar.deleteIfExists(zooKeeper, path);
     }
 
     @Override
-    public void clearTable(String table) {
-        String path = join(database, table);
+    public void clearTable(String table, String... tables) {
+        String path = spellPath(table, tables);
 
 //        List<String> childrenFullPath = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
 //        childrenFullPath.stream().forEach(c -> ZooKeeperSugar.clearIfExists(zooKeeper, c));
@@ -74,14 +102,15 @@ public class ZooKeeperPO implements KeyValuePersistence {
     }
 
     @Override
-    public void removeTable(String table) {
-        String path = join(database, table);
+    public void removeTable(String table, String... tables) {
+        String path = spellPath(table, tables);
         ZooKeeperSugar.deleteIfExists(zooKeeper, path);
     }
 
     @Override
     public void clearDatabase() {
-        String path = join(database);
+//        String path = join(EMPTY, INTERVAL, database);
+        String path = spellPath(EMPTY);
 //        List<String> childrenFullPath = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
 //        childrenFullPath.stream().forEach(c -> ZooKeeperSugar.clearIfExists(zooKeeper, c));
         ZooKeeperSugar.clearIfExists(zooKeeper, path);
@@ -89,13 +118,30 @@ public class ZooKeeperPO implements KeyValuePersistence {
 
     @Override
     public void removeDatabase() {
-        String path = join(database);
+//        String path = join(EMPTY, INTERVAL, database);
+        String path = spellPath(EMPTY);
         ZooKeeperSugar.deleteIfExists(zooKeeper, path);
     }
 
     @Override
-    public <T> T get(String table, String key, Class<T> clazz) {
-        String path = join(database, table, key);
+    public <T> T get(String table, Class<T> clazz, String... tables) {
+        String path = spellPath(table, tables);
+        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
+        T t = JacksonSugar.json2T(new String(bytes), clazz);
+        return t;
+    }
+
+    @Override
+    public <T> T get(String key, TypeReference<T> valueTypeRef, String... tables) {
+        String path = spellPath(key, tables);
+        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
+        T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
+        return t;
+    }
+
+    @Override
+    public <T> T getTable(String key, Class<T> clazz, String... tables) {
+        String path = spellPath(key, tables);
         byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
         String json = new String(bytes);
         T t = JacksonSugar.json2T(json, clazz);
@@ -103,28 +149,37 @@ public class ZooKeeperPO implements KeyValuePersistence {
     }
 
     @Override
-    public <T> T get(String table, String key, TypeReference<T> valueTypeRef) {
-        String path = join(database, table, key);
+    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+        String path = spellPath(table, tables);
         byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
-        String json = new String(bytes);
-        T t = JacksonSugar.json2T(json, valueTypeRef);
+        T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
         return t;
     }
 
     @Override
-    public List<String> getChildren(String table) {
-        String path = join(database, table);
+    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
+        return this.getAll(table, clazz, tables);
+    }
+
+    @Override
+    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+        return this.getAll(table, valueTypeRef, tables);
+    }
+
+    @Override
+    public List<String> getChildren(String table, String... tables) {
+        String path = spellPath(table, tables);
         List<String> relativeChildren = ZooKeeperSugar.getRelativeChildren(zooKeeper, path, false);
         return relativeChildren;
     }
 
     @Override
-    public <T> Map<String, T> getAll(String table, Class<T> clazz) {
-        String path = join(database, table);
+    public <T> Map<String, T> getAll(String table, Class<T> clazz, String... tables) {
+        String path = spellPath(table, tables);
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + "/"),
+                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + INTERVAL),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), clazz);
@@ -134,12 +189,12 @@ public class ZooKeeperPO implements KeyValuePersistence {
     }
 
     @Override
-    public <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef) {
-        String path = join(database, table);
+    public <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef, String... tables) {
+        String path = spellPath(table, tables);
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + "/"),
+                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + INTERVAL),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
@@ -149,40 +204,40 @@ public class ZooKeeperPO implements KeyValuePersistence {
     }
 
     @Override
-    public boolean exists(String table, String key) {
-        String path = join(database, table, key);
+    public boolean exists(String key, String... tables) {
+        String path = spellPath(key, tables);
         boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
         return exists;
     }
 
     @Override
-    public boolean existsTable(String table) {
-        String path = join(database, table);
+    public boolean existsTable(String table, String... tables) {
+        String path = spellPath(table, tables);
         boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
         return exists;
     }
 
     @Override
     public boolean existsDatabase() {
-        String path = join(database);
+        String path = spellPath(EMPTY);
         boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
         return exists;
     }
 
     @Override
-    public List<String> keys(String table) {
-        String path = join(database, table);
+    public List<String> keys(String table, String... tables) {
+        String path = spellPath(table, tables);
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
-        List<String> collect = absoluteChildren.stream().map(key -> StringSugar.removeStart(key, path + "/")).collect(Collectors.toList());
+        List<String> collect = absoluteChildren.stream().map(key -> StringSugar.removeStart(key, path + INTERVAL)).collect(Collectors.toList());
         return collect;
     }
 
     @Override
     public List<String> tables() {
-        String path = join(database);
+        String path = spellPath(EMPTY);
         List<String> AbsoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         List<String> collect = AbsoluteChildren.stream()
-                .map(table -> StringSugar.removeStart(table, path + "/"))
+                .map(table -> StringSugar.removeStart(table, path + INTERVAL))
                 .collect(Collectors.toList());
         return collect;
     }

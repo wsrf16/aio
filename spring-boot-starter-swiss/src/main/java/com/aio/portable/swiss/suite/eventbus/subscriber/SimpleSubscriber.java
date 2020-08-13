@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.eventbus.subscriber;
 
-import com.aio.portable.swiss.suite.eventbus.event.AbstractEvent;
+import com.aio.portable.swiss.suite.eventbus.event.Event;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class SimpleSubscriber extends Subscriber {
 
-    protected Function<AbstractEvent, Object> func;
+    protected Function<Event, Object> func;
 
     protected Consumer<Object> succeedBack;
 
@@ -47,12 +47,12 @@ public class SimpleSubscriber extends Subscriber {
     }
 
     @Override
-    public <E extends AbstractEvent> Object push(E event) {
+    public <E extends Event> Object push(E event) {
         Object responseEntity = proxy(this.func, event);
         return responseEntity;
     }
 
-    public <E extends AbstractEvent> Object proxy(Function<E, Object> func, E event) {
+    public <E extends Event> Object proxy(Function<E, Object> func, E event) {
         Object responseEntity = null;
         try {
             responseEntity = func.apply(event);

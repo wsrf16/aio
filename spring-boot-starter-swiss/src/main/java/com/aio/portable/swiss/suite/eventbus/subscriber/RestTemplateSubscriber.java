@@ -1,13 +1,15 @@
 package com.aio.portable.swiss.suite.eventbus.subscriber;
 
 import com.aio.portable.swiss.sugar.SpringContexts;
-import com.aio.portable.swiss.suite.eventbus.event.AbstractEvent;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.eventbus.event.Event;
 import com.aio.portable.swiss.suite.eventbus.subscriber.http.HttpAttempt;
 import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -65,7 +67,7 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateSubscriber(@NotNull String name, @NotNull List<String> tags, @NotNull HttpAttempt httpAttempt) {
+    public RestTemplateSubscriber(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull List<String> tags) {
         super(name, tags);
         this.httpAttempt = httpAttempt;
 
@@ -74,18 +76,18 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateSubscriber(@NotNull String name, @NotNull String tag, @NotNull HttpAttempt httpAttempt) {
-        super(name, new ArrayList<String>(){{add(tag);}});
+    public RestTemplateSubscriber(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull String tag) {
+        this(name, httpAttempt, new ArrayList<String>(){{add(tag);}});
     }
 
     @Override
-    public <E extends AbstractEvent> ResponseEntity<String> push(E event) {
+    public <E extends Event> ResponseEntity<String> push(E event) {
         ResponseEntity<String> responseEntity = proxy(this::httpPush, event);
         return responseEntity;
     }
 
-    public <E extends AbstractEvent> ResponseEntity<String> proxy(Function<E, Object> func, E event) {
-        ResponseEntity<String> responseEntity = null;
+    public <E extends Event> ResponseEntity<String> proxy(Function<E, Object> func, E event) {
+        ResponseEntity<String> responseEntity;
         try {
             responseEntity = (ResponseEntity<String>) func.apply(event);
         } catch (Exception e) {
@@ -104,11 +106,26 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         return responseEntity;
     }
 
-    private <E extends AbstractEvent> ResponseEntity<String> httpPush(E event) {
-        HttpMethod method = httpAttempt.getHttpMethod();
+    private HttpHeaders merge(HttpHeaders httpHeaders1, HttpHeaders httpHeaders2) {
+        HttpHeaders httpHeaders;
+        if (!CollectionUtils.isEmpty(httpHeaders1) && !CollectionUtils.isEmpty(httpHeaders2)) {
+            httpHeaders1.addAll(httpHeaders2);
+            httpHeaders = httpHeaders1;
+        } else if (!CollectionUtils.isEmpty(httpHeaders1) && CollectionUtils.isEmpty(httpHeaders2)) {
+            httpHeaders = httpHeaders1;
+        } else if (CollectionUtils.isEmpty(httpHeaders1) && !CollectionUtils.isEmpty(httpHeaders2)) {
+            httpHeaders = httpHeaders2;
+        } else {
+            httpHeaders = new HttpHeaders();
+        }
+        return httpHeaders;
+    }
+
+    private <E extends Event> ResponseEntity<String> httpPush(E event) {
+        HttpMethod method = httpAttempt.getMethod();
         Object source = event.getSource();
         String url = httpAttempt.getUrl();
-        HttpHeaders httpHeaders = httpAttempt.getHttpHeaders();
+        HttpHeaders httpHeaders = merge(httpAttempt.getHeaders(), event.getHeaders());
         ResponseEntity<String> responseEntity;
         switch (method) {
             case DELETE: {

@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.eventbus.subscriber;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
-import com.aio.portable.swiss.suite.eventbus.event.AbstractEvent;
+import com.aio.portable.swiss.suite.eventbus.event.Event;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -60,7 +60,7 @@ public abstract class Subscriber {
 //        listener.add(this);
 //    }
 
-    public abstract <E extends AbstractEvent> Object push(E event);
+    public abstract <E extends Event> Object push(E event);
 
 //    @Override
 //    public <E extends Event> RESULT push(E event) {

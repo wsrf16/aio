@@ -17,6 +17,8 @@ public abstract class AbstractEventListener implements BaseCollection<Subscriber
 
     private String className;
 
+    private boolean enabled = true;
+
     public String getListener() {
         return listener;
     }
@@ -41,6 +43,14 @@ public abstract class AbstractEventListener implements BaseCollection<Subscriber
         this.className = className;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public AbstractEventListener() {
     }
 
@@ -53,5 +63,5 @@ public abstract class AbstractEventListener implements BaseCollection<Subscriber
 
     public abstract boolean exists();
 
-    public abstract <E extends Event> void onEvent(E event);
+    public abstract <E extends Event> void onReceiveEvent(E event);
 }

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.eventbus.event;
 
-public class AbstractEvent {
+public abstract class EventObject {
     private Object source;
 
     public Object getSource() {
@@ -11,10 +11,10 @@ public class AbstractEvent {
         this.source = source;
     }
 
-    public AbstractEvent() {
+    public EventObject() {
     }
 
-    public AbstractEvent(Object source) {
+    public EventObject(Object source) {
         this.source = source;
     }
 }

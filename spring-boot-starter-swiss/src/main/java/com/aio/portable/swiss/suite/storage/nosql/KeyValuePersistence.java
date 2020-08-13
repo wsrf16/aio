@@ -2,41 +2,45 @@ package com.aio.portable.swiss.suite.storage.nosql;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
 public interface KeyValuePersistence {
-    void set(String table, String key, Object value);
+//    String join(String node, String... nodes);
+//    String join(@NotNull String... nodes);
 
-    void createTable(String table);
+    String join(String node, String... prefixNodes);
 
-    void remove(String table, String key);
+    void set(String key, Object value, String... tables);
 
-    void clearTable(String table);
+    void remove(String key, String... tables);
 
-    void removeTable(String table);
+    void clearTable(String table, String... tables);
+
+    void removeTable(String table, String... tables);
 
     void clearDatabase();
 
     void removeDatabase();
 
-    <T> T get(String table, String key, Class<T> clazz);
+    <T> T get(String key, Class<T> clazz, String... tables);
 
-    <T> T get(String table, String key, TypeReference<T> valueTypeRef);
+    <T> T get(String key, TypeReference<T> valueTypeRef, String... tables);
 
-    List<String> getChildren(String table);
+    List<String> getChildren(String table, String... tables);
 
-    <T> Map<String, T> getAll(String table, Class<T> clazz);
+    <T> Map<String, T> getAll(String table, Class<T> clazz, String... tables);
 
-    <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef);
+    <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef, String... tables);
 
-    boolean exists(String table, String key);
+    boolean exists(String key, String... tables);
 
-    boolean existsTable(String table);
+    boolean existsTable(String table, String... tables);
 
     boolean existsDatabase();
 
-    List<String> keys(String table);
+    List<String> keys(String table, String... tables);
 
     List<String> tables();
 }

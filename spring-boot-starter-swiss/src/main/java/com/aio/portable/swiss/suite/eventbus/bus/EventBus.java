@@ -1,15 +1,13 @@
 package com.aio.portable.swiss.suite.eventbus.bus;
 
 
-import com.aio.portable.swiss.suite.eventbus.bus.persistence.KeyValueEventBusPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.bus.persistence.NodeEventBusPersistentContainer;
+import com.aio.portable.swiss.suite.eventbus.bus.persistence.EventBusPersistentContainer;
 import com.aio.portable.swiss.suite.eventbus.event.Event;
 import com.aio.portable.swiss.suite.eventbus.group.EventGroup;
 import com.aio.portable.swiss.suite.eventbus.listener.EventListener;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
-import com.aio.portable.swiss.suite.storage.nosql.zookeeper.ZooKeeperPO;
+import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Map;
@@ -17,29 +15,26 @@ import java.util.stream.Collectors;
 
 
 public class EventBus extends AbstractEventBus {
+    private final static String EMPTY = "";
     volatile static EventBus instance;
 
     @JsonIgnore
-    KeyValuePersistence keyValuePersistence;
+    NodePersistence nodePersistence;
 
     @JsonIgnore
     private PersistentContainer persistentContainer;
 
-    public void setKeyValuePersistence(KeyValuePersistence keyValuePersistence) {
-        this.keyValuePersistence = keyValuePersistence;
-        if (keyValuePersistence instanceof ZooKeeperPO) {
-            this.persistentContainer = new NodeEventBusPersistentContainer(keyValuePersistence);
-        } else {
-            this.persistentContainer = new KeyValueEventBusPersistentContainer(keyValuePersistence);
-        }
+    public void setNodePersistence(NodePersistence nodePersistence) {
+        this.nodePersistence = nodePersistence;
+        this.persistentContainer = PersistentContainer.buildEventBusPersistentContainer(nodePersistence);
     }
 
-    public KeyValuePersistence getKeyValuePersistence() {
-        return keyValuePersistence;
+    public NodePersistence getNodePersistence() {
+        return nodePersistence;
     }
 
-    public static void initPersistent(KeyValuePersistence keyValuePersistence) {
-        instance = instance != null ? instance : new EventBus(keyValuePersistence);
+    public static void initPersistent(NodePersistence nodePersistence) {
+        instance = instance != null ? instance : new EventBus(nodePersistence);
     }
 
     public synchronized static EventBus singletonInstance() {
@@ -49,27 +44,18 @@ public class EventBus extends AbstractEventBus {
             throw new RuntimeException("Please initial the EventBus first.");
     }
 
-
-    public EventBus(KeyValuePersistence keyValuePersistence) {
-        setKeyValuePersistence(keyValuePersistence);
+    public EventBus(NodePersistence nodePersistence) {
+        setNodePersistence(nodePersistence);
     }
 
-    private String spellTable() {
-//        String table;
-//        if (persistentContainer instanceof NodeEventBusPersistentContainer) {
-//            table = EventBusConfig.EVENT_BUS_TABLE;
-//        } else {
-//            table = EventBusConfig.EVENT_BUS_TABLE;
-//        }
-//        return table;
-        return persistentContainer.joinIntoTable(EventBusConfig.EVENT_BUS_TABLE);
+    private String[] spellTable() {
+        return new String[]{EventBusConfig.EVENT_BUS_TABLE};
     }
 
 
     public void add(String group) {
-//        addIfNotExists(group);
         EventGroup eventGroup = buildEventGroup(group);
-        add(eventGroup);
+        addIfNotExists(eventGroup);
     }
 
     @Override
@@ -77,96 +63,73 @@ public class EventBus extends AbstractEventBus {
         addIfNotExists(eventGroup);
     }
 
-//    private EventGroup addIfNotExists(String group) {
-////        EventGroup eventGroup = ClassSugar.newInstance(clazz);
-//        EventGroup eventGroup;
-//        if (exists(group)) {
-//            eventGroup = get(group);
-//        } else {
-//            eventGroup = buildEventGroup(group);
-//            String table = spellTable();
-//            persistentContainer.set(table, group, eventGroup);
-//        }
-//        return eventGroup;
-//    }
-
     private EventGroup addIfNotExists(EventGroup eventGroup) {
         String group = eventGroup.getGroup();
         if (exists(group)) {
             eventGroup = get(group);
         } else {
             eventGroup = persist(eventGroup);
-            String table = spellTable();
-            persistentContainer.set(table, group, eventGroup);
+            String[] tables = spellTable();
+            if (!exists(tables[0]))
+                persistentContainer.setTable(tables[0], this);
+            persistentContainer.setTable(group, eventGroup, tables);
         }
         return eventGroup;
     }
 
     @Override
     public void remove(String group) {
-        String table = spellTable();
+        String[] tables = spellTable();
         EventGroup eventGroup = get(group);
         eventGroup.clear();
 
-        persistentContainer.remove(table, group);
+        persistentContainer.removeTable(group, tables);
     }
 
     @Override
     public void clear() {
-        String table = spellTable();
-        collection().entrySet().forEach(c -> c.getValue().clear());
+        String[] tables = spellTable();
+        collection().entrySet().forEach(c -> {
+            c.getValue().clear();
+            remove(c.getValue().getGroup());
+        });
 
-        persistentContainer.clear(table);
+        persistentContainer.clearTable(EMPTY, tables);
     }
 
     @Override
     public boolean exists(String group) {
-        String table = spellTable();
-        return persistentContainer.exists(table, group);
+        String[] tables = spellTable();
+        return persistentContainer.existsTable(group, tables);
     }
 
     @Override
     public EventGroup get(String group) {
-        String table = spellTable();
-        EventGroup eventGroup = persistentContainer.get(table, group, EventGroup.class);
+        String[] tables = spellTable();
+        EventGroup eventGroup = persistentContainer.getTable(group, EventGroup.class, tables);
         persist(eventGroup);
         return eventGroup;
     }
 
     @Override
     public Map<String, EventGroup> collection() {
-        String table = spellTable();
-        return persistentContainer.getAll(table, EventGroup.class)
+        String[] tables = spellTable();
+        return persistentContainer.getAllTable(EMPTY, EventGroup.class, tables)
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> persist(e.getValue())));
     }
 
-//    @Override
-//    public void addGroupAndListener(EventListener listener) {
-//        String group = listener.getGroup();
-//
-//        EventGroup eventGroup = addIfNotExists(group);
-//        eventGroup.add(listener);
-//    }
-
     @Override
     public <E extends Event> void send(final E event) {
         this.collection().values().stream().filter(eventGroup -> eventGroup.exists()).forEach(eventGroup -> {
-//            eventGroup.collection().values().stream().parallel().forEach(listener -> {
-//                send(listener, event);
-//            });
             eventGroup.send(event);
         });
     }
 
-//    private final <E extends Event> void send(EventListener eventListener, E event) {
-//        eventListener.onEvent(event);
-//    }
-
 
     public EventGroup buildEventGroup(String group) {
-        EventGroup eventGroup = new EventGroup(this.keyValuePersistence, group);
+        EventGroup eventGroup = new EventGroup(this.nodePersistence, group);
         return eventGroup;
     }
 
@@ -177,7 +140,7 @@ public class EventBus extends AbstractEventBus {
     }
 
     public EventGroup persist(EventGroup eventGroup) {
-        eventGroup.setKeyValuePersistence(this.keyValuePersistence);
+        eventGroup.setNodePersistence(this.nodePersistence);
         return eventGroup;
     }
 
@@ -190,7 +153,7 @@ public class EventBus extends AbstractEventBus {
     }
 
     public EventListener persist(EventListener eventListener) {
-        eventListener.setKeyValuePersistence(this.keyValuePersistence);
+        eventListener.setNodePersistence(this.nodePersistence);
         return eventListener;
     }
 

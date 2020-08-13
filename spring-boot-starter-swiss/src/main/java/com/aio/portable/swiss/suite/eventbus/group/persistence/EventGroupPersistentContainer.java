@@ -2,24 +2,24 @@ package com.aio.portable.swiss.suite.eventbus.group.persistence;
 
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
+import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 
-public class NodeEventGroupPersistentContainer extends PersistentContainer {
+public class EventGroupPersistentContainer extends PersistentContainer {
     private final static String TABLE = EventBusConfig.KEY_VALUE_EVENT_LISTENER_GROUP_TABLE;
     private final static String KEY = EventBusConfig.EVENT_LISTENER_GROUP_KEY;
 
-    public NodeEventGroupPersistentContainer(@NotNull KeyValuePersistence keyValuePersistence) {
-        super(keyValuePersistence);
+    public EventGroupPersistentContainer(@NotNull NodePersistence nodePersistence) {
+        super(nodePersistence);
     }
 
-    @Override
-    public String joinIntoTable(String... items) {
-        String table = String.join("/", items);
-        return table;
-    }
+//    @Override
+//    public String joinTables(String... tables) {
+//        String table = String.join("/", tables);
+//        return table;
+//    }
 
     @Override
     public String getActualTable(String table) {

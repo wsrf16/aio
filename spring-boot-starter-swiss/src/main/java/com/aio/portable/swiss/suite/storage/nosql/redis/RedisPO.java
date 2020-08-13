@@ -1,12 +1,5 @@
 package com.aio.portable.swiss.suite.storage.nosql.redis;
 
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.List;
-import java.util.Map;
-
 //public class RedisPO implements KeyValuePersistence {
 //
 //    private RedisTemplate redisTemplate;

@@ -1,11 +1,9 @@
 package com.aio.portable.swiss.suite.eventbus.refer.persistence;
 
-import com.aio.portable.swiss.suite.eventbus.group.persistence.KeyValueEventGroupPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.group.persistence.NodeEventGroupPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.listener.persistence.KeyValueEventListenerPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.listener.persistence.NodeEventListenerPersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
-import com.aio.portable.swiss.suite.storage.nosql.zookeeper.ZooKeeperPO;
+import com.aio.portable.swiss.suite.eventbus.bus.persistence.EventBusPersistentContainer;
+import com.aio.portable.swiss.suite.eventbus.group.persistence.EventGroupPersistentContainer;
+import com.aio.portable.swiss.suite.eventbus.listener.persistence.EventListenerPersistentContainer;
+import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.validation.constraints.NotNull;
@@ -13,97 +11,140 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class PersistentContainer {
-    //    public static String DATABASE_NAME = "event-bus" ;
-    KeyValuePersistence keyValuePersistence;
+    NodePersistence nodePersistence;
 
-    public KeyValuePersistence getKeyValuePersistence() {
-        return keyValuePersistence;
+    public NodePersistence getNodePersistence() {
+        return nodePersistence;
     }
 
-    public PersistentContainer(@NotNull KeyValuePersistence keyValuePersistence) {
-        this.keyValuePersistence = keyValuePersistence;
+    public PersistentContainer(@NotNull NodePersistence nodePersistence) {
+        this.nodePersistence = nodePersistence;
     }
 
-    public abstract String joinIntoTable(String... items);
+    public String joinTables(String table, String... tables) {
+        return nodePersistence.join(table, tables);
+    }
 
     public abstract String getActualTable(String table);
 
     public abstract String getActualKey(String key);
 
-    public <T> void set(String table, String key, T t) {
-        String actualTable = getActualTable(table);
+    public <T> void set(String key, T t, String... tables) {
+//        table = joinTables(table, tables);
+//        String actualTable = getActualTable(table);
         String actualKey = getActualKey(key);
-        keyValuePersistence.set(actualTable, actualKey, t);
+        nodePersistence.set(actualKey, t, tables);
     }
 
-    public void remove(String table, String key) {
+    public <T> void setTable(String table, T t, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        String actualKey = getActualKey(key);
-        keyValuePersistence.remove(actualTable, actualKey);
+        nodePersistence.setTable(actualTable, t, tables);
     }
 
-    public <T> T get(String table, String key, TypeReference<T> valueTypeRef) {
-        String actualKey = getActualKey(key);
+    public void removeTable(String table, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        T t = keyValuePersistence.existsTable(actualTable) ? keyValuePersistence.get(actualTable, actualKey, valueTypeRef) : null;
+        nodePersistence.removeTable(actualTable, tables);
+    }
+
+    public void remove(String key, String... tables) {
+//        table = joinTables(table, tables);
+//        String actualTable = getActualTable(table);
+        String actualKey = getActualKey(key);
+        nodePersistence.remove(actualKey, tables);
+    }
+
+    public <T> T get(String key, TypeReference<T> valueTypeRef, String... tables) {
+//        table = joinTables(table, tables);
+        String actualKey = getActualKey(key);
+        T t = nodePersistence.exists(actualKey, tables) ? nodePersistence.get(actualKey, valueTypeRef, tables) : null;
         return t;
     }
 
-    public <T> T get(String table, String key, Class<T> clazz) {
-        String actualTable = getActualTable(table);
+    public <T> T get(String key, Class<T> clazz, String... tables) {
+//        table = joinTables(table, tables);
+//        String actualTable = getActualTable(table);
         String actualKey = getActualKey(key);
-        T t = keyValuePersistence.existsTable(actualTable) ? keyValuePersistence.get(actualTable, actualKey, clazz) : null;
+        T t = nodePersistence.exists(actualKey, tables) ? nodePersistence.get(actualKey, clazz, tables) : null;
         return t;
     }
 
-    public List<String> getChildren(String table) {
+    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        return keyValuePersistence.getChildren(actualTable);
+        T t = nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getTable(actualTable, valueTypeRef, tables) : null;
+        return t;
     }
 
-    public boolean exists(String table, String key) {
+    public <T> T getTable(String table, Class<T> clazz, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
+        T t = nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getTable(actualTable, clazz, tables) : null;
+        return t;
+    }
+
+    public List<String> getChildren(String table, String... tables) {
+//        table = joinTables(table, tables);
+        String actualTable = getActualTable(table);
+        return nodePersistence.getChildren(actualTable, tables);
+    }
+
+    public boolean exists(String key, String... tables) {
+//        table = joinTables(table, tables);
+//        String actualTable = getActualTable(table);
         String actualKey = getActualKey(key);
-        return keyValuePersistence.exists(actualTable, actualKey);
+        return nodePersistence.exists(actualKey, tables);
     }
 
-    public boolean existsTable(String table) {
+    public boolean existsTable(String table, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        return keyValuePersistence.existsTable(actualTable);
+        return nodePersistence.existsTable(actualTable, tables);
     }
 
-    public <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef) {
+    public <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        return keyValuePersistence.existsTable(actualTable) ? keyValuePersistence.getAll(actualTable, valueTypeRef) : null;
+        return nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getAll(actualTable, valueTypeRef, tables) : null;
     }
 
-    public <T> Map<String, T> getAll(String table, Class<T> clazz) {
+    public <T> Map<String, T> getAll(String table, Class<T> clazz, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        return keyValuePersistence.existsTable(actualTable) ? keyValuePersistence.getAll(actualTable, clazz) : null;
+        return nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getAll(actualTable, clazz, tables) : null;
     }
 
-    public void clear(String table) {
+    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        table = joinTables(table, tables);
         String actualTable = getActualTable(table);
-        keyValuePersistence.clearTable(actualTable);
+        return nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getAllTable(actualTable, valueTypeRef, tables) : null;
     }
 
-    public final static PersistentContainer buildEventGroupPersistentContainer(KeyValuePersistence keyValuePersistence) {
-        PersistentContainer persistentContainer;
-        if (keyValuePersistence instanceof ZooKeeperPO) {
-            persistentContainer = new NodeEventGroupPersistentContainer(keyValuePersistence);
-        } else {
-            persistentContainer = new KeyValueEventGroupPersistentContainer(keyValuePersistence);
-        }
+    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
+//        table = joinTables(table, tables);
+        String actualTable = getActualTable(table);
+        return nodePersistence.existsTable(actualTable, tables) ? nodePersistence.getAllTable(actualTable, clazz, tables) : null;
+    }
+
+    public void clearTable(String table, String... tables) {
+//        table = joinTables(table, tables);
+        String actualTable = getActualTable(table);
+        nodePersistence.clearTable(actualTable, tables);
+    }
+
+    public final static PersistentContainer buildEventGroupPersistentContainer(NodePersistence nodePersistence) {
+        PersistentContainer persistentContainer = new EventGroupPersistentContainer(nodePersistence);
         return persistentContainer;
     }
 
-    public final static PersistentContainer buildEventListenerPersistentContainer(KeyValuePersistence keyValuePersistence) {
-        PersistentContainer persistentContainer;
-        if (keyValuePersistence instanceof ZooKeeperPO) {
-            persistentContainer = new NodeEventListenerPersistentContainer(keyValuePersistence);
-        } else {
-            persistentContainer = new KeyValueEventListenerPersistentContainer(keyValuePersistence);
-        }
+    public final static PersistentContainer buildEventListenerPersistentContainer(NodePersistence nodePersistence) {
+        PersistentContainer persistentContainer = new EventListenerPersistentContainer(nodePersistence);
+        return persistentContainer;
+    }
+
+    public final static PersistentContainer buildEventBusPersistentContainer(NodePersistence nodePersistence) {
+        PersistentContainer persistentContainer = new EventBusPersistentContainer(nodePersistence);
         return persistentContainer;
     }
 }

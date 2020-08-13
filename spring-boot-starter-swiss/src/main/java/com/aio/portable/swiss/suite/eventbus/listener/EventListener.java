@@ -6,22 +6,20 @@ import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.eventbus.subscriber.RestTemplateSubscriber;
 import com.aio.portable.swiss.suite.eventbus.subscriber.Subscriber;
-import com.aio.portable.swiss.suite.storage.nosql.KeyValuePersistence;
+import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.assertj.core.util.Arrays;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public class EventListener extends AbstractEventListener {
+    private final static String EMPTY = "";
     @JsonIgnore
     protected boolean concurrent = true;
 
     @JsonIgnore
-    KeyValuePersistence keyValuePersistence;
+    NodePersistence nodePersistence;
 
     @JsonIgnore
     private PersistentContainer persistentContainer;
@@ -34,94 +32,100 @@ public class EventListener extends AbstractEventListener {
         this.concurrent = concurrent;
     }
 
-    public KeyValuePersistence getKeyValuePersistence() {
-        return keyValuePersistence;
+    public NodePersistence getNodePersistence() {
+        return nodePersistence;
     }
 
-    public void setKeyValuePersistence(KeyValuePersistence keyValuePersistence) {
-        this.keyValuePersistence = keyValuePersistence;
-        this.persistentContainer = PersistentContainer.buildEventListenerPersistentContainer(keyValuePersistence);
+    public void setNodePersistence(NodePersistence nodePersistence) {
+        this.nodePersistence = nodePersistence;
+        this.persistentContainer = PersistentContainer.buildEventListenerPersistentContainer(nodePersistence);
     }
 
     public EventListener() {
     }
 
-    private String joinIntoTable() {
-//        String table;
-//        if (persistentContainer instanceof NodeEventListenerPersistentContainer) {
-//            table = MessageFormat.format("{0}/{1}/{2}", EventBusConfig.EVENT_BUS_TABLE, getGroup(), getListener());
-//        } else {
-//            table = MessageFormat.format("{0}-{1}", getGroup(), getListener());
-//        }
-//        return table;
-
-        return persistentContainer.joinIntoTable(EventBusConfig.EVENT_BUS_TABLE, getGroup(), getListener());
+    private String mutateTable() {
+        return getListener();
     }
 
-    public EventListener(@NotNull KeyValuePersistence keyValuePersistence, @NotNull String group, @NotNull String name) {
+    private String[] tables() {
+        return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup(), getListener()};
+    }
+
+    public EventListener(@NotNull NodePersistence nodePersistence, @NotNull String group, @NotNull String name) {
         super(group, name);
-        setKeyValuePersistence(keyValuePersistence);
+        setNodePersistence(nodePersistence);
     }
+
 
     @Override
     public void add(Subscriber subscriber) {
-        String table = joinIntoTable();
+        String[] tables = tables();
+//        String table = mutateTable();
         String key = subscriber.getName();
-        persistentContainer.set(table, key, subscriber);
+        persistentContainer.set(key, subscriber, tables);
     }
 
     @Override
     public void remove(Subscriber subscriber) {
-        String table = joinIntoTable();
+        String[] tables = tables();
+//        String table = mutateTable();
         String key = subscriber.getName();
-        persistentContainer.remove(table, key);
+        persistentContainer.remove(key, tables);
     }
 
     @Override
     public void remove(String name) {
-        String table = joinIntoTable();
+        String[] tables = tables();
+//        String table = mutateTable();
         String key = name;
-        persistentContainer.remove(table, key);
+        persistentContainer.remove(key, tables);
     }
 
     @Override
     public void clear() {
-        String table = joinIntoTable();
-        persistentContainer.clear(table);
+        String[] tables = tables();
+//        String table = mutateTable();
+        persistentContainer.clearTable(EMPTY, tables);
     }
 
     @Override
     public Subscriber get(String name) {
-        String table = joinIntoTable();
+        String[] tables = tables();
+//        String table = mutateTable();
         String key = name;
-        return persistentContainer.get(table, key, Subscriber.class);
+        return persistentContainer.get(key, Subscriber.class, tables);
     }
 
     @Override
     public boolean exists() {
-        String table = joinIntoTable();
+        String table = mutateTable();
         return persistentContainer.existsTable(table);
     }
 
     @Override
     public boolean exists(String name) {
-        String table = joinIntoTable();
-        return persistentContainer.exists(table, name);
+        String[] tables = tables();
+//        String table = mutateTable();
+        return persistentContainer.exists(name, tables);
     }
 
     @Override
     public Map<String, Subscriber> collection() {
-        String table = joinIntoTable();
-        return persistentContainer.getAll(table, Subscriber.class);
+        String[] tables = tables();
+//        String table = mutateTable();
+        return persistentContainer.getAll(EMPTY, Subscriber.class, tables);
     }
 
     @Override
-    public <E extends Event> void onEvent(E event) {
+    public <E extends Event> void onReceiveEvent(E event) {
         dispatch(event);
     }
 
     private <E extends Event> void dispatch(E event) {
         if (!exists())
+            return;
+        if (!isEnabled())
             return;
 
         Stream<Map.Entry<String, Subscriber>> stream = concurrent ?

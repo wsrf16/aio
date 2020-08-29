@@ -1,7 +1,7 @@
-package com.aio.portable.swiss.suite.eventbus.subscriber;
+package com.aio.portable.swiss.suite.eventbus.component.handler;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
-import com.aio.portable.swiss.suite.eventbus.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -11,9 +11,9 @@ import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RestTemplateSubscriber.class, name = "RestTemplateSubscriber"),
-        @JsonSubTypes.Type(value = SimpleSubscriber.class, name = "SimpleSubscriber")})
-public abstract class Subscriber {
+        @JsonSubTypes.Type(value = RestTemplateEventHandler.class, name = "RestTemplateEventHandler"),
+        @JsonSubTypes.Type(value = SimpleEventHandler.class, name = "SimpleEventHandler")})
+public abstract class EventHandler {
     private String name = IDS.uuid();
 
     private List<String> tags = new ArrayList<>();
@@ -44,21 +44,17 @@ public abstract class Subscriber {
         this.className = className;
     }
 
-    public Subscriber() {
+    public EventHandler() {
     }
 
-    public Subscriber(List<String> tags) {
+    public EventHandler(List<String> tags) {
         this.tags = tags;
     }
 
-    public Subscriber(@NotNull String name, @NotNull List<String> tags) {
+    public EventHandler(@NotNull String name, @NotNull List<String> tags) {
         this.name = name;
         this.tags = tags;
     }
-
-//    public void subscribe(HashMapEventListener listener) {
-//        listener.add(this);
-//    }
 
     public abstract <E extends Event> Object push(E event);
 

@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.suite.eventbus.bus;
 
 
-import com.aio.portable.swiss.suite.eventbus.bus.persistence.EventBusPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.event.Event;
-import com.aio.portable.swiss.suite.eventbus.group.EventGroup;
-import com.aio.portable.swiss.suite.eventbus.listener.EventListener;
+import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.group.EventGroup;
+import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
@@ -123,7 +123,11 @@ public class EventBus extends AbstractEventBus {
     @Override
     public <E extends Event> void send(final E event) {
         this.collection().values().stream().filter(eventGroup -> eventGroup.exists()).forEach(eventGroup -> {
-            eventGroup.send(event);
+            if (CollectionSugar.isEmpty(event.getGroups())) {
+                eventGroup.send(event);
+            } else if (!CollectionSugar.isEmpty(event.getGroups()) && event.getGroups().contains(eventGroup.getGroup())) {
+                eventGroup.send(event);
+            }
         });
     }
 
@@ -133,10 +137,10 @@ public class EventBus extends AbstractEventBus {
         return eventGroup;
     }
 
-    public EventListener buildEventListener(String group, String listener) {
+    public EventSubscriber buildEventSubscriber(String group, String subscriber) {
         EventGroup eventGroup = buildEventGroup(group);
-        EventListener eventListener = eventGroup.buildEventListener(listener);
-        return eventListener;
+        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber);
+        return eventSubscriber;
     }
 
     public EventGroup persist(EventGroup eventGroup) {
@@ -144,17 +148,17 @@ public class EventBus extends AbstractEventBus {
         return eventGroup;
     }
 
-    public EventListener addEventListener(String group, String listener) {
+    public EventSubscriber addEventSubscriber(String group, String subscriber) {
         EventGroup eventGroup = buildEventGroup(group);
-        EventListener eventListener = eventGroup.buildEventListener(listener);
+        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber);
         add(eventGroup);
-        eventGroup.add(eventListener);
-        return eventListener;
+        eventGroup.add(eventSubscriber);
+        return eventSubscriber;
     }
 
-    public EventListener persist(EventListener eventListener) {
-        eventListener.setNodePersistence(this.nodePersistence);
-        return eventListener;
+    public EventSubscriber persist(EventSubscriber eventSubscriber) {
+        eventSubscriber.setNodePersistence(this.nodePersistence);
+        return eventSubscriber;
     }
 
 

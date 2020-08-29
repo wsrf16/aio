@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.eventbus.refer.persistence;
 
 import com.aio.portable.swiss.suite.eventbus.bus.persistence.EventBusPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.group.persistence.EventGroupPersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.listener.persistence.EventListenerPersistentContainer;
+import com.aio.portable.swiss.suite.eventbus.component.group.persistence.EventGroupPersistentContainer;
+import com.aio.portable.swiss.suite.eventbus.component.subscriber.persistence.EventSubscriberPersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -138,8 +138,8 @@ public abstract class PersistentContainer {
         return persistentContainer;
     }
 
-    public final static PersistentContainer buildEventListenerPersistentContainer(NodePersistence nodePersistence) {
-        PersistentContainer persistentContainer = new EventListenerPersistentContainer(nodePersistence);
+    public final static PersistentContainer buildEventSubscriberPersistentContainer(NodePersistence nodePersistence) {
+        PersistentContainer persistentContainer = new EventSubscriberPersistentContainer(nodePersistence);
         return persistentContainer;
     }
 

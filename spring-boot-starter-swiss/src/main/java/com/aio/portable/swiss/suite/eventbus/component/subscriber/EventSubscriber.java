@@ -1,11 +1,9 @@
-package com.aio.portable.swiss.suite.eventbus.listener;
+package com.aio.portable.swiss.suite.eventbus.component.subscriber;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
-import com.aio.portable.swiss.suite.eventbus.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.eventbus.subscriber.RestTemplateSubscriber;
-import com.aio.portable.swiss.suite.eventbus.subscriber.Subscriber;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class EventListener extends AbstractEventListener {
+public class EventSubscriber extends AbstractEventSubscriber {
     private final static String EMPTY = "";
     @JsonIgnore
     protected boolean concurrent = true;
@@ -38,39 +36,39 @@ public class EventListener extends AbstractEventListener {
 
     public void setNodePersistence(NodePersistence nodePersistence) {
         this.nodePersistence = nodePersistence;
-        this.persistentContainer = PersistentContainer.buildEventListenerPersistentContainer(nodePersistence);
+        this.persistentContainer = PersistentContainer.buildEventSubscriberPersistentContainer(nodePersistence);
     }
 
-    public EventListener() {
+    public EventSubscriber() {
     }
 
     private String mutateTable() {
-        return getListener();
+        return getSubscriber();
     }
 
     private String[] tables() {
-        return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup(), getListener()};
+        return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup(), getSubscriber()};
     }
 
-    public EventListener(@NotNull NodePersistence nodePersistence, @NotNull String group, @NotNull String name) {
+    public EventSubscriber(@NotNull NodePersistence nodePersistence, @NotNull String group, @NotNull String name) {
         super(group, name);
         setNodePersistence(nodePersistence);
     }
 
 
     @Override
-    public void add(Subscriber subscriber) {
+    public void add(EventHandler handler) {
         String[] tables = tables();
 //        String table = mutateTable();
-        String key = subscriber.getName();
-        persistentContainer.set(key, subscriber, tables);
+        String key = handler.getName();
+        persistentContainer.set(key, handler, tables);
     }
 
     @Override
-    public void remove(Subscriber subscriber) {
+    public void remove(EventHandler handler) {
         String[] tables = tables();
 //        String table = mutateTable();
-        String key = subscriber.getName();
+        String key = handler.getName();
         persistentContainer.remove(key, tables);
     }
 
@@ -90,11 +88,11 @@ public class EventListener extends AbstractEventListener {
     }
 
     @Override
-    public Subscriber get(String name) {
+    public EventHandler get(String name) {
         String[] tables = tables();
 //        String table = mutateTable();
         String key = name;
-        return persistentContainer.get(key, Subscriber.class, tables);
+        return persistentContainer.get(key, EventHandler.class, tables);
     }
 
     @Override
@@ -111,10 +109,10 @@ public class EventListener extends AbstractEventListener {
     }
 
     @Override
-    public Map<String, Subscriber> collection() {
+    public Map<String, EventHandler> collection() {
         String[] tables = tables();
 //        String table = mutateTable();
-        return persistentContainer.getAll(EMPTY, Subscriber.class, tables);
+        return persistentContainer.getAll(EMPTY, EventHandler.class, tables);
     }
 
     @Override
@@ -128,20 +126,21 @@ public class EventListener extends AbstractEventListener {
         if (!isEnabled())
             return;
 
-        Stream<Map.Entry<String, Subscriber>> stream = concurrent ?
+        Stream<Map.Entry<String, EventHandler>> stream = concurrent ?
                 this.collection().entrySet().parallelStream()
                 : this.collection().entrySet().stream();
         stream.forEach(c -> {
-            Subscriber subscriber = c.getValue();
+            EventHandler handler = c.getValue();
+            Object push = handler.push(event);
 
-            if (CollectionSugar.isEmpty(subscriber.getTags())
-                    || subscriber.getTags().containsAll(event.getTags())) {
-                if (subscriber instanceof RestTemplateSubscriber) {
-                    Object push = subscriber.push(event);
-                } else {
-                    Object push = subscriber.push(event);
-                }
-            }
+//            if (CollectionSugar.isEmpty(subscriber.getTags())
+//                    || event.getTags().containsAll(subscriber.getTags())) {
+//                if (subscriber instanceof RestTemplateHandler) {
+//                    Object push = subscriber.push(event);
+//                } else {
+//                    Object push = subscriber.push(event);
+//                }
+//            }
         });
     }
 

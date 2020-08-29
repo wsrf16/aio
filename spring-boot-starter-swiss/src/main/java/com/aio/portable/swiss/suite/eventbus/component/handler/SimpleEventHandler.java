@@ -1,13 +1,13 @@
-package com.aio.portable.swiss.suite.eventbus.subscriber;
+package com.aio.portable.swiss.suite.eventbus.component.handler;
 
-import com.aio.portable.swiss.suite.eventbus.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class SimpleSubscriber extends Subscriber {
+public class SimpleEventHandler extends EventHandler {
 
     protected Function<Event, Object> func;
 
@@ -40,9 +40,9 @@ public class SimpleSubscriber extends Subscriber {
 //    }
 
 
-    public SimpleSubscriber() {}
+    public SimpleEventHandler() {}
 
-    public SimpleSubscriber(@NotNull String name, @NotNull List<String> tags) {
+    public SimpleEventHandler(@NotNull String name, @NotNull List<String> tags) {
         super(name, tags);
     }
 

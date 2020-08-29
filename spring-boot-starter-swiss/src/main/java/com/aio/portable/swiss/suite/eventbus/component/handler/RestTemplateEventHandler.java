@@ -1,9 +1,8 @@
-package com.aio.portable.swiss.suite.eventbus.subscriber;
+package com.aio.portable.swiss.suite.eventbus.component.handler;
 
 import com.aio.portable.swiss.sugar.SpringContexts;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.eventbus.event.Event;
-import com.aio.portable.swiss.suite.eventbus.subscriber.http.HttpAttempt;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.handler.http.HttpAttempt;
 import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
 import org.springframework.http.HttpHeaders;
@@ -19,11 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class RestTemplateSubscriber extends SimpleSubscriber {
+public class RestTemplateEventHandler extends SimpleEventHandler {
     public static RestTemplate restTemplate;
 
     public static void setRestTemplate(RestTemplate restTemplate) {
-        RestTemplateSubscriber.restTemplate = restTemplate;
+        RestTemplateEventHandler.restTemplate = restTemplate;
     }
 
     private HttpAttempt httpAttempt;
@@ -60,14 +59,14 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         restTemplate = SpringContexts.getApplicationContext().containsBean("restTemplate") ? (RestTemplate) SpringContexts.getApplicationContext().getBean("restTemplate") : new RestTemplate();
     }
 
-    public RestTemplateSubscriber() {
+    public RestTemplateEventHandler() {
         super();
         this.func = this::httpPush;
         this.succeedBack = this::echoBack;
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateSubscriber(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull List<String> tags) {
+    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull List<String> tags) {
         super(name, tags);
         this.httpAttempt = httpAttempt;
 
@@ -76,7 +75,7 @@ public class RestTemplateSubscriber extends SimpleSubscriber {
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateSubscriber(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull String tag) {
+    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull String tag) {
         this(name, httpAttempt, new ArrayList<String>(){{add(tag);}});
     }
 

@@ -1,7 +1,7 @@
-package com.aio.portable.swiss.suite.eventbus.group;
+package com.aio.portable.swiss.suite.eventbus.component.group;
 
 import com.aio.portable.swiss.suite.bean.structure.BaseCollection;
-import com.aio.portable.swiss.suite.eventbus.listener.EventListener;
+import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 //@JsonSubTypes({
 //        @JsonSubTypes.Type(value = DiskEventListenerGroup.class, name = "DiskEventListenerGroup"),
 //        @JsonSubTypes.Type(value = HashMapEventListenerGroup.class, name = "HashMapEventListenerGroup")})
-public abstract class AbstractEventGroup implements BaseCollection<EventListener> {
+public abstract class AbstractEventGroup implements BaseCollection<EventSubscriber> {
     private String group;
 
     private String className;
@@ -37,7 +37,7 @@ public abstract class AbstractEventGroup implements BaseCollection<EventListener
         this.group = group;
     }
 
-    public abstract void remove(EventListener eventListener);
+    public abstract void remove(EventSubscriber eventListener);
 
     public abstract boolean exists();
 }

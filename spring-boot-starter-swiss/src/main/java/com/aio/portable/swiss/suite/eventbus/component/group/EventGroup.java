@@ -1,7 +1,8 @@
-package com.aio.portable.swiss.suite.eventbus.group;
+package com.aio.portable.swiss.suite.eventbus.component.group;
 
-import com.aio.portable.swiss.suite.eventbus.event.Event;
-import com.aio.portable.swiss.suite.eventbus.listener.EventListener;
+import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.suite.eventbus.component.event.Event;
+import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
@@ -45,48 +46,48 @@ public class EventGroup extends AbstractEventGroup {
         return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup()};
     }
 
-    public void add(String listener) {
-        EventListener eventListener = buildEventListener(listener);
-        add(eventListener);
+    public void add(String subscriber) {
+        EventSubscriber eventSubscriber = buildEventSubscriber(subscriber);
+        add(eventSubscriber);
     }
 
     @Override
-    public void add(EventListener eventListener) {
-        addIfNotExists(eventListener);
+    public void add(EventSubscriber eventSubscriber) {
+        addIfNotExists(eventSubscriber);
     }
 
-    private void set(EventListener eventListener) {
+    private void set(EventSubscriber eventSubscriber) {
         if (StringUtils.isEmpty(this.getGroup())) {
-            throw new IllegalArgumentException("eventGroup.group is null.");
+            throw new IllegalArgumentException("eventGroup.group is empty.");
         }
         String[] tables = spellTables();
-        String key = eventListener.getListener();
-        persist(eventListener);
-        persistentContainer.setTable(key, eventListener, tables);
+        String key = eventSubscriber.getSubscriber();
+        persist(eventSubscriber);
+        persistentContainer.setTable(key, eventSubscriber, tables);
     }
 
-    public EventListener addIfNotExists(EventListener eventListener) {
-        set(eventListener);
-        return eventListener;
+    public EventSubscriber addIfNotExists(EventSubscriber eventSubscriber) {
+        set(eventSubscriber);
+        return eventSubscriber;
     }
 
     @Override
-    public void remove(String listener) {
-        EventListener eventListener = get(listener);
-        eventListener.clear();
+    public void remove(String subscriber) {
+        EventSubscriber eventSubscriber = get(subscriber);
+        eventSubscriber.clear();
 
         String[] tables = spellTables();
-        String key = listener;
+        String key = subscriber;
         persistentContainer.removeTable(key, tables);
     }
 
     @Override
-    public void remove(EventListener eventListener) {
-        persist(eventListener);
-        eventListener.clear();
+    public void remove(EventSubscriber eventSubscriber) {
+        persist(eventSubscriber);
+        eventSubscriber.clear();
 
         String[] tables = spellTables();
-        String key = eventListener.getListener();
+        String key = eventSubscriber.getSubscriber();
         persistentContainer.removeTable(key, tables);
     }
 
@@ -94,7 +95,7 @@ public class EventGroup extends AbstractEventGroup {
     public void clear() {
         collection().entrySet().forEach(c -> {
             c.getValue().clear();
-            remove(c.getValue().getListener());
+            remove(c.getValue().getSubscriber());
         });
 
         String[] tables = spellTables();
@@ -102,18 +103,18 @@ public class EventGroup extends AbstractEventGroup {
     }
 
     @Override
-    public EventListener get(String listener) {
+    public EventSubscriber get(String subscriber) {
         String[] tables = spellTables();
-        String key = listener;
-        EventListener eventListener = persistentContainer.getTable(key, EventListener.class, tables);
-        persist(eventListener);
-        return eventListener;
+        String key = subscriber;
+        EventSubscriber eventSubscriber = persistentContainer.getTable(key, EventSubscriber.class, tables);
+        persist(eventSubscriber);
+        return eventSubscriber;
     }
 
     @Override
-    public boolean exists(String listener) {
+    public boolean exists(String subscriber) {
         String[] tables = spellTables();
-        String key = listener;
+        String key = subscriber;
         return persistentContainer.existsTable(key, tables);
     }
 
@@ -124,27 +125,32 @@ public class EventGroup extends AbstractEventGroup {
     }
 
     @Override
-    public Map<String, EventListener> collection() {
+    public Map<String, EventSubscriber> collection() {
         String[] tables = spellTables();
-        return persistentContainer.getAllTable(EMPTY, EventListener.class, tables)
+        return persistentContainer.getAllTable(EMPTY, EventSubscriber.class, tables)
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> persist(e.getValue())));
     }
 
-    public EventListener buildEventListener(String listener) {
-        EventListener eventListener = new EventListener(this.nodePersistence, getGroup(), listener);
-        return eventListener;
+    public EventSubscriber buildEventSubscriber(String subscriber) {
+        EventSubscriber eventSubscriber = new EventSubscriber(this.nodePersistence, getGroup(), subscriber);
+        return eventSubscriber;
     }
 
-    public EventListener persist(EventListener eventListener) {
-        eventListener.setNodePersistence(this.nodePersistence);
-        return eventListener;
+    public EventSubscriber persist(EventSubscriber eventSubscriber) {
+        eventSubscriber.setNodePersistence(this.nodePersistence);
+        return eventSubscriber;
     }
 
     public final <E extends Event> void send(E event) {
-        this.collection().values().stream().parallel().forEach(eventListener -> {
-            eventListener.onReceiveEvent(event);
+        this.collection().values().stream().parallel().forEach(subscriber -> {
+            if (CollectionSugar.isEmpty(event.getTags()))
+                subscriber.onReceiveEvent(event);
+            else {
+                if (event.getTags().containsAll(subscriber.getTags()))
+                    subscriber.onReceiveEvent(event);
+            }
         });
     }
 

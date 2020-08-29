@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.event;
+package com.aio.portable.swiss.suite.eventbus.component.event;
 
 import org.springframework.http.HttpHeaders;
 
@@ -11,6 +11,8 @@ import java.util.List;
 public class Event extends EventObject {
     private List<String> tags;
 
+    private List<String> groups;
+
     private HttpHeaders headers;
 
     public List<String> getTags() {
@@ -19,6 +21,14 @@ public class Event extends EventObject {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 
     public HttpHeaders getHeaders() {

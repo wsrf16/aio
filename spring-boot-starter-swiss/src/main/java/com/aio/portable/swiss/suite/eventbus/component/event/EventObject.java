@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.event;
+package com.aio.portable.swiss.suite.eventbus.component.event;
 
 public abstract class EventObject {
     private Object source;

@@ -1,24 +1,24 @@
 
 
-                                                                                                Topic 1      Subscriber A|Subscriber B
-                                                                                    onEvent  ↗
-                                                        ┌——————→ Listener —————┤
-                                                        │                                   ↘
-                                                        │                                      Topic 2      Subscriber F|Subscriber G
-            Event                        Listener       │   Topic 2                onEvent  ↗
-Publisher ————→ EventBus ——┬—→  Group ———→┼——————→ Listener —————┤
-                                  │                    │                                   ↘
-                                  │                    │                                      Topic 3      Subscriber M
+
+                                                                                       onEvent  ↗ Handler A1
+                                                        ┌——————→ Subscriber1 —————┤
+                                                        │                tag1,tag2             ↘ Handler A2
+                                                        │
+            Event                                       │
+        tag1,tag2,tag3                                  │                             onEvent  ↗ Handler B1
+Publisher ————→ EventBus ——┬—→  Group ———→┼——————→ Subscriber2 —————┤  Handler B2
+                                  │                    │                tag1,tag3             ↘ Handler B3
                                   │                    │
-                                  │                    │                                      Subscriber 4
-                                  │                    │                          onEvent  ↗
-                                  │                    └——————→ Listener —————┤
-                                  │                                                         ↘
-                                  │                                                            Subscriber 5
+                                  │                    │
+                                  │                    │                             onEvent  ↗ Handler C1
+                                  │                    └— — — — → Subscriber3 —————┤
+                                  │                                        tag4                ↘ Handler C2
                                   │
                                   │
                                   │
-                                  │     Listener
+                                  │
+                                  │
                                   └—→  Group ———→ ...
 
 

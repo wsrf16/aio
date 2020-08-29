@@ -9,7 +9,7 @@ public interface PersistentBaseCollection<T> {
 
     void remove(String name);
 
-//    void remove(T listener);
+//    void remove(T t);
 
     void clear();
 

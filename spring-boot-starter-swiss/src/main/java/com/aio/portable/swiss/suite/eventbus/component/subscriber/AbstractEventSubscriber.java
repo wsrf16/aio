@@ -7,6 +7,7 @@ import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 //@JsonSubTypes({
@@ -75,5 +76,5 @@ public abstract class AbstractEventSubscriber implements BaseCollection<EventHan
 
     public abstract boolean exists();
 
-    public abstract <E extends Event> void onReceiveEvent(E event);
+    public abstract <E extends Event> Map<String, EventHandler> onReceive(E event);
 }

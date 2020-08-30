@@ -2,12 +2,16 @@ package com.aio.portable.swiss.suite.eventbus.component.subscriber;
 
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
+import com.aio.portable.swiss.suite.eventbus.component.handler.RestTemplateEventHandler;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
+import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventGroupException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -46,7 +50,7 @@ public class EventSubscriber extends AbstractEventSubscriber {
         return getSubscriber();
     }
 
-    private String[] tables() {
+    private String[] spellTables() {
         return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup(), getSubscriber()};
     }
 
@@ -57,42 +61,61 @@ public class EventSubscriber extends AbstractEventSubscriber {
 
 
     @Override
-    public void add(EventHandler handler) {
-        String[] tables = tables();
+    public void add(EventHandler eventHandler) {
+        String handler = eventHandler.getHandler();
+        String[] tables = spellTables();
 //        String table = mutateTable();
-        String key = handler.getName();
-        persistentContainer.set(key, handler, tables);
+        persistentContainer.set(handler, eventHandler, tables);
+    }
+
+    public void set(EventHandler eventHandler) {
+        String handler = eventHandler.getHandler();
+        if (StringUtils.isEmpty(handler)) {
+            throw new IllegalArgumentException("handler is empty.");
+        }
+        if (exists(handler)) {
+//            persist(eventGroup);
+            String[] tables = spellTables();
+            persistentContainer.set(handler, eventHandler, tables);
+        } else {
+            throw new NotExistEventGroupException(MessageFormat.format("handler {0} is not exist.", eventHandler.getHandler()));
+        }
     }
 
     @Override
-    public void remove(EventHandler handler) {
-        String[] tables = tables();
+    public void remove(EventHandler eventHandler) {
+        String[] tables = spellTables();
 //        String table = mutateTable();
-        String key = handler.getName();
+        String key = eventHandler.getHandler();
         persistentContainer.remove(key, tables);
     }
 
     @Override
-    public void remove(String name) {
-        String[] tables = tables();
+    public void remove(String handler) {
+        String[] tables = spellTables();
 //        String table = mutateTable();
-        String key = name;
+        String key = handler;
         persistentContainer.remove(key, tables);
     }
 
     @Override
     public void clear() {
-        String[] tables = tables();
+        String[] tables = spellTables();
 //        String table = mutateTable();
         persistentContainer.clearTable(EMPTY, tables);
     }
 
     @Override
-    public EventHandler get(String name) {
-        String[] tables = tables();
+    public EventHandler get(String handler) {
+        String[] tables = spellTables();
 //        String table = mutateTable();
-        String key = name;
-        return persistentContainer.get(key, EventHandler.class, tables);
+        return persistentContainer.get(handler, EventHandler.class, tables);
+    }
+
+    public void enable(String handler, boolean enabled) {
+        EventHandler eventHandler = get(handler);
+        eventHandler.setEnabled(enabled);
+        set(eventHandler);
     }
 
     @Override
@@ -103,35 +126,40 @@ public class EventSubscriber extends AbstractEventSubscriber {
 
     @Override
     public boolean exists(String name) {
-        String[] tables = tables();
+        String[] tables = spellTables();
 //        String table = mutateTable();
         return persistentContainer.exists(name, tables);
     }
 
     @Override
     public Map<String, EventHandler> collection() {
-        String[] tables = tables();
+        String[] tables = spellTables();
 //        String table = mutateTable();
         return persistentContainer.getAll(EMPTY, EventHandler.class, tables);
     }
 
     @Override
-    public <E extends Event> void onReceiveEvent(E event) {
-        dispatch(event);
+    public <E extends Event> Map<String, EventHandler> onReceive(E event) {
+        return dispatch(event);
     }
 
-    private <E extends Event> void dispatch(E event) {
+    private <E extends Event> Map<String, EventHandler> dispatch(E event) {
         if (!exists())
-            return;
+            return null;
         if (!isEnabled())
-            return;
+            return null;
 
-        Stream<Map.Entry<String, EventHandler>> stream = concurrent ?
-                this.collection().entrySet().parallelStream()
-                : this.collection().entrySet().stream();
-        stream.forEach(c -> {
-            EventHandler handler = c.getValue();
-            Object push = handler.push(event);
+        Stream<EventHandler> stream = this.collection()
+                .values()
+                .stream()
+                .filter(c -> c.isEnabled());
+        stream = concurrent ? stream.parallel() : stream;
+        stream.forEach(handler -> {
+            if (handler instanceof RestTemplateEventHandler) {
+                Object push = handler.push(event);
+            } else {
+                Object push = handler.push(event);
+            }
 
 //            if (CollectionSugar.isEmpty(subscriber.getTags())
 //                    || event.getTags().containsAll(subscriber.getTags())) {
@@ -142,6 +170,8 @@ public class EventSubscriber extends AbstractEventSubscriber {
 //                }
 //            }
         });
+
+        return this.collection();
     }
 
 

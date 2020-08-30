@@ -14,18 +14,20 @@ import java.util.List;
         @JsonSubTypes.Type(value = RestTemplateEventHandler.class, name = "RestTemplateEventHandler"),
         @JsonSubTypes.Type(value = SimpleEventHandler.class, name = "SimpleEventHandler")})
 public abstract class EventHandler {
-    private String name = IDS.uuid();
+    private String handler = IDS.uuid();
 
     private List<String> tags = new ArrayList<>();
 
     private String className;
 
-    public String getName() {
-        return name;
+    private boolean enabled = true;
+
+    public String getHandler() {
+        return handler;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
     public List<String> getTags() {
@@ -44,6 +46,14 @@ public abstract class EventHandler {
         this.className = className;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public EventHandler() {
     }
 
@@ -51,8 +61,8 @@ public abstract class EventHandler {
         this.tags = tags;
     }
 
-    public EventHandler(@NotNull String name, @NotNull List<String> tags) {
-        this.name = name;
+    public EventHandler(@NotNull String handler, @NotNull List<String> tags) {
+        this.handler = handler;
         this.tags = tags;
     }
 

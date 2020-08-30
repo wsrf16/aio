@@ -1,17 +1,20 @@
 package com.aio.portable.swiss.suite.eventbus.component.group;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
+import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventGroupException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
+import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EventGroup extends AbstractEventGroup {
     private final static String EMPTY = "";
@@ -57,17 +60,31 @@ public class EventGroup extends AbstractEventGroup {
     }
 
     private void set(EventSubscriber eventSubscriber) {
-        if (StringUtils.isEmpty(this.getGroup())) {
-            throw new IllegalArgumentException("eventGroup.group is empty.");
+        String subscriber = eventSubscriber.getSubscriber();
+        if (StringUtils.isEmpty(subscriber)) {
+            throw new IllegalArgumentException("subscriber is empty.");
         }
-        String[] tables = spellTables();
-        String key = eventSubscriber.getSubscriber();
-        persist(eventSubscriber);
-        persistentContainer.setTable(key, eventSubscriber, tables);
+        if (exists(subscriber)) {
+            persist(eventSubscriber);
+            String[] tables = spellTables();
+            persistentContainer.setTable(subscriber, eventSubscriber, tables);
+        } else {
+            throw new NotExistEventGroupException(MessageFormat.format("subscriber {0} is not exist.", subscriber));
+        }
+
     }
 
     public EventSubscriber addIfNotExists(EventSubscriber eventSubscriber) {
-        set(eventSubscriber);
+        String subscriber = eventSubscriber.getSubscriber();
+        if (exists(subscriber))
+            eventSubscriber = get(subscriber);
+        else {
+            persist(eventSubscriber);
+            String[] tables = spellTables();
+            if (!exists(tables[0]))
+                persistentContainer.setTable(tables[0], this);
+            persistentContainer.setTable(subscriber, eventSubscriber, tables);
+        }
         return eventSubscriber;
     }
 
@@ -111,6 +128,12 @@ public class EventGroup extends AbstractEventGroup {
         return eventSubscriber;
     }
 
+    public void enable(String subscriber, boolean enabled) {
+        EventSubscriber eventSubscriber = get(subscriber);
+        eventSubscriber.setEnabled(enabled);
+        set(eventSubscriber);
+    }
+
     @Override
     public boolean exists(String subscriber) {
         String[] tables = spellTables();
@@ -143,15 +166,27 @@ public class EventGroup extends AbstractEventGroup {
         return eventSubscriber;
     }
 
-    public final <E extends Event> void send(E event) {
-        this.collection().values().stream().parallel().forEach(subscriber -> {
-            if (CollectionSugar.isEmpty(event.getTags()))
-                subscriber.onReceiveEvent(event);
-            else {
-                if (event.getTags().containsAll(subscriber.getTags()))
-                    subscriber.onReceiveEvent(event);
+    public final <E extends Event> Map<String, EventSubscriber> send(E event) {
+        Map<String, EventSubscriber> map = new HashMap<>();
+
+        Stream<EventSubscriber> stream = this.collection()
+                .values()
+                .stream()
+                .filter(c -> c.exists() && c.isEnabled())
+                .parallel();
+
+        stream.forEach(subscriber -> {
+            if (event.getTags().containsAll(subscriber.getTags())) {
+                subscriber.onReceive(event);
+                map.put(subscriber.getGroup(), subscriber);
             }
+//            if (CollectionSugar.isEmpty(event.getTags())) {
+//                subscriber.onReceive(event);
+//            } else if (event.getTags().containsAll(subscriber.getTags())) {
+//                subscriber.onReceive(event);
+//            }
         });
+        return map;
     }
 
 

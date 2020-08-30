@@ -14,6 +14,8 @@ public abstract class AbstractEventGroup implements BaseCollection<EventSubscrib
 
     private String className;
 
+    private boolean enabled = true;
+
     public String getGroup() {
         return group;
     }
@@ -28,6 +30,14 @@ public abstract class AbstractEventGroup implements BaseCollection<EventSubscrib
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public AbstractEventGroup() {

@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 public class RestTemplateEventHandler extends SimpleEventHandler {
@@ -66,17 +64,13 @@ public class RestTemplateEventHandler extends SimpleEventHandler {
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull List<String> tags) {
-        super(name, tags);
+    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt) {
+        super(name);
         this.httpAttempt = httpAttempt;
 
         this.func = this::httpPush;
         this.succeedBack = this::echoBack;
         this.failedBack = this::echoError;
-    }
-
-    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt, @NotNull String tag) {
-        this(name, httpAttempt, new ArrayList<String>(){{add(tag);}});
     }
 
     @Override
@@ -122,7 +116,7 @@ public class RestTemplateEventHandler extends SimpleEventHandler {
 
     private <E extends Event> ResponseEntity<String> httpPush(E event) {
         HttpMethod method = httpAttempt.getMethod();
-        Object source = event.getSource();
+        Object source = event.getPayload();
         String url = httpAttempt.getUrl();
         HttpHeaders httpHeaders = merge(httpAttempt.getHeaders(), event.getHeaders());
         ResponseEntity<String> responseEntity;

@@ -42,8 +42,8 @@ public class SimpleEventHandler extends EventHandler {
 
     public SimpleEventHandler() {}
 
-    public SimpleEventHandler(@NotNull String name, @NotNull List<String> tags) {
-        super(name, tags);
+    public SimpleEventHandler(@NotNull String name) {
+        super(name);
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class EventHandler {
     private String handler = IDS.uuid();
 
-    private List<String> tags = new ArrayList<>();
+//    private List<String> tags = new ArrayList<>();
 
     private String className;
 
@@ -30,13 +30,13 @@ public abstract class EventHandler {
         this.handler = handler;
     }
 
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+//    public List<String> getTags() {
+//        return tags;
+//    }
+//
+//    public void setTags(List<String> tags) {
+//        this.tags = tags;
+//    }
 
     public String getClassName() {
         return className == null ? this.getClass().getSimpleName() : className;
@@ -57,13 +57,17 @@ public abstract class EventHandler {
     public EventHandler() {
     }
 
-    public EventHandler(List<String> tags) {
-        this.tags = tags;
-    }
+//    public EventHandler(List<String> tags) {
+//        this.tags = tags;
+//    }
 
-    public EventHandler(@NotNull String handler, @NotNull List<String> tags) {
+//    public EventHandler(@NotNull String handler, @NotNull List<String> tags) {
+//        this.handler = handler;
+//        this.tags = tags;
+//    }
+
+    public EventHandler(@NotNull String handler) {
         this.handler = handler;
-        this.tags = tags;
     }
 
     public abstract <E extends Event> Object push(E event);

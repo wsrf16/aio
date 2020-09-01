@@ -1,20 +1,20 @@
 package com.aio.portable.swiss.suite.eventbus.component.event;
 
 public abstract class EventObject {
-    private Object source;
+    private Object payload;
 
-    public Object getSource() {
-        return source;
+    public Object getPayload() {
+        return payload;
     }
 
-    public void setSource(Object source) {
-        this.source = source;
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 
     public EventObject() {
     }
 
-    public EventObject(Object source) {
-        this.source = source;
+    public EventObject(Object payload) {
+        this.payload = payload;
     }
 }

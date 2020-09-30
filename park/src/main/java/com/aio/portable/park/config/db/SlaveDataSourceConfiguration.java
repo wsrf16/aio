@@ -16,7 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 @MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
 public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
     public final static String BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.mapper";
@@ -40,7 +40,7 @@ public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfigura
 
     @Bean(DATA_SOURCE_BEAN)
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
-    @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
+    @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "jdbc-url")
 //    @ConditionalOnClass(DruidDataSourceBuilder.class)
     @ConditionalOnClass(name = {"com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder"})
     public DataSource dataSource() {

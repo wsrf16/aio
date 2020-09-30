@@ -1,5 +1,6 @@
 package com.aio.portable.park.config;
 
+import com.aio.portable.swiss.designpattern.singleton.BaseSingletonInstance;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
@@ -10,33 +11,51 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppLogHubFactory extends LogHubFactory {
-    protected static AppLogHubFactory instance = new AppLogHubFactory();
 
-//    public synchronized static AppLogHubFactory singletonInstance() {
-//        return instance;
-//    }
-
-    protected AppLogHubFactory() {
+    private AppLogHubFactory() {
     }
-
-    public static LogHub logHub(String className) {
-        LogHub logger = instance.build(className);
-        return logger;
-    }
-
-    public static LogHub logHub() {
-        LogHub logger = instance.build(1);
-        return logger;
-    }
-
 
     @Override
     public LogHub build(String className) {
-//        LogHub logger = LogHub.build(KafkaLog.build(className), RabbitMQLog.build(className), Slf4JLog.build(className));
-//        LogHub logger = LogHub.build(ConsoleLog.build(className), Slf4JLog.build(className));
-        LogHub logger = LogHub.build(Slf4JLog.build(className));
+        LogHub logger = LogHub.build(
+//                new KafkaLog(className),
+//                new RabbitMQLog(className),
+//                new ConsoleLog(className),
+                new Slf4JLog(className));
         return logger;
     }
-
-
 }
+
+
+
+
+
+
+
+
+//@Component
+//public class AppLogHubFactory extends BaseSingletonInstance {
+//
+//    protected AppLogHubFactory() {
+//        LogHubFactory logHubFactory = new LogHubFactory() {
+//            @Override
+//            public LogHub build(String className) {
+////        LogHub logger = LogHub.build(KafkaLog.build(className), RabbitMQLog.build(className), Slf4JLog.build(className));
+////        LogHub logger = LogHub.build(ConsoleLog.build(className), Slf4JLog.build(className));
+//                LogHub logger = LogHub.build(Slf4JLog.build(className));
+//                return logger;
+//            }
+//        };
+//        BaseSingletonInstance.importSingletonInstance(logHubFactory);
+//    }
+//
+//    public static LogHub logHub(String className) {
+//        return BaseSingletonInstance.singletonInstance(LogHubFactory.class).build(className);
+//    }
+//
+//    public static LogHub logHub() {
+//        return  BaseSingletonInstance.singletonInstance(LogHubFactory.class).build(1);
+//    }
+//
+//
+//}

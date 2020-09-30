@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.resource;
 import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -153,12 +154,31 @@ public abstract class ClassSugar {
     /**
      * newInstance
      * @param clazz
+     * @param parameterTypes
      * @param <T>
      * @return
      */
-    public synchronized final static <T> T newInstance(Class<T> clazz) {
+    public synchronized final static <T> T newInstance(Class<T> clazz, Class<?>... parameterTypes) {
         try {
-            return clazz.getConstructor().newInstance();
+            return clazz.getConstructor(parameterTypes).newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * declaredNewInstance
+     * @param clazz
+     * @param parameterTypes
+     * @param <T>
+     * @return
+     */
+    public synchronized final static <T> T declaredNewInstance(Class<T> clazz, Class<?>... parameterTypes) {
+        try {
+            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(parameterTypes);
+            declaredConstructor.setAccessible(true);
+            return declaredConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

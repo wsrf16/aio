@@ -147,7 +147,7 @@ public abstract class RegexSugar {
         int i = -1;
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(sb, replacement[++i].toString());
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement[++i].toString()));
         }
         return sb.toString();
     }

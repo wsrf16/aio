@@ -22,7 +22,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = LogHub.build(Slf4JLog.build());
+    LogHub log = LogHub.build(new Slf4JLog());
 
     {
         try {

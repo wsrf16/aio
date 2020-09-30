@@ -22,6 +22,8 @@ public abstract class EventHandler {
 
     private boolean enabled = true;
 
+    private int retry = 0;
+
     public String getHandler() {
         return handler;
     }
@@ -52,6 +54,14 @@ public abstract class EventHandler {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getRetry() {
+        return retry;
+    }
+
+    public void setRetry(int retry) {
+        this.retry = retry;
     }
 
     public EventHandler() {

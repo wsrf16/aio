@@ -46,7 +46,7 @@ public abstract class LogSingle implements LogAction {
 //        return serializer;
 //    }
 
-    protected boolean async = false;
+    protected boolean async = true;
 
     public boolean isAsync() {
         return async;
@@ -78,9 +78,9 @@ public abstract class LogSingle implements LogAction {
         initialPrinter();
     }
 
-    public LogSingle(Class clazz) {
-        this(clazz.toString());
-    }
+//    public LogSingle(Class clazz) {
+//        this(clazz.toString());
+//    }
 
 
     protected abstract void initialPrinter();

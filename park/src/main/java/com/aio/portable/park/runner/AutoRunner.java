@@ -4,6 +4,7 @@ import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.park.config.RootConfig;
 import com.aio.portable.park.test.LogTest;
 //import com.aio.portable.park.test.MyDatabaseTest;
+import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
@@ -13,19 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
-import sun.security.x509.X500Name;
-
-import java.io.File;
 
 @Configuration
 public class AutoRunner implements ApplicationRunner {
 
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
-//    @Autowired
-//    MyDatabaseTest myDatabaseTest;
 
-    LogHub log = AppLogHubFactory.logHub();//.setSamplerRate(1f);
+    @Autowired
+    MyDatabaseTest myDatabaseTest;
+
+    LogHub log = AppLogHubFactory.staticBuild();//.setSamplerRate(1f);
 
     @Autowired
     RootConfig rootConfig;
@@ -37,7 +36,7 @@ public class AutoRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments applicationArguments) {
 //        logTest.logStyle();
-//        myDatabaseTest.blah();
+        myDatabaseTest.blah();
 
 
 
@@ -62,15 +61,13 @@ public class AutoRunner implements ApplicationRunner {
 //
 //
 //
-//
-//
-//
-//
 //            CertSugar.createKeyStore(new File("d:\\a"), "", new X500Name(""), "");
 //            CertSugar.CertInfo certInfo = new CertSugar.CertInfo();
 //            CertSugar.createSubjectCert(certInfo, "","", new File("d:\\a"), "", "cn", "");
 
-            String aaaa = new SerializerSelector(SerializerEnum.SERIALIZE_JACKXML).serialize("aaaa");
+            log.setAsync(false).i("111111111111");
+
+
             String ss = ClassSugar.getPath(AA.class);
             Thread.sleep(0);
         } catch (Exception e) {
@@ -84,3 +81,6 @@ public class AutoRunner implements ApplicationRunner {
 
 
 }
+
+
+

@@ -28,32 +28,6 @@ public class LogHubAutoConfiguration {
 //    return  new Slf4jHubFactory();
 //    }
 
-
-
-
-//    private static LogHubAutoConfiguration instance;
-//
-//    public synchronized static LogHubAutoConfiguration singletonInstance() {
-//        return instance;
-//    }
-//
-//    public LogHubAutoConfiguration() {
-//        instance = this;
-//    }
-//
-//    @Autowired(required = false)
-//    RabbitMQLogProperties rabbitMQLogProperties;
-//    @Autowired(required = false)
-//    KafkaLogProperties kafkaLogProperties;
-
-    @Bean
-    @ConditionalOnProperty("spring.log.rabbitmq.host")
-    @ConfigurationProperties(prefix = "spring.log.rabbitmq")
-    @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
-    public RabbitMQLogProperties rabbitMQLogProperties() {
-        return RabbitMQLogProperties.singletonInstance();
-    }
-
 //    @Bean
 //    @DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
 //    @ConditionalOnBean(RabbitMQLogProperties.class)
@@ -64,14 +38,6 @@ public class LogHubAutoConfiguration {
 //        return RabbitMQHubFactory.singletonInstance();
 //    }
 
-    @Bean
-    @ConditionalOnProperty("spring.log.kafka.bootstrap-servers")
-    @ConfigurationProperties(prefix = "spring.log.kafka")
-    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
-    public KafkaLogProperties kafkaLogProperties() {
-        return KafkaLogProperties.singletonInstance();
-    }
-
 //    @Bean
 //    @DependsOn(PropertyBean.KAFKA_PROPERTIES)
 //    @ConditionalOnBean(KafkaLogProperties.class)
@@ -81,13 +47,21 @@ public class LogHubAutoConfiguration {
 //        return KafkaHubFactory.singletonInstance();
 //    }
 
-//    @Autowired
-//    LogProperties logProperties;
+    @Bean
+    @ConditionalOnProperty("spring.log.rabbitmq.host")
+    @ConfigurationProperties(prefix = "spring.log.rabbitmq")
+    @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
+    public RabbitMQLogProperties rabbitMQLogProperties() {
+        return RabbitMQLogProperties.singletonInstance();
+    }
 
-//    @Autowired
-//    public void logHubAutoConfiguration(
-//            @Autowired(required = false) RabbitMQLogProperties rabbitMQLogProperties,
-//            @Autowired(required = false) KafkaLogProperties kafkaLogProperties) {
-//        return;
-//    }
+
+    @Bean
+    @ConditionalOnProperty("spring.log.kafka.bootstrap-servers")
+    @ConfigurationProperties(prefix = "spring.log.kafka")
+    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
+    public KafkaLogProperties kafkaLogProperties() {
+        return KafkaLogProperties.singletonInstance();
+    }
+
 }

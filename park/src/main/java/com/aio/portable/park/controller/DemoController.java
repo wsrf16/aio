@@ -1,6 +1,8 @@
 package com.aio.portable.park.controller;
 
+import com.aio.portable.park.config.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
@@ -27,12 +29,14 @@ public class DemoController {
     @Autowired
     private HttpServletResponse response;
 
-//    LogHub log = LogFactory.singletonInstance().build();
+    private LogHub log = AppLogHubFactory.staticBuild();
+
     @GetMapping("log")
     public String log() {
         request = request;
         response = response;
 
+        log.i("ok");
         return "ok";
     }
 
@@ -41,12 +45,14 @@ public class DemoController {
 
     @Autowired(required = false)
     AmqpTemplate amqpTemplate;
+
     @GetMapping("mqsend")
     public String mqsend() {
         amqpTemplate.convertAndSend("tc.exchange","taoche", "aaaaaaaaaaaaa");
         String msg = MessageFormat.format("现在的时间是{0}", DateTimeSugar.UnixTime.convertUnix2DateTime(DateTimeSugar.UnixTime.nowUnix()));
         amqpTemplate.convertAndSend("application-log-queue", msg);
         return msg;
+
     }
 
     @GetMapping("throwe")

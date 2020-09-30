@@ -80,21 +80,31 @@ public class RestTemplateEventHandler extends SimpleEventHandler {
     }
 
     public <E extends Event> ResponseEntity<String> proxy(Function<E, Object> func, E event) {
-        ResponseEntity<String> responseEntity;
-        try {
-            responseEntity = (ResponseEntity<String>) func.apply(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (!StringUtils.isEmpty(backURL)) {
-                ResponseEntity<String> errorResponseEntity =
-                        echoError(e);
+        ResponseEntity<String> responseEntity = null;
+        Exception exp = null;
+
+        for(int todo = 1; todo - 1 <= this.getRetry(); todo++) {
+            try {
+                responseEntity = (ResponseEntity<String>) func.apply(event);
+                exp = null;
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                exp = e;
+                responseEntity = null;
             }
-//            throw new RuntimeException(e);
-            return null;
         }
-        if (!StringUtils.isEmpty(backURL)) {
-            ResponseEntity<?> backResponseEntity =
-                    echoBack(responseEntity);
+
+        if (exp != null) {
+            if (StringUtils.hasLength(backURL)) {
+                ResponseEntity<String> errorResponseEntity =
+                        echoError(exp);
+            }
+        } else {
+            if (StringUtils.hasLength(backURL)) {
+                ResponseEntity<?> backResponseEntity =
+                        echoBack(responseEntity);
+            }
         }
         return responseEntity;
     }

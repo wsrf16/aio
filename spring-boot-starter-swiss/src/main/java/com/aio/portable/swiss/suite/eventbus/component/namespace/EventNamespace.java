@@ -1,9 +1,9 @@
-package com.aio.portable.swiss.suite.eventbus.component.group;
+package com.aio.portable.swiss.suite.eventbus.component.namespace;
 
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
-import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventGroupException;
+import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventNamespaceException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,11 +12,12 @@ import org.springframework.util.StringUtils;
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EventGroup extends AbstractEventGroup {
+public class EventNamespace extends AbstractEventNamespace {
     private final static String EMPTY = "";
     @JsonIgnore
     NodePersistence nodePersistence;
@@ -30,27 +31,27 @@ public class EventGroup extends AbstractEventGroup {
 
     public void setNodePersistence(NodePersistence nodePersistence) {
         this.nodePersistence = nodePersistence;
-        this.persistentContainer = PersistentContainer.buildEventGroupPersistentContainer(nodePersistence);
+        this.persistentContainer = PersistentContainer.buildEventNamespacePersistentContainer(nodePersistence);
     }
 
     public PersistentContainer getPersistentContainer() {
         return persistentContainer;
     }
 
-    public EventGroup() {
+    public EventNamespace() {
     }
 
-    public EventGroup(@NotNull NodePersistence nodePersistence, @NotNull String group) {
-        super(group);
+    public EventNamespace(@NotNull NodePersistence nodePersistence, @NotNull String namespace) {
+        super(namespace);
         setNodePersistence(nodePersistence);
     }
 
     private String[] spellTables() {
-        return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup()};
+        return new String[]{EventBusConfig.EVENT_BUS_TABLE, getNamespace()};
     }
 
-    public void add(String subscriber) {
-        EventSubscriber eventSubscriber = buildEventSubscriber(subscriber);
+    public void add(String subscriber, List<String> tags) {
+        EventSubscriber eventSubscriber = buildEventSubscriber(subscriber, tags);
         add(eventSubscriber);
     }
 
@@ -69,7 +70,7 @@ public class EventGroup extends AbstractEventGroup {
             String[] tables = spellTables();
             persistentContainer.setTable(subscriber, eventSubscriber, tables);
         } else {
-            throw new NotExistEventGroupException(MessageFormat.format("subscriber {0} is not exist.", subscriber));
+            throw new NotExistEventNamespaceException(MessageFormat.format("subscriber {0} is not exist.", subscriber));
         }
 
     }
@@ -156,8 +157,8 @@ public class EventGroup extends AbstractEventGroup {
                 .collect(Collectors.toMap(e -> e.getKey(), e -> persist(e.getValue())));
     }
 
-    public EventSubscriber buildEventSubscriber(String subscriber) {
-        EventSubscriber eventSubscriber = new EventSubscriber(this.nodePersistence, getGroup(), subscriber);
+    public EventSubscriber buildEventSubscriber(String subscriber, List<String> tags) {
+        EventSubscriber eventSubscriber = new EventSubscriber(this.nodePersistence, getNamespace(), tags, subscriber);
         return eventSubscriber;
     }
 

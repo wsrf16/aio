@@ -6,6 +6,7 @@ import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
 
 public class Slf4JLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -17,30 +18,28 @@ public class Slf4JLog extends LogSingle {
         logger = org.slf4j.LoggerFactory.getLogger(name);
     }
 
-    public final static Slf4JLog build() {
-        String name = StackTraceSugar.Previous.getClassName();
-        return build(name);
+    public Slf4JLog(Class<?> clazz) {
+        this(clazz.toString());
     }
 
-    public final static Slf4JLog build(Class clazz) {
-        String name = clazz.toString();
-        return build(name);
+    public Slf4JLog() {
+        this(StackTraceSugar.Previous.getClassName());
     }
 
-    public final static Slf4JLog build(String name) {
-        Slf4JLog slf4jLogger = new Slf4JLog(name);
-        return slf4jLogger;
-    }
+//    public Slf4JLog build(String name) {
+//        Slf4JLog slf4jLogger = new Slf4JLog(name);
+//        return slf4jLogger;
+//    }
 
     @Override
     protected void initialPrinter() {
-        String name = this.getClass().getName();
+        String name = this.getName();
 
         printer = (text, level) -> {
             switch (level)
             {
                 case VERBOSE: {
-                    Global.unsupportedOperationException(name + ": verbose");
+                    Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
                 }
                 break;
                 case TRACE: {
@@ -64,11 +63,11 @@ public class Slf4JLog extends LogSingle {
                 }
                 break;
                 case FATAL: {
-                    Global.unsupportedOperationException(name + ": fatal");
+                    Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
                 }
                 break;
                 default:{
-                    Global.unsupportedOperationException(name + ": known level");
+                    Global.unsupportedOperationException(name + ": unknown level");
                 }
                 break;
             }

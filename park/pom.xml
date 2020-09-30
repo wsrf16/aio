@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>park</artifactId>
-    <version>1.1.10-SNAPSHOT</version>
+    <version>1.1.13-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>park</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.aio.portable</groupId>
         <artifactId>all-in-one</artifactId>
-        <version>1.1.10-SNAPSHOT</version>
+        <version>1.1.13-SNAPSHOT</version>
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--        <relativePath>../</relativePath>-->
     </parent>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>spring-boot-starter-swiss</artifactId>
-            <version>1.1.10-SNAPSHOT</version>
+            <version>1.1.13-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
@@ -452,16 +452,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <!--<skipTests>true</skipTests>-->
-                    <!--<skipAfterFailureCount>1</skipAfterFailureCount>-->
-                    <!--<rerunFailingTestsCount>1</rerunFailingTestsCount>-->
-<!--                    <systemPropertyVariables>-->
-<!--                        <test.swagger2markup.swaggerOutput>${swagger2markup.swaggerOutput}</test.swagger2markup.swaggerOutput>-->
-<!--                        &lt;!&ndash;<test.asciidoctor.directory.output.snippet>${asciidoctor.directory.output.snippet}</test.asciidoctor.directory.output.snippet>&ndash;&gt;-->
-<!--                        <test.asciidoctor.directory.input>${asciidoctor.directory.input}</test.asciidoctor.directory.input>-->
-<!--                        <test.asciidoctor.directory.input.generated>${asciidoctor.directory.input.generated}</test.asciidoctor.directory.input.generated>-->
-<!--                        <test.asciidoctor.directory.output.html>${asciidoctor.directory.output.html}</test.asciidoctor.directory.output.html>-->
-<!--                        <test.asciidoctor.directory.output.seveletpdf>${asciidoctor.directory.output.pdf}</test.asciidoctor.directory.output.seveletpdf>-->
-<!--                    </systemPropertyVariables>-->
                 </configuration>
             </plugin>
             <plugin>

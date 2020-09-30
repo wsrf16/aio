@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.component.group.persistence;
+package com.aio.portable.swiss.suite.eventbus.component.namespace.persistence;
 
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;

@@ -25,7 +25,7 @@ public class ToolController {
     private final static String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
     private final static String UPLOAD_DIRECTORY = "upload";
 
-    private LogHub log = AppLogHubFactory.logHub();
+    private LogHub log = AppLogHubFactory.staticBuild();
 
     @Autowired
     private HttpServletRequest request;

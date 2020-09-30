@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CustomExceptionAdvice extends HamletExceptionAdvice {
 
-    public CustomExceptionAdvice(LogHubFactory appLogHubFactory) {
-        super(appLogHubFactory);
+    public CustomExceptionAdvice(LogHubFactory logHubFactory) {
+        super(logHubFactory);
     }
 
 }

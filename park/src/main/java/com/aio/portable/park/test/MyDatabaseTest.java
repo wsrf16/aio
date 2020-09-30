@@ -40,7 +40,7 @@ public class MyDatabaseTest {
             Book book = new Book();
             book.setDescription("abc");
             book.setAuthor("ooooo");
-            bookThirdRepository.save(book);
+//            bookThirdRepository.save(book);
         }
     }
 

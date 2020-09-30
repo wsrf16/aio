@@ -2,14 +2,7 @@ package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.LogSingle;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {
@@ -22,18 +15,21 @@ public abstract class LogHubFactory {
         public final static String KAFKA_HUB_FACTORY = "kafkaHubFactory";
     }
 
+    protected static LogHubFactory singleton;
+
+    protected LogHubFactory() {
+        LogHubFactory.singleton = LogHubFactory.singleton == null ? this : LogHubFactory.singleton;
+    }
+
     boolean enable = true;
 
     LevelEnum level = LevelEnum.VERBOSE;
-
-
 
     public abstract LogHub build(String className);
 
     public LogHub build(Class clazz) {
         String className = clazz.getTypeName();
-        LogHub logger = build(className);
-        return logger;
+        return build(className);
     }
 
     public LogHub build() {
@@ -46,26 +42,71 @@ public abstract class LogHubFactory {
         return build(className);
     }
 
-    public LogHub buildAsync(String className) {
-        LogHub logger = build(className);
-        logger.setAsync(true);
-        return logger;
+    public LogHub buildSync(String className) {
+        LogHub logHub = build(className);
+        logHub.setAsync(false);
+        return logHub;
     }
 
-    public LogHub buildAsync(Class clazz) {
-        LogHub logger = build(clazz);
-        logger.setAsync(true);
-        return logger;
+    public LogHub buildSync(Class clazz) {
+        LogHub logHub = build(clazz);
+        logHub.setAsync(false);
+        return logHub;
     }
 
-    public LogHub buildAsync() {
+    public LogHub buildSync() {
+        LogHub logHub = build();
+        logHub.setAsync(false);
+        return logHub;
+    }
+
+    public LogHub buildSync(int previous) {
+        LogHub logHub = build(previous);
+        logHub.setAsync(false);
+        return logHub;
+    }
+
+    public final static LogHub staticBuild(String className) {
+        return singleton.build(className);
+    }
+
+    public final static LogHub staticBuild(Class clazz) {
+        String className = clazz.getTypeName();
+        return singleton.build(className);
+    }
+
+    public final static LogHub staticBuild() {
         String className = StackTraceSugar.Previous.getClassName();
-        return buildAsync(className);
+        return singleton.build(className);
     }
 
-    public LogHub buildAsync(int previous) {
+    public final static LogHub staticBuild(int previous) {
         String className = StackTraceSugar.Previous.getClassName(previous);
-        return buildAsync(className);
+        return singleton.build(className);
+    }
+
+    public final static LogHub staticBuildSync(String className) {
+        LogHub logHub = singleton.build(className);
+        logHub.setAsync(false);
+        return logHub;
+    }
+
+    public final static LogHub staticBuildSync(Class clazz) {
+        LogHub logHub = singleton.build(clazz);
+        logHub.setAsync(false);
+        return logHub;
+    }
+
+    public final static LogHub staticBuildSync() {
+        LogHub logHub = singleton.build();
+        logHub.setAsync(false);
+        return logHub;
+    }
+
+    public final static LogHub staticBuildSync(int previous) {
+        LogHub logHub = singleton.build(previous);
+        logHub.setAsync(false);
+        return logHub;
     }
 
 

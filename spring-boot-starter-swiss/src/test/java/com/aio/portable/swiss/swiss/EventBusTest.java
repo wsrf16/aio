@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.TestComponent;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,10 +53,12 @@ public class EventBusTest {
         httpAttempt2.setMethod(HttpMethod.POST);
 
 
-        RestTemplateEventHandler handler1 = new RestTemplateEventHandler("handler-1", httpAttempt1,"tag-test");
-        RestTemplateEventHandler handler2 = new RestTemplateEventHandler("handler-2", httpAttempt2,"tag-test");
+        RestTemplateEventHandler handler1 = new RestTemplateEventHandler("handler-1", httpAttempt1);
+        RestTemplateEventHandler handler2 = new RestTemplateEventHandler("handler-2", httpAttempt2);
 
-        EventSubscriber subscriber = eventBus.addEventSubscriber("group-task", "subscriber-task");
+        EventSubscriber subscriber = eventBus.addEventSubscriber("group-task", "subscriber-task", new ArrayList<String>() {{
+            add(("tag-test"));
+        }});
         subscriber.add(handler1);
         subscriber.add(handler2);
         return subscriber;

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
+import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaPrinter;
@@ -11,24 +12,32 @@ import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
  * Created by York on 2017/11/23.
  */
 public class RabbitMQLog extends LogSingle {
-    public final static RabbitMQLog build(String name) {
-        return new RabbitMQLog(name);
-    }
+//    public final static RabbitMQLog build(String name) {
+//        return new RabbitMQLog(name);
+//    }
+//
+//    public final static RabbitMQLog build(Class clazz) {
+//        String name = clazz.getTypeName();
+//        return build(name);
+//    }
 
-    public final static RabbitMQLog build(Class clazz) {
-        String name = clazz.getTypeName();
-        return build(name);
-    }
-
-    private RabbitMQLog(String name) {
+    public RabbitMQLog(String name) {
         super(name);
+    }
+
+    public RabbitMQLog(Class<?> clazz) {
+        this(clazz.toString());
+    }
+
+    public RabbitMQLog() {
+        this(StackTraceSugar.Previous.getClassName());
     }
 
     RabbitMQLogProperties properties;
 
     @Override
     protected void initialPrinter() {
-        String name = getName();
+        String name = this.getName();
         properties = RabbitMQLogProperties.singletonInstance();
         printer = RabbitMQPrinter.instance(name, properties);
     }

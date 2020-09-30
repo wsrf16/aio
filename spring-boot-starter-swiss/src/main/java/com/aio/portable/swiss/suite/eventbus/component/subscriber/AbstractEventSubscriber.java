@@ -67,8 +67,9 @@ public abstract class AbstractEventSubscriber implements BaseCollection<EventHan
     public AbstractEventSubscriber() {
     }
 
-    public AbstractEventSubscriber(@NotNull String group, @NotNull String subscriber) {
+    public AbstractEventSubscriber(@NotNull String group, @NotNull List<String> tags, @NotNull String subscriber) {
         setGroup(group);
+        setTags(tags);
         setSubscriber(subscriber);
     }
 

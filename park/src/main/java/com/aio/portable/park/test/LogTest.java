@@ -12,14 +12,14 @@ import java.util.List;
 public class LogTest {
     LogHub dynamicLogger;
 
-    public LogTest(LogHubFactory appLogHubFactory) {
-        dynamicLogger = appLogHubFactory.build();
+    public LogTest(LogHubFactory logHubFactory) {
+        dynamicLogger = logHubFactory.build();
     }
 
 //    LogHub logger = AppLogHubFactory.singletonInstance()
 //            .build("随便写哒")
 //            .setBaseLevel(LevelEnum.DEBUG);
-    LogHub logger = AppLogHubFactory.logHub();
+    LogHub logger = AppLogHubFactory.staticBuild();
 
     public void logCase1() {
         logger.i("abcdefghijklmnopqrstuvwxyz1介个是kafka");

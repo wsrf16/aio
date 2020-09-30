@@ -50,20 +50,21 @@ public class LogHub extends LogBundle implements Logger {
         return f <= samplerRate;
     }
 
-    public final static LogHub build(List<LogSingle> loggers) {
-        LogHub logHub = new LogHub(loggers);
+    public final static LogHub build(List<LogSingle> logSingleList) {
+        LogHub logHub = new LogHub(logSingleList);
         LogHub proxy = Proxy.toProxy(logHub);
         return proxy;
     }
 
-    public final static LogHub build(LogSingle... logger) {
-        List<LogSingle> loggers = logger == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logger));
-        return build(loggers);
+    public final static LogHub build(LogSingle... logSingles) {
+        List<LogSingle> logSingleList = logSingles == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logSingles));
+        LogHub logHub = build(logSingleList);
+        return logHub;
     }
 
-    public final static LogHub buildAsync(List<LogSingle> loggers){
-        LogHub logHub = build(loggers);
-        logHub.setAsync(true);
+    public final static LogHub buildSync(List<LogSingle> logSingleList){
+        LogHub logHub = build(logSingleList);
+        logHub.setAsync(false);
         return logHub;
     }
 

@@ -4,7 +4,7 @@ import com.aio.portable.swiss.suite.eventbus.component.event.Event;
 import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
 import com.aio.portable.swiss.suite.eventbus.component.handler.RestTemplateEventHandler;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
-import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventGroupException;
+import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventNamespaceException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -54,8 +55,8 @@ public class EventSubscriber extends AbstractEventSubscriber {
         return new String[]{EventBusConfig.EVENT_BUS_TABLE, getGroup(), getSubscriber()};
     }
 
-    public EventSubscriber(@NotNull NodePersistence nodePersistence, @NotNull String group, @NotNull String name) {
-        super(group, name);
+    public EventSubscriber(@NotNull NodePersistence nodePersistence, @NotNull String group, @NotNull List<String> tags, @NotNull String name) {
+        super(group, tags, name);
         setNodePersistence(nodePersistence);
     }
 
@@ -78,7 +79,7 @@ public class EventSubscriber extends AbstractEventSubscriber {
             String[] tables = spellTables();
             persistentContainer.set(handler, eventHandler, tables);
         } else {
-            throw new NotExistEventGroupException(MessageFormat.format("handler {0} is not exist.", eventHandler.getHandler()));
+            throw new NotExistEventNamespaceException(MessageFormat.format("handler {0} is not exist.", eventHandler.getHandler()));
         }
     }
 

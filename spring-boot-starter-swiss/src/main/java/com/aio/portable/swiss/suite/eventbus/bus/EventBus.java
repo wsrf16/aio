@@ -3,10 +3,10 @@ package com.aio.portable.swiss.suite.eventbus.bus;
 
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.group.EventGroup;
+import com.aio.portable.swiss.suite.eventbus.component.namespace.EventNamespace;
 import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
-import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventGroupException;
+import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventNamespaceException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
 import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -58,17 +59,17 @@ public class EventBus extends AbstractEventBus {
 
 
     public void add(String group) {
-        EventGroup eventGroup = buildEventGroup(group);
+        EventNamespace eventGroup = buildEventGroup(group);
         addIfNotExists(eventGroup);
     }
 
     @Override
-    public void add(EventGroup eventGroup) {
+    public void add(EventNamespace eventGroup) {
         addIfNotExists(eventGroup);
     }
 
-    private void set(EventGroup eventGroup) {
-        String group = eventGroup.getGroup();
+    private void set(EventNamespace eventGroup) {
+        String group = eventGroup.getNamespace();
         if (StringUtils.isEmpty(group)) {
             throw new IllegalArgumentException("group is empty.");
         }
@@ -77,12 +78,12 @@ public class EventBus extends AbstractEventBus {
             String[] tables = spellTables();
             persistentContainer.setTable(group, eventGroup, tables);
         } else {
-            throw new NotExistEventGroupException(MessageFormat.format("group {0} is not exist.", eventGroup.getGroup()));
+            throw new NotExistEventNamespaceException(MessageFormat.format("group {0} is not exist.", eventGroup.getNamespace()));
         }
     }
 
-    private EventGroup addIfNotExists(EventGroup eventGroup) {
-        String group = eventGroup.getGroup();
+    private EventNamespace addIfNotExists(EventNamespace eventGroup) {
+        String group = eventGroup.getNamespace();
         if (exists(group)) {
             eventGroup = get(group);
         } else {
@@ -98,7 +99,7 @@ public class EventBus extends AbstractEventBus {
     @Override
     public void remove(String group) {
         String[] tables = spellTables();
-        EventGroup eventGroup = get(group);
+        EventNamespace eventGroup = get(group);
         eventGroup.clear();
 
         persistentContainer.removeTable(group, tables);
@@ -109,7 +110,7 @@ public class EventBus extends AbstractEventBus {
         String[] tables = spellTables();
         collection().entrySet().forEach(c -> {
             c.getValue().clear();
-            remove(c.getValue().getGroup());
+            remove(c.getValue().getNamespace());
         });
 
         persistentContainer.clearTable(EMPTY, tables);
@@ -122,23 +123,23 @@ public class EventBus extends AbstractEventBus {
     }
 
     @Override
-    public EventGroup get(String group) {
+    public EventNamespace get(String group) {
         String[] tables = spellTables();
-        EventGroup eventGroup = persistentContainer.getTable(group, EventGroup.class, tables);
+        EventNamespace eventGroup = persistentContainer.getTable(group, EventNamespace.class, tables);
         persist(eventGroup);
         return eventGroup;
     }
 
     public void enable(String group, boolean enabled) {
-        EventGroup eventGroup = get(group);
+        EventNamespace eventGroup = get(group);
         eventGroup.setEnabled(enabled);
         set(eventGroup);
     }
 
     @Override
-    public Map<String, EventGroup> collection() {
+    public Map<String, EventNamespace> collection() {
         String[] tables = spellTables();
-        return persistentContainer.getAllTable(EMPTY, EventGroup.class, tables)
+        return persistentContainer.getAllTable(EMPTY, EventNamespace.class, tables)
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> persist(e.getValue())));
@@ -155,7 +156,7 @@ public class EventBus extends AbstractEventBus {
                 .forEach(eventGroup -> {
             if (CollectionSugar.isEmpty(event.getGroups())) {
                 map.putAll(eventGroup.send(event));
-            } else if (!CollectionSugar.isEmpty(event.getGroups()) && event.getGroups().contains(eventGroup.getGroup())) {
+            } else if (!CollectionSugar.isEmpty(event.getGroups()) && event.getGroups().contains(eventGroup.getNamespace())) {
                 map.putAll(eventGroup.send(event));
             }
         });
@@ -164,25 +165,25 @@ public class EventBus extends AbstractEventBus {
     }
 
 
-    public EventGroup buildEventGroup(String group) {
-        EventGroup eventGroup = new EventGroup(this.nodePersistence, group);
+    public EventNamespace buildEventGroup(String group) {
+        EventNamespace eventGroup = new EventNamespace(this.nodePersistence, group);
         return eventGroup;
     }
 
-    public EventSubscriber buildEventSubscriber(String group, String subscriber) {
-        EventGroup eventGroup = buildEventGroup(group);
-        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber);
+    public EventSubscriber buildEventSubscriber(String group, String subscriber, List<String> tags) {
+        EventNamespace eventGroup = buildEventGroup(group);
+        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber, tags);
         return eventSubscriber;
     }
 
-    public EventGroup persist(EventGroup eventGroup) {
+    public EventNamespace persist(EventNamespace eventGroup) {
         eventGroup.setNodePersistence(this.nodePersistence);
         return eventGroup;
     }
 
-    public EventSubscriber addEventSubscriber(String group, String subscriber) {
-        EventGroup eventGroup = buildEventGroup(group);
-        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber);
+    public EventSubscriber addEventSubscriber(String group, String subscriber, List<String> tags) {
+        EventNamespace eventGroup = buildEventGroup(group);
+        EventSubscriber eventSubscriber = eventGroup.buildEventSubscriber(subscriber, tags);
         add(eventGroup);
         eventGroup.add(eventSubscriber);
         return eventSubscriber;

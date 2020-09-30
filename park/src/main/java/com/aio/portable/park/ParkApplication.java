@@ -5,10 +5,12 @@ package com.aio.portable.park;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
 //import com.aio.portable.park.task.ThreadLocalTest;
 import com.aio.portable.swiss.suite.log.annotation.InitialLogProperties;
-        import org.springframework.boot.SpringApplication;
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
-        import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
         import org.springframework.context.ApplicationContext;
         import org.springframework.core.env.Environment;
@@ -17,7 +19,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
         DataSourceAutoConfiguration.class,
 //        HibernateJpaAutoConfiguration.class,
 //        JpaRepositoriesAutoConfiguration.class,
-//        DruidDataSourceAutoConfigure.class,
+        DruidDataSourceAutoConfigure.class,
 //        MybatisAutoConfiguration.class,
         KafkaAutoConfiguration.class,
         RabbitAutoConfiguration.class,

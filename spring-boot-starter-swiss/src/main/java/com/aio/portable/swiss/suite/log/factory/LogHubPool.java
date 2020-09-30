@@ -39,7 +39,7 @@ public class LogHubPool {
             if (storage.containsKey(className))
                 logHub = storage.get(className);
             else {
-                logHub = logHubFactory.buildAsync(className);
+                logHub = logHubFactory.build(className);
                 storage.putIfAbsent(className, logHub);
             }
         }

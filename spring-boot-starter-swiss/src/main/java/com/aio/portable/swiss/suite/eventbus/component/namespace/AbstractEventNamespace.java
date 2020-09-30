@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.component.group;
+package com.aio.portable.swiss.suite.eventbus.component.namespace;
 
 import com.aio.portable.swiss.suite.bean.structure.BaseCollection;
 import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
@@ -9,19 +9,19 @@ import javax.validation.constraints.NotNull;
 //@JsonSubTypes({
 //        @JsonSubTypes.Type(value = DiskEventListenerGroup.class, name = "DiskEventListenerGroup"),
 //        @JsonSubTypes.Type(value = HashMapEventListenerGroup.class, name = "HashMapEventListenerGroup")})
-public abstract class AbstractEventGroup implements BaseCollection<EventSubscriber> {
-    private String group;
+public abstract class AbstractEventNamespace implements BaseCollection<EventSubscriber> {
+    private String namespace;
 
     private String className;
 
     private boolean enabled = true;
 
-    public String getGroup() {
-        return group;
+    public String getNamespace() {
+        return namespace;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public String getClassName() {
@@ -40,11 +40,11 @@ public abstract class AbstractEventGroup implements BaseCollection<EventSubscrib
         this.enabled = enabled;
     }
 
-    public AbstractEventGroup() {
+    public AbstractEventNamespace() {
     }
 
-    public AbstractEventGroup(@NotNull String group) {
-        this.group = group;
+    public AbstractEventNamespace(@NotNull String namespace) {
+        this.namespace = namespace;
     }
 
     public abstract void remove(EventSubscriber eventListener);

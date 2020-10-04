@@ -24,7 +24,7 @@ public class YamlSugar {
         return t;
     }
 
-    public static <T> T yaml2T(String yaml) throws FileNotFoundException {
+    public static <T> T yaml2T(String yaml) {
         T t = YamlSugar.YAML.load(yaml);
         return t;
     }

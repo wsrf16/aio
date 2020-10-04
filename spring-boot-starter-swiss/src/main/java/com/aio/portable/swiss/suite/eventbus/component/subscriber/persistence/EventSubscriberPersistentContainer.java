@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.eventbus.component.subscriber.persistence;
 
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
+import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
@@ -17,7 +17,7 @@ public class EventSubscriberPersistentContainer extends PersistentContainer {
 
 //    @Override
 //    public String joinTables(String... tables) {
-////        String table = MessageFormat.format("{0}/{1}/{2}", EventBusConfig.EVENT_BUS_TABLE, getGroup(), getListener());
+////        String table = MessageFormat.format("{0}/{1}/{2}", EventBusConfig.EVENT_BUS_TABLE, getNamespace(), getListener());
 //        String table = String.join("/", tables);
 //        return table;
 //    }

@@ -1,9 +1,8 @@
 package com.aio.portable.swiss.suite.log;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.bean.serializer.ISerializerSelector;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
@@ -41,10 +40,7 @@ public abstract class LogSingle implements LogAction {
         this.prefixSupplier = EMPTY_PREFIX;
     }
 
-    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
-//    public ISerializerSelector getSerializer() {
-//        return serializer;
-//    }
+    protected SerializerConverter serializer = new SerializerConverters.JacksonConverter();
 
     protected boolean async = true;
 

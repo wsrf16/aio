@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.eventbus.bus.persistence;
 
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
+import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;

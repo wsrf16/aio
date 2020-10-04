@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.component.handler.http;
+package com.aio.portable.swiss.suite.eventbus.component.action.http;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

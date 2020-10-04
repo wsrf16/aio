@@ -1,14 +1,13 @@
-package com.aio.portable.swiss.suite.storage.nosql.file;
+package com.aio.portable.swiss.suite.storage.persistence.file;
 
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
-import com.aio.portable.swiss.suite.bean.serializer.ISerializerSelector;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.io.NIOFiles;
-import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
+import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.util.StringUtils;
 
@@ -38,7 +37,8 @@ public class FilePO implements NodePersistence {
 
     private Charset charset = StandardCharsets.UTF_8;
 
-    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
+//    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
+    protected SerializerConverter serializerConverter = new SerializerConverters.JacksonConverter();
 
 
     public final static FilePO singletonInstance(Path root, String database) {

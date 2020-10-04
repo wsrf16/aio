@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.component.handler;
+package com.aio.portable.swiss.suite.eventbus.component.action;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
@@ -6,17 +6,15 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RestTemplateEventHandler.class, name = "RestTemplateEventHandler"),
-        @JsonSubTypes.Type(value = SimpleEventHandler.class, name = "SimpleEventHandler")})
-public abstract class EventHandler {
-    private String handler = IDS.uuid();
+        @JsonSubTypes.Type(value = RestTemplateEventAction.class, name = "RestTemplateEventAction"),
+        @JsonSubTypes.Type(value = SimpleEventAction.class, name = "SimpleEventAction")})
+public abstract class EventAction {
+    private String action = IDS.uuid();
 
-//    private List<String> tags = new ArrayList<>();
+//    private List<String> topics = new ArrayList<>();
 
     private String className;
 
@@ -24,20 +22,20 @@ public abstract class EventHandler {
 
     private int retry = 0;
 
-    public String getHandler() {
-        return handler;
+    public String getAction() {
+        return action;
     }
 
-    public void setHandler(String handler) {
-        this.handler = handler;
+    public void setAction(String action) {
+        this.action = action;
     }
 
-//    public List<String> getTags() {
-//        return tags;
+//    public List<String> getTopics() {
+//        return topics;
 //    }
 //
-//    public void setTags(List<String> tags) {
-//        this.tags = tags;
+//    public void setTopics(List<String> topics) {
+//        this.topics = topics;
 //    }
 
     public String getClassName() {
@@ -64,20 +62,20 @@ public abstract class EventHandler {
         this.retry = retry;
     }
 
-    public EventHandler() {
+    public EventAction() {
     }
 
-//    public EventHandler(List<String> tags) {
-//        this.tags = tags;
+//    public EventAction(List<String> topics) {
+//        this.topics = topics;
 //    }
 
-//    public EventHandler(@NotNull String handler, @NotNull List<String> tags) {
-//        this.handler = handler;
-//        this.tags = tags;
+//    public EventAction(@NotNull String action, @NotNull List<String> topics) {
+//        this.action = action;
+//        this.topics = topics;
 //    }
 
-    public EventHandler(@NotNull String handler) {
-        this.handler = handler;
+    public EventAction(@NotNull String action) {
+        this.action = action;
     }
 
     public abstract <E extends Event> Object push(E event);

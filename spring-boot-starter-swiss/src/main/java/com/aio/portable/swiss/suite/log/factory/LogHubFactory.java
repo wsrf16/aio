@@ -18,7 +18,9 @@ public abstract class LogHubFactory {
     protected static LogHubFactory singleton;
 
     protected LogHubFactory() {
-        LogHubFactory.singleton = LogHubFactory.singleton == null ? this : LogHubFactory.singleton;
+        synchronized (LogHubFactory.class) {
+            LogHubFactory.singleton = LogHubFactory.singleton == null ? this : LogHubFactory.singleton;
+        }
     }
 
     boolean enable = true;

@@ -1,8 +1,8 @@
-package com.aio.portable.swiss.suite.eventbus.component.handler;
+package com.aio.portable.swiss.suite.eventbus.component.action;
 
 import com.aio.portable.swiss.sugar.SpringContexts;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.handler.http.HttpAttempt;
+import com.aio.portable.swiss.suite.eventbus.component.action.http.HttpAttempt;
 import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
 import org.springframework.http.HttpHeaders;
@@ -16,11 +16,11 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 import java.util.function.Function;
 
-public class RestTemplateEventHandler extends SimpleEventHandler {
+public class RestTemplateEventAction extends SimpleEventAction {
     public static RestTemplate restTemplate;
 
     public static void setRestTemplate(RestTemplate restTemplate) {
-        RestTemplateEventHandler.restTemplate = restTemplate;
+        RestTemplateEventAction.restTemplate = restTemplate;
     }
 
     private HttpAttempt httpAttempt;
@@ -57,14 +57,14 @@ public class RestTemplateEventHandler extends SimpleEventHandler {
         restTemplate = SpringContexts.getApplicationContext().containsBean("restTemplate") ? (RestTemplate) SpringContexts.getApplicationContext().getBean("restTemplate") : new RestTemplate();
     }
 
-    public RestTemplateEventHandler() {
+    public RestTemplateEventAction() {
         super();
         this.func = this::httpPush;
         this.succeedBack = this::echoBack;
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt) {
+    public RestTemplateEventAction(@NotNull String name, @NotNull HttpAttempt httpAttempt) {
         super(name);
         this.httpAttempt = httpAttempt;
 

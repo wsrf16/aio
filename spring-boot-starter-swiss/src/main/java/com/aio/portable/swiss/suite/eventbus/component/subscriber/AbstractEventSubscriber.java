@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.eventbus.component.subscriber;
 
 import com.aio.portable.swiss.suite.bean.structure.BaseCollection;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
+import com.aio.portable.swiss.suite.eventbus.component.action.EventAction;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.Map;
 //@JsonSubTypes({
 //        @JsonSubTypes.Type(value = DiskEventListener.class, name = "DiskEventListener"),
 //        @JsonSubTypes.Type(value = HashMapEventListener.class, name = "HashMapEventListener")})
-public abstract class AbstractEventSubscriber implements BaseCollection<EventHandler> {
+public abstract class AbstractEventSubscriber implements BaseCollection<EventAction> {
     private String subscriber;
 
-    private String group;
+    private String namespace;
 
-    private List<String> tags = new ArrayList<>();
+    private List<String> topics = new ArrayList<>();
 
     private String className;
 
@@ -32,20 +32,20 @@ public abstract class AbstractEventSubscriber implements BaseCollection<EventHan
         this.subscriber = subscriber;
     }
 
-    public String getGroup() {
-        return group;
+    public String getNamespace() {
+        return namespace;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public List<String> getTopics() {
+        return topics;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
     }
 
     public String getClassName() {
@@ -67,15 +67,15 @@ public abstract class AbstractEventSubscriber implements BaseCollection<EventHan
     public AbstractEventSubscriber() {
     }
 
-    public AbstractEventSubscriber(@NotNull String group, @NotNull List<String> tags, @NotNull String subscriber) {
-        setGroup(group);
-        setTags(tags);
+    public AbstractEventSubscriber(@NotNull String namespace, @NotNull List<String> topics, @NotNull String subscriber) {
+        setNamespace(namespace);
+        setTopics(topics);
         setSubscriber(subscriber);
     }
 
-    public abstract void remove(EventHandler handler);
+    public abstract void remove(EventAction action);
 
     public abstract boolean exists();
 
-    public abstract <E extends Event> Map<String, EventHandler> onReceive(E event);
+    public abstract <E extends Event> Map<String, EventAction> onReceive(E event);
 }

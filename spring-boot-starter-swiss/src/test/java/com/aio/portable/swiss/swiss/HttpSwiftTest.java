@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.net.protocol.http.HttpSwift;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
@@ -42,7 +42,7 @@ public class HttpSwiftTest {
         String url = "http://www.baidu.com";
         HttpHost httpProxy = new HttpHost("127.0.0.1", 8888, "http");
         RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
-        HttpSwift.getSerializer().setSerializer(SerializerEnum.SERIALIZE_JACKXML);
+        HttpSwift.setSerializer(new SerializerConverters.JacksonConverter());
         StringEntity entity = HttpSwift.buildJsonObjectEntity(people, "utf-8");
         Header[] headers = newHeaders("sign");
 

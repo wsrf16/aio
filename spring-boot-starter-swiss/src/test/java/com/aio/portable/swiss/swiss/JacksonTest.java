@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sandbox.a中文.AA;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -34,7 +34,7 @@ public class JacksonTest {
         list = JacksonSugar.json2T(JacksonSugar.obj2Json(list));
         map = JacksonSugar.json2T(JacksonSugar.obj2Json(map));
 
-        String listjson = new SerializerSelector(SerializerEnum.SERIALIZE_JACKSON).serialize(list);
+        String listjson = new SerializerConverters.JacksonConverter().serialize(list);
     }
 
     class JsonModel {

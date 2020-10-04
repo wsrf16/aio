@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.storage.nosql;
+package com.aio.portable.swiss.suite.storage.persistence;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 

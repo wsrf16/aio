@@ -197,6 +197,29 @@ public abstract class CollectionSugar {
     }
 
     /**
+     * add
+     * @param src
+     * @param <T>
+     * @return
+     */
+    public final static <T> T[] concat(IntFunction<T[]> generator, T[] src, T... dest) {
+//        int length1 = src.length;
+//        int length2 = dest.length;
+//
+//        int length = length1 + length2;
+//        T[] result = (T[]) new Object[length];
+//        for (int i = 0; i < length1; i++) {
+//            result[i] = src[i];
+//        }
+//        for (int i = length1; i < length; i++) {
+//            result[i] = dest[length - length1 - 1];
+//        }
+        List<T> list1 = Arrays.stream(src).collect(Collectors.toList());
+        List<T> list2 = Arrays.stream(dest).collect(Collectors.toList());
+        return concat(list1, list2).stream().toArray(generator);
+    }
+
+    /**
      * cloneByProperties
      * @param srcCollection
      * @param targetItem
@@ -242,7 +265,7 @@ public abstract class CollectionSugar {
         }
     }
 
-    public final static Object[] toObjectArray(Object source) {
+    public final static Object[] toArray(Object source) {
         return ObjectUtils.toObjectArray(source);
     }
 
@@ -252,6 +275,11 @@ public abstract class CollectionSugar {
 
     public final static <T> List<T> toList(Iterator<T> iterator) {
         return toList(iterator, 10);
+    }
+
+    public final static <T> List<T> toList(T[] array) {
+        List<T> list = new ArrayList<>(Arrays.asList((T[]) new Object[array.length]));
+        return list;
     }
 
 

@@ -22,7 +22,7 @@ public abstract class PersistentContainer {
     }
 
     public String joinTables(String table, String... tables) {
-        return nodePersistence.join(table, tables);
+        return nodePersistence.spellPath(table, tables);
     }
 
     public abstract String getActualTable(String table);

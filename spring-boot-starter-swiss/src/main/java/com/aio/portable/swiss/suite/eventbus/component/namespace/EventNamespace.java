@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +83,8 @@ public class EventNamespace extends AbstractEventNamespace {
         else {
             persist(eventSubscriber);
             String[] tables = spellTables();
-            if (!exists(tables[0]))
-                persistentContainer.setTable(tables[0], this);
+            if (!exists(tables[tables.length - 1]))
+                persistentContainer.setTable(tables[tables.length - 1], this, Arrays.copyOf(tables, tables.length - 1));
             persistentContainer.setTable(subscriber, eventSubscriber, tables);
         }
         return eventSubscriber;

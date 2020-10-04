@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,8 +90,8 @@ public class EventBus extends AbstractEventBus {
         } else {
             eventNamespace = persist(eventNamespace);
             String[] tables = spellTables();
-            if (!exists(tables[0]))
-                persistentContainer.setTable(tables[0], this);
+            if (!exists(tables[tables.length - 1]))
+                persistentContainer.setTable(tables[tables.length - 1], this, Arrays.copyOf(tables, tables.length - 1));
             persistentContainer.setTable(namespace, eventNamespace, tables);
         }
         return eventNamespace;

@@ -3,13 +3,12 @@ package com.aio.portable.swiss.suite.storage.persistence.file;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.io.NIOFiles;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -17,17 +16,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FilePO implements NodePersistence {
     private static String DEFAULT_DATABASE = "default";
     private final static String EMPTY = "";
 
-    private static Path DEFAULT_ROOT = Paths.get(Constant.CURRENT_DIRECTORY);
+    private static String DEFAULT_ROOT = Paths.get(Constant.CURRENT_DIRECTORY).toString();
 
 
-    private Path root;
+    private String root;
 
     private String database = "_cache";
 
@@ -41,7 +43,7 @@ public class FilePO implements NodePersistence {
     protected SerializerConverter serializerConverter = new SerializerConverters.JacksonConverter();
 
 
-    public final static FilePO singletonInstance(Path root, String database) {
+    public final static FilePO singletonInstance(String root, String database) {
         return instance = instance == null ? new FilePO(root, database) : instance;
     }
 
@@ -53,7 +55,7 @@ public class FilePO implements NodePersistence {
         return instance = instance == null ? new FilePO(DEFAULT_ROOT, DEFAULT_DATABASE) : instance;
     }
 
-    public FilePO(Path root, String database) {
+    public FilePO(String root, String database) {
         this.root = root;
         this.database = database;
     }
@@ -65,11 +67,6 @@ public class FilePO implements NodePersistence {
     public FilePO() {
     }
 
-    private String spellPath(String keyOrTable, String... tables) {
-        String joinTable = join(EMPTY, tables);
-        String path = join(keyOrTable, database, joinTable);
-        return path;
-    }
 
     private String formatKey(String key) {
         return MessageFormat.format("{0}.{1}", key, CACHE_EXTENSION);
@@ -84,47 +81,40 @@ public class FilePO implements NodePersistence {
     }
 
     @Override
-    public String join(String node, String... prefixes) {
-        String path = Paths.get(EMPTY, prefixes).toString();
-        return Paths.get(path, node).toString();
+    public String spellPath(String node, String... prefixes) {
+        Path path = Paths.get(root, database);
+        path = Paths.get(path.toString(), prefixes);
+        path = Paths.get(path.toString(), node);
+        return path.toString();
     }
 
     @Override
     public void set(String key, Object value, String... tables) {
-        Path dirPath = Paths.get(root.toString(), database, join(EMPTY, tables));
+        String dirPath = spellPath(EMPTY, tables);
         NIOFiles.createDirectories(dirPath);
 
         String filename = formatKey(key);
-        Path path = Paths.get(root.toString(), database, join(EMPTY, tables), filename);
+        String path = spellPath(filename, tables);
         String content = JacksonSugar.obj2Json(value);
         NIOFiles.write(path, charset, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
     public void setTable(String table, Object value, String... tables) {
-        String joinTable = join(table, tables);
-        Path dirPath = Paths.get(root.toString(), database, joinTable);
+        String dirPath = spellPath(table, tables);
         NIOFiles.createDirectories(dirPath);
 
         String filename = formatTable(table);
         String content = JacksonSugar.obj2Json(value);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
+        String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
         NIOFiles.write(path, charset, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
     public void remove(String key, String... tables) {
-        String joinTable = join(EMPTY, tables);
-        if (!StringUtils.isEmpty(joinTable))
-            checkTable(joinTable);
         String filename = formatKey(key);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
-        try {
-            Files.deleteIfExists(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        Path path = Paths.get(spellPath(filename, tables));
+        NIOFiles.deleteIfExists(path);
     }
 
     @Override
@@ -138,18 +128,12 @@ public class FilePO implements NodePersistence {
     @Override
     public void removeTable(String table, String... tables) {
         checkDatabase();
-        String joinTable = join(table, tables);
-
         String filename = formatTable(table);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
-        Path dirPath = Paths.get(root.toString(), database, joinTable);
-        try {
-            Files.deleteIfExists(path);
-            Files.deleteIfExists(dirPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        String dirTable = spellPath(table, tables);
+        String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
+
+        NIOFiles.deleteIfExists(path);
+        NIOFiles.deleteIfExists(dirTable);
     }
 
     @Override
@@ -162,21 +146,15 @@ public class FilePO implements NodePersistence {
 
     @Override
     public void removeDatabase() {
-        Path path = Paths.get(root.toString(), database);
-        try {
-            Files.deleteIfExists(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        String path = spellPath(EMPTY);
+        NIOFiles.deleteIfExists(path);
     }
 
     @Override
     public <T> T get(String key, Class<T> clazz, String... tables) {
         checkKey(key, tables);
         String filename = formatKey(key);
-        String joinTable = join(EMPTY, tables);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
+        String path = spellPath(filename, tables);
         String content = NIOFiles.read(path, charset);
         T t = JacksonSugar.json2T(content, clazz);
         return t;
@@ -186,8 +164,7 @@ public class FilePO implements NodePersistence {
     public <T> T get(String key, TypeReference<T> valueTypeRef, String... tables) {
         checkKey(key, tables);
         String filename = formatKey(key);
-        String joinTable = join(EMPTY, tables);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
+        String path = spellPath(filename, tables);
         String content = NIOFiles.read(path, charset);
         T t = JacksonSugar.json2T(content, valueTypeRef);
         return t;
@@ -197,8 +174,7 @@ public class FilePO implements NodePersistence {
     public <T> T getTable(String table, Class<T> clazz, String... tables) {
         checkTable(table, tables);
         String filename = formatTable(table);
-        String joinTable = join(table, tables);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
+        String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
         String content = NIOFiles.read(path, charset);
         T t = JacksonSugar.json2T(content, clazz);
         return t;
@@ -208,8 +184,8 @@ public class FilePO implements NodePersistence {
     public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
         checkTable(table, tables);
         String filename = formatTable(table);
-        String joinTable = join(table, tables);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
+//        String dirTable = spellPath(table, tables);
+        String path = spellPath(filename, tables);
         String content = NIOFiles.read(path, charset);
         T t = JacksonSugar.json2T(content, valueTypeRef);
         return t;
@@ -218,12 +194,11 @@ public class FilePO implements NodePersistence {
     @Override
     public List<String> getChildren(String table, String... tables) {
         checkTable(table, tables);
-        String joinTable = join(table, tables);
-        Path path = Paths.get(root.toString(), database, joinTable);
+        String path = spellPath(table, tables);
         List<Path> files = new ArrayList<>();
 
         try {
-            Files.walkFileTree(path, null, 1, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(Paths.get(path), null, 1, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 //                    return super.visitFile(file, attrs);
@@ -272,35 +247,32 @@ public class FilePO implements NodePersistence {
     @Override
     public boolean exists(String key, String... tables) {
         String filename = formatKey(key);
-        String joinTable = join(EMPTY, tables);
-        Path path = Paths.get(root.toString(), database, joinTable, filename);
-        boolean exists = Files.exists(path);
+        String path = spellPath(filename, tables);
+        boolean exists = Files.exists(Paths.get(path));
         return exists;
     }
 
     @Override
     public boolean existsTable(String table, String... tables) {
-        String joinTable = join(table, tables);
-        Path path = Paths.get(root.toString(), database, joinTable);
-        boolean exists = Files.exists(path);
+        String path = spellPath(table, tables);
+        boolean exists = Files.exists(Paths.get(path));
         return exists;
     }
 
     @Override
     public boolean existsDatabase() {
-        Path path = Paths.get(root.toString());
-        boolean exists = Files.exists(path);
+        String path = spellPath(EMPTY);
+        boolean exists = Files.exists(Paths.get(path));
         return exists;
     }
 
     @Override
     public List<String> keys(String table, String... tables) {
         checkTable(table, tables);
-        String joinTable = join(table, tables);
-        Path path = Paths.get(root.toString(), database, joinTable);
+        String path = spellPath(table, tables);
         List<Path> files = new ArrayList<>();
 
-        try (DirectoryStream<Path> pathDirectoryStream = Files.newDirectoryStream(path)) {
+        try (DirectoryStream<Path> pathDirectoryStream = Files.newDirectoryStream(Paths.get(path))) {
 //            Files.walkFileTree(path, null, 1, new SimpleFileVisitor<Path>() {
 //                @Override
 //                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
@@ -325,7 +297,7 @@ public class FilePO implements NodePersistence {
     @Override
     public List<String> tables() {
         checkDatabase();
-        Path path = Paths.get(root.toString(), database);
+        Path path = Paths.get(root, database);
         final List<Path> paths = new ArrayList<>();
 
         try {
@@ -442,14 +414,14 @@ public class FilePO implements NodePersistence {
     private void checkKey(String key, String... tables) {
         checkDatabase();
         if (!exists(key, tables)) {
-            throw new JsonCacheException.NotExistKeyException(join(key, tables));
+            throw new JsonCacheException.NotExistKeyException(spellPath(key, tables));
         }
     }
 
     private void checkTable(String table, String... tables) {
         checkDatabase();
         if (!existsTable(table, tables)) {
-            throw new JsonCacheException.NotExistTableException(join(table, tables));
+            throw new JsonCacheException.NotExistTableException(spellPath(table, tables));
         }
     }
 

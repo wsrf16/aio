@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.net.protocol.http;
 
-import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
@@ -61,19 +62,19 @@ public class HttpSwift {
 //    }
 
 
-    public static SerializerSelector serializer;
+    protected static SerializerConverter serializer;
 
-    public final static SerializerSelector getSerializer() {
+    public final static SerializerConverter getSerializer() {
         return serializer;
     }
 
-    public final static void setSerializer(SerializerSelector serializer) {
+    public final static void setSerializer(SerializerConverter serializer) {
         HttpSwift.serializer = serializer;
     }
 
     static {
 //        serializer = new SerializerSelector()::serialize;
-        serializer = new SerializerSelector();
+        serializer = new SerializerConverters.JacksonConverter();
     }
 
     public final static UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {

@@ -1,13 +1,11 @@
 package com.aio.portable.park.runner;
 
 import com.aio.portable.park.config.AppLogHubFactory;
-import com.aio.portable.park.config.RootConfig;
+import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.LogTest;
 //import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.sandbox.a中文.AA;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerEnum;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerSelector;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class AutoRunner implements ApplicationRunner {
     LogHub log = AppLogHubFactory.staticBuild();//.setSamplerRate(1f);
 
     @Autowired
-    RootConfig rootConfig;
+    ApplicationConfig rootConfig;
 
     @Autowired
     LogTest logTest;
@@ -68,7 +66,7 @@ public class AutoRunner implements ApplicationRunner {
             log.setAsync(false).i("111111111111");
 
 
-            String ss = ClassSugar.getPath(AA.class);
+            System.out.println(ClassSugar.getPath(AA.class));
             Thread.sleep(0);
         } catch (Exception e) {
             e.printStackTrace();

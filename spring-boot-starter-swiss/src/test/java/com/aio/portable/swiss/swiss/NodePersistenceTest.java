@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.module.zookeeper.ZooKeeperSugar;
-import com.aio.portable.swiss.suite.storage.nosql.zookeeper.ZooKeeperPO;
+import com.aio.portable.swiss.suite.storage.persistence.zookeeper.ZooKeeperPO;
 import org.apache.zookeeper.ZooKeeper;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;

@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -264,6 +265,10 @@ public abstract class CollectionSugar {
 
     public final static Object[] toArray(List<?> list) {
         return list.stream().toArray();
+    }
+
+    public final static <T> T[] toArray(List<T> list, IntFunction<T[]> generator) {
+        return list.stream().toArray(generator);
     }
 
 //    public final static <T> T[] toArray(List<T> list) {

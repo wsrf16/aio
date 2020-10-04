@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 
 //@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 //@JsonSubTypes({
-//        @JsonSubTypes.Type(value = DiskEventListenerGroup.class, name = "DiskEventListenerGroup"),
-//        @JsonSubTypes.Type(value = HashMapEventListenerGroup.class, name = "HashMapEventListenerGroup")})
+//        @JsonSubTypes.Type(value = DiskEventListenerNamespace.class, name = "DiskEventListenerNamespace"),
+//        @JsonSubTypes.Type(value = HashMapEventListenerNamespace.class, name = "HashMapEventListenerNamespace")})
 public abstract class AbstractEventNamespace implements BaseCollection<EventSubscriber> {
     private String namespace;
 

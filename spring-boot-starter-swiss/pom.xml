@@ -641,7 +641,7 @@
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <name>user snapshot</name>
+            <name>user snapshot resp</name>
             <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>

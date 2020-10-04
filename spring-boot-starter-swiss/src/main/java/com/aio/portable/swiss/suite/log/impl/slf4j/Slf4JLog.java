@@ -33,9 +33,60 @@ public class Slf4JLog extends LogSingle {
 
     @Override
     protected void initialPrinter() {
-        String name = this.getName();
+        printer = new Slf4JPrinter(this.getName());
 
-        printer = (text, level) -> {
+//        String name = this.getName();
+//
+//        printer = (text, level) -> {
+//            switch (level)
+//            {
+//                case VERBOSE: {
+//                    Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
+//                }
+//                break;
+//                case TRACE: {
+//                    logger.trace(text);
+//                }
+//                break;
+//                case INFORMATION: {
+//                    logger.info(text);
+//                }
+//                break;
+//                case DEBUG: {
+//                    logger.debug(text);
+//                }
+//                break;
+//                case WARNING: {
+//                    logger.warn(text);
+//                }
+//                break;
+//                case ERROR: {
+//                    logger.error(text);
+//                }
+//                break;
+//                case FATAL: {
+//                    Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
+//                }
+//                break;
+//                default:{
+//                    Global.unsupportedOperationException(name + ": unknown level");
+//                }
+//                break;
+//            }
+//        };
+
+    }
+
+
+    private class Slf4JPrinter implements Printer {
+        final String name;
+
+        public Slf4JPrinter(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void println(String text, LevelEnum level) {
             switch (level)
             {
                 case VERBOSE: {
@@ -71,7 +122,6 @@ public class Slf4JLog extends LogSingle {
                 }
                 break;
             }
-        };
+        }
     }
-
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppLogHubFactory extends LogHubFactory {
 
-    private AppLogHubFactory() {
+    public AppLogHubFactory() {
     }
 
     @Override

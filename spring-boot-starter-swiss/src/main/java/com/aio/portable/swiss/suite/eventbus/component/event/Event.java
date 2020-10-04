@@ -9,26 +9,26 @@ import java.util.List;
  * event object
  */
 public class Event extends EventObject {
-    private List<String> tags;
+    private List<String> topics;
 
-    private List<String> groups;
+    private List<String> namespaces;
 
     private HttpHeaders headers;
 
-    public List<String> getTags() {
-        return tags;
+    public List<String> getTopics() {
+        return topics;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTopics(List<String> topics) {
+        this.topics = topics;
     }
 
-    public List<String> getGroups() {
-        return groups;
+    public List<String> getNamespaces() {
+        return namespaces;
     }
 
-    public void setGroups(List<String> groups) {
-        this.groups = groups;
+    public void setNamespaces(List<String> namespaces) {
+        this.namespaces = namespaces;
     }
 
     public HttpHeaders getHeaders() {
@@ -42,12 +42,12 @@ public class Event extends EventObject {
     public Event() {
     }
 
-    public Event(Object source, List<String> tags) {
+    public Event(Object source, List<String> topics) {
         super(source);
-        this.tags = tags;
+        this.topics = topics;
     }
 
-    public Event(Object source, String tag) {
-        this(source, new ArrayList<String>(){{add(tag);}});
+    public Event(Object source, String topic) {
+        this(source, new ArrayList<String>(){{add(topic);}});
     }
 }

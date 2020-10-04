@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "config")
-public class RootConfig {
+public class ApplicationConfig {
     private String abc;
 
     public String getAbc() {

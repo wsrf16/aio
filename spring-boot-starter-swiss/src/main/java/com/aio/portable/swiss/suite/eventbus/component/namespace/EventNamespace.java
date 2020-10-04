@@ -5,7 +5,7 @@ import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscribe
 import com.aio.portable.swiss.suite.eventbus.refer.EventBusConfig;
 import com.aio.portable.swiss.suite.eventbus.refer.exception.NotExistEventNamespaceException;
 import com.aio.portable.swiss.suite.eventbus.refer.persistence.PersistentContainer;
-import com.aio.portable.swiss.suite.storage.nosql.NodePersistence;
+import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.util.StringUtils;
 
@@ -50,8 +50,8 @@ public class EventNamespace extends AbstractEventNamespace {
         return new String[]{EventBusConfig.EVENT_BUS_TABLE, getNamespace()};
     }
 
-    public void add(String subscriber, List<String> tags) {
-        EventSubscriber eventSubscriber = buildEventSubscriber(subscriber, tags);
+    public void add(String subscriber, List<String> topics) {
+        EventSubscriber eventSubscriber = buildEventSubscriber(subscriber, topics);
         add(eventSubscriber);
     }
 
@@ -157,8 +157,8 @@ public class EventNamespace extends AbstractEventNamespace {
                 .collect(Collectors.toMap(e -> e.getKey(), e -> persist(e.getValue())));
     }
 
-    public EventSubscriber buildEventSubscriber(String subscriber, List<String> tags) {
-        EventSubscriber eventSubscriber = new EventSubscriber(this.nodePersistence, getNamespace(), tags, subscriber);
+    public EventSubscriber buildEventSubscriber(String subscriber, List<String> topics) {
+        EventSubscriber eventSubscriber = new EventSubscriber(this.nodePersistence, getNamespace(), topics, subscriber);
         return eventSubscriber;
     }
 
@@ -177,13 +177,13 @@ public class EventNamespace extends AbstractEventNamespace {
                 .parallel();
 
         stream.forEach(subscriber -> {
-            if (event.getTags().containsAll(subscriber.getTags())) {
+            if (event.getTopics().containsAll(subscriber.getTopics())) {
                 subscriber.onReceive(event);
-                map.put(subscriber.getGroup(), subscriber);
+                map.put(subscriber.getNamespace(), subscriber);
             }
-//            if (CollectionSugar.isEmpty(event.getTags())) {
+//            if (CollectionSugar.isEmpty(event.getTopics())) {
 //                subscriber.onReceive(event);
-//            } else if (event.getTags().containsAll(subscriber.getTags())) {
+//            } else if (event.getTopics().containsAll(subscriber.getTopics())) {
 //                subscriber.onReceive(event);
 //            }
         });

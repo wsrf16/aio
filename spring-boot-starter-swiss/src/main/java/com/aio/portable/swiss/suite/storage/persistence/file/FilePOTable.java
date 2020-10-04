@@ -1,9 +1,4 @@
-package com.aio.portable.swiss.suite.storage.nosql.file;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.util.List;
-import java.util.Map;
+package com.aio.portable.swiss.suite.storage.persistence.file;
 
 //public class FilePOTable {
 //    private FilePO jsonCache;

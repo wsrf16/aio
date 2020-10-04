@@ -1,8 +1,7 @@
-package com.aio.portable.swiss.suite.storage.nosql;
+package com.aio.portable.swiss.suite.storage.persistence;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

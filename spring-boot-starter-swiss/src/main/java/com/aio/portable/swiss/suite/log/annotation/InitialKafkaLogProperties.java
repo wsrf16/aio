@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 //@Inherited
-public @interface InitialKafkaLogProperties {
+@interface InitialKafkaLogProperties {
 }

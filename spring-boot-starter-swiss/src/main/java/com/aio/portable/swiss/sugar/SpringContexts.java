@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -9,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.beans.Introspector;
@@ -62,28 +64,28 @@ public class SpringContexts implements ApplicationContextAware {
     }
 
     public static class BeanCenter {
-        public static String getBeanName(String simpleClassName) {
+        public static String getBeanName(@Nullable String simpleClassName) {
             return Introspector.decapitalize(simpleClassName);
         }
 
-        public final static <T> T getBean(String beanName) {
+        public final static <T> T getBean(@Nullable String beanName) {
             return (T) getBeanFactory().getBean(beanName);
         }
 
-        public final static <T> T getBean(Class<T> clazz) {
+        public final static <T> T getBean(@Nullable Class<T> clazz) {
             return getBeanFactory().getBean(clazz);
         }
 
-        public final static void remove(String beanName) {
+        public final static void remove(@Nullable String beanName) {
             getDefaultListableBeanFactory().removeBeanDefinition(beanName);
         }
 
-        public final static void registry(String beanName, BeanDefinition beanDefinition) {
+        public final static void registry(@Nullable String beanName, @Nullable BeanDefinition beanDefinition) {
             DefaultListableBeanFactory defaultListableBeanFactory = getDefaultListableBeanFactory();
             defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinition);
         }
 
-        public final static BeanDefinition getRawBeanDefinition(Class<?> clazz, Map<String, Object> propertyValueMap) {
+        public final static BeanDefinition getRawBeanDefinition(@Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
             for (Map.Entry<String, Object> stringObjectEntry : propertyValueMap.entrySet()) {
                 String name = stringObjectEntry.getKey();
@@ -93,7 +95,7 @@ public class SpringContexts implements ApplicationContextAware {
             return beanDefinitionBuilder.getRawBeanDefinition();
         }
 
-        public final static void registry(String beanName, Class<?> clazz, Map<String, Object> propertyValueMap) {
+        public final static void registry(@Nullable String beanName, @Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
             BeanDefinition rawBeanDefinition = getRawBeanDefinition(clazz, propertyValueMap);
             registry(beanName, rawBeanDefinition);
         }
@@ -107,7 +109,7 @@ public class SpringContexts implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public final static <T> T getBean(String name) {
+    public final static <T> T getBean(@Nullable String name) {
         return (T) applicationContext.getBean(name);
     }
 
@@ -118,8 +120,12 @@ public class SpringContexts implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public final static <T> T getBean(Class<T> requiredType) {
+    public final static <T> T getBean(@Nullable Class<T> requiredType) {
         return applicationContext.getBean(requiredType);
+    }
+
+    public final static <T> Map<String, T> getBeansOfType(@Nullable Class<T> clazz) throws BeansException {
+        return applicationContext.getBeansOfType(clazz);
     }
 
     /**

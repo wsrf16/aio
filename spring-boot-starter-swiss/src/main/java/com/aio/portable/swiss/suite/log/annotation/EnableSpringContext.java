@@ -7,10 +7,11 @@ import org.springframework.context.annotation.DependsOn;
 import java.lang.annotation.*;
 
 //@Import({RedisRepositoriesRegistrar.class})
-@DependsOn(PropertyBean.RABBITMQ_LOG_PROPERTIES)
+//@DependsOn(PropertyBean.LOG_PROPERTIES)
+@DependsOn({PropertyBean.SWISS})
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 //@Inherited
-@interface InitialRabbitMQLogProperties {
+public @interface EnableSpringContext {
 }

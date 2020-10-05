@@ -1,13 +1,19 @@
 package com.aio.portable.park.config;
 
 import com.aio.portable.swiss.designpattern.singleton.BaseSingletonInstance;
+import com.aio.portable.swiss.sugar.SpringContexts;
 import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLog;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLog;
+import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class AppLogHubFactory extends LogHubFactory {
@@ -19,7 +25,7 @@ public class AppLogHubFactory extends LogHubFactory {
     public LogHub build(String className) {
         LogHub logger = LogHub.build(
 //                new KafkaLog(className),
-//                new RabbitMQLog(className),
+                new RabbitMQLog(className),
 //                new ConsoleLog(className),
                 new Slf4JLog(className));
         return logger;

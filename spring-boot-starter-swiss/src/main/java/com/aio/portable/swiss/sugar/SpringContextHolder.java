@@ -17,7 +17,7 @@ import java.beans.Introspector;
 import java.util.Map;
 
 @Component
-public class SpringContexts implements ApplicationContextAware {
+public class SpringContextHolder implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
     /**
@@ -29,6 +29,10 @@ public class SpringContexts implements ApplicationContextAware {
         return applicationContext;
     }
 
+    public final static boolean hasLoad() {
+        return applicationContext != null;
+    }
+
     /**
      * 实现ApplicationContextAware接口, 注入Context到静态变量中.
      *
@@ -36,7 +40,7 @@ public class SpringContexts implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringContexts.applicationContext = applicationContext;
+        SpringContextHolder.applicationContext = applicationContext;
     }
 
     public final static <T extends ApplicationContext> T getSimilarApplicationContext() {

@@ -7,11 +7,10 @@ import org.springframework.context.annotation.DependsOn;
 import java.lang.annotation.*;
 
 //@Import({RedisRepositoriesRegistrar.class})
-//@DependsOn(PropertyBean.LOG_PROPERTIES)
-@DependsOn({PropertyBean.SWISS})
+@DependsOn({PropertyBean.LOG_HUB_PROPERTIES})
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 //@Inherited
-public @interface EnableSpringContext {
+public @interface EnableLogHub {
 }

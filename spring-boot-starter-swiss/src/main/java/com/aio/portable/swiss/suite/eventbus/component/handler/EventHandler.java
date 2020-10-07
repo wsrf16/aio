@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.eventbus.component.action;
+package com.aio.portable.swiss.suite.eventbus.component.handler;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = RestTemplateEventAction.class, name = "RestTemplateEventAction"),
-        @JsonSubTypes.Type(value = SimpleEventAction.class, name = "SimpleEventAction")})
-public abstract class EventAction {
-    private String action = IDS.uuid();
+        @JsonSubTypes.Type(value = RestTemplateEventHandler.class, name = "RestTemplateEventHandler"),
+        @JsonSubTypes.Type(value = SimpleEventHandler.class, name = "SimpleEventHandler")})
+public abstract class EventHandler {
+    private String handler = IDS.uuid();
 
 //    private List<String> topics = new ArrayList<>();
 
@@ -22,12 +22,12 @@ public abstract class EventAction {
 
     private int retry = 0;
 
-    public String getAction() {
-        return action;
+    public String getHandler() {
+        return handler;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
 //    public List<String> getTopics() {
@@ -62,20 +62,20 @@ public abstract class EventAction {
         this.retry = retry;
     }
 
-    public EventAction() {
+    public EventHandler() {
     }
 
-//    public EventAction(List<String> topics) {
+//    public EventHandler(List<String> topics) {
 //        this.topics = topics;
 //    }
 
-//    public EventAction(@NotNull String action, @NotNull List<String> topics) {
-//        this.action = action;
+//    public EventHandler(@NotNull String handler, @NotNull List<String> topics) {
+//        this.handler = handler;
 //        this.topics = topics;
 //    }
 
-    public EventAction(@NotNull String action) {
-        this.action = action;
+    public EventHandler(@NotNull String handler) {
+        this.handler = handler;
     }
 
     public abstract <E extends Event> Object push(E event);

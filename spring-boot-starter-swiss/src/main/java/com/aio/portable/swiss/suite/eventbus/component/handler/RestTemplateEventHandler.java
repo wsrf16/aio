@@ -1,8 +1,8 @@
-package com.aio.portable.swiss.suite.eventbus.component.action;
+package com.aio.portable.swiss.suite.eventbus.component.handler;
 
-import com.aio.portable.swiss.sugar.SpringContexts;
+import com.aio.portable.swiss.sugar.SpringContextHolder;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.action.http.HttpAttempt;
+import com.aio.portable.swiss.suite.eventbus.component.handler.http.HttpAttempt;
 import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
 import org.springframework.http.HttpHeaders;
@@ -16,11 +16,11 @@ import javax.validation.constraints.NotNull;
 import java.text.MessageFormat;
 import java.util.function.Function;
 
-public class RestTemplateEventAction extends SimpleEventAction {
+public class RestTemplateEventHandler extends SimpleEventHandler {
     public static RestTemplate restTemplate;
 
     public static void setRestTemplate(RestTemplate restTemplate) {
-        RestTemplateEventAction.restTemplate = restTemplate;
+        RestTemplateEventHandler.restTemplate = restTemplate;
     }
 
     private HttpAttempt httpAttempt;
@@ -54,17 +54,17 @@ public class RestTemplateEventAction extends SimpleEventAction {
 //    }
 
     static {
-        restTemplate = SpringContexts.getApplicationContext().containsBean("restTemplate") ? (RestTemplate) SpringContexts.getApplicationContext().getBean("restTemplate") : new RestTemplate();
+        restTemplate = SpringContextHolder.getApplicationContext().containsBean("restTemplate") ? (RestTemplate) SpringContextHolder.getApplicationContext().getBean("restTemplate") : new RestTemplate();
     }
 
-    public RestTemplateEventAction() {
+    public RestTemplateEventHandler() {
         super();
         this.func = this::httpPush;
         this.succeedBack = this::echoBack;
         this.failedBack = this::echoError;
     }
 
-    public RestTemplateEventAction(@NotNull String name, @NotNull HttpAttempt httpAttempt) {
+    public RestTemplateEventHandler(@NotNull String name, @NotNull HttpAttempt httpAttempt) {
         super(name);
         this.httpAttempt = httpAttempt;
 
@@ -111,14 +111,14 @@ public class RestTemplateEventAction extends SimpleEventAction {
 
     private HttpHeaders merge(HttpHeaders httpHeaders1, HttpHeaders httpHeaders2) {
         HttpHeaders httpHeaders;
-        if (!CollectionUtils.isEmpty(httpHeaders1) && !CollectionUtils.isEmpty(httpHeaders2)) {
-            httpHeaders1.addAll(httpHeaders2);
-            httpHeaders = httpHeaders1;
-        } else if (!CollectionUtils.isEmpty(httpHeaders1) && CollectionUtils.isEmpty(httpHeaders2)) {
+        if (!CollectionUtils.isEmpty(httpHeaders1) && CollectionUtils.isEmpty(httpHeaders2)) {
             httpHeaders = httpHeaders1;
         } else if (CollectionUtils.isEmpty(httpHeaders1) && !CollectionUtils.isEmpty(httpHeaders2)) {
             httpHeaders = httpHeaders2;
-        } else {
+        } else if (!CollectionUtils.isEmpty(httpHeaders1) && !CollectionUtils.isEmpty(httpHeaders2)) {
+            httpHeaders1.addAll(httpHeaders2);
+            httpHeaders = httpHeaders1;
+        } else  {
             httpHeaders = new HttpHeaders();
         }
         return httpHeaders;
@@ -128,7 +128,7 @@ public class RestTemplateEventAction extends SimpleEventAction {
         HttpMethod method = httpAttempt.getMethod();
         Object source = event.getPayload();
         String url = httpAttempt.getUrl();
-        HttpHeaders httpHeaders = merge(httpAttempt.getHeaders(), event.getHeaders());
+        HttpHeaders httpHeaders = merge(event.getHeaders(), httpAttempt.getHeaders());
         ResponseEntity<String> responseEntity;
         switch (method) {
             case DELETE: {

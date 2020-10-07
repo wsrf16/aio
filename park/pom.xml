@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>park</artifactId>
-    <version>1.1.13-SNAPSHOT</version>
+    <version>1.1.14-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>park</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.aio.portable</groupId>
         <artifactId>all-in-one</artifactId>
-        <version>1.1.13-SNAPSHOT</version>
+        <version>1.1.14-SNAPSHOT</version>
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--        <relativePath>../</relativePath>-->
     </parent>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>spring-boot-starter-swiss</artifactId>
-            <version>1.1.13-SNAPSHOT</version>
+            <version>1.1.14-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
@@ -387,9 +387,10 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>/static/**</include>
-                    <include>/templates/**</include>
-                    <include>/config/**</include>
+                    <include>static/**</include>
+                    <include>templates/**</include>
+                    <include>config/**</include>
+                    <include>banner.txt</include>
                 </includes>
             </resource>
 

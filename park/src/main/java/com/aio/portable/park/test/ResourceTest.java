@@ -1,6 +1,6 @@
 package com.aio.portable.park.test;
 
-import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.ParkApplication;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.LogHub;

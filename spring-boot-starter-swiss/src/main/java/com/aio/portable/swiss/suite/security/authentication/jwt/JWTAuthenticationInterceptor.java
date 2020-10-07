@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt;
 
+import com.aio.portable.swiss.hamlet.bean.BizStatusOriginEnum;
 import com.aio.portable.swiss.autoconfigure.properties.JWTClaimsProperties;
-import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.StringSugar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
 public class JWTAuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     JWTAction jwtAction;
+
+    @Autowired
+    BizStatusOriginEnum httpResponseStatus;
 
     private final static String AUTHORIZATION_HEAD = JWTAction.AUTHORIZATION_HEAD;
     private final String bearer = JWTAction.BEAR_PREFIX;
@@ -56,7 +59,7 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
                 if (required && StringUtils.hasText(bearToken)) {
                     String token = StringSugar.removeStart(bearToken, bearer);
                     if (!this.jwtAction.verify(token))
-                        throw new BizException(BizStatusEnum.UNAUTHORIZED.getCode(), BizStatusEnum.UNAUTHORIZED.getMessage());
+                        throw new BizException(httpResponseStatus.unauthorized().getCode(), httpResponseStatus.unauthorized().getMessage());
                 }
             }
             return true;

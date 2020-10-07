@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.eventbus.component.subscriber;
 
 import com.aio.portable.swiss.suite.bean.structure.BaseCollection;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.action.EventAction;
+import com.aio.portable.swiss.suite.eventbus.component.handler.EventHandler;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.Map;
 //@JsonSubTypes({
 //        @JsonSubTypes.Type(value = DiskEventListener.class, name = "DiskEventListener"),
 //        @JsonSubTypes.Type(value = HashMapEventListener.class, name = "HashMapEventListener")})
-public abstract class AbstractEventSubscriber implements BaseCollection<EventAction> {
+public abstract class AbstractEventSubscriber implements BaseCollection<EventHandler> {
     private String subscriber;
 
     private String namespace;
@@ -73,9 +73,9 @@ public abstract class AbstractEventSubscriber implements BaseCollection<EventAct
         setSubscriber(subscriber);
     }
 
-    public abstract void remove(EventAction action);
+    public abstract void remove(EventHandler handler);
 
     public abstract boolean exists();
 
-    public abstract <E extends Event> Map<String, EventAction> onReceive(E event);
+    public abstract <E extends Event> Map<String, EventHandler> onReceive(E event);
 }

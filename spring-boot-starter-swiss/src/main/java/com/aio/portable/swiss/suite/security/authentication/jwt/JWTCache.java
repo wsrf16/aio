@@ -1,13 +1,10 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
-import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class JWTCache {
     private static <T> Class<T> reflectForClass(String className) {

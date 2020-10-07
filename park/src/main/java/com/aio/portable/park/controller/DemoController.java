@@ -1,7 +1,10 @@
 package com.aio.portable.park.controller;
 
-import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.common.BizStatusEnum;
+import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapperUtils;
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Random;
 
 @RestController
 @RequestMapping("demo")
@@ -57,7 +61,10 @@ public class DemoController {
 
     @GetMapping("throwe")
     public void throwe() {
-        throw new RuntimeException("throw exception");
+        if (new Random().nextBoolean())
+            throw new RuntimeException("throw exception");
+        else
+            throw new BizException(BizStatusEnum.staticInvalid().getCode(), "throw bizexception");
     }
 
     @GetMapping("date")
@@ -68,7 +75,7 @@ public class DemoController {
     @GetMapping("ok")
     @LogMarker
     public ResponseWrapper<String> ok() {
-        return ResponseWrapper.build(0, "oookkk");
+        return ResponseWrapperUtils.build(0, "oookkk");
     }
 
     @GetMapping("lock")

@@ -1,16 +1,15 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
+import com.aio.portable.swiss.hamlet.bean.BizStatusOriginEnum;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.LogHubPool;
-import com.aio.portable.swiss.hamlet.bean.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.text.MessageFormat;
@@ -21,77 +20,73 @@ public abstract class HamletExceptionAdvice {
     private final static String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
     private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
 
-    public HamletExceptionAdvice(LogHubFactory slf4jHubFactory) {
-        loggerPool = LogHubPool.singletonInstance(slf4jHubFactory);
+    public HamletExceptionAdvice(LogHubFactory logHubFactory) {
+        loggerPool = LogHubPool.singletonInstance(logHubFactory);
     }
 
     protected static LogHubPool loggerPool;
 
-    @ExceptionHandler(value = {HandOverException.class})
-    public ResponseWrapper handleBizException(HandOverException inpute) {
-        Exception e = inpute.getException();
+    @Autowired
+    BizStatusOriginEnum httpResponseStatus;
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseWrapper handleBizException(Exception input) {
+        Exception e = input instanceof HandOverException ? ((HandOverException)input).getException() : input;
 
         ResponseWrapper responseWrapper;
         if (e instanceof BizException) {
-            BizException bizException = (BizException) (e);
+            BizException bizException = (BizException)e;
             responseWrapper = ResponseWrapper.build(bizException.getCode(), bizException.getMessage());
-        } else if (e instanceof NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
+        }
         else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+            responseWrapper = ResponseWrapper.build(httpResponseStatus.invalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+        else if (e instanceof NoHandlerFoundException)
+            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), e.getMessage());
         else
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), BizStatusEnum.EXCEPTION.getMessage());
-        String traceId = inpute.getTraceId();
-        responseWrapper.setTraceId(traceId);
+            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), httpResponseStatus.exception().getMessage());
+        if (input instanceof HandOverException) {
+            String traceId = ((HandOverException) input).getTraceId();
+            responseWrapper.setTraceId(traceId);
+        }
+        return responseWrapper;
+    }
 
-//        RequestRecord requestRecord = inpute.getRequestRecord();
+
+//    @ExceptionHandler(value = {BizException.class})
+//    public ResponseWrapper handleBizException(BizException e) {
+//        LogHub logger = loggerPool.putIfAbsent(e);
+//
+//        ResponseWrapper responseWrapper = ResponseWrapper.build(e.getCode(), e.getMessage());
+//        String traceId = responseWrapper.getTraceId();
+//
+//        if (logger != null) {
+//            logger.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, traceId), e.getMessage(), e);
+//        }
+//        return responseWrapper;
+//    }
+
+//    @ExceptionHandler(value = {Exception.class})
+//    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ResponseWrapper handleException(Exception e) {
+//        ResponseWrapper responseWrapper;
+////        responseWrapper = e instanceof org.springframework.web.servlet.NoHandlerFoundException ?
+////                        ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage())
+////                        : ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
+//        if (e instanceof NoHandlerFoundException)
+//            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), e.getMessage());
+//        else if (e instanceof MethodArgumentNotValidException)
+//            responseWrapper = ResponseWrapper.build(httpResponseStatus.invalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+//        else
+//            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), httpResponseStatus.exception());
+//        String traceId = responseWrapper.getTraceId();
+//
 //        LogHub logger = loggerPool.putIfAbsent(e);
 //        if (logger != null) {
-//            if (e instanceof BizException)
-//                logger.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, traceId), requestRecord, e);
-//            else
-//                logger.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, traceId), e.getMessage(), e);
+////            logger.e(GLOBAL_SYSTEM_EXCEPTION, e);
+//            logger.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, traceId), e.getMessage(), e);
 //        }
-        return responseWrapper;
-    }
-
-
-    @ExceptionHandler(value = {BizException.class})
-    public ResponseWrapper handleBizException(BizException e) {
-        LogHub logger = loggerPool.putIfAbsent(e);
-
-        ResponseWrapper responseWrapper = ResponseWrapper.build(e.getCode(), e.getMessage());
-        String traceId = responseWrapper.getTraceId();
-
-        if (logger != null) {
-//            logger.e(GLOBAL_BUSINESS_EXCEPTION, e);
-            logger.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, traceId), e.getMessage(), e);
-        }
-        return responseWrapper;
-    }
-
-    @ExceptionHandler(value = {Exception.class})
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseWrapper handleException(Exception e) {
-        ResponseWrapper responseWrapper;
-//        responseWrapper = e instanceof org.springframework.web.servlet.NoHandlerFoundException ?
-//                        ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage())
-//                        : ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
-        if (e instanceof NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
-        else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.INVALID.getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
-        else
-            responseWrapper = ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), BizStatusEnum.EXCEPTION);
-        String traceId = responseWrapper.getTraceId();
-
-        LogHub logger = loggerPool.putIfAbsent(e);
-        if (logger != null) {
-//            logger.e(GLOBAL_SYSTEM_EXCEPTION, e);
-            logger.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, traceId), e.getMessage(), e);
-        }
-        return responseWrapper;
-    }
+//        return responseWrapper;
+//    }
 
 
 }

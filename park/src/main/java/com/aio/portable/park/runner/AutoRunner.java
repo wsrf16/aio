@@ -1,6 +1,6 @@
 package com.aio.portable.park.runner;
 
-import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.LogTest;
 //import com.aio.portable.park.test.MyDatabaseTest;

@@ -2,8 +2,8 @@ package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.suite.eventbus.bus.EventBus;
 import com.aio.portable.swiss.suite.eventbus.component.event.Event;
-import com.aio.portable.swiss.suite.eventbus.component.action.RestTemplateEventAction;
-import com.aio.portable.swiss.suite.eventbus.component.action.http.HttpAttempt;
+import com.aio.portable.swiss.suite.eventbus.component.handler.RestTemplateEventHandler;
+import com.aio.portable.swiss.suite.eventbus.component.handler.http.HttpAttempt;
 import com.aio.portable.swiss.suite.eventbus.component.subscriber.EventSubscriber;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class EventBusTest {
 
     @Test
     public void todo() {
-        RestTemplateEventAction.setRestTemplate(restTemplate);
+        RestTemplateEventHandler.setRestTemplate(restTemplate);
 
         importEventSubscriber();
         publish();
@@ -53,8 +53,8 @@ public class EventBusTest {
         httpAttempt2.setMethod(HttpMethod.POST);
 
 
-        RestTemplateEventAction handler1 = new RestTemplateEventAction("handler-1", httpAttempt1);
-        RestTemplateEventAction handler2 = new RestTemplateEventAction("handler-2", httpAttempt2);
+        RestTemplateEventHandler handler1 = new RestTemplateEventHandler("handler-1", httpAttempt1);
+        RestTemplateEventHandler handler2 = new RestTemplateEventHandler("handler-2", httpAttempt2);
 
         EventSubscriber subscriber = eventBus.addEventSubscriber("namespace-task", "subscriber-task", new ArrayList<String>() {{
             add(("tag-test"));

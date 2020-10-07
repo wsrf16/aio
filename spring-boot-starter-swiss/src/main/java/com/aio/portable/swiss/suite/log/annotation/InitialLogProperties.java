@@ -13,5 +13,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 //@Inherited
-@interface InitialLogProperties {
+public @interface InitialLogProperties {
 }

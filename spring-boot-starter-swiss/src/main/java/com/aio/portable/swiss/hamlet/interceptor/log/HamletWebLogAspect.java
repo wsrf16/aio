@@ -8,8 +8,8 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public abstract class HamletWebLogAspect extends AbstractWebLogAspect {
-    public HamletWebLogAspect(LogHubFactory slf4jHubFactory) {
-        super(slf4jHubFactory);
+    public HamletWebLogAspect(LogHubFactory logHubFactory) {
+        super(logHubFactory);
     }
 
     @Pointcut(POINTCUT_SPECIAL)

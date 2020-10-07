@@ -1,19 +1,19 @@
 
 
 
-                                                                                           onEvent  ↗ Action A1
+                                                                                           onEvent  ↗ Handler A1
                                                             ┌——————→ Subscriber1 —————┤
-                                                            │              topic1,topic2           ↘ Action A2
+                                                            │              topic1,topic2           ↘ Handler A2
                                                             │
             Event                                           │
-      topic1,topic2,topic3                                  │                             onEvent  ↗ Action B1
-Publisher ————→ EventBus ——┬—→  Namespace ———→┼——————→ Subscriber2 —————┤  Action B2
-                                  │                        │              topic1,topic3           ↘ Action B3
+      topic1,topic2,topic3                                  │                             onEvent  ↗ Handler B1
+Publisher ————→ EventBus ——┬—→  Namespace ———→┼——————→ Subscriber2 —————┤  Handler B2
+                                  │                        │              topic1,topic3           ↘ Handler B3
                                   │                        │
                                   │                        │
-                                  │                        │                             onEvent  ↗ Action C1
+                                  │                        │                             onEvent  ↗ Handler C1
                                   │                        └— — — — → Subscriber3 —————┤
-                                  │                                            topic4              ↘ Action C2
+                                  │                                            topic4              ↘ Handler C2
                                   │
                                   │
                                   │

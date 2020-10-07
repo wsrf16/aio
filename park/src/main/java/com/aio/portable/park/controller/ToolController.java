@@ -1,6 +1,6 @@
 package com.aio.portable.park.controller;
 
-import com.aio.portable.park.config.AppLogHubFactory;
+import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 import org.springframework.beans.factory.annotation.Autowired;

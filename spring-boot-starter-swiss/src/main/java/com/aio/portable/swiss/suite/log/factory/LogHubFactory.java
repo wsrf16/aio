@@ -1,12 +1,14 @@
 package com.aio.portable.swiss.suite.log.factory;
 
-import com.aio.portable.swiss.sugar.SpringContexts;
+import com.aio.portable.swiss.sugar.SpringContextHolder;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanInitializationException;
+
+import java.text.MessageFormat;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {
@@ -21,18 +23,30 @@ public abstract class LogHubFactory {
 
     protected static LogHubFactory singleton;
 
-    static {
-        try {
-            SpringContexts.getApplicationContext().getBeansOfType(RabbitMQLogProperties.class);
-        } catch (BeansException e) {
-            e.printStackTrace();
-        }
-        try {
-            SpringContexts.getApplicationContext().getBeansOfType(KafkaLogProperties.class);
-        } catch (BeansException e) {
-            e.printStackTrace();
-        }
-    }
+//    static {
+//        if (SpringContextHolder.hasLoad()) {
+//            try {
+//                SpringContextHolder.getApplicationContext().getBeansOfType(RabbitMQLogProperties.class);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                SpringContextHolder.getApplicationContext().getBeansOfType(KafkaLogProperties.class);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            try {
+//                throw new BeanInitializationException(SpringContextHolder.class.toString());
+//            } catch (Exception e) {
+//                if (e.getStackTrace()[0] != null){
+//                    System.err.println(MessageFormat.format("{0}: {1}", NullPointerException.class.getTypeName(), SpringContextHolder.class.getTypeName()));
+//                    System.err.println("\t\t" + e.getStackTrace()[0]);
+//                }
+////                e.printStackTrace();
+//            }
+//        }
+//    }
 
     protected LogHubFactory() {
         synchronized (LogHubFactory.class) {

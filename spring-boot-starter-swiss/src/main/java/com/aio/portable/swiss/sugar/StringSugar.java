@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.global.ColorEnum;
 import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
@@ -283,5 +284,10 @@ public class StringSugar {
      */
     public static String format(String input, Object... replacement) {
         return RegexSugar.replace(PLACE_HOLDER, input, replacement);
+    }
+
+    public final static String wrap(String content, ColorEnum... colors) {
+//        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
+        return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
     }
 }

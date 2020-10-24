@@ -30,6 +30,7 @@ public class Constant {
         public final static long Week = 7 * Day;
     }
 
+
     public final static String LIBRARY_DIRECTORY = "Lib";
     public final static String CURRENT_DIRECTORY = System.getProperty("user.dir");
     public final static String CLASS_PATH = System.getProperty("java.class.path");

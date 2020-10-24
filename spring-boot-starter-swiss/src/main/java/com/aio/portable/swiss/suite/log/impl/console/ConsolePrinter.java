@@ -1,6 +1,9 @@
 package com.aio.portable.swiss.suite.log.impl.console;
 
+import com.aio.portable.swiss.global.ColorEnum;
+import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
 import com.aio.portable.swiss.suite.log.Printer;
 import com.aio.portable.swiss.global.Constant;
@@ -23,16 +26,16 @@ public class ConsolePrinter implements Printer {
 
     private String emptyLines = String.join(Constant.EMPTY, Stream.of(Constant.LINE_SEPARATOR).limit(EMPTY_LINES).collect(Collectors.toList()));
 
-    private ConsolePrinter() throws Exception {
+    protected ConsolePrinter() throws Exception {
         throw new Exception("This is a invalid construction method.");
     }
 
-    String logName;
-    String logfilePrefix;
+    String name;
+    String prefix;
 
-    private ConsolePrinter(String logName, String logfilePrefix) {
-        this.logName = logName;
-        this.logfilePrefix = logfilePrefix;
+    private ConsolePrinter(String name, String prefix) {
+        this.name = name;
+        this.prefix = prefix;
     }
 
     private static Map<String, ConsolePrinter> instanceMaps = new HashMap<>();
@@ -60,8 +63,8 @@ public class ConsolePrinter implements Printer {
 
 //    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
 
-    private static String nowTime() {
-        String dateTime = DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date());
+    protected String nowTime() {
+        String dateTime = DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_NORMAL_LONGEST, new Date());
 //        String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());
         return dateTime;
     }
@@ -71,7 +74,7 @@ public class ConsolePrinter implements Printer {
      *
      * @return
      */
-    private static String LINEPRIFIX() {
+    protected String prefix() {
         return MessageFormat.format("{0} {1}", nowTime(), Thread.currentThread());
     }
 
@@ -92,8 +95,46 @@ public class ConsolePrinter implements Printer {
      */
     @Override
     public void println(String line, LevelEnum level) {
-        System.out.println(LINEPRIFIX() + LINE_SEPARATOR + line);
-        System.out.print(emptyLines);
+        String _level;
+        switch (level)
+        {
+            case VERBOSE: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+            }
+            break;
+            case TRACE: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+            }
+            break;
+            case DEBUG: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
+            }
+            break;
+            case INFORMATION: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
+            }
+            break;
+            case WARNING: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED);
+            }
+            break;
+            case ERROR: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
+            }
+            break;
+            case FATAL: {
+                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
+            }
+            break;
+            default:{
+                _level = null;
+                Global.unsupportedOperationException(name + ": unknown level");
+            }
+            break;
+        }
+        String output = MessageFormat.format("{1} {2}{0}{3}", LINE_SEPARATOR, prefix(), _level, line);
+        System.out.println(output);
+//        System.out.print(emptyLines);
     }
 
     /**

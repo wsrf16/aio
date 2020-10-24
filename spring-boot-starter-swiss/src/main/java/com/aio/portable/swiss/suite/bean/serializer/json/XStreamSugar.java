@@ -21,7 +21,7 @@ public class XStreamSugar {
 
     public static <T> T xml2Class(byte[] buf, Type typeOfT) throws UnsupportedEncodingException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //		byte[] buf = str.getBytes("UTF-8");
-        Class<T> clazz = (Class) typeOfT;
+        Class<T> clazz = (Class<T>) typeOfT;
         T t = clazz.getDeclaredConstructor().newInstance();
         XStream xStream = new XStream(new DomDriver());
         InputStream in = new ByteArrayInputStream(buf);

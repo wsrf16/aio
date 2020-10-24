@@ -37,9 +37,6 @@ public class AutoRunner implements ApplicationRunner {
         myDatabaseTest.blah();
 
 
-
-
-
         try {
 //            DataCertCreate dataCertCreate = new DataCertCreate();
 //            String[] info = { "huahua_user", "hnu", "university", "china", "hunan", "changsha", "111111", "11111111", "1" };
@@ -63,6 +60,15 @@ public class AutoRunner implements ApplicationRunner {
 //            CertSugar.CertInfo certInfo = new CertSugar.CertInfo();
 //            CertSugar.createSubjectCert(certInfo, "","", new File("d:\\a"), "", "cn", "");
 
+//            log.setAsync(false).e("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
+//            log.setAsync(false).i("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
+            log.setAsync(false).f("111111111111");
+            log.setAsync(false).e("111111111111");
+            log.setAsync(false).w("111111111111");
+            log.setAsync(false).i("111111111111");
+            log.setAsync(false).d("111111111111");
+            log.setAsync(false).t("111111111111");
+            log.setAsync(false).v("111111111111");
             log.setAsync(false).i("111111111111");
 
 

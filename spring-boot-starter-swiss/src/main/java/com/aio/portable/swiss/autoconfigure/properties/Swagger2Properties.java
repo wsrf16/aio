@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ResponseMessage;
+import springfox.documentation.service.VendorExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +208,7 @@ public class Swagger2Properties {
             springfox.documentation.service.ApiInfo apiInfo = null;
             try {
                 apiInfo = new springfox.documentation.service.ApiInfo(
-                        title, description, version, termsOfServiceUrl, contact == null ? null : contact.toContact(), license, licenseUrl, new ArrayList()
+                        title, description, version, termsOfServiceUrl, contact == null ? null : contact.toContact(), license, licenseUrl, new ArrayList<VendorExtension>()
                 );
             } catch (Exception e) {
                 e.printStackTrace();

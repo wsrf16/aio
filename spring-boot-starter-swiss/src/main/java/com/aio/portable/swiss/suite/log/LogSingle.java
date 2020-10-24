@@ -23,11 +23,9 @@ public abstract class LogSingle implements LogAction {
     }
 
 
-    final static String NEWLINE = Constant.LINE_SEPARATOR;
-    //    protected final static String INTERVAL_CHAR = " => ";
-    protected final static String INTERVAL_CHAR = " ";
+    protected final static String NEWLINE = Constant.LINE_SEPARATOR;
+    protected final static String DELIMITER_CHAR = " ";
     protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
-    protected final static String DEFAULT_NAME = LogSingle.class.getTypeName();
 
 
     protected Supplier<String> prefixSupplier;
@@ -97,10 +95,10 @@ public abstract class LogSingle implements LogAction {
         try {
             if (async)
                 executor.execute(() ->
-                        printer.println(prefixSupplier.get() + INTERVAL_CHAR + text, level)
+                        printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level)
                 );
             else
-                printer.println(prefixSupplier.get() + INTERVAL_CHAR + text, level);
+                printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -109,8 +109,8 @@ public abstract class ResourceSugar {
         return fullName;
     }
 
-    final static String[] intervals = new String[]{"//", "/"};
-    final static String interval = "/";
+    final static String[] delimiters = new String[]{"//", "/"};
+    final static String delimiter = "/";
 
     /**
      * concat 连接多个资源路径
@@ -119,16 +119,16 @@ public abstract class ResourceSugar {
      * @return
      */
     public final static String concat(String... parts) {
-        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringSugar.replaceEach(c, intervals, new String[]{interval, interval}));
+        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringSugar.replaceEach(c, delimiters, new String[]{delimiter, delimiter}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
-            String _a = StringSugar.removeStart(c, interval);
-            String _b = StringSugar.removeEnd(_a, interval);
+            String _a = StringSugar.removeStart(c, delimiter);
+            String _b = StringSugar.removeEnd(_a, delimiter);
             return _b;
         }).toArray(String[]::new);
-        String combined = String.join(interval, fixParts);
-        String start = fixPartList.get(0).startsWith(interval) ? interval : Constant.EMPTY;
-        String end = fixPartList.get(parts.length - 1).endsWith(interval) ? interval : Constant.EMPTY;
+        String combined = String.join(delimiter, fixParts);
+        String start = fixPartList.get(0).startsWith(delimiter) ? delimiter : Constant.EMPTY;
+        String end = fixPartList.get(parts.length - 1).endsWith(delimiter) ? delimiter : Constant.EMPTY;
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 

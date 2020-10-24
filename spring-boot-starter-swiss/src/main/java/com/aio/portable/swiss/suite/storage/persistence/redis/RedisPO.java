@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RedisPO implements NodePersistence {
-    private final static String INTERVAL = ":";
+    private final static String DELIMITER = ":";
     private final static String EMPTY = "";
 
     private String database;
@@ -57,7 +57,7 @@ public class RedisPO implements NodePersistence {
             tableList.add(keyOrTable);
 
         String[] join = CollectionSugar.toArray(tableList, String[]::new);
-        String path = PathSugar.concatBy(INTERVAL, join);
+        String path = PathSugar.concatBy(DELIMITER, join);
         return path;
 
 

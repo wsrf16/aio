@@ -8,6 +8,6 @@ public abstract class PropertyBean {
     public final static String KAFKA_LOG_PROPERTIES = "kafkaLogProperties";
 
 //    public final static String[] ALL = {KAFKA_PROPERTIES, RABBITMQ_PROPERTIES};
-    public final static String LOG_HUB_PROPERTIES = "logHubPropertiesBean";
+//    public final static String LOG_HUB_PROPERTIES = "logHubPropertiesBean";
 
 }

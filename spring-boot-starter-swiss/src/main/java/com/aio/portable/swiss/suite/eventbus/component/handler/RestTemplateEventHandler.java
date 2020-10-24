@@ -79,11 +79,12 @@ public class RestTemplateEventHandler extends SimpleEventHandler {
         return responseEntity;
     }
 
+    @Override
     public <E extends Event> ResponseEntity<String> proxy(Function<E, Object> func, E event) {
         ResponseEntity<String> responseEntity = null;
         Exception exp = null;
 
-        for(int todo = 1; todo - 1 <= this.getRetry(); todo++) {
+        for(int times = 0; times < this.getRetry(); times++) {
             try {
                 responseEntity = (ResponseEntity<String>) func.apply(event);
                 exp = null;

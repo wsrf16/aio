@@ -27,14 +27,7 @@
     </parent>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-<!--        <resource.delimiter>@</resource.delimiter>-->
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-
 
         <xstream.version>1.4.11</xstream.version>
         <swagger.version>2.9.2</swagger.version>
@@ -507,6 +500,14 @@
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <skip>true</skip>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.8</version>
+                        </path>
+                    </annotationProcessorPaths>
+<!--                    <compilerArgument>-Xlint:unchecked</compilerArgument>-->
                 </configuration>
             </plugin>
 

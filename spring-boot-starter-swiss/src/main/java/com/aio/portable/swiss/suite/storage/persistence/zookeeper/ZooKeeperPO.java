@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ZooKeeperPO implements NodePersistence {
-    private final static String INTERVAL = "/";
+    private final static String DELIMITER = "/";
     private final static String EMPTY = "";
 
     private String database;
@@ -56,7 +56,7 @@ public class ZooKeeperPO implements NodePersistence {
             tableList.add(keyOrTable);
 
         String[] join = CollectionSugar.toArray(tableList, String[]::new);
-        String path = PathSugar.concatBy(INTERVAL, join);
+        String path = PathSugar.concatBy(DELIMITER, join);
         return path;
     }
 
@@ -105,7 +105,7 @@ public class ZooKeeperPO implements NodePersistence {
 
     @Override
     public void clearDatabase() {
-//        String path = join(EMPTY, INTERVAL, database);
+//        String path = join(EMPTY, DELIMITER, database);
         String path = spellPath(EMPTY);
 //        List<String> childrenFullPath = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
 //        childrenFullPath.stream().forEach(c -> ZooKeeperSugar.clearIfExists(zooKeeper, c));
@@ -114,7 +114,7 @@ public class ZooKeeperPO implements NodePersistence {
 
     @Override
     public void removeDatabase() {
-//        String path = join(EMPTY, INTERVAL, database);
+//        String path = join(EMPTY, DELIMITER, database);
         String path = spellPath(EMPTY);
         ZooKeeperSugar.deleteIfExists(zooKeeper, path);
     }
@@ -175,7 +175,7 @@ public class ZooKeeperPO implements NodePersistence {
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + INTERVAL),
+                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + DELIMITER),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), clazz);
@@ -190,7 +190,7 @@ public class ZooKeeperPO implements NodePersistence {
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + INTERVAL),
+                .collect(Collectors.toMap(key -> StringSugar.removeStart(key, path + DELIMITER),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
@@ -224,7 +224,7 @@ public class ZooKeeperPO implements NodePersistence {
     public List<String> keys(String table, String... tables) {
         String path = spellPath(table, tables);
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
-        List<String> collect = absoluteChildren.stream().map(key -> StringSugar.removeStart(key, path + INTERVAL)).collect(Collectors.toList());
+        List<String> collect = absoluteChildren.stream().map(key -> StringSugar.removeStart(key, path + DELIMITER)).collect(Collectors.toList());
         return collect;
     }
 
@@ -233,7 +233,7 @@ public class ZooKeeperPO implements NodePersistence {
         String path = spellPath(EMPTY);
         List<String> AbsoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         List<String> collect = AbsoluteChildren.stream()
-                .map(table -> StringSugar.removeStart(table, path + INTERVAL))
+                .map(table -> StringSugar.removeStart(table, path + DELIMITER))
                 .collect(Collectors.toList());
         return collect;
     }

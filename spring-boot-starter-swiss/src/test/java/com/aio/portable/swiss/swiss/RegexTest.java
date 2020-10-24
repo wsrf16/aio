@@ -10,7 +10,7 @@ import java.util.List;
 public class RegexTest {
     @Test
     public void regex() {
-        String ret1 = RegexSugar.blurPhone("12345678901");
+        String ret1 = RegexSugar.Application.blurPhone("12345678901");
         String ret2 = RegexSugar.replaceAll("4567", "12345678901", "xxxx");
         boolean ret3 = RegexSugar.match("456", "12345678901");
         System.out.println(ret1);

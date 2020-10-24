@@ -1,16 +1,20 @@
 package com.aio.portable.swiss.suite.log.annotation;
 
 
-import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
 //@Import({RedisRepositoriesRegistrar.class})
-@DependsOn({PropertyBean.LOG_HUB_PROPERTIES})
+@DependsOn
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-//@Inherited
 public @interface EnableLogHub {
+    @AliasFor(
+            annotation = DependsOn.class,
+            attribute = "value"
+    )
+    String[] initialBeanNames() default {};
 }

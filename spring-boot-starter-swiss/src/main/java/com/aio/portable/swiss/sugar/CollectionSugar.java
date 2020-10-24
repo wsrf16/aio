@@ -318,9 +318,13 @@ public abstract class CollectionSugar {
     }
 
     public final static <T> Map<T, Long> groupCount(List<T> list) {
-        Map<T, Long> map = list.stream().
-                collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<T, Long> map = list.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         return map;
+    }
+
+    public final static String join(List<String> list, String delimiter) {
+        return list.stream().collect(Collectors.joining(delimiter));
     }
 
     private static void taolu() {

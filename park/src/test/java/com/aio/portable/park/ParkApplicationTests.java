@@ -1,17 +1,10 @@
 package com.aio.portable.park;
 
-//import io.github.robwin.markup.builder.MarkupLanguage;
-//import io.github.robwin.swagger2markup.GroupBy;
-//import io.github.robwin.swagger2markup.Language;
-//import io.github.robwin.swagger2markup.config.Swagger2MarkupConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
-
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 可以使用@SpringBootTest的webEnvironment属性来进一步优化测试的运行方式：
@@ -25,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  * 3、不要忘记还要在测试中添加@RunWith（SpringRunner.class），否则注释将被忽略。
  */
 @RunWith(SpringRunner.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
 //@SpringBootTest(classes = {ParkApplication.class})
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)

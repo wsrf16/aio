@@ -53,12 +53,12 @@ public class Log4JLog extends LogSingle {
                     logger.trace(text);
                 }
                 break;
-                case INFORMATION: {
-                    logger.info(text);
-                }
-                break;
                 case DEBUG: {
                     logger.debug(text);
+                }
+                break;
+                case INFORMATION: {
+                    logger.info(text);
                 }
                 break;
                 case WARNING: {

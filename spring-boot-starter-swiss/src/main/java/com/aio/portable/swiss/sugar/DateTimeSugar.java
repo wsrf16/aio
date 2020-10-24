@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.global.Constant;
 
+import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -68,13 +69,13 @@ public abstract class DateTimeSugar {
             return calendar;
         }
 
-        public static Calendar dateToCalendar(Date date) {
+        public static Calendar fromDate(Date date) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             return calendar;
         }
 
-        public static Date calendarToLocalDate(Calendar calendar) {
+        public static Date toDate(Calendar calendar) {
             Date date = calendar.getTime();
             return date;
         }
@@ -109,32 +110,32 @@ public abstract class DateTimeSugar {
             return epochMilli;
         }
 
-        public final static LocalDateTime convertText2LocalDateTime(String format, String text) {
+        public final static LocalDateTime parse(@NotNull String text, String format) {
             LocalDateTime localDateTime = LocalDateTime.parse(text, DateTimeFormatter.ofPattern(format));
             return localDateTime;
         }
 
-        public final static String convertLocalDateTime2Text(String format, LocalDateTime localDateTime) {
+        public final static String format(@NotNull LocalDateTime localDateTime, String format) {
             String text = localDateTime.format(DateTimeFormatter.ofPattern(format));
             return text;
         }
 
-        public final static Date convertLocalDateTimeToDate(LocalDateTime localDateTime, ZoneId zoneId) {
+        public final static Date toDate(@NotNull LocalDateTime localDateTime, ZoneId zoneId) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public final static Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
+        public final static Date toDate(@NotNull LocalDateTime localDateTime) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public final static LocalDateTime convertDateToLocalDateTime(Date date, ZoneId zoneId) {
+        public final static LocalDateTime fromDate(Date date, ZoneId zoneId) {
             Instant instant = date.toInstant();
             return instant.atZone(zoneId).toLocalDateTime();
         }
 
-        public final static LocalDateTime convertDateToLocalDateTime(Date date) {
+        public final static LocalDateTime fromDate(Date date) {
             Instant instant = date.toInstant();
             return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
@@ -147,6 +148,7 @@ public abstract class DateTimeSugar {
 
     public static class Format {
         public final static String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        public final static String FORMAT_NORMAL_LONGEST = "yyyy-MM-dd HH:mm:ss.SSS";
         public final static String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
         public final static String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
         public final static String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";

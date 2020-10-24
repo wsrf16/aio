@@ -17,35 +17,38 @@ public abstract class RegexSugar {
             "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\\.([0-9]+))?)?" +
             "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
 
-
-    public final static boolean matchPhone(String phone) {
-        return Pattern.compile(FULL_REGEX_PHONE).matcher(phone).find();
-    }
-
-//    public final static String sensitivePhone(String phone) {
-//        if (phone.length() != 11)
-//            return phone;
-//        String result = null;
-//        final String condition = REGEX_PHONE;
-//        Pattern pattern = Pattern.compile(condition);
-//        Matcher matcher = pattern.matcher(phone);
-//        if (matcher.find()) {
-//            String matchers = matcher.group(0);
-//            String prefix = matchers.substring(0, 3);
-//            String suffix = matchers.substring(7, 11);
-//            StringBuffer sb = new StringBuffer();
-//            result = sb.append(prefix).append(FAKE_TEXT).append(suffix).toString();
-//        }
-//        return result;
-//    }
-
-    public static final String blurPhone(String phone) {
-        boolean checkFlag = matchPhone(phone);
-        if (!checkFlag) {
-            throw new IllegalArgumentException(MessageFormat.format("{0} is illegal.", phone));
+    public static class Application {
+        public final static boolean matchPhone(String phone) {
+            return Pattern.compile(FULL_REGEX_PHONE).matcher(phone).find();
         }
-        return phone.replaceAll(REGEX_PHONE_BLUR, REGEX_PHONE_BLUR_REPLACE);
+
+//        public final static String blurPhone(String phone) {
+//            if (phone.length() != 11)
+//                return phone;
+//            String result = null;
+//            final String condition = REGEX_PHONE;
+//            Pattern pattern = Pattern.compile(condition);
+//            Matcher matcher = pattern.matcher(phone);
+//            if (matcher.find()) {
+//                String matchers = matcher.group(0);
+//                String prefix = matchers.substring(0, 3);
+//                String suffix = matchers.substring(7, 11);
+//                StringBuffer sb = new StringBuffer();
+//                result = sb.append(prefix).append(FAKE_TEXT).append(suffix).toString();
+//            }
+//            return result;
+//        }
+
+        public static final String blurPhone(String phone) {
+            boolean checkFlag = matchPhone(phone);
+            if (!checkFlag) {
+                throw new IllegalArgumentException(MessageFormat.format("{0} is illegal.", phone));
+            }
+            return phone.replaceAll(REGEX_PHONE_BLUR, REGEX_PHONE_BLUR_REPLACE);
+        }
     }
+
+
 
 
     /**
@@ -139,15 +142,17 @@ public abstract class RegexSugar {
      * replace
      * @param regex
      * @param input
-     * @param replacement
+     * @param replacements
      * @return
      */
-    public static String replace(String regex, String input, Object... replacement) {
-        Matcher matcher = Pattern.compile(regex).matcher(input);
-        int i = -1;
+    public static String replace(String regex, String input, Object... replacements) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        int i = 0;
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement[++i].toString()));
+            String replacement = Matcher.quoteReplacement(replacements[i++].toString());
+            matcher.appendReplacement(sb, replacement);
         }
         return sb.toString();
     }

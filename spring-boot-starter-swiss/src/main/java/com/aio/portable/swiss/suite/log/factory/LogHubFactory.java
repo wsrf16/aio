@@ -1,14 +1,8 @@
 package com.aio.portable.swiss.suite.log.factory;
 
-import com.aio.portable.swiss.sugar.SpringContextHolder;
-import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import org.springframework.beans.factory.BeanInitializationException;
-
-import java.text.MessageFormat;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {

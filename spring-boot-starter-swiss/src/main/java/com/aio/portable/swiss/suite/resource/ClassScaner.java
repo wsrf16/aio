@@ -34,7 +34,7 @@ public class ClassScaner implements ResourceLoaderAware {
         ClassScaner cs = new ClassScaner();
 
         if(!CollectionSugar.isEmpty(annotations)) {
-            for (Class anno : annotations) {
+            for (Class<? extends Annotation> anno : annotations) {
                 cs.addIncludeFilter(new AnnotationTypeFilter(anno));
             }
         }

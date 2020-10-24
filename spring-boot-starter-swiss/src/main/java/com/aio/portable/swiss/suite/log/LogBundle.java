@@ -19,8 +19,7 @@ public abstract class LogBundle implements LogAction {
 
 
     public void dispose() {
-        logList.forEach(it ->
-        {
+        logList.forEach(it -> {
             it.dispose();
             it = null;
         });

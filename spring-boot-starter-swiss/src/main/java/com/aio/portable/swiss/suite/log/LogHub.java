@@ -7,6 +7,8 @@ import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
@@ -121,10 +123,11 @@ public class LogHub extends LogBundle implements Logger {
         protected static LogHub toCGLIBProxy(LogHub logHub) {
             LogHub proxy = DynamicProxy.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
-                public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws Throwable {
+                public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                     final LogHub hub = logHub;
                     hub.check();
                     Object invoke = null;
+
                     switch (_method.getName()) {
                         case "verbose":
                         case "v": {
@@ -173,7 +176,8 @@ public class LogHub extends LogBundle implements Logger {
                         }
                         break;
                     }
-                    return invoke;
+                    return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
+//                    return _method.getReturnType().isAssignableFrom() ?  invoke;
                 }
 
             });
@@ -181,56 +185,58 @@ public class LogHub extends LogBundle implements Logger {
         }
 
         protected static Logger toJDKProxy(LogHub logHub) {
-            Logger proxy = DynamicProxy.jdkProxy(logHub.getClass(),
-                    (_proxy, _method, _args) -> {
-                        LogHub hub = logHub;
-                        hub.check();
-                        Object invoke = null;
-                        switch (_method.getName().toLowerCase()) {
-                            case "verbose":
-                            case "v": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.VERBOSE))
-                                    invoke = _method.invoke(hub, _args);
+            Logger proxy = DynamicProxy.jdkProxy(logHub.getClass(), new InvocationHandler() {
+                        @Override
+                        public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                            LogHub hub = logHub;
+                            hub.check();
+                            Object invoke = null;
+                            switch (_method.getName().toLowerCase()) {
+                                case "verbose":
+                                case "v": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.VERBOSE))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "info":
+                                case "i": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.INFORMATION))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "trace":
+                                case "t": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.TRACE))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "debug":
+                                case "d": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.DEBUG))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "warn":
+                                case "w": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.WARNING))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "error":
+                                case "e": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.ERROR))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
+                                case "fatal":
+                                case "f": {
+                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.FATAL))
+                                        invoke = _method.invoke(hub, _args);
+                                }
+                                break;
                             }
-                            break;
-                            case "info":
-                            case "i": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.INFORMATION))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
-                            case "trace":
-                            case "t": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.TRACE))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
-                            case "debug":
-                            case "d": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.DEBUG))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
-                            case "warn":
-                            case "w": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.WARNING))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
-                            case "error":
-                            case "e": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.ERROR))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
-                            case "fatal":
-                            case "f": {
-                                if (hub.passing() && hub.baseLevel.match(LevelEnum.FATAL))
-                                    invoke = _method.invoke(hub, _args);
-                            }
-                            break;
+                            return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
                         }
-                        return invoke;
                     });
             return proxy;
         }

@@ -15,12 +15,13 @@ public class UserIDAuditorAware<T> implements AuditorAware<T> {
     @Override
     public Optional<T> getCurrentAuditor() {
         SecurityContext ctx = SecurityContextHolder.getContext();
-        Object principal;
+        T principal;
         if (ctx == null || ctx.getAuthentication() == null || ctx.getAuthentication().getPrincipal() == null) {
             principal = null;
         } else {
-            principal = ctx.getAuthentication().getPrincipal();
+            principal = (T) ctx.getAuthentication().getPrincipal();
         }
-        return Optional.ofNullable((T) principal);
+//        return null;
+        return Optional.ofNullable(principal);
     }
 }

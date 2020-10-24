@@ -1,14 +1,11 @@
 package com.aio.portable.swiss.suite.io;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.suite.systeminfo.OSInfo;
 import com.aio.portable.swiss.sugar.StringSugar;
 import org.springframework.boot.system.ApplicationHome;
-import org.springframework.security.core.parameters.P;
 import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +16,6 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class PathSugar {
     final static String[] SEPARATORS = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
@@ -53,12 +49,12 @@ public abstract class PathSugar {
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
-    final static String INTERVAL_CHAR = "/";
+    final static String DELIMITER_CHAR = "/";
 
     public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
-            urlPath = StringSugar.removeStart(urlPath, INTERVAL_CHAR);
+            urlPath = StringSugar.removeStart(urlPath, DELIMITER_CHAR);
         }
         return urlPath;
     }

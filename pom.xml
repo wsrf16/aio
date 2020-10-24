@@ -28,6 +28,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+<!--        <resource.delimiter>@</resource.delimiter>-->
+        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
     </properties>
@@ -59,4 +63,28 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <build>
+        <plugins>
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <skip>true</skip>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.8</version>
+                        </path>
+                    </annotationProcessorPaths>
+<!--                    <compilerArgument>-Xlint:unchecked</compilerArgument>-->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

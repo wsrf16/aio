@@ -387,11 +387,16 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>static/**</include>
-                    <include>templates/**</include>
-                    <include>config/**</include>
-                    <include>banner.txt</include>
+<!--                    <include>static/**</include>-->
+<!--                    <include>templates/**</include>-->
+<!--                    <include>config/**</include>-->
+                    <include>**/*</include>
                 </includes>
+                <excludes>
+                    <exclude>application*.yml</exclude>
+                    <exclude>application*.yaml</exclude>
+                    <exclude>application*.properties</exclude>
+                </excludes>
             </resource>
 
             <resource>
@@ -399,7 +404,9 @@
                 <targetPath>${project.deploy.directoryName.profile}</targetPath>
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/*</include>
+                    <include>application*.yml</include>
+                    <include>application*.yaml</include>
+                    <include>application*.properties</include>
                 </includes>
             </resource>
 
@@ -555,14 +562,14 @@
             </snapshots>
         </repository>
 
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-                <!--<updatePolicy>always</updatePolicy>-->
-            </snapshots>
-            <id>jcenter-releases</id>
-            <name>jcenter</name>
-            <url>http://jcenter.bintray.com</url>
-        </repository>
+<!--        <repository>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                &lt;!&ndash;<updatePolicy>always</updatePolicy>&ndash;&gt;-->
+<!--            </snapshots>-->
+<!--            <id>jcenter-releases</id>-->
+<!--            <name>jcenter</name>-->
+<!--            <url>http://jcenter.bintray.com</url>-->
+<!--        </repository>-->
     </repositories>
 </project>

@@ -11,40 +11,40 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class DynamicProxy<T> implements InvocationHandler {
+public class DynamicProxy<T> {
 
-    private T t;
-    private BiFunction<Object, Method, Object[], Object> aopFunction;
+//    private T t;
+//    private BiFunction<Object, Method, Object[], Object> aopFunction;
+//
+//    public DynamicProxy(T t) {
+//        this.t = t;
+//    }
+//
+//    public T jdkProxy() {
+//        T proxy = (T) Proxy.newProxyInstance(t.getClass().getClassLoader(),
+//                t.getClass().getInterfaces(),
+//                this);
+//        return proxy;
+//    }
 
-    public DynamicProxy(T t) {
-        this.t = t;
-    }
-
-    public T jdkProxy() {
-        T proxy = (T) Proxy.newProxyInstance(t.getClass().getClassLoader(),
-                t.getClass().getInterfaces(),
-                this);
-        return proxy;
-    }
-
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (aopFunction == null)
-            throw new NullPointerException("JDKProxy::getAopFunction");
-        Object apply = aopFunction.apply(proxy, method, args);
-        return method.invoke(t, args);
-    }
-
-
-
-
-    public BiFunction<Object, Method, Object[], Object> getAopFunction() {
-        return aopFunction;
-    }
-
-    public void setAopFunction(BiFunction<Object, Method, Object[], Object> aopFunction) {
-        this.aopFunction = aopFunction;
-    }
+//    @Override
+//    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//        if (aopFunction == null)
+//            throw new NullPointerException("JDKProxy::getAopFunction");
+//        Object apply = aopFunction.apply(proxy, method, args);
+//        return method.invoke(t, args);
+//    }
+//
+//
+//
+//
+//    public BiFunction<Object, Method, Object[], Object> getAopFunction() {
+//        return aopFunction;
+//    }
+//
+//    public void setAopFunction(BiFunction<Object, Method, Object[], Object> aopFunction) {
+//        this.aopFunction = aopFunction;
+//    }
 
 
 

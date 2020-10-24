@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class Grammar {
     public static List<String> newList() {
-        ArrayList<String> arrayList = ((Supplier<ArrayList>) ArrayList<String>::new).get();
+        ArrayList<String> arrayList = ((Supplier<ArrayList<String>>) ArrayList<String>::new).get();
         return arrayList;
     }
 }

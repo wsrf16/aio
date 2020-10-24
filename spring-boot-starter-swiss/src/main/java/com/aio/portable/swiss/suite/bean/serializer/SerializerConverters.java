@@ -38,9 +38,29 @@ public abstract class SerializerConverters {
         public <T> T deserialize(String json, Class<T> clazz) {
             return JacksonSugar.json2T(json, clazz);
         }
+
+        public <T> T deserialize(String json, TypeReference<T> valueTypeRef) {
+            return JacksonSugar.json2T(json, valueTypeRef);
+        }
     }
 
-    public static class ForceJacksonConverter implements SerializerConverter {
+    public static class LongJacksonConverter implements SerializerConverter {
+        @Override
+        public <T> String serialize(T t) {
+            return JacksonSugar.obj2LongJson(t);
+        }
+
+        @Override
+        public <T> T deserialize(String json, Class<T> clazz) {
+            return JacksonSugar.json2T(json, clazz);
+        }
+
+        public <T> T deserialize(String json, TypeReference<T> valueTypeRef) {
+            return JacksonSugar.json2T(json, valueTypeRef);
+        }
+    }
+
+    public static class SilentJacksonConverter implements SerializerConverter {
         @Override
         public <T> String serialize(T t) {
             return JacksonSugar.obj2Json(t, false);
@@ -52,7 +72,7 @@ public abstract class SerializerConverters {
         }
     }
 
-    public static class ForceShortJacksonConverter implements SerializerConverter {
+    public static class SilentShortJacksonConverter implements SerializerConverter {
         @Override
         public <T> String serialize(T t) {
             return JacksonSugar.obj2ShortJson(t, false);

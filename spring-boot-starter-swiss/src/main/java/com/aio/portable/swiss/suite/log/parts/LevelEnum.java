@@ -14,7 +14,7 @@ public enum LevelEnum {
     WARNING("warn", 50, "Service is degraded or endangered."),
     ERROR("error", 60, "Functionality is unavailable, invariants are broken or data is lost."),
     FATAL("fatal", 70, "If you have a pager, it goes off when one of these occurs."),
-    OFF("off", 00, "off");
+    OFF("off", Integer.MAX_VALUE, "off");
 
 
     // org.springframework.boot.logging.LogLevel

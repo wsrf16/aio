@@ -130,7 +130,7 @@ public abstract class SerializerConverters {
 
         @Override
         public <T> T deserialize(String yaml, Class<T> clazz) {
-            return YamlSugar.yaml2T(yaml);
+            return YamlSugar.yaml2T(yaml, clazz);
         }
     }
 

@@ -129,11 +129,12 @@ public abstract class RegexSugar {
      * @param replacement
      * @return
      */
-    public final static String replaceAll(String regex, String input, String replacement) {
+    public final static String replaceAll(String regex, String input, Object replacement) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
-        String result = matcher.find() ? matcher.replaceAll(replacement) : regex;
+        String _replacement = Matcher.quoteReplacement(replacement.toString());
+        String result = matcher.find() ? matcher.replaceAll(_replacement) : regex;
         return result;
     }
 

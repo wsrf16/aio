@@ -7,36 +7,48 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
 public class YamlSugar {
-    private final static Yaml YAML = new Yaml();
+    static {
+        Representer representer = new Representer();
+        representer.getPropertyUtils().setSkipMissingProperties(true);
+        YAML = new Yaml(new Constructor(), representer);
+    }
 
-    public static <T> T yaml2T(ClassLoader classLoader, String resource) {
-        InputStream inputStream = classLoader
-                .getResourceAsStream(resource);
-        T t = YAML.load(inputStream);
+    private final static Yaml YAML;
+
+    public static <T> T yaml2T(ClassLoader classLoader, String resource, Class<T> clazz) {
+        InputStream inputStream = classLoader.getResourceAsStream(resource);
+        T t = YAML.loadAs(inputStream, clazz);
         return t;
     }
 
-    public static <T> T yaml2T(String yaml) {
-        T t = YamlSugar.YAML.load(yaml);
+    public static <T> T yaml2T(String yaml, Class<T> clazz) {
+        T t = YamlSugar.YAML.loadAs(yaml, clazz);
         return t;
     }
 
-    public static <T> T yaml2T(File file) throws FileNotFoundException {
-        InputStream inputStream = new FileInputStream(file);
-        T t = YAML.load(inputStream);
+    public static <T> T yaml2T(File file, Class<T> clazz)  {
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        T t = YAML.loadAs(inputStream, clazz);
         return t;
     }
 
-    public static <T> T yaml2T(InputStream inputStream) {
-        T t = YAML.load(inputStream);
+    public static <T> T yaml2T(InputStream inputStream, Class<T> clazz) {
+        T t = YAML.loadAs(inputStream, clazz);
         return t;
     }
 
@@ -95,6 +107,7 @@ public class YamlSugar {
             }
             parser.close();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -131,6 +144,7 @@ public class YamlSugar {
             generator.flush();
             generator.close();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

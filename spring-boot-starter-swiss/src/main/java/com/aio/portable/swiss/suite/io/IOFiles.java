@@ -1,6 +1,9 @@
 package com.aio.portable.swiss.suite.io;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Created by York on 2017/11/28.
@@ -106,4 +109,30 @@ public abstract class IOFiles {
         }
         return hasDeleted;
     }
+
+    public final static File createParentDirectories(File path) {
+        File dir = path.getParentFile();
+        return createDirectories(dir);
+    }
+
+    public final static File createDirectories(File dir) {
+        if (null != dir && !dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    public final static File createParentDirectories(String path) {
+        File dir = new File(path).getParentFile();
+        return createDirectories(dir);
+    }
+
+    public final static File createDirectories(String path) {
+        File dir = new File(path);
+        return createDirectories(dir);
+    }
+
+
+
+
 }

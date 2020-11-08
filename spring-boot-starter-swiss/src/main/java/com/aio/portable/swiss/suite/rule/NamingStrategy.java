@@ -7,16 +7,18 @@ import java.util.Locale;
 public class NamingStrategy {
     public static class Snake {
         public final static boolean isCaseInsensitive = true;
+        public final static char UNDER_LINE = '_';
+        public final static char DASH = '-';
 
         public final static String snake(String name) {
             if (!StringUtils.hasText(name))
                 return name;
 
-            StringBuilder builder = new StringBuilder(name.replace('.', '_'));
+            StringBuilder builder = new StringBuilder(name.replace('.', UNDER_LINE));
 
             for(int i = 1; i < builder.length() - 1; ++i) {
                 if (isUnderscoreRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
-                    builder.insert(i++, '_');
+                    builder.insert(i++, UNDER_LINE);
                 }
             }
 
@@ -28,13 +30,16 @@ public class NamingStrategy {
         }
 
         private final static boolean isUnderscoreRequired(char before, char current, char after) {
-            return Character.isLowerCase(before) && Character.isUpperCase(current) && Character.isLowerCase(after);
+            return Character.isLowerCase(before) &&
+                    (Character.isUpperCase(current) && current == DASH) &&
+                    Character.isLowerCase(after);
         }
     }
 
     public static class Camel {
         public final static boolean isCaseInsensitive = false;
         public final static char UNDER_LINE = '_';
+        public final static char DASH = '-';
 
         public final static String camel(String name) {
             if (!StringUtils.hasText(name))
@@ -59,35 +64,53 @@ public class NamingStrategy {
         }
 
         private final static boolean isUnderscoreRequired(char before, char current, char after) {
-            return Character.isLowerCase(before) && (current == UNDER_LINE) && Character.isLowerCase(after);
+            return Character.isLowerCase(before) &&
+                    ((current == UNDER_LINE) && (current == DASH)) &&
+                    Character.isLowerCase(after);
         }
     }
 
-    public static class Kebab {
-        public final static boolean isCaseInsensitive = true;
+    public static class Pascal {
+        public final static boolean isCaseInsensitive = false;
+        public final static char UNDER_LINE = '_';
+        public final static char DASH = '-';
 
-        public final static String kebab(String name) {
-            if (!StringUtils.hasText(name))
-                return name;
-
-            StringBuilder builder = new StringBuilder(name.replace('.', '-'));
-
-            for(int i = 1; i < builder.length() - 1; ++i) {
-                if (isDashRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
-                    builder.insert(i++, '-');
-                }
-            }
-
-            if (isCaseInsensitive) {
-                name = builder.toString().toLowerCase(Locale.ROOT);
-            }
-
-            return name;
-        }
-
-        private final static boolean isDashRequired(char before, char current, char after) {
-            return Character.isLowerCase(before) && Character.isUpperCase(current) && Character.isLowerCase(after);
+        public final static String pascal(String name) {
+            name = Camel.camel(name);
+            return name.substring(0, 1).toUpperCase() + name.substring(1);
         }
     }
+
+
+//    public static class Kebab {
+//        public final static boolean isCaseInsensitive = true;
+//        public final static char UNDER_LINE = '_';
+//        public final static char DASH = '-';
+//
+//        public final static String kebab(String name) {
+//            if (!StringUtils.hasText(name))
+//                return name;
+//
+//            StringBuilder builder = new StringBuilder(name.replace('.', '-'));
+//
+//            for(int i = 1; i < builder.length() - 1; ++i) {
+//                if (isDashRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
+//                    builder.insert(i++, '-');
+//                }
+//            }
+//
+//            if (isCaseInsensitive) {
+//                name = builder.toString().toLowerCase(Locale.ROOT);
+//            }
+//
+//            return name;
+//        }
+//
+//        private final static boolean isDashRequired(char before, char current, char after) {
+//            return Character.isLowerCase(before) &&
+//                    Character.isUpperCase(current) &&
+//                    Character.isLowerCase(after);
+//        }
+//    }
 
 }

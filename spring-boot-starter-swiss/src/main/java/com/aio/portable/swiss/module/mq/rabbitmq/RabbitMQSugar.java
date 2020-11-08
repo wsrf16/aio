@@ -179,7 +179,7 @@ public abstract class RabbitMQSugar {
                 if (rabbitTemplate == null) {
                     ConnectionFactory connectionFactory = buildConnectionFactory(properties);
                     rabbitTemplate = new RabbitTemplate(connectionFactory);
-                    rabbitTemplate.setEncoding(StandardCharsets.UTF_8.toString());
+                    rabbitTemplate.setEncoding(StandardCharsets.UTF_8.name());
                     Boolean mandatory = determineMandatoryFlag(properties);
                     rabbitTemplate.setMandatory(mandatory);
                     Channel channel = connectionFactory.createConnection().createChannel(false);

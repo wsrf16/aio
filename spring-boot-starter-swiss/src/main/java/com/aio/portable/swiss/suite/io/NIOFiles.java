@@ -6,16 +6,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public abstract class NIOFiles {
-    public final static void write(String path, Charset charset, String content, OpenOption... options) {
-        write(Paths.get(path), charset, content, options);
+    public final static void write(String path, String content, Charset charset, OpenOption... options) {
+        write(Paths.get(path), content, charset, options);
     }
 
-    public final static void write(Path path, Charset charset, String content, OpenOption... options) {
+    public final static void write(Path path, String content, Charset charset, OpenOption... options) {
         try (BufferedWriter writer = Files.newBufferedWriter(path, charset, options)) {
             writer.write(content);
         } catch (IOException e) {
@@ -62,6 +66,19 @@ public abstract class NIOFiles {
         }
     }
 
+    public final static List<Path> listFileAbsolutePath(String path) {
+        return listFileAbsolutePath(Paths.get(path));
+    }
+
+    public final static List<Path> listFileAbsolutePath(Path path) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+            return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.toAbsolutePath()).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public final static void createDirectories(String path, FileAttribute<?>... attrs) {
         createDirectories(Paths.get(path), attrs);
     }
@@ -86,5 +103,68 @@ public abstract class NIOFiles {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+
+    public final static List<Path> listChildrenFilePath(String path) {
+        return listChildrenFilePath(Paths.get(path));
+    }
+
+    public final static List<Path> listChildrenFilePath(Path path) {
+        final List<Path> paths = new ArrayList<>();
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (attrs.isRegularFile() && !Objects.equals(file, path)) {
+                        paths.add(file);
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return paths;
+    }
+
+
+//    public final static <T> List<Path> listChildrenFilePath(String path, Predicate<T> predicate, T t) {
+//        return listChildrenFilePath(Paths.get(path), predicate, t);
+//    }
+
+    private final static List<Path> listChildrenFilePath(Path path, BiFunction<Path, List<String>, Boolean> biFunction, List<String> condition) {
+        final List<Path> paths = new ArrayList<>();
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (attrs.isRegularFile() && !Objects.equals(file, path)) {
+                        if (biFunction.apply(file, condition))
+                            paths.add(file);
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return paths;
+    }
+
+
+    public final static List<Path> listChildrenFilePath(Path path, List<String> anyEndsWithList) {
+        return listChildrenFilePath(path, new BiFunction<Path, List<String>, Boolean>() {
+            @Override
+            public Boolean apply(Path path, List<String> condition) {
+                return condition.stream().anyMatch(c -> path.toString().endsWith(c));
+            }
+        }, anyEndsWithList);
+    }
+
+    public final static List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
+        return listChildrenFilePath(Paths.get(path), anyEndsWithList);
     }
 }

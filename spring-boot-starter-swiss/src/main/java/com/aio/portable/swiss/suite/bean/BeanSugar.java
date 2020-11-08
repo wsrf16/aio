@@ -138,6 +138,14 @@ public abstract class BeanSugar {
             return map;
         }
 
+        public final static Map<String, String> toNameValueMapForString(Object bean) {
+            Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+                    .filter(c -> !c.getName().equals("class"))
+                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
+            return map;
+        }
+
 
         public static Object getValue(Object bean, PropertyDescriptor c) {
             try {

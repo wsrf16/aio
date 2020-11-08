@@ -6,6 +6,7 @@ import com.aio.portable.swiss.suite.systeminfo.OSInfo;
 import com.aio.portable.swiss.sugar.StringSugar;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,12 +23,12 @@ public abstract class PathSugar {
 
     final static String SEPARATOR = File.separator;
 
-    public final static Path concatBySystem(String first, String... more) {
-        return Paths.get(first, more);
+    public final static String path(String first, String... more) {
+        return Paths.get(first, more).toString();
     }
 
 
-    public final static String concat(String... parts) {
+    public final static String concatByOS(String... parts) {
         return concatBy(SEPARATOR, parts);
     }
 
@@ -36,7 +37,8 @@ public abstract class PathSugar {
             return Constant.EMPTY;
 
         List<String> fixPartList = Arrays.stream(parts)
-                .map(c -> StringSugar.replaceEach(c, SEPARATORS, new String[]{separator, separator, separator, separator, separator, separator}))
+                .filter(c -> StringUtils.hasText(c)).collect(Collectors.toList());
+        fixPartList = fixPartList.stream().map(c -> StringSugar.replaceEach(c, SEPARATORS, new String[]{separator, separator, separator, separator, separator, separator}))
                 .collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> {
             String _a = StringSugar.removeStart(c, separator);
@@ -45,7 +47,7 @@ public abstract class PathSugar {
         }).toArray(String[]::new);
         String combined = String.join(separator, fixParts);
         String start = fixPartList.get(0).startsWith(separator) ? separator : Constant.EMPTY;
-        String end = fixPartList.get(parts.length - 1).endsWith(separator) ? separator : Constant.EMPTY;
+        String end = fixPartList.get(fixPartList.size() - 1).endsWith(separator) ? separator : Constant.EMPTY;
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 

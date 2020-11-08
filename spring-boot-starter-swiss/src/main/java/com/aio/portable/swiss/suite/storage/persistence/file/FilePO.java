@@ -37,7 +37,7 @@ public class FilePO implements NodePersistence {
 
     private static String CACHE_EXTENSION = "cache";
 
-    private Charset charset = StandardCharsets.UTF_8;
+    private static Charset charset = StandardCharsets.UTF_8;
 
 //    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
     protected SerializerConverter serializerConverter = new SerializerConverters.JacksonConverter();
@@ -96,7 +96,7 @@ public class FilePO implements NodePersistence {
         String filename = formatKey(key);
         String path = spellPath(filename, tables);
         String content = JacksonSugar.obj2Json(value);
-        NIOFiles.write(path, charset, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        NIOFiles.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class FilePO implements NodePersistence {
         String filename = formatTable(table);
         String content = JacksonSugar.obj2Json(value);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
-        NIOFiles.write(path, charset, content, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        NIOFiles.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
@@ -200,12 +200,11 @@ public class FilePO implements NodePersistence {
         try {
             Files.walkFileTree(Paths.get(path), null, 1, new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-//                    return super.visitFile(file, attrs);
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (attrs.isDirectory() || attrs.isRegularFile()) {
                         files.add(file);
                     }
-                    return FileVisitResult.CONTINUE;
+                    return super.visitFile(file, attrs);
                 }
             });
         } catch (IOException e) {
@@ -304,11 +303,10 @@ public class FilePO implements NodePersistence {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-//                    return super.preVisitDirectory(dir, attrs);
                     if (attrs.isDirectory() && !Objects.equals(dir, path)) {
                         paths.add(dir);
                     }
-                    return FileVisitResult.CONTINUE;
+                    return super.preVisitDirectory(dir, attrs);
                 }
             });
         } catch (IOException e) {
@@ -322,7 +320,7 @@ public class FilePO implements NodePersistence {
 
     public final static void set(String database, String table, String key, Object value, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        filePO.set(key, value, tables);
+        filePO.set(key, value, CollectionSugar.concat(String[]::new, tables, table));
     }
 
     public final static void setTable(String database, String table, String... tables) {
@@ -332,7 +330,7 @@ public class FilePO implements NodePersistence {
 
     public final static void remove(String database, String table, String key, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        filePO.remove(key, tables);
+        filePO.remove(key, CollectionSugar.concat(String[]::new, tables, table));
     }
 
     public final static void clearTable(String database, String table, String... tables) {
@@ -357,12 +355,12 @@ public class FilePO implements NodePersistence {
 
     public final static <T> T get(String database, String table, String key, Class<T> clazz, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.get(key, clazz, tables);
+        return filePO.get(key, clazz, CollectionSugar.concat(String[]::new, tables, table));
     }
 
     public final static <T> T get(String database, String table, String key, TypeReference<T> valueTypeRef, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.get(key, valueTypeRef, tables);
+        return filePO.get(key, valueTypeRef, CollectionSugar.concat(String[]::new, tables, table));
     }
 
     public final static <T> Map<String, T> getAll(String database, String table, Class<T> clazz, String... tables) {

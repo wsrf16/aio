@@ -29,7 +29,7 @@
     <properties>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
 
-        <xstream.version>1.4.11</xstream.version>
+        <xstream.version>1.4.13-java7</xstream.version>
         <swagger.version>2.9.2</swagger.version>
         <knife4j.version>2.0.3</knife4j.version>
         <cron-utils.version>7.0.6</cron-utils.version>

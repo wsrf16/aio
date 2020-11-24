@@ -1,14 +1,14 @@
 package com.aio.portable.swiss.hamlet.exception;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatusOriginEnum;
+import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
 
 public class VerificationException extends BizException {
 
     public VerificationException() {
-        super(BizStatusOriginEnum.staticUnauthorized().getCode(), BizStatusOriginEnum.staticUnauthorized().getMessage());
+        super(BizStatusNativeEnum.staticUnauthorized().getCode(), BizStatusNativeEnum.staticUnauthorized().getMessage());
     }
 
     public VerificationException(String message) {
-        super(BizStatusOriginEnum.staticUnauthorized().getCode(), message);
+        super(BizStatusNativeEnum.staticUnauthorized().getCode(), message);
     }
 }

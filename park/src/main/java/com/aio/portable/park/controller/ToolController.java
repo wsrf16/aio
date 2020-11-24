@@ -3,6 +3,7 @@ package com.aio.portable.park.controller;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,7 @@ public class ToolController {
     @Autowired
     private HttpServletRequest request;
 
+    @ApiOperation(value = "upload接口")
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
@@ -40,7 +43,7 @@ public class ToolController {
         multipartFile.transferTo(targetFile);
 
         String realIP = HostInfo.getClientIpAddress(request);
-        String uploadLocation = realIP + ":" + targetFile.toAbsolutePath();
+        String uploadLocation = MessageFormat.format("{0}:{1}", realIP, targetFile.toAbsolutePath());
         log.info(UPLOAD_DIRECTORY, uploadLocation);
         return uploadLocation;
     }

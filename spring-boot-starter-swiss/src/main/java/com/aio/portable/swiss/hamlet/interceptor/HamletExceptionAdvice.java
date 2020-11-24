@@ -1,18 +1,14 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatusOriginEnum;
+import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
-import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.LogHubPool;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.text.MessageFormat;
 
 //@RestControllerAdvice
 public abstract class HamletExceptionAdvice {
@@ -26,9 +22,6 @@ public abstract class HamletExceptionAdvice {
 
     protected static LogHubPool loggerPool;
 
-    @Autowired
-    BizStatusOriginEnum httpResponseStatus;
-
     @ExceptionHandler(value = {Exception.class})
     public ResponseWrapper handleBizException(Exception input) {
         Exception e = input instanceof HandOverException ? ((HandOverException)input).getException() : input;
@@ -39,11 +32,11 @@ public abstract class HamletExceptionAdvice {
             responseWrapper = ResponseWrapper.build(bizException.getCode(), bizException.getMessage());
         }
         else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(httpResponseStatus.invalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else if (e instanceof NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), e.getMessage());
+            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticException().getCode(), e.getMessage());
         else
-            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), httpResponseStatus.exception().getMessage());
+            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticException().getCode(), BizStatusNativeEnum.staticException().getMessage());
         if (input instanceof HandOverException) {
             String traceId = ((HandOverException) input).getTraceId();
             responseWrapper.setTraceId(traceId);

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.algorithm.identity;
 
+import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 
 import java.text.SimpleDateFormat;
@@ -12,8 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class SerialNumber {
 //    private final static Object _serialNumberLock = new Object();
-    private final static Lock lock = new ReentrantLock();
-    private final static String DATETIME_FORMAT = "yyyyMMddHHmmssSSS";
+//    private final static Lock lock = new ReentrantLock();
+    private final static String DATETIME_FORMAT = DateTimeSugar.Format.FORMAT_TIGHT_LONG; //"yyyyMMddHHmmssSSS";
 
     public final static SerialNumberBuilder serialNumberBuilder() {
         String dateTimeFormat = DATETIME_FORMAT;
@@ -42,29 +43,22 @@ public class SerialNumber {
         int COUNT_DIGIT;
         double MAX_COUNT;
 
-        SerialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
+        private SerialNumberBuilder(String dateTimeFormat, int minCount, int countDigit) {
             this.dateTimeFormat = dateTimeFormat;
             this.MIN_COUNT = minCount;
             this.COUNT_DIGIT = countDigit;
             this.MAX_COUNT = Math.pow(10, COUNT_DIGIT) - 1;
         }
 
-        public String build(){
-            String id;
-            //lock (_serialNumberLock)
-            try {
-                lock.lock();
-                String now = new SimpleDateFormat(dateTimeFormat).format(new Date());
-                if (!now.equals(latestDateTime)) {
-                    countInSecond = MIN_COUNT;
-                    latestDateTime = now;
-                } else
-                    countInSecond = (countInSecond + 1) > MAX_COUNT ? MIN_COUNT : (countInSecond + 1);
-                id = latestDateTime + StringSugar.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
-            } finally {
-                lock.unlock();
+        public synchronized String build(){
+            String now = new SimpleDateFormat(dateTimeFormat).format(new Date());
+            if (now.equals(latestDateTime)) {
+                countInSecond = (countInSecond + 1) > MAX_COUNT ? MIN_COUNT : (countInSecond + 1);
+            } else {
+                countInSecond = MIN_COUNT;
+                latestDateTime = now;
             }
-
+            String id = latestDateTime + StringSugar.leftPad(String.valueOf(countInSecond),COUNT_DIGIT, '0');
             return id;
         }
     }

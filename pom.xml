@@ -39,7 +39,7 @@
     <repositories>
         <repository>
             <id>ali-maven</id>
-<!--            http://maven.aliyun.com/mvn/view-->
+            <!--http://maven.aliyun.com/mvn/view-->
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
@@ -62,6 +62,45 @@
                 <updatePolicy>interval:30</updatePolicy>
             </snapshots>
         </repository>
+
+<!--        <repository>-->
+<!--            <id>sonatype-maven</id>-->
+<!--            <url>http://repository.sonatype.org/content/groups/public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>always</updatePolicy>-->
+<!--                <checksumPolicy>fail</checksumPolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+
+<!--        <repository>-->
+<!--            <id>mvnsearch-maven</id>-->
+<!--            <url>http://www.mvnsearch.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>always</updatePolicy>-->
+<!--                <checksumPolicy>fail</checksumPolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+
+<!--        <repository>-->
+<!--            <id>ibiblio-maven</id>-->
+<!--            <url>http://maven.ibiblio.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>always</updatePolicy>-->
+<!--                <checksumPolicy>fail</checksumPolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
     </repositories>
 
     <build>

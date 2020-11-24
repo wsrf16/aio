@@ -18,6 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
+import springfox.documentation.oas.annotations.EnableOpenApi;
+
 
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,

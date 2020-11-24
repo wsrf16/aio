@@ -104,6 +104,21 @@ xxl:
       logretentiondays: -1
 
 
+#knife4j:
+#  enableAggregation: true
+#  cloud:
+#    enable: true
+#    routes:
+#      - name: 测试分组1
+#        uri: localhost:8880
+#        location: /v2/api-docs
+#      - name: 测试分组2
+#        uri: localhost:58882
+#        location: /v2/api-docs
+#      - name: 测试分组3
+#        uri: localhost:8084
+#        location: /v2/api-docs
+
 app:
   id: park
 apollo:

@@ -129,7 +129,7 @@ public abstract class RegexSugar {
      * @param replacement
      * @return
      */
-    public final static String replaceAll(String regex, String input, Object replacement) {
+    public final static String replaceAll(String input, String regex, Object replacement) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
@@ -141,12 +141,12 @@ public abstract class RegexSugar {
 
     /**
      * replace
-     * @param regex
      * @param input
+     * @param regex
      * @param replacements
      * @return
      */
-    public static String replace(String regex, String input, Object... replacements) {
+    public static String replace(String input, String regex, Object... replacements) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         int i = 0;

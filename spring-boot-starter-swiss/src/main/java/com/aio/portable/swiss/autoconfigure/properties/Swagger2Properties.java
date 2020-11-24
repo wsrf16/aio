@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Response;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.service.VendorExtension;
 
@@ -23,6 +24,8 @@ public class Swagger2Properties {
 //    springfox.documentation.service
 
     private List<ResponseMessage> responseMessageList;
+
+    private List<Response> responseList;
 
     private String packageName;
 
@@ -44,10 +47,17 @@ public class Swagger2Properties {
 //        this.version = version;
 //    }
 
-    public static Swagger2Properties build(String packageName, List<ResponseMessage> responseMessageList) {
+    public static Swagger2Properties buildByResponseMessage(String packageName, List<ResponseMessage> responseMessageList) {
         Swagger2Properties swagger2Properties = new Swagger2Properties();
         swagger2Properties.setPackageName(packageName);
         swagger2Properties.setResponseMessageList(responseMessageList);
+        return swagger2Properties;
+    }
+
+    public static Swagger2Properties buildByResponse(String packageName, List<Response> responseList) {
+        Swagger2Properties swagger2Properties = new Swagger2Properties();
+        swagger2Properties.setPackageName(packageName);
+        swagger2Properties.setResponseList(responseList);
         return swagger2Properties;
     }
 
@@ -65,6 +75,14 @@ public class Swagger2Properties {
 
     public void setResponseMessageList(List<ResponseMessage> responseMessageList) {
         this.responseMessageList = responseMessageList;
+    }
+
+    public List<Response> getResponseList() {
+        return responseList;
+    }
+
+    public void setResponseList(List<Response> responseList) {
+        this.responseList = responseList;
     }
 
     public String getPackageName() {

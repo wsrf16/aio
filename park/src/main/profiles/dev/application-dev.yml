@@ -55,7 +55,7 @@ spring:
               auto: update
             dialect: org.hibernate.dialect.MySQL5Dialect
             #dialect: org.hibernate.dialect.MySQL57Dialect
-            physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+            physical-naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
   #            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 

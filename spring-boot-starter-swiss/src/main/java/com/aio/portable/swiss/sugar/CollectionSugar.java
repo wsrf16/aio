@@ -107,33 +107,82 @@ public abstract class CollectionSugar {
 
 
 
+//    /**
+//     * 并集，不去重
+//     *
+//     * @param collection1
+//     * @param collection2
+//     * @return
+//     */
+//    public final static <T> List<T> concat(Collection<T> collection1, Collection<T> collection2) {
+//        List<T> _list1 = collection1.stream().collect(Collectors.toList());
+//        List<T> _list2 = collection2.stream().collect(Collectors.toList());
+//        _list1.addAll(_list2);
+//        List<T> list = _list1;
+//        return list;
+//    }
+
+
     /**
-     * 并集，不去重
-     *
-     * @param collection1
-     * @param collection2
+     * concat 并集，不去重
+     * @param collections
+     * @param <T>
      * @return
      */
-    public final static <T> List<T> concat(Collection<T> collection1, Collection<T> collection2) {
-        List<T> _list1 = collection1.stream().collect(Collectors.toList());
-        List<T> _list2 = collection2.stream().collect(Collectors.toList());
-        _list1.addAll(_list2);
-        List<T> list = _list1;
-        return list;
+    public final static <T> List<T> concat(Collection<T>... collections) {
+        List<T> _list = new ArrayList<>();
+        for (Collection<T> collection : collections) {
+            _list.addAll(collection.stream().collect(Collectors.toList()));
+        }
+        return _list;
+    }
+
+
+    /**
+     * union 并集，去重
+     *
+     * @param collections
+     * @return
+     */
+    public final static <T> List<T> union(Collection<T> collections) {
+        List<T> _list = concat(collections).stream().distinct().collect(Collectors.toList());
+        return _list;
     }
 
     /**
-     * 并集，去重
-     *
-     * @param collection1
-     * @param collection2
+     * concatIfAbsent 并集去重
+     * @param maps
+     * @param <K>
+     * @param <V>
      * @return
      */
-    public final static <T> List<T> union(Collection<T> collection1, Collection<T> collection2) {
-        List<T> list = concat(collection1, collection2).stream().distinct().collect(Collectors.toList());
-        return list;
+    public final static <K, V> Map<K, V> concatIfAbsent(Map<K, V>... maps) {
+        Map<K, V> _map = new HashMap<>();
+        for (Map<K, V> map : maps) {
+            map.entrySet().forEach(c -> {
+                _map.putIfAbsent(c.getKey(), c.getValue());
+            });
+        }
+        return _map;
     }
 
+    /**
+     * concatIfAbsent 并集去重
+     * @param maps
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public final static <K, V> Map<K, V> concatIfAbsent(Predicate<Map.Entry<K, V>> predicate, Map<K, V>... maps) {
+        Map<K, V> _map = new HashMap<>();
+        for (Map<K, V> map : maps) {
+            map.entrySet().forEach(c -> {
+                if (predicate.test(c))
+                    _map.putIfAbsent(c.getKey(), c.getValue());
+            });
+        }
+        return _map;
+    }
 
     /**
      * distinctBy

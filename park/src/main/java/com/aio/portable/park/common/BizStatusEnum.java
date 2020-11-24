@@ -1,18 +1,18 @@
 package com.aio.portable.park.common;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatusOriginEnum;
 import com.aio.portable.swiss.hamlet.bean.BizStatus;
+import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizStatusEnum extends BizStatusOriginEnum {
+public class BizStatusEnum extends BizStatusNativeEnum {
     private final static BizStatusEnum _ = new BizStatusEnum();
 
-    protected static BizStatusEnum instance;
-
-    public static BizStatusOriginEnum singletonInstance() {
-        return instance;
-    }
+//    protected static BizStatusEnum instance;
+//
+//    public static BizStatusNativeEnum singletonInstance() {
+//        return instance;
+//    }
 
     @Override
     public BizStatus succeed() {

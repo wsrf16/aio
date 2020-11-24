@@ -22,7 +22,7 @@ import java.util.*;
 
 public class ClassScaner implements ResourceLoaderAware {
 
-    //保存过滤规则要排除的注解
+    // 保存过滤规则要排除的注解
     private final List<TypeFilter> includeFilters = new LinkedList<TypeFilter>();
     private final List<TypeFilter> excludeFilters = new LinkedList<TypeFilter>();
 

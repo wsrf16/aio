@@ -283,11 +283,43 @@ public class StringSugar {
      * @return
      */
     public static String format(String input, Object... replacement) {
-        return RegexSugar.replace(PLACE_HOLDER, input, replacement);
+        return RegexSugar.replace(input, PLACE_HOLDER, replacement);
     }
 
     public final static String wrap(String content, ColorEnum... colors) {
 //        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
         return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
     }
+
+    public final static String hasTextFirst(String otherwise, String... str) {
+        for (String s : str) {
+            if (StringUtils.hasText(s))
+                return s;
+        }
+        return otherwise;
+    }
+
+    public final static String hasLengthFirst(String otherwise, String... str) {
+        for (String s : str) {
+            if (StringUtils.hasLength(s))
+                return s;
+        }
+        return otherwise;
+    }
+
+    public final static String isEmptyFirst(String otherwise, String... str) {
+        for (String s : str) {
+            if (StringUtils.isEmpty(s))
+                return s;
+        }
+        return otherwise;
+    }
+
+
+
+
+
+
+
+
 }

@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class BizStatusOriginEnum {
-    protected static BizStatusOriginEnum instance;
+public abstract class BizStatusNativeEnum {
+    protected static BizStatusNativeEnum instance;
 
-    public static BizStatusOriginEnum singletonInstance() {
+    public static BizStatusNativeEnum singletonInstance() {
         return instance;
     }
 
-    protected BizStatusOriginEnum() {
-        synchronized (BizStatusOriginEnum.class) {
-            BizStatusOriginEnum.instance = BizStatusOriginEnum.instance == null ? this : BizStatusOriginEnum.instance;
+    protected BizStatusNativeEnum() {
+        synchronized (BizStatusNativeEnum.class) {
+            BizStatusNativeEnum.instance = BizStatusNativeEnum.instance == null ? this : BizStatusNativeEnum.instance;
         }
     }
 
@@ -65,7 +65,7 @@ public abstract class BizStatusOriginEnum {
 
 
     public static List<BizStatus> values() {
-        Class<BizStatusOriginEnum> clazz = BizStatusOriginEnum.class;
+        Class<BizStatusNativeEnum> clazz = BizStatusNativeEnum.class;
         Method[] declaredMethods = clazz.getDeclaredMethods();
         List<Method> methodList = Arrays.stream(declaredMethods).filter(c -> !Modifier.isStatic(c.getModifiers()) && c.getReturnType() == BizStatus.class).collect(Collectors.toList());
 

@@ -11,7 +11,7 @@ public class RegexTest {
     @Test
     public void regex() {
         String ret1 = RegexSugar.Application.blurPhone("12345678901");
-        String ret2 = RegexSugar.replaceAll("4567", "12345678901", "xxxx");
+        String ret2 = RegexSugar.replaceAll( "12345678901", "4567","xxxx");
         boolean ret3 = RegexSugar.match("456", "12345678901");
         System.out.println(ret1);
         System.out.println(ret2);
@@ -27,6 +27,6 @@ public class RegexTest {
         List<List<String>> matches = RegexSugar.findMore(regex, input);
 
         String replacement[] = {"1", "2", "3", "4", "5"};
-        RegexSugar.replace(regex, input, "1", "2", "3", "4", "5");
+        RegexSugar.replace(input, regex, "1", "2", "3", "4", "5");
     }
 }

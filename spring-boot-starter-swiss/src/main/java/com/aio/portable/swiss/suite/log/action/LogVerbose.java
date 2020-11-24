@@ -18,9 +18,9 @@ public interface LogVerbose {
 
     void verbose(String summary, String message);
 
-    default void verbose(String summary, String verbose, Object[] arguments) {
-        verbose = RegexSugar.replace("\\{\\}", verbose, arguments);
-        verbose(summary, verbose);
+    default void verbose(String summary, String message, Object[] arguments) {
+        message = StringSugar.format(message, arguments);
+        verbose(summary, message);
     }
 
     <T> void verbose(String summary, T t);

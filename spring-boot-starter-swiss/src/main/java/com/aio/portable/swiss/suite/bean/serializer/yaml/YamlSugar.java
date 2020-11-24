@@ -24,7 +24,7 @@ public class YamlSugar {
 
     private final static Yaml YAML;
 
-    public static <T> T yaml2T(ClassLoader classLoader, String resource, Class<T> clazz) {
+    public static <T> T resource2T(ClassLoader classLoader, String resource, Class<T> clazz) {
         InputStream inputStream = classLoader.getResourceAsStream(resource);
         T t = YAML.loadAs(inputStream, clazz);
         return t;
@@ -35,7 +35,15 @@ public class YamlSugar {
         return t;
     }
 
-    public static <T> T yaml2T(File file, Class<T> clazz)  {
+    public final static <T> T file2T(String path, Class<T> clazz) {
+        File file = new File(path);
+        if (!file.exists())
+            throw new RuntimeException(path);
+        T t = YamlSugar.file2T(file, clazz);
+        return t;
+    }
+
+    public static <T> T file2T(File file, Class<T> clazz)  {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(file);
@@ -47,7 +55,7 @@ public class YamlSugar {
         return t;
     }
 
-    public static <T> T yaml2T(InputStream inputStream, Class<T> clazz) {
+    public static <T> T inputStream2T(InputStream inputStream, Class<T> clazz) {
         T t = YAML.loadAs(inputStream, clazz);
         return t;
     }

@@ -3,7 +3,6 @@ package com.aio.portable.park.runner;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.LogTest;
-//import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.suite.log.LogHub;

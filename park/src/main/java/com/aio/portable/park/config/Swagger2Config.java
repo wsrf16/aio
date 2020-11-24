@@ -9,24 +9,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Response;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
 @Import(BeanValidatorPluginsConfiguration.class)
-@EnableSwagger2
+//@EnableSwagger2
+@EnableOpenApi
 @Configuration
 @ConditionalOnClass(ApiInfo.class)
 public class Swagger2Config {
-    private final static List<ResponseMessage> responseMessageList() {
-        return SwaggerStatus.toResponseMessageList(BizStatusEnum.values());
-    }
-
     @Bean
     public Swagger2Properties swagger2Properties() {
-        return Swagger2Properties.build(DemoController.class.getPackage().getName(), responseMessageList());
+        return Swagger2Properties.buildByResponse(DemoController.class.getPackage().getName(),
+                SwaggerStatus.toResponseList(BizStatusEnum.values()));
     }
 
 }

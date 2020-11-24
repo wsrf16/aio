@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface KeyValuePersistence {
-//    String join(String node, String... nodes);
-//    String join(@NotNull String... nodes);
-
     String spellPath(String node, String... prefixNodes);
 
     void set(String key, Object value, String... tables);

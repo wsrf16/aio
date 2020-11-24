@@ -82,35 +82,35 @@ public class NamingStrategy {
     }
 
 
-//    public static class Kebab {
-//        public final static boolean isCaseInsensitive = true;
-//        public final static char UNDER_LINE = '_';
-//        public final static char DASH = '-';
-//
-//        public final static String kebab(String name) {
-//            if (!StringUtils.hasText(name))
-//                return name;
-//
-//            StringBuilder builder = new StringBuilder(name.replace('.', '-'));
-//
-//            for(int i = 1; i < builder.length() - 1; ++i) {
-//                if (isDashRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
-//                    builder.insert(i++, '-');
-//                }
-//            }
-//
-//            if (isCaseInsensitive) {
-//                name = builder.toString().toLowerCase(Locale.ROOT);
-//            }
-//
-//            return name;
-//        }
-//
-//        private final static boolean isDashRequired(char before, char current, char after) {
-//            return Character.isLowerCase(before) &&
-//                    Character.isUpperCase(current) &&
-//                    Character.isLowerCase(after);
-//        }
-//    }
+    public static class Kebab {
+        public final static boolean isCaseInsensitive = true;
+        public final static char UNDER_LINE = '_';
+        public final static char DASH = '-';
+
+        public final static String kebab(String name) {
+            if (!StringUtils.hasText(name))
+                return name;
+
+            StringBuilder builder = new StringBuilder(name.replace('.', '-'));
+
+            for(int i = 1; i < builder.length() - 1; ++i) {
+                if (isDashRequired(builder.charAt(i - 1), builder.charAt(i), builder.charAt(i + 1))) {
+                    builder.insert(i++, '-');
+                }
+            }
+
+            if (isCaseInsensitive) {
+                name = builder.toString().toLowerCase(Locale.ROOT);
+            }
+
+            return name;
+        }
+
+        private final static boolean isDashRequired(char before, char current, char after) {
+            return Character.isLowerCase(before) &&
+                    Character.isUpperCase(current) &&
+                    Character.isLowerCase(after);
+        }
+    }
 
 }

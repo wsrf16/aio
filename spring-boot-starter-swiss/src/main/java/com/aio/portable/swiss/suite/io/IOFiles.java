@@ -19,6 +19,11 @@ public abstract class IOFiles {
         }
     }
 
+    public final static File getDirectoryOfFile(String path) {
+        File file = new File(path);
+        return getDirectoryOfFile(file);
+    }
+
 //    public final static void createDirectoryIfNotExists(Path path) throws IOException {
 //        if (Files.notExists(path))
 //            Files.createDirectory(path);
@@ -95,17 +100,22 @@ public abstract class IOFiles {
         }
     }
 
-    public final static boolean delete(File fileOrDirectory) {
+    public final static boolean delete(String path) {
+        File file = new File(path);
+        return delete(file);
+    }
+
+    public final static boolean delete(File path) {
         boolean hasDeleted = false;
-        if (fileOrDirectory.exists()) {
-            if (fileOrDirectory.isDirectory()) {
-                File files[] = fileOrDirectory.listFiles();
+        if (path.exists()) {
+            if (path.isDirectory()) {
+                File files[] = path.listFiles();
                 for (int i = 0; i < files.length; i++) {
                     delete(files[i]);
                 }
             }
             hasDeleted = true;
-            fileOrDirectory.delete();
+            path.delete();
         }
         return hasDeleted;
     }
@@ -123,8 +133,8 @@ public abstract class IOFiles {
     }
 
     public final static File createParentDirectories(String path) {
-        File dir = new File(path).getParentFile();
-        return createDirectories(dir);
+        File dir = new File(path);
+        return createParentDirectories(dir);
     }
 
     public final static File createDirectories(String path) {

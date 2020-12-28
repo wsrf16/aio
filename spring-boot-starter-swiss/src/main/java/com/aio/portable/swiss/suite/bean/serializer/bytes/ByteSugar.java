@@ -10,14 +10,13 @@ public class ByteSugar {
      * @return
      */
     public final static byte[] toByteArray(Object obj) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] bytes;
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(obj);
             objectOutputStream.flush();
             bytes = byteArrayOutputStream.toByteArray();
-            objectOutputStream.close();
+//            objectOutputStream.close();
             byteArrayOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();

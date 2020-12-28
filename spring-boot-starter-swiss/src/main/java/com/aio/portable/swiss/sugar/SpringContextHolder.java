@@ -6,6 +6,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,6 +20,23 @@ import java.util.Map;
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
+
+    private static Class<?> primarySource;
+
+    private static String[] args;
+
+    public static Class<?> getPrimarySource() {
+        return primarySource;
+    }
+
+    public static String[] getArgs() {
+        return args;
+    }
+
+    public static void beReadyForStarting(Class<?> primarySource, String[] args) {
+        SpringContextHolder.primarySource = primarySource;
+        SpringContextHolder.args = args;
+    }
 
     /**
      * 获取静态变量中的ApplicationContext.
@@ -148,4 +166,9 @@ public class SpringContextHolder implements ApplicationContextAware {
         applicationContext = null;
     }
 
+
+    public final static void restart() {
+        ((ConfigurableApplicationContext) applicationContext).close();
+        SpringApplication.run(primarySource, args);
+    }
 }

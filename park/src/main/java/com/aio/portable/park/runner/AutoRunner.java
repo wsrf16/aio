@@ -4,6 +4,7 @@ import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.LogTest;
 import com.aio.portable.park.test.MyDatabaseTest;
+import com.aio.portable.park.test.ResourceTest;
 import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.suite.log.LogHub;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
@@ -17,6 +18,7 @@ public class AutoRunner implements ApplicationRunner {
 
 //    @Autowired
 //    MyDatabaseTest mybatisTest;
+
 
     @Autowired
     MyDatabaseTest myDatabaseTest;
@@ -73,6 +75,8 @@ public class AutoRunner implements ApplicationRunner {
 
             System.out.println(ClassSugar.getPath(AA.class));
             Thread.sleep(0);
+//            Class.forName(ResourceTest.class.toString());
+            ResourceTest resourceTest = new ResourceTest();
         } catch (Exception e) {
             e.printStackTrace();
         }

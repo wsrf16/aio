@@ -177,6 +177,16 @@ public class JacksonSugar {
      * getObjectMapper
      * @param indent
      * @param includeNullAndEmpty
+     * @return
+     */
+    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty) {
+        return getObjectMapper(indent, includeNullAndEmpty, null, null);
+    }
+
+    /**
+     * getObjectMapper
+     * @param indent
+     * @param includeNullAndEmpty
      * @param strategy
      * @return
      */

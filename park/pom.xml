@@ -46,7 +46,7 @@
 
         <mysql.version>8.0.11</mysql.version>
         <mybatis.version>2.1.0</mybatis.version>
-        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+<!--        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>-->
         <!-- swagger2markup -->
 <!--        <swagger2markup.directory.output.generated>${project.build.directory}/asciidoc/generated</swagger2markup.directory.output.generated>-->
 <!--        <swagger2markup.swaggerOutput>${project.build.directory}/swagger/swagger.json</swagger2markup.swaggerOutput>-->
@@ -403,17 +403,10 @@
                 <args.app></args.app>
             </properties>
         </profile>
-        <profile>
-            <id>prod-docker</id>
-            <properties>
-                <profiles.active>prod-docker</profiles.active>
-                <args.app></args.app>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
-        <finalName>${project.deploy.finalName}-${profiles.active}</finalName>
+        <finalName>${project.deploy.finalName}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -478,7 +471,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

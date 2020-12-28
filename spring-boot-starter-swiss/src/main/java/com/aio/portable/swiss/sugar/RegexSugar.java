@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -123,7 +124,7 @@ public abstract class RegexSugar {
 
 
     /**
-     * 正则替换
+     * replaceAll
      * @param input
      * @param regex
      * @param replacement
@@ -134,7 +135,22 @@ public abstract class RegexSugar {
         Matcher matcher = pattern.matcher(input);
 
         String _replacement = Matcher.quoteReplacement(replacement.toString());
-        String result = matcher.find() ? matcher.replaceAll(_replacement) : regex;
+        String result = matcher.find() ? matcher.replaceAll(_replacement) : input;
+        return result;
+    }
+
+    /**
+     * replaceAll
+     * @param input
+     * @param regexList
+     * @param replacement
+     * @return
+     */
+    public final static String replaceAll(String input, List<String> regexList, Object replacement) {
+        String result = input;
+        for (String regex : regexList) {
+            result = RegexSugar.replaceAll(result, regex, replacement);
+        }
         return result;
     }
 

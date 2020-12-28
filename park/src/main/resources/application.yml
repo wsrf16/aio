@@ -123,6 +123,7 @@ app:
   id: park
 apollo:
   bootstrap:
+#    namespaces: normal.yml
     enabled: true
     eagerLoad:
       enabled: true

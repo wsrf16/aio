@@ -6,7 +6,7 @@ import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.io.NIOFiles;
+import com.aio.portable.swiss.suite.io.NIOSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -91,30 +91,30 @@ public class FilePO implements NodePersistence {
     @Override
     public void set(String key, Object value, String... tables) {
         String dirPath = spellPath(EMPTY, tables);
-        NIOFiles.createDirectories(dirPath);
+        NIOSugar.Files.createDirectories(dirPath);
 
         String filename = formatKey(key);
         String path = spellPath(filename, tables);
         String content = JacksonSugar.obj2Json(value);
-        NIOFiles.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        NIOSugar.Files.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
     public void setTable(String table, Object value, String... tables) {
         String dirPath = spellPath(table, tables);
-        NIOFiles.createDirectories(dirPath);
+        NIOSugar.Files.createDirectories(dirPath);
 
         String filename = formatTable(table);
         String content = JacksonSugar.obj2Json(value);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
-        NIOFiles.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        NIOSugar.Files.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @Override
     public void remove(String key, String... tables) {
         String filename = formatKey(key);
         Path path = Paths.get(spellPath(filename, tables));
-        NIOFiles.deleteIfExists(path);
+        NIOSugar.Files.deleteIfExists(path);
     }
 
     @Override
@@ -132,8 +132,8 @@ public class FilePO implements NodePersistence {
         String dirTable = spellPath(table, tables);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
 
-        NIOFiles.deleteIfExists(path);
-        NIOFiles.deleteIfExists(dirTable);
+        NIOSugar.Files.deleteIfExists(path);
+        NIOSugar.Files.deleteIfExists(dirTable);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class FilePO implements NodePersistence {
     @Override
     public void removeDatabase() {
         String path = spellPath(EMPTY);
-        NIOFiles.deleteIfExists(path);
+        NIOSugar.Files.deleteIfExists(path);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class FilePO implements NodePersistence {
         checkKey(key, tables);
         String filename = formatKey(key);
         String path = spellPath(filename, tables);
-        String content = NIOFiles.read(path, charset);
+        String content = NIOSugar.Files.read(path, charset);
         T t = JacksonSugar.json2T(content, clazz);
         return t;
     }
@@ -165,7 +165,7 @@ public class FilePO implements NodePersistence {
         checkKey(key, tables);
         String filename = formatKey(key);
         String path = spellPath(filename, tables);
-        String content = NIOFiles.read(path, charset);
+        String content = NIOSugar.Files.read(path, charset);
         T t = JacksonSugar.json2T(content, valueTypeRef);
         return t;
     }
@@ -175,7 +175,7 @@ public class FilePO implements NodePersistence {
         checkTable(table, tables);
         String filename = formatTable(table);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
-        String content = NIOFiles.read(path, charset);
+        String content = NIOSugar.Files.read(path, charset);
         T t = JacksonSugar.json2T(content, clazz);
         return t;
     }
@@ -186,7 +186,7 @@ public class FilePO implements NodePersistence {
         String filename = formatTable(table);
 //        String dirTable = spellPath(table, tables);
         String path = spellPath(filename, tables);
-        String content = NIOFiles.read(path, charset);
+        String content = NIOSugar.Files.read(path, charset);
         T t = JacksonSugar.json2T(content, valueTypeRef);
         return t;
     }

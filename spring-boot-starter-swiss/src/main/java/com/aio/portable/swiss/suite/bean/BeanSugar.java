@@ -2,11 +2,13 @@ package com.aio.portable.swiss.suite.bean;
 
 import com.aio.portable.swiss.suite.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.CollectionSugar;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -90,6 +92,10 @@ public abstract class BeanSugar {
         return properties.toArray(new String[0]);
     }
 
+    public final static void copyNotNullProperties(Object source, Object target) {
+        BeanUtils.copyProperties(source, target, BeanSugar.getNullProperties(source));
+    }
+
 
 
     public abstract static class PropertyDescriptors {
@@ -138,7 +144,33 @@ public abstract class BeanSugar {
             return map;
         }
 
-        public final static Map<String, String> toNameValueMapForString(Object bean) {
+        public final static Map<String, Object> toNameValueMapExceptNull(Object bean) {
+            Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+                    .filter(pro -> !pro.getName().equals("class") && getValue(bean, pro) != null)
+                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
+            return map;
+        }
+
+
+        public final static Map<String, PropertyDescriptor> toNamePropertyMap(Object bean) {
+            Map<String, PropertyDescriptor> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+                    .filter(c -> !c.getName().equals("class"))
+                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
+            return map;
+        }
+
+        public final static Map<String, PropertyDescriptor> toNamePropertyMapExceptNull(Object bean) {
+            Map<String, PropertyDescriptor> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+                    .filter(pro -> !pro.getName().equals("class") && getValue(bean, pro) != null)
+                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
+            return map;
+        }
+
+
+        public final static Map<String, String> toNameStringMap(Object bean) {
             Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !c.getName().equals("class"))
                     //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
@@ -146,14 +178,68 @@ public abstract class BeanSugar {
             return map;
         }
 
+        public final static Map<String, String> toNameStringMapExceptNull(Object bean) {
+            Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
+                    .filter(c -> !c.getName().equals("class"))
+                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
+            return map;
+        }
 
-        public static Object getValue(Object bean, PropertyDescriptor c) {
+        public static Object getValue(Object bean, PropertyDescriptor propertyDescriptor) {
             try {
-                return c.getReadMethod().invoke(bean);
+                return propertyDescriptor.getReadMethod().invoke(bean);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static Object getValue(Object bean, String propertyName) {
+            try {
+                PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
+                return propertyDescriptor.getReadMethod().invoke(bean);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        public static boolean exist(Object bean, String propertyName) {
+            PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
+            return propertyDescriptor != null;
+        }
+
+        public static <T extends Annotation> T getAnnotationIncludeParents(Class<?> clazz, PropertyDescriptor propertyDescriptor, Class<T> annotationClass) {
+            try {
+                String fieldName = propertyDescriptor.getName();
+                return BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz, fieldName).getAnnotation(annotationClass);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static Annotation[] getAnnotationsIncludeParents(Class<?> clazz, PropertyDescriptor propertyDescriptor) {
+            try {
+                String fieldName = propertyDescriptor.getName();
+                return BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz, fieldName).getAnnotations();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static <T extends Annotation> Boolean isAnnotationPresentIncludeParents(Class<?> clazz, PropertyDescriptor propertyDescriptor, Class<T> annotationClass) {
+            try {
+                String fieldName = propertyDescriptor.getName();
+                return BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz, fieldName).isAnnotationPresent(annotationClass);
+            } catch (NoSuchFieldException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }

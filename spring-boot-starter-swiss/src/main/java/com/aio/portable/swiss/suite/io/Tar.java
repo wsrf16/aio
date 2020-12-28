@@ -1,13 +1,9 @@
 package com.aio.portable.swiss.suite.io;
 
 import com.aio.portable.swiss.sugar.StringSugar;
-import com.aio.portable.swiss.suite.io.IOFiles;
-import com.aio.portable.swiss.suite.io.PathSugar;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.springframework.security.oauth2.client.http.StringSplitUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.*;
 
@@ -144,7 +140,7 @@ public class Tar {
     public static String targz(String path) {
         String tar = tar(path);
         String targz = gz(tar);
-        IOFiles.delete(tar);
+        IOSugar.Files.delete(tar);
         return targz;
     }
 
@@ -154,7 +150,7 @@ public class Tar {
 
         String tar = tar(path, targetTarFile);
         String targz = gz(tar);
-        IOFiles.delete(tar);
+        IOSugar.Files.delete(tar);
         return targz;
     }
 

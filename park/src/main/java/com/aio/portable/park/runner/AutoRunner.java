@@ -5,9 +5,7 @@ import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.LogTest;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.ResourceTest;
-import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.suite.log.LogHub;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -15,11 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AutoRunner implements ApplicationRunner {
-
-//    @Autowired
-//    MyDatabaseTest mybatisTest;
-
-
     @Autowired
     MyDatabaseTest myDatabaseTest;
 
@@ -39,6 +32,33 @@ public class AutoRunner implements ApplicationRunner {
 
 
         try {
+//            log.setAsync(false).e("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
+//            log.setAsync(false).i("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
+            log.setAsync(false).f("111111111111");
+            log.setAsync(false).e("111111111111");
+            log.setAsync(false).w("111111111111");
+            log.setAsync(false).i("111111111111");
+            log.setAsync(false).d("111111111111");
+            log.setAsync(false).t("111111111111");
+            log.setAsync(false).v("111111111111");
+            log.setAsync(false).i("111111111111");
+
+
+            Thread.sleep(0);
+//            Class.forName(ResourceTest.class.toString());
+            ResourceTest resourceTest = new ResourceTest();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+    private static void cert() {
 //            DataCertCreate dataCertCreate = new DataCertCreate();
 //            String[] info = { "huahua_user", "hnu", "university", "china", "hunan", "changsha", "111111", "11111111", "1" };
 //            // 生成公钥
@@ -60,33 +80,7 @@ public class AutoRunner implements ApplicationRunner {
 //            CertSugar.createKeyStore(new File("d:\\a"), "", new X500Name(""), "");
 //            CertSugar.CertInfo certInfo = new CertSugar.CertInfo();
 //            CertSugar.createSubjectCert(certInfo, "","", new File("d:\\a"), "", "cn", "");
-
-//            log.setAsync(false).e("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
-//            log.setAsync(false).i("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
-            log.setAsync(false).f("111111111111");
-            log.setAsync(false).e("111111111111");
-            log.setAsync(false).w("111111111111");
-            log.setAsync(false).i("111111111111");
-            log.setAsync(false).d("111111111111");
-            log.setAsync(false).t("111111111111");
-            log.setAsync(false).v("111111111111");
-            log.setAsync(false).i("111111111111");
-
-
-            System.out.println(ClassSugar.getPath(AA.class));
-            Thread.sleep(0);
-//            Class.forName(ResourceTest.class.toString());
-            ResourceTest resourceTest = new ResourceTest();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
-
-
-
-
-
-
 }
 
 

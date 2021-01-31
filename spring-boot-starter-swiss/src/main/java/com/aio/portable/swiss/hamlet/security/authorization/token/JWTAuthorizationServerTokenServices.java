@@ -15,15 +15,36 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Date;
 
-public class HamletJWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices {
+/**
+ * JWTAuthorizationServerTokenServices
+ * Method "configure(AuthorizationServerEndpointsConfigurer endpoints)" In AuthorizationServerConfigurerAdapter.class
+ */
+public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices {
     @Autowired
     private JWTAction jwtAction;
 
+    /**
+     * 配置AccessToken的存储方式:此处使用Redis存储
+     * Token的可选存储方式
+     * 1、InMemoryTokenStore
+     * 2、JdbcTokenStore
+     * 3、JwtTokenStore
+     * 4、RedisTokenStore
+     * 5、JwkTokenStore
+     */
     @Autowired
-    private TokenStore tokenStore;
+    private TokenStore tokenStore = jwtTokenStore();
+
+    private JwtTokenStore jwtTokenStore() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey("secret");
+        return new JwtTokenStore(converter);
+    }
 
 
     private String create(JWTClaims jwtClaims, String issuer) {
@@ -37,14 +58,6 @@ public class HamletJWTAuthorizationServerTokenServices implements AuthorizationS
         return tokenWord;
     }
 
-    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
-        String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwtClaims, issuer);
-        Date expiresAt = jwtClaims.getExpiresAt();
-        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(value, expiresAt);
-        return refreshToken;
-    }
-
     private DefaultOAuth2AccessToken createAccessToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
         String value = create(jwtClaims, issuer);
@@ -55,14 +68,23 @@ public class HamletJWTAuthorizationServerTokenServices implements AuthorizationS
         return accessToken;
     }
 
+    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
+        String issuer = authentication.getUserAuthentication().getName();
+        String value = create(jwtClaims, issuer);
+        Date expiresAt = jwtClaims.getExpiresAt();
+        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(value, expiresAt);
+
+        return refreshToken;
+    }
+
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        JWTClaims refreshTokenJWTClaims = jwtAction.toJWTClaims();
-        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWTClaims, authentication);
         JWTClaims accessTokenJWTClaims = jwtAction.toJWTClaims();
         DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWTClaims, authentication);
-        accessToken.setRefreshToken(refreshToken);
+        JWTClaims refreshTokenJWTClaims = jwtAction.toJWTClaims();
+        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWTClaims, authentication);
 
+        accessToken.setRefreshToken(refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);
         tokenStore.storeRefreshToken(refreshToken, authentication);
         return accessToken;

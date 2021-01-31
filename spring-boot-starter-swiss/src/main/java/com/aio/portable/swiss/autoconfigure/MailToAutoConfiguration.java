@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 //@Import(JavaMailSenderImpl.class)
 @AutoConfigureAfter(MailSenderAutoConfiguration.class)
 
-@ConditionalOnClass({MimeMessage.class, MimeType.class, MailSender.class})
+@ConditionalOnClass({MimeMessage.class, MimeType.class, MailSender.class, JavaMailSender.class})
 //@ConditionalOnMissingBean({MailSender.class})
 @EnableConfigurationProperties({MailProperties.class})
 public class MailToAutoConfiguration {

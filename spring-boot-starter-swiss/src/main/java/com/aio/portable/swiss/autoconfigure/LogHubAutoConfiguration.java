@@ -17,36 +17,6 @@ import org.springframework.context.annotation.DependsOn;
 
 //@Configuration
 public class LogHubAutoConfiguration {
-//    @Bean
-//    public ConsoleHubFactory consoleHubFactory() {
-//        return ConsoleHubFactory.singletonInstance();
-//    }
-
-//    @Bean
-//    public Slf4jHubFactory slf4jHubFactory() {
-//        return Slf4jHubFactory.singletonInstance();
-//    return  new Slf4jHubFactory();
-//    }
-
-//    @Bean
-//    @DependsOn(PropertyBean.RABBITMQ_PROPERTIES)
-//    @ConditionalOnBean(RabbitMQLogProperties.class)
-////    @ConditionalOnClass({org.springframework.amqp.rabbit.connection.CachingConnectionFactory.class, org.springframework.amqp.rabbit.core.RabbitTemplate.class})
-////    @ConditionalOnClass({RabbitTemplate.class, Channel.class})
-//    @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate" , "com.rabbitmq.client.Channel"})
-//    public RabbitMQHubFactory rabbitMQHubFactory() {
-//        return RabbitMQHubFactory.singletonInstance();
-//    }
-
-//    @Bean
-//    @DependsOn(PropertyBean.KAFKA_PROPERTIES)
-//    @ConditionalOnBean(KafkaLogProperties.class)
-////    @ConditionalOnClass({org.springframework.kafka.core.KafkaTemplate.class})
-//    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
-//    public KafkaHubFactory kafkaHubFactory() {
-//        return KafkaHubFactory.singletonInstance();
-//    }
-
     @Bean
     @ConditionalOnProperty("spring.log.rabbitmq.host")
     @ConfigurationProperties(prefix = "spring.log.rabbitmq")

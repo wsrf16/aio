@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.security.authorization.user;
+package com.aio.portable.swiss.hamlet.security.authentication.userdetails;
 
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 

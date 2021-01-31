@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>park</artifactId>
-    <version>1.1.14-SNAPSHOT</version>
+    <version>1.1.18.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>park</name>
@@ -41,9 +41,11 @@
         <shiro.version>1.5.3</shiro.version>
         <cglib-nodep.version>3.2.8</cglib-nodep.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
-        <zookeeper.version>3.4.14</zookeeper.version>
+<!--        <zookeeper.version>3.4.14</zookeeper.version>-->
+<!--        <zookeeper.version>3.6.2</zookeeper.version>-->
         <druid-spring-boot-starter.version>1.1.18</druid-spring-boot-starter.version>
 
+        <curator-recipes.version>5.1.0</curator-recipes.version>
         <mysql.version>8.0.11</mysql.version>
         <mybatis.version>2.1.0</mybatis.version>
 <!--        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>-->
@@ -330,22 +332,22 @@
 
 
 
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>${zookeeper.version}</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.zookeeper</groupId>-->
+<!--            <artifactId>zookeeper</artifactId>-->
+<!--            <version>${zookeeper.version}</version>-->
+<!--            <optional>true</optional>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                    <artifactId>slf4j-log4j12</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                    <artifactId>slf4j-api</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>org.projectlombok</groupId>-->
@@ -368,6 +370,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.12</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator-recipes.version}</version>
         </dependency>
 
     </dependencies>

@@ -1,12 +1,10 @@
-package com.aio.portable.swiss.hamlet.security.authorization.code;
+package com.aio.portable.swiss.hamlet.security.authorization.code.object;
 
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-public class OAuthCode {
+public class AuthorizationCodeObject {
 
     private String code;
 
@@ -38,8 +36,8 @@ public class OAuthCode {
         this.date = date;
     }
 
-    public final static OAuthCode newInstance(String code, OAuth2Authentication oauth2Authentication) {
-        OAuthCode oauthCode = new OAuthCode();
+    public final static AuthorizationCodeObject newInstance(String code, OAuth2Authentication oauth2Authentication) {
+        AuthorizationCodeObject oauthCode = new AuthorizationCodeObject();
         oauthCode.code = code;
         oauthCode.oauth2Authentication = oauth2Authentication;
         oauthCode.date = new Date();

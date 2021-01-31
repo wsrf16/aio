@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.net.mail;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+
 
 /**
  * MailUtils
@@ -21,6 +23,7 @@ import java.io.File;
  *   JavaMailSender.class
  */
 @Component
+@ConditionalOnClass(JavaMailSender.class)
 @ConditionalOnBean(JavaMailSender.class)
 public class MailTo {
     private JavaMailSender javaMailSender;// = new JavaMailSenderImpl();

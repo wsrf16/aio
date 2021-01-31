@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sandbox.Wood;
-import com.aio.portable.swiss.sandbox.a中文.AA;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.GsonSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
@@ -17,7 +16,6 @@ import java.util.List;
 public class ClassTest {
     @Test
     private static void todo() throws IOException {
-        String ss = ClassSugar.getPath(AA.class);
         boolean b1 = ClassSugar.exist("Wood");
         boolean b2 = ClassSugar.exist("Wood");
 

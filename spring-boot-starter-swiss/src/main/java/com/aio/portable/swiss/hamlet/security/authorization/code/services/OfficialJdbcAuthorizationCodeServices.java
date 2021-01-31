@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.hamlet.security.authorization.code;
+package com.aio.portable.swiss.hamlet.security.authorization.code.services;
 
 import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

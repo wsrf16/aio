@@ -162,7 +162,6 @@ public class ResourceTest {
 
     {
         String resourceLocation = "/com/aio/portable/swiss/sandbox/Wood.class";
-        String resourceLocation2 = "/com/aio/portable/swiss/sandbox/a中文/AA.class";
         String classname = "Wood";
         Class clazz = Wood.class;
 

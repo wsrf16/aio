@@ -7,6 +7,10 @@ import org.springframework.security.oauth2.provider.client.JdbcClientDetailsServ
 
 import javax.sql.DataSource;
 
+/**
+ * OfficialJdbcClientDetailsService
+ * Method "configure(ClientDetailsServiceConfigurer clients)" In AuthorizationServerConfigurerAdapter.class
+ */
 public abstract class OfficialJdbcClientDetailsService extends JdbcClientDetailsService {
     public OfficialJdbcClientDetailsService(DataSource dataSource) {
         super(dataSource);

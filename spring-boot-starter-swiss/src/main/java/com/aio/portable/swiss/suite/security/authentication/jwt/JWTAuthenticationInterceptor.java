@@ -55,7 +55,7 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
 
                 if (required && StringUtils.hasText(bearToken)) {
                     String token = StringSugar.removeStart(bearToken, bearer);
-                    if (!this.jwtAction.verify(token))
+                    if (!this.jwtAction.validate(token))
                         throw new BizException(BizStatusNativeEnum.staticUnauthorized().getCode(), BizStatusNativeEnum.staticUnauthorized().getMessage());
                 }
             }

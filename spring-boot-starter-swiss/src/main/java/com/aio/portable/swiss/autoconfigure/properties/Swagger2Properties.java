@@ -16,7 +16,7 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "swagger.api-info", name = "title")
 @ConfigurationProperties(prefix = "swagger")
 public class Swagger2Properties {
-    private boolean enable = true;
+    private boolean enabled = true;
 
 //    private String version = "1.0";
 
@@ -31,12 +31,12 @@ public class Swagger2Properties {
 
     private String host = "";
 
-    public boolean getEnable() {
-        return enable;
+    public boolean getEnabled() {
+        return enabled;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 //    public String getVersion() {

@@ -3,7 +3,6 @@ package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.LogSingle;
 import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaPrinter;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
 import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;

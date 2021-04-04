@@ -15,6 +15,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Date;
+
 @Configuration
 public class AutoRunner implements ApplicationRunner {
     @Autowired
@@ -32,6 +34,18 @@ public class AutoRunner implements ApplicationRunner {
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) {
+        log.setAsync(false);
+        log.i("定时执行2", "当前时间{}", "null", null);
+        log.i("定时执行2", "当前时间{}", null);
+
+        log.i("定时执行1", "当前时间{}", new Object[]{new Date()});
+        log.i("定时执行2", "当前时间{}", new Date());
+        log.i("定时执行3", "当前时间{}", new Date(), new Date());
+        log.i("定时执行4", "当前时间{}", "1999 04 04 04");
+        log.i("定时执行5", "当前时间{}", "1999 04 04 04", "1999 04 04 04");
+        log.i("定时执行6", "当前时间", new Date());
+        log.i("定时执行7", "当前时间", new Date(), new Date());
+
         new BeanOrder(new UserInfoEntity());
 //        logTest.logStyle();
         myDatabaseTest.blah();

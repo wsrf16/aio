@@ -9,8 +9,9 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogVerbose {
     void verbose(String message);
 
-    default void verbose(String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void verbose(String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         verbose(message);
     }
 
@@ -18,8 +19,9 @@ public interface LogVerbose {
 
     void verbose(String summary, String message);
 
-    default void verbose(String summary, String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void verbose(String summary, String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         verbose(summary, message);
     }
 
@@ -31,7 +33,7 @@ public interface LogVerbose {
         verbose(message);
     }
 
-    default void v(String message, Object[] arguments) {
+    default void v(String message, Object... arguments) {
         verbose(message, arguments);
     }
 
@@ -43,7 +45,7 @@ public interface LogVerbose {
         verbose(summary, message);
     }
 
-    default void v(String summary, String message, Object[] arguments) {
+    default void v(String summary, String message, Object... arguments) {
         verbose(summary, message, arguments);
     }
 

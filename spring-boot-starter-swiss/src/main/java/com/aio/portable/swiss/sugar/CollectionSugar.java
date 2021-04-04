@@ -23,13 +23,17 @@ public abstract class CollectionSugar {
      * @return
      */
     public final static boolean isEmpty(Collection<?> collection) {
-//        return list == null || list.isEmpty();
-        return org.springframework.util.CollectionUtils.isEmpty(collection);
+        return collection == null || collection.isEmpty();
+//        return org.springframework.util.CollectionUtils.isEmpty(collection);
     }
 
     public final static boolean isEmpty(Object[] array) {
-//        return array == null || array.length < 1;
-        return ObjectUtils.isEmpty(array);
+        return array == null || array.length == 0;
+//        return ObjectUtils.isEmpty(array);
+    }
+
+    public final static long longOf(Object[] array) {
+        return array == null ? 0 : array.length;
     }
 
     /**

@@ -1,11 +1,15 @@
 package com.aio.portable.park.runner;
 
+import com.aio.portable.park.beanprocessor.UserInfoEntity;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.config.ApplicationConfig;
+import com.aio.portable.park.test.BeanOrder;
 import com.aio.portable.park.test.LogTest;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.ResourceTest;
+import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -26,23 +30,15 @@ public class AutoRunner implements ApplicationRunner {
 
 
     @Override
+    @LogMarker
     public void run(ApplicationArguments applicationArguments) {
+        new BeanOrder(new UserInfoEntity());
 //        logTest.logStyle();
         myDatabaseTest.blah();
 
 
         try {
-//            log.setAsync(false).e("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
-//            log.setAsync(false).i("qqqqqqq111111111111{}{}{}", new Object[]{"a","b","c"});
-            log.setAsync(false).f("111111111111");
-            log.setAsync(false).e("111111111111");
-            log.setAsync(false).w("111111111111");
-            log.setAsync(false).i("111111111111");
-            log.setAsync(false).d("111111111111");
-            log.setAsync(false).t("111111111111");
-            log.setAsync(false).v("111111111111");
-            log.setAsync(false).i("111111111111");
-
+//            StringSugar.rightPad(22,22)
 
             Thread.sleep(0);
 //            Class.forName(ResourceTest.class.toString());
@@ -58,7 +54,8 @@ public class AutoRunner implements ApplicationRunner {
 
 
 
-    private static void cert() {
+    public void cert(int sth) {
+        System.out.println(sth);
 //            DataCertCreate dataCertCreate = new DataCertCreate();
 //            String[] info = { "huahua_user", "hnu", "university", "china", "hunan", "changsha", "111111", "11111111", "1" };
 //            // 生成公钥

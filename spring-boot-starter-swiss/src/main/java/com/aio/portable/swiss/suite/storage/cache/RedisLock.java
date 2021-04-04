@@ -69,7 +69,7 @@ public class RedisLock {
                 }
             }
         }
-        RedisConnectionUtils.releaseConnection(redisConnection, redisConnectionFactory);
+        RedisConnectionUtils.releaseConnection(redisConnection, redisConnectionFactory, false);
         return identifier;
     }
 

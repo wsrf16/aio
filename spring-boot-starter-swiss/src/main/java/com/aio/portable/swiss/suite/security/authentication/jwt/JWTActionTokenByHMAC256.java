@@ -36,7 +36,7 @@ public abstract class JWTActionTokenByHMAC256 implements JWTAction {
     }
 
     @Override
-    public Boolean verify(String base64Token) {
+    public Boolean validate(String base64Token) {
         String decodeToken = tokenDecode(base64Token);
         return JWTSugar.Classic.verifyByHMAC256(decodeToken, jwtClaimsProperties.getSecret());
     }

@@ -6,8 +6,12 @@ import com.aio.portable.swiss.suite.storage.rds.jpa.annotation.order.OrderBy;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.storage.rds.jpa.annotation.where.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
 import javax.persistence.criteria.*;
 import java.beans.PropertyDescriptor;
@@ -108,6 +112,27 @@ public class JPASugar {
             return predicate;
         };
         return specification;
+    }
+
+    public final static <T, ID> T convertToSavedOne(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
+        final Specification<T> specification = JPASugar.<T>buildSpecification(t);
+        final Optional<T> optional = specificationRepository.findOne(specification);
+        T target;
+        if (optional.isPresent()) {
+            target = optional.get();
+            BeanUtils.copyProperties(t, target, BeanSugar.getNullProperties(t));
+        } else {
+            target = t;
+        }
+
+
+        return target;
+    }
+
+    public final static <T, ID> T saveIgnoreNullProperties(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
+        final T target = convertToSavedOne(specificationRepository, t);
+        specificationRepository.save(target);
+        return target;
     }
 
     /**

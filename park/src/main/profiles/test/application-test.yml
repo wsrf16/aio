@@ -28,8 +28,9 @@ spring:
     password: Yixin4redis
 
   log:
+    ennabled: true
     rabbitmq:
-      enable: false
+      enabled: false
       host: mecs.com
       port: 5672
       username: yixincapital

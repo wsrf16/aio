@@ -1,8 +1,11 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
 import com.aio.portable.swiss.autoconfigure.properties.RabbitMQProperties;
+import org.springframework.beans.factory.InitializingBean;
 
-public class RabbitMQLogProperties extends RabbitMQProperties {
+public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean {
+    private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
+
     private String esIndex;
 
     public String getEsIndex() {
@@ -13,18 +16,21 @@ public class RabbitMQLogProperties extends RabbitMQProperties {
         this.esIndex = esIndex;
     }
 
-    private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
-
     public synchronized static RabbitMQLogProperties singletonInstance() {
         return instance;
     }
 
     protected RabbitMQLogProperties() {
-        instance = this;
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        injectCurrentIntoSingletonInstance();
+    }
 
-
+    private void injectCurrentIntoSingletonInstance() {
+        instance = this;
+    }
 
 
 //    private final void validProperties() {

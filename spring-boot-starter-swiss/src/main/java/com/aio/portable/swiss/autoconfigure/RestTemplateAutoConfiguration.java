@@ -30,7 +30,7 @@ public class RestTemplateAutoConfiguration {
     @ConditionalOnBean({RestTemplateProperties.class, RestTemplateBuilder.class})
 //    @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
-        boolean agent = restTemplateProperties.getAgent().isEnable();
+        boolean agent = restTemplateProperties.getAgent().isEnabled();
         String agentHost = restTemplateProperties.getAgent().getHost();
         int agentPort = restTemplateProperties.getAgent().getPort();
         RestTemplate restTemplate;

@@ -29,8 +29,9 @@ spring:
     password: Yixin4redis
 
   log:
+    enabled: true
     rabbitmq:
-      enable: false
+      enabled: false
       host: mecs.com
       port: 5672
       username: yixincapital
@@ -45,7 +46,7 @@ spring:
         queue: application-log-queue
         exchange: application-log-exchange
     kafka:
-      enable: true
+      enabled: true
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       topic: basic_application_log
       bootstrap-servers: 10.4.8.31:9092

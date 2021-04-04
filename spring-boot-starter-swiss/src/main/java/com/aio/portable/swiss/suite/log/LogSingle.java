@@ -4,13 +4,15 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.log.parts.LogNote;
+import com.aio.portable.swiss.suite.log.parts.LogThrowable;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class LogSingle implements LogAction {
@@ -50,7 +52,7 @@ public abstract class LogSingle implements LogAction {
         this.async = async;
     }
 
-    public final static ExecutorService executor = Executors.newFixedThreadPool(2);
+    public final static ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
 
 //    protected Printer verbosePrinter;
 //    protected Printer infoPrinter;
@@ -1108,5 +1110,37 @@ public abstract class LogSingle implements LogAction {
             e.printStackTrace();
         }
         return ip;
+    }
+
+
+
+
+
+
+    static class LogSingleThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        LogSingleThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                    Thread.currentThread().getThreadGroup();
+            namePrefix = "log-" + "pool-" +
+                    poolNumber.getAndIncrement() +
+                    "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                    namePrefix + threadNumber.getAndIncrement(),
+                    0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
     }
 }

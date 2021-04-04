@@ -79,8 +79,9 @@ spring:
 #    password: Yixin4redis
 
   log:
+    enabled: true
     rabbitmq:
-      enable: false
+      enabled: false
       host: mecs.com
 #      host: 192.168.133.133
 #      host: 10.124.163.95
@@ -99,7 +100,7 @@ spring:
         exchange: application-log-exchange
 
     kafka:
-      enable: false
+      enabled: false
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       topic: application-log
       bootstrap-servers: 192.168.133.133:9092

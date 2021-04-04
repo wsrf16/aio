@@ -9,8 +9,9 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogInformation {
     void info(String message);
 
-    default void info(String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void info(String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         info(message);
     }
 
@@ -18,8 +19,9 @@ public interface LogInformation {
 
     void info(String summary, String message);
 
-    default void info(String summary, String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void info(String summary, String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         info(summary, message);
     }
 
@@ -31,7 +33,7 @@ public interface LogInformation {
         info(message);
     }
 
-    default void i(String message, Object[] arguments) {
+    default void i(String message, Object... arguments) {
         info(message, arguments);
     }
 
@@ -43,7 +45,7 @@ public interface LogInformation {
         info(summary, message);
     }
 
-    default void i(String summary, String message, Object[] arguments) {
+    default void i(String summary, String message, Object... arguments) {
         info(summary, message, arguments);
     }
 

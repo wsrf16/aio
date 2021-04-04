@@ -8,8 +8,9 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogFatal {
     void fatal(String message);
 
-    default void fatal(String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void fatal(String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         fatal(message);
     }
 
@@ -19,8 +20,9 @@ public interface LogFatal {
 
     void fatal(String summary, String message);
 
-    default void fatal(String summary, String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void fatal(String summary, String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         fatal(summary, message);
     }
 
@@ -36,7 +38,7 @@ public interface LogFatal {
         fatal(message);
     }
 
-    default void f(String message, Object[] arguments) {
+    default void f(String message, Object... arguments) {
         fatal(message, arguments);
     }
 
@@ -52,7 +54,7 @@ public interface LogFatal {
         fatal(summary, message);
     }
 
-    default void f(String summary, String message, Object[] arguments) {
+    default void f(String summary, String message, Object... arguments) {
         fatal(summary, message, arguments);
     }
 

@@ -8,8 +8,9 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogDebug {
     void debug(String message);
 
-    default void debug(String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void debug(String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         debug(message);
     }
 
@@ -17,8 +18,9 @@ public interface LogDebug {
 
     void debug(String summary, String message);
 
-    default void debug(String summary, String message, Object[] arguments) {
-        message = StringSugar.format(message, arguments);
+    default void debug(String summary, String message, Object... arguments) {
+        if (arguments != null)
+            message = StringSugar.format(message, arguments);
         debug(summary, message);
     }
 
@@ -30,7 +32,7 @@ public interface LogDebug {
         debug(message);
     }
 
-    default void d(String message, Object[] arguments) {
+    default void d(String message, Object... arguments) {
         debug(message, arguments);
     }
 
@@ -42,7 +44,7 @@ public interface LogDebug {
         debug(summary, message);
     }
 
-    default void d(String summary, String message, Object[] arguments) {
+    default void d(String summary, String message, Object... arguments) {
         debug(summary, message, arguments);
     }
 

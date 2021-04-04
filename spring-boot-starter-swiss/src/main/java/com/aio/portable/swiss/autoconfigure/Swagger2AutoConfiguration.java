@@ -40,7 +40,7 @@ public class Swagger2AutoConfiguration {
 //    @ConditionalOnBean(Swagger2Properties.class)
     public Docket createRestApi(Swagger2Properties swagger2Properties) {
         ApiInfo apiInfo = swagger2Properties.getApiInfo().toSwaggerApiInfo();
-        boolean enable = swagger2Properties.getEnable();
+        boolean enable = swagger2Properties.getEnabled();
         List<ResponseMessage> responseMessageList = swagger2Properties.getResponseMessageList();
         String packageName = swagger2Properties.getPackageName();
 
@@ -94,7 +94,7 @@ public class Swagger2AutoConfiguration {
     @ConditionalOnBean(Swagger2Properties.class)
     public Docket createRestApi3(Swagger2Properties swagger2Properties) {
         ApiInfo apiInfo = swagger2Properties.getApiInfo().toSwaggerApiInfo();
-        boolean enable = swagger2Properties.getEnable();
+        boolean enable = swagger2Properties.getEnabled();
         List<Response> responseList = swagger2Properties.getResponseList();
         String packageName = swagger2Properties.getPackageName();
 

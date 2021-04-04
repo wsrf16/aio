@@ -42,7 +42,7 @@ public enum LevelEnum {
         return description;
     }
 
-    public boolean match(LevelEnum levelEnum) {
+    public boolean beMatched(LevelEnum levelEnum) {
         return levelEnum.getPriority() >= priority;
     }
 }

@@ -9,6 +9,10 @@ import java.util.List;
 public abstract class LogBundle implements LogAction {
     protected List<LogSingle> logList;
 
+    public List<LogSingle> getLogList() {
+        return logList;
+    }
+
     protected LogBundle() {
         logList = new ArrayList<>();
     }

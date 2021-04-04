@@ -23,9 +23,9 @@ public interface JWTAction {
 
     DecodedJWT parse(String token);
 
-    Boolean verify(String token);
+    Boolean validate(String token);
 
-    default Boolean verify(String token, String issuer) {
+    default Boolean validate(String token, String issuer) {
         String tokenIssuer = parse(token).getIssuer();
         boolean v = Objects.equals(tokenIssuer, issuer);
         return v;

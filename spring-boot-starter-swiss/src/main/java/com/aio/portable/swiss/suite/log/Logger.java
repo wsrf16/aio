@@ -7,13 +7,13 @@ public interface Logger extends LogAction {
 
     Logger setSamplerRate(float samplerRate);
 
-    boolean isEnable();
+//    boolean beEnable();
 
-    Logger setEnable(boolean enable);
+//    Logger setEnable(boolean enable);
 
-    LevelEnum getBaseLevel();
+    LevelEnum getEnabledLevel();
 
-    Logger setBaseLevel(LevelEnum baseLevel);
+    Logger setEnabledLevel(LevelEnum enabledLevel);
 
     Logger setAsync(boolean async);
 }

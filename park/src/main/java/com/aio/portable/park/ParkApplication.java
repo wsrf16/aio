@@ -5,7 +5,7 @@ package com.aio.portable.park;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
 //import com.aio.portable.park.task.ThreadLocalTest;
 
-import com.aio.portable.swiss.suite.log.annotation.EnableLogHub;
+import com.aio.portable.swiss.suite.log.annotation.InitialLogProperties;
 import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -14,11 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 
 
 @SpringBootApplication(exclude = {
@@ -30,7 +27,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 }, scanBasePackages = "com.aio.portable")
 //@ComponentScan(lazyInit = true)
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
-@EnableLogHub(initialBeanNames = PropertyBean.RABBITMQ_LOG_PROPERTIES)
+@InitialLogProperties(initialBeanNames = PropertyBean.RABBITMQ_LOG_PROPERTIES)
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

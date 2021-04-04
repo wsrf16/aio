@@ -1,9 +1,7 @@
 package com.aio.portable.swiss.suite.net.protocol.http;
 
-import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.cipher.AlgorithmSugar;
-import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -208,7 +206,7 @@ public abstract class JWTSugar {
                 parse = Classic.parseTokenByHMAC256(token, secret);
                 if (parse != null)
                     // TokenExpiredException
-                    verify = isExpire(parse.getExpiresAt());
+                    verify = isExpired(parse.getExpiresAt());
                 else
                     verify = true;
             } catch (Exception e) {
@@ -231,12 +229,12 @@ public abstract class JWTSugar {
         return DateTimeSugar.CalendarUtils.add(calendar, calendarField, mount).getTime();
     }
 
-    public final static boolean isExpire(Date expiresAt) {
-        return isExpire(expiresAt, new Date());
+    public final static boolean isExpired(Date expiredDate) {
+        return isExpired(expiredDate, new Date());
     }
 
-    public final static boolean isExpire(Date expiresAt, Date now) {
-        return now.after(expiresAt) ? false : true;
+    public final static boolean isExpired(Date expiredDate, Date now) {
+        return now.after(expiredDate) ? false : true;
     }
 
     public final static Date now(Calendar calendar) {

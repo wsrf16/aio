@@ -2,8 +2,6 @@ package com.aio.portable.swiss.suite.log;
 
 import com.aio.portable.swiss.sugar.DynamicProxy;
 import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import org.springframework.cglib.proxy.Callback;
-import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
@@ -17,9 +15,13 @@ import java.util.*;
  * Created by York on 2017/11/23.
  */
 public class LogHub extends LogBundle implements Logger {
-    private float samplerRate = 1f;
-    private boolean enable = true;
-    private LevelEnum baseLevel = LevelEnum.ALL;
+    private final static float DEFAULT_SAMPLER_RATE = 1f;
+
+    private boolean enabled = true;
+
+    private LevelEnum enabledLevel = LevelEnum.ALL;
+
+    private float samplerRate = DEFAULT_SAMPLER_RATE;
 
     protected LogHub() {
         super();
@@ -37,17 +39,21 @@ public class LogHub extends LogBundle implements Logger {
     }
 
     private void check() {
-        boolean b = logList != null && logList.size() > 0;
+        boolean b = getLogList() != null && getLogList().size() > 0;
         if (!b)
             throwEmptyList();
     }
 
     private boolean passing() {
-        boolean b = enable && sampling();
+        boolean b = beEnable() && beEnabledLevel() && beSampled();
         return b;
     }
 
-    private boolean sampling() {
+    private boolean beEnabledLevel() {
+        return enabledLevel != LevelEnum.OFF;
+    }
+
+    private boolean beSampled() {
         float f = new Random().nextFloat();
         return f <= samplerRate;
     }
@@ -88,26 +94,26 @@ public class LogHub extends LogBundle implements Logger {
         return this;
     }
 
-    public boolean isEnable() {
-        return enable;
+    public boolean beEnable() {
+        return enabled;
     }
 
-    public LogHub setEnable(boolean enable) {
-        this.enable = enable;
+    public LogHub setEnabled(boolean enabled) {
+        this.enabled = enabled;
         return this;
     }
 
-    public LevelEnum getBaseLevel() {
-        return baseLevel;
+    public LevelEnum getEnabledLevel() {
+        return enabledLevel;
     }
 
-    public LogHub setBaseLevel(LevelEnum baseLevel) {
-        this.baseLevel = baseLevel;
+    public LogHub setEnabledLevel(LevelEnum enabledLevel) {
+        this.enabledLevel = enabledLevel;
         return this;
     }
 
     public LogHub setAsync(boolean async) {
-        logList.forEach(c -> c.setAsync(async));
+        getLogList().forEach(c -> c.setAsync(async));
         return this;
     }
 
@@ -131,43 +137,43 @@ public class LogHub extends LogBundle implements Logger {
                     switch (_method.getName()) {
                         case "verbose":
                         case "v": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.VERBOSE))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.VERBOSE))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "info":
                         case "i": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.INFORMATION))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.INFORMATION))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "trace":
                         case "t": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.TRACE))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.TRACE))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "debug":
                         case "d": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.DEBUG))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.DEBUG))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "warn":
                         case "w": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.WARNING))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.WARNING))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "error":
                         case "e": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.ERROR))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.ERROR))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "fatal":
                         case "f": {
-                            if (hub.passing() && hub.baseLevel.match(LevelEnum.FATAL))
+                            if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.FATAL))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
@@ -194,43 +200,43 @@ public class LogHub extends LogBundle implements Logger {
                             switch (_method.getName().toLowerCase()) {
                                 case "verbose":
                                 case "v": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.VERBOSE))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.VERBOSE))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "info":
                                 case "i": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.INFORMATION))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.INFORMATION))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "trace":
                                 case "t": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.TRACE))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.TRACE))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "debug":
                                 case "d": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.DEBUG))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.DEBUG))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "warn":
                                 case "w": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.WARNING))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.WARNING))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "error":
                                 case "e": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.ERROR))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.ERROR))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "fatal":
                                 case "f": {
-                                    if (hub.passing() && hub.baseLevel.match(LevelEnum.FATAL))
+                                    if (hub.passing() && hub.enabledLevel.beMatched(LevelEnum.FATAL))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;

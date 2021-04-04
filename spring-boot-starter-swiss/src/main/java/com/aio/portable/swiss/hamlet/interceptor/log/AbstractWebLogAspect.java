@@ -20,9 +20,9 @@ class AbstractWebLogAspect {
     }
 
     protected static LogHubPool loggerPool;
-    protected static String REQUEST_SUMMARY = "接口请求";
-    protected static String RESPONSE_SUMMARY = "接口响应";
-    protected static String EXCEPTION_SUMMARY = "接口异常";
+    protected static String REQUEST_SUMMARY = "请求日志";
+    protected static String RESPONSE_SUMMARY = "响应日志";
+    protected static String EXCEPTION_SUMMARY = "异常日志";
 
     protected final static String POINTCUT_CONTROLLER = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
@@ -41,9 +41,15 @@ class AbstractWebLogAspect {
     protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarker";
     protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarkerExcept";
 
-    protected final static String POINTCUT_SPECIAL = "" +
+    protected final static String POINTCUT_SPECIAL__ = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")" + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")" +
             " && (" + POINTCUT_MAPPING + "))" +
+            " || @annotation("+ LOG_MARKER_TYPENAME +")";
+
+
+    protected final static String POINTCUT_SPECIAL = "" +
+            "(@within(" + LOG_MARKER_TYPENAME + ")" + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")" +
+            ")" +
             " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
     public void doBefore(ProceedingJoinPoint joinPoint) {
@@ -66,7 +72,7 @@ class AbstractWebLogAspect {
 
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
+        HttpServletRequest request = attributes == null ? null : attributes.getRequest();
         RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
         LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());

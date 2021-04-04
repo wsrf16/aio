@@ -20,8 +20,9 @@ public class LogHubPool {
     public final static LogHubPool singletonInstance(LogHubFactory logHubFactory) {
         if (instance.logHubFactory == null)
             synchronized (LogHubPool.class) {
-                if (instance.logHubFactory == null)
+                if (instance.logHubFactory == null) {
                     instance.logHubFactory = logHubFactory;
+                }
             }
         return instance;
     }

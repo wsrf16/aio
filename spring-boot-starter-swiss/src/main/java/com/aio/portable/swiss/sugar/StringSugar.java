@@ -170,15 +170,26 @@ public class StringSugar {
         }
     }
 
-    public final static String rightPad(String str, int size, char padChar) {
+
+    public final static String leftPad(int no, int length) {
+        /*
+         * 0 指前面补充零
+         * formatLength 字符总长度为 formatLength
+         * d 代表为正数。
+         */
+        String newString = String.format("%0"+length+"d", no);
+        return  newString;
+    }
+
+    public final static String rightPad(String str, int length, char padChar) {
         if (str == null) {
             return null;
         } else {
-            int pads = size - str.length();
+            int pads = length - str.length();
             if (pads <= 0) {
                 return str;
             } else {
-                return pads > 8192 ? rightPad(str, size, String.valueOf(padChar)) : str.concat(repeat(padChar, pads));
+                return pads > 8192 ? rightPad(str, length, String.valueOf(padChar)) : str.concat(repeat(padChar, pads));
             }
         }
     }
@@ -194,7 +205,7 @@ public class StringSugar {
         return s;
     }
 
-        public final static String rightPad(String str, int size, String padStr) {
+        private final static String rightPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {

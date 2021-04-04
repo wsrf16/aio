@@ -3,7 +3,7 @@ package com.aio.portable.swiss.suite.log.impl.es.kafka;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 public class KafkaLogProperties extends KafkaProperties {
-    private Boolean enable = true;
+    private Boolean enabled = true;
     private String topic;
     private String esIndex;
 
@@ -18,11 +18,11 @@ public class KafkaLogProperties extends KafkaProperties {
     }
 
     public Boolean isEnable() {
-        return enable;
+        return enabled;
     }
 
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getTopic() {

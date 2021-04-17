@@ -387,14 +387,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>${java-jwt.version}</version>
-            <optional>true</optional>
-        </dependency>
-
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
@@ -438,6 +430,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
+            <optional>true</optional>
+        </dependency>
+
         <!-- springboot2.0已经将oauth2.0与security整合在一起 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -452,6 +452,29 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-jwt</artifactId>-->
+<!--            <version>1.1.1.RELEASE</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-oauth2</artifactId>-->
+<!--            <version>2.1.5.RELEASE</version>-->
+<!--        </dependency>-->
+
 
 <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.yaml/snakeyaml &ndash;&gt;-->
 <!--        <dependency>-->
@@ -503,6 +526,8 @@
             <artifactId>commons-compress</artifactId>
             <version>1.20</version>
         </dependency>
+
+
 
     </dependencies>
 

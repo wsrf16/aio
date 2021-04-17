@@ -1,7 +1,5 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt;
 
-import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
-import com.aio.portable.swiss.suite.net.protocol.http.JWTSugar;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,9 +22,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
 
-        JWTClaims jwtClaims = jwtAction.toJWTClaims();
+        JWTFactory jwt = jwtAction.newFactory();
 //        String secret = jwtClaims.getSecret();
-        JWTCreator.Builder builder = jwtClaims.createJWTBuilder();
+        JWTCreator.Builder builder = jwt.createJWTBuilder();
         String token = jwtAction.sign(builder);
         httpServletResponse.setHeader(AUTHORIZATION_HEAD, token);
     }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class LinuxSugar {
+public abstract class ShellSugar {
     private final static String VARIABLE_LONG = "\\$\\'{'{0}\\'}'";
     private final static String VARIABLE_SHORT = "\\${0}";
     private final static List<String> VARIABLE_LIST = Arrays.asList(VARIABLE_LONG, VARIABLE_SHORT);

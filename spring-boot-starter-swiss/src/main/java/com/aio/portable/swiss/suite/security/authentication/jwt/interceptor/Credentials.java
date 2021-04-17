@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.security.authentication.jwt;
+package com.aio.portable.swiss.suite.security.authentication.jwt.interceptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

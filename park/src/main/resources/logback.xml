@@ -47,7 +47,7 @@
     <!-- 日志级别：OFF < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < ALL -->
     <root level="INFO">
         <appender-ref ref="STD_OUT"/>
-<!--        <appender-ref ref="FILE_LOG"/>-->
+        <!--<appender-ref ref="FILE_LOG"/>-->
         <!--<appender-ref ref="ROLE_FILE_LOG"/>-->
     </root>
 

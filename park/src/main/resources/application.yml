@@ -118,34 +118,3 @@ xxl:
 #      - name: 测试分组3
 #        uri: localhost:8084
 #        location: /v2/api-docs
-
-app:
-  id: park
-apollo:
-  bootstrap:
-#    namespaces: normal.yml
-    enabled: true
-    eagerLoad:
-      enabled: true
-
----
-spring:
-  profiles: dev
-
-apollo:
-  meta: http://10.124.192.118:8080
-
-
----
-spring:
-  profiles: uat
-
-apollo:
-  meta: http://10.124.192.118:8082
-
----
-spring:
-  profiles: prod
-
-apollo:
-  meta: http://10.124.192.118:8081

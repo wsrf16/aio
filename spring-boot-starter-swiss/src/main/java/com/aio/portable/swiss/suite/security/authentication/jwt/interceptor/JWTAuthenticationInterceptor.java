@@ -1,9 +1,11 @@
-package com.aio.portable.swiss.suite.security.authentication.jwt;
+package com.aio.portable.swiss.suite.security.authentication.jwt.interceptor;
 
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
 import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
-import com.aio.portable.swiss.autoconfigure.properties.JWTClaimsProperties;
+import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -23,7 +25,8 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        JWTClaimsProperties jwtClaimsProperties = jwtAction.toJWTClaims();
+        JWTFactory jwtFactory = jwtAction.newFactory();
+        JWTProperties jwtProperties = jwtFactory.getJwtProperties();
 
         Method method;
         if (!(object instanceof HandlerMethod)) {
@@ -33,13 +36,13 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
             method = handlerMethod.getMethod();
         }
 
-        if (jwtClaimsProperties.getRequire() == false) {
+        if (jwtProperties.getRequire() == false) {
             return true;
         } else {
             String bearToken = httpServletRequest.getHeader(AUTHORIZATION_HEAD);
             Class<?> declaringClass = method.getDeclaringClass();
 
-            boolean requiredByPackage = jwtClaimsProperties.getBasePackages().stream()
+            boolean requiredByPackage = jwtProperties.getScanBasePackages().stream()
                     .anyMatch(c -> declaringClass.getPackage().getName().startsWith(c.trim()));
             if (requiredByPackage) {
                 boolean required;

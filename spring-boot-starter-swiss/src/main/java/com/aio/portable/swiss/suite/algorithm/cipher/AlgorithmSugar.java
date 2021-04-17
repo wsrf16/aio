@@ -1,11 +1,7 @@
 package com.aio.portable.swiss.suite.algorithm.cipher;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
-import java.nio.charset.StandardCharsets;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
@@ -30,18 +26,16 @@ public abstract class AlgorithmSugar {
         ECDSA512
     }
 
-    public final static Algorithm newHMAC(String secret, HMAC hmac) {
+    public final static Algorithm newHMAC(HMAC hmac, String secret) {
         Algorithm algorithm;
         switch (hmac) {
-            case HMAC256:
-                algorithm = Algorithm.HMAC256(secret);
-                break;
             case HMAC384:
                 algorithm = Algorithm.HMAC384(secret);
                 break;
             case HMAC512:
                 algorithm = Algorithm.HMAC512(secret);
                 break;
+            case HMAC256:
             default:
                 algorithm = Algorithm.HMAC256(secret);
                 break;
@@ -50,18 +44,16 @@ public abstract class AlgorithmSugar {
         return algorithm;
     }
 
-    public final static Algorithm newRSA(RSAPublicKey publicKey, RSAPrivateKey privateKey, RSA rsa) {
+    public final static Algorithm newRSA(RSA rsa, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
         Algorithm algorithm;
         switch (rsa) {
-            case RSA256:
-                algorithm = Algorithm.RSA256(publicKey, privateKey);
-                break;
             case RSA384:
                 algorithm = Algorithm.RSA384(publicKey, privateKey);
                 break;
             case RSA512:
                 algorithm = Algorithm.RSA512(publicKey, privateKey);
                 break;
+            case RSA256:
             default:
                 algorithm = Algorithm.RSA256(publicKey, privateKey);
                 break;
@@ -70,18 +62,16 @@ public abstract class AlgorithmSugar {
         return algorithm;
     }
 
-    public final static Algorithm newECDSA(ECPublicKey publicKey, ECPrivateKey privateKey, ECDSA ecdsa) {
+    public final static Algorithm newECDSA(ECDSA ecdsa, ECPublicKey publicKey, ECPrivateKey privateKey) {
         Algorithm algorithm;
         switch (ecdsa) {
-            case ECDSA256:
-                algorithm = Algorithm.ECDSA256(publicKey, privateKey);
-                break;
             case ECDSA384:
                 algorithm = Algorithm.ECDSA384(publicKey, privateKey);
                 break;
             case ECDSA512:
                 algorithm = Algorithm.ECDSA512(publicKey, privateKey);
                 break;
+            case ECDSA256:
             default:
                 algorithm = Algorithm.ECDSA256(publicKey, privateKey);
                 break;

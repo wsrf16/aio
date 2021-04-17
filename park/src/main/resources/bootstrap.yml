@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active:
+      @profiles.active@
+app:
+  id: park
+apollo:
+  bootstrap:
+    namespaces: application, application.yaml
+    enabled: true
+    eagerLoad:
+      enabled: true
+
+---
+spring:
+  profiles: dev
+
+apollo:
+  meta: http://10.124.192.118:8080
+
+---
+spring:
+  profiles: pro
+
+apollo:
+  meta: http://10.124.192.118:8081
+
+---
+spring:
+  profiles: uat
+
+apollo:
+  meta: http://10.124.192.118:8082
+
+---
+spring:
+  profiles: urgent
+
+apollo:
+  meta: http://10.124.192.118:8085
+

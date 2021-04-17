@@ -1,10 +1,11 @@
 package com.aio.portable.swiss.hamlet.security.authorization.token;
 
-import com.aio.portable.swiss.autoconfigure.properties.JWTClaims;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
+import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
+import com.aio.portable.swiss.suite.algorithm.transcode.TranscoderBase64;
+import com.aio.portable.swiss.suite.algorithm.transcode.Transcoding;
 import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -15,8 +16,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Date;
 
@@ -24,8 +23,7 @@ import java.util.Date;
  * JWTAuthorizationServerTokenServices
  * Method "configure(AuthorizationServerEndpointsConfigurer endpoints)" In AuthorizationServerConfigurerAdapter.class
  */
-public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices {
-    @Autowired
+public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices, Transcoding {
     private JWTAction jwtAction;
 
     /**
@@ -37,41 +35,56 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
      * 4、RedisTokenStore
      * 5、JwkTokenStore
      */
-    @Autowired
-    private TokenStore tokenStore = jwtTokenStore();
+    private TokenStore tokenStore;
 
-    private JwtTokenStore jwtTokenStore() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey("secret");
-        return new JwtTokenStore(converter);
+    private Transcoder transcode = new TranscoderBase64();
+
+    @Override
+    public Transcoder getTranscode() {
+        return transcode;
+    }
+
+    @Override
+    public void setTranscode(Transcoder transcode) {
+        this.transcode = transcode;
     }
 
 
-    private String create(JWTClaims jwtClaims, String issuer) {
-        JWTCreator.Builder builder = JWT.create();
+
+    public JWTAuthorizationServerTokenServices(JWTAction jwtAction, TokenStore tokenStore) {
+        this.jwtAction = jwtAction;
+        this.tokenStore = tokenStore;
+    }
+
+
+
+
+
+    private String create(JWTFactory jwt, String issuer) {
+        JWTCreator.Builder builder = com.auth0.jwt.JWT.create();
         builder.withIssuer(issuer);
         builder.withClaim("r", System.currentTimeMillis());
-        builder.withIssuedAt(jwtClaims.getIssuedAt());
-        builder.withExpiresAt(jwtClaims.getExpiresAt());
+        builder.withIssuedAt(jwt.getIssuedAt());
+        builder.withExpiresAt(jwt.getExpiresAt());
 
         String tokenWord = jwtAction.sign(builder);
         return tokenWord;
     }
 
-    private DefaultOAuth2AccessToken createAccessToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
+    private DefaultOAuth2AccessToken createAccessToken(JWTFactory jwt, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwtClaims, issuer);
-        Date expiresAt = jwtClaims.getExpiresAt();
+        String value = create(jwt, issuer);
+        Date expiresAt = jwt.getExpiresAt();
         DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(value);
         accessToken.setExpiration(expiresAt);
         accessToken.setScope(authentication.getOAuth2Request().getScope());
         return accessToken;
     }
 
-    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTClaims jwtClaims, OAuth2Authentication authentication) {
+    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTFactory jwt, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwtClaims, issuer);
-        Date expiresAt = jwtClaims.getExpiresAt();
+        String value = create(jwt, issuer);
+        Date expiresAt = jwt.getExpiresAt();
         DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(value, expiresAt);
 
         return refreshToken;
@@ -79,10 +92,10 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
 
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        JWTClaims accessTokenJWTClaims = jwtAction.toJWTClaims();
-        DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWTClaims, authentication);
-        JWTClaims refreshTokenJWTClaims = jwtAction.toJWTClaims();
-        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWTClaims, authentication);
+        JWTFactory accessTokenJWT = jwtAction.newFactory();
+        DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWT, authentication);
+        JWTFactory refreshTokenJWT = jwtAction.newFactory();
+        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWT, authentication);
 
         accessToken.setRefreshToken(refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);
@@ -107,4 +120,6 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
     public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
         return tokenStore.getAccessToken(authentication);
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.autoconfigure.properties;
 
-import com.aio.portable.swiss.suite.net.protocol.http.JWTSugar;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTSugar;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import org.springframework.beans.BeanUtils;
@@ -9,23 +10,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-//@Configuration
-//@ConfigurationProperties(
-//        prefix = "spring.jwt"
-//)
-public class JWTClaimsProperties {
+public class JWTProperties {
+    private final static int EXPIRED_MINUTES = 10;
+    private final static String SECRET = "secret";
+
     protected Boolean require = true;
     protected String algorithm = "HMAC256";
     protected String JWTId;
-    protected String secret;
-    protected List<String> basePackages;
+    protected String secret = SECRET;
+    protected List<String> scanBasePackages;
     protected String keyId;
-    protected String issuer;
+    protected String issuer = "issuer";
     protected String subject;
     protected String[] audience;
 //    protected Date issuedAt;
 //    protected Date expiresAt;
-    protected Integer expiredHours;
+    protected Integer expiredMinutes = EXPIRED_MINUTES;
     protected Date notBefore;
 
     public Boolean getRequire() {
@@ -60,12 +60,12 @@ public class JWTClaimsProperties {
         this.secret = secret;
     }
 
-    public List<String> getBasePackages() {
-        return basePackages;
+    public List<String> getScanBasePackages() {
+        return scanBasePackages;
     }
 
-    public void setBasePackages(List<String> basePackages) {
-        this.basePackages = basePackages;
+    public void setScanBasePackages(List<String> scanBasePackages) {
+        this.scanBasePackages = scanBasePackages;
     }
 
     public String getKeyId() {
@@ -100,40 +100,41 @@ public class JWTClaimsProperties {
         this.audience = audience;
     }
 
-    public JWTClaims toJWTClaims() {
+    public JWTFactory newFactory() {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         String JWTId = IDS.uuid();
         Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.getExpiredDate(now, expiredHours);
+        Date expiresAt = JWTSugar.getExpiredMinutes(now, expiredMinutes);
 
-        JWTClaims target = new JWTClaims();
-        BeanUtils.copyProperties(this, target);
-        target.setJWTId(JWTId);
-        target.setIssuedAt(issuedAt);
-        target.setExpiresAt(expiresAt);
-        return target;
+        JWTProperties properties = new JWTProperties();
+        BeanUtils.copyProperties(this, properties);
+        properties.setJWTId(JWTId);
+        JWTFactory factory = new JWTFactory(properties);
+        factory.setIssuedAt(issuedAt);
+        factory.setExpiresAt(expiresAt);
+        return factory;
     }
 
-    public JWTClaims toJWTClaims(int calendarField, int mount) {
+    public JWTFactory newFactory(int calendarField, int mount) {
+        JWTProperties properties = new JWTProperties();
+        BeanUtils.copyProperties(this, properties);
+        properties.setJWTId(IDS.uuid());
+
         Calendar now = DateTimeSugar.CalendarUtils.now();
-        String JWTId = IDS.uuid();
         Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.getExpiredDate(now, calendarField, mount);
-
-        JWTClaims target = new JWTClaims();
-        BeanUtils.copyProperties(this, target);
-        target.setJWTId(JWTId);
-        target.setIssuedAt(issuedAt);
-        target.setExpiresAt(expiresAt);
-        return target;
+        Date expiresAt = JWTSugar.getExpiredMinutes(now, calendarField, mount);
+        JWTFactory factory = new JWTFactory(properties);
+        factory.setIssuedAt(issuedAt);
+        factory.setExpiresAt(expiresAt);
+        return factory;
     }
 
-    public Integer getExpiredHours() {
-        return expiredHours;
+    public Integer getExpiredMinutes() {
+        return expiredMinutes;
     }
 
-    public void setExpiredHours(Integer expiredHours) {
-        this.expiredHours = expiredHours;
+    public void setExpiredMinutes(Integer expiredMinutes) {
+        this.expiredMinutes = expiredMinutes;
     }
 
     public Date getNotBefore() {

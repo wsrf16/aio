@@ -1,12 +1,8 @@
 package com.aio.portable.swiss.autoconfigure.properties;
 
-import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
-import com.aio.portable.swiss.suite.security.authentication.jwt.JWTSugar;
-import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +11,11 @@ public class JWTProperties {
     private final static String SECRET = "secret";
 
     protected Boolean require = true;
-    protected String algorithm = "HMAC256";
+    protected String signAlgorithm = "HMAC256";
     protected String JWTId;
     protected String secret = SECRET;
+    protected String privateKey;
+    protected String publicKey;
     protected List<String> scanBasePackages;
     protected String keyId;
     protected String issuer = "issuer";
@@ -36,12 +34,12 @@ public class JWTProperties {
         this.require = require;
     }
 
-    public String getAlgorithm() {
-        return algorithm;
+    public String getSignAlgorithm() {
+        return signAlgorithm;
     }
 
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+    public void setSignAlgorithm(String signAlgorithm) {
+        this.signAlgorithm = signAlgorithm;
     }
 
     public String getJWTId() {
@@ -58,6 +56,22 @@ public class JWTProperties {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public List<String> getScanBasePackages() {
@@ -100,35 +114,6 @@ public class JWTProperties {
         this.audience = audience;
     }
 
-    public JWTFactory newFactory() {
-        Calendar now = DateTimeSugar.CalendarUtils.now();
-        String JWTId = IDS.uuid();
-        Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.getExpiredMinutes(now, expiredMinutes);
-
-        JWTProperties properties = new JWTProperties();
-        BeanUtils.copyProperties(this, properties);
-        properties.setJWTId(JWTId);
-        JWTFactory factory = new JWTFactory(properties);
-        factory.setIssuedAt(issuedAt);
-        factory.setExpiresAt(expiresAt);
-        return factory;
-    }
-
-    public JWTFactory newFactory(int calendarField, int mount) {
-        JWTProperties properties = new JWTProperties();
-        BeanUtils.copyProperties(this, properties);
-        properties.setJWTId(IDS.uuid());
-
-        Calendar now = DateTimeSugar.CalendarUtils.now();
-        Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.getExpiredMinutes(now, calendarField, mount);
-        JWTFactory factory = new JWTFactory(properties);
-        factory.setIssuedAt(issuedAt);
-        factory.setExpiresAt(expiresAt);
-        return factory;
-    }
-
     public Integer getExpiredMinutes() {
         return expiredMinutes;
     }
@@ -145,5 +130,11 @@ public class JWTProperties {
         this.notBefore = notBefore;
     }
 
+    public JWTProperties clone() {
+        JWTProperties properties = new JWTProperties();
+        BeanUtils.copyProperties(this, properties);
+        properties.setJWTId(IDS.uuid());
+        return properties;
+    }
 }
 

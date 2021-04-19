@@ -13,7 +13,7 @@ import java.util.Map;
 @TestComponent
 public class NodePersistenceTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         Map<String, Object> map = new HashMap<>();
         map.put("key1", 1111);
         map.put("key2", "bbbb");

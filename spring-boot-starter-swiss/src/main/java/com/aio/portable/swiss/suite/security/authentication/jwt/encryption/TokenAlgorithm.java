@@ -5,9 +5,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-public interface TokenEncryption {
-    Algorithm getAlgorithm();
-
+public interface TokenAlgorithm {
     void setAlgorithm(Algorithm algorithm);
 
     default String encode(JWTCreator.Builder builder, Algorithm algorithm) {

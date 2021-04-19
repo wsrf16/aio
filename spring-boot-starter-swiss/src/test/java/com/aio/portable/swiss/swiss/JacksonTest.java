@@ -14,7 +14,7 @@ import java.util.Map;
 @TestComponent
 public class JacksonTest {
     @Test
-    private void todo() throws IOException {
+    private void foobar() throws IOException {
         JsonModel a = new JsonModel() {{
             setNo(88);
         }};

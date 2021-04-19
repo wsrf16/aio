@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @TestComponent
 public class CuratorTest {
     @Test
-    public void todo() {
+    public void foobar() {
         try {
             final ExponentialBackoffRetry exponentialBackoffRetry = CuratorSugar.RetryPolicyBuilder.newExponentialBackoffRetry(5000, 3, 5000);
             final CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient("mecs.com:32181", exponentialBackoffRetry);

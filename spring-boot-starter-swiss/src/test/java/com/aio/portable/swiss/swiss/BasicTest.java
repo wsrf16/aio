@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.TestComponent;
 @TestComponent
 public class BasicTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         SerialNumber.SerialNumberBuilder serialNumberBuilder = new SerialNumber().serialNumberBuilder();
         String s1 = serialNumberBuilder.build();
         String s2 = serialNumberBuilder.build();

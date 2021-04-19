@@ -1,22 +1,18 @@
 package com.aio.portable.swiss.suite.algorithm.transcode;
 
-import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
+import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class TranscoderBase64 implements Transcoder {
     @Override
     public String encode(String plain, Charset charset) {
-        return CipherSugar.JavaUtil.encodeBase64(plain, charset);
+        return JDKBase64Convert.encodeToString(plain.getBytes(charset) );
     }
 
     @Override
-    public String decode(String base64, Charset charset) {
-        return CipherSugar.JavaUtil.decodeBase64(base64, charset);
+    public String decode(String cipher, Charset charset) {
+        return new String(JDKBase64Convert.decode(cipher.getBytes(charset)), charset);
     }
-
-
-
 
 }

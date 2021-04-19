@@ -1,9 +1,8 @@
 package com.aio.portable.swiss.suite.net.protocol.http;
 
 import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.net.protocol.http.resttemplate.SkipSSLSimpleClientHttpRequestFactory;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -135,10 +134,7 @@ public class RestTemplater {
 
     public static Map.Entry buildBasicAuthorizationHead(String username, int password) {
         final String plainCreds = MessageFormat.format("{0}:{1}", username, password);
-
-        final byte[] plainCredsBytes = plainCreds.getBytes();
-        final byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        final String base64Creds = new String(base64CredsBytes);
+        final String base64Creds = JDKBase64Convert.encodeToString(plainCreds.getBytes());
 
         Map.Entry<String, String> entry = new HashMap<String, String>() {
             {

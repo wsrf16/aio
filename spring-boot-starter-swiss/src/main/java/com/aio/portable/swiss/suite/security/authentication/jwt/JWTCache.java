@@ -22,28 +22,28 @@ public class JWTCache {
         return key + "__class";
     }
 
-    public final static String sign(JWTAction jwtAction, String issuer, Map<String, Object> map) {
+    public final static String sign(JWTSession jwtSession, String issuer, Map<String, Object> map) {
         Map<String, Object> classMap = remap(map);
-        String token = jwtAction.sign(issuer, classMap);
+        String token = jwtSession.sign(issuer, classMap);
         return token;
     }
 
-    public final static String sign(JWTAction jwtAction, String issuer, int minutes, Map<String, Object> map) {
+    public final static String sign(JWTSession jwtSession, String issuer, int minutes, Map<String, Object> map) {
         Map<String, Object> classMap = remap(map);
-        String token = jwtAction.sign(issuer, minutes, classMap);
+        String token = jwtSession.sign(issuer, minutes, classMap);
         return token;
     }
 
-    public final static String sign(JWTAction jwtAction, String issuer, String key, Object value) {
+    public final static String sign(JWTSession jwtSession, String issuer, String key, Object value) {
         Map<String, Object> map = new HashMap<>();
         map.put(key, value);
-        return sign(jwtAction, issuer, map);
+        return sign(jwtSession, issuer, map);
     }
 
-    public final static String sign(JWTAction jwtAction, String issuer, int minutes, String key, Object value) {
+    public final static String sign(JWTSession jwtSession, String issuer, int minutes, String key, Object value) {
         Map<String, Object> map = new HashMap<>();
         map.put(key, value);
-        return sign(jwtAction, issuer, minutes, map);
+        return sign(jwtSession, issuer, minutes, map);
     }
 
     private final static Map<String, Object> remap(Map<String, Object> map) {
@@ -60,8 +60,8 @@ public class JWTCache {
         return toMap;
     }
 
-    public final static Map<String, Object> parseForMap(JWTAction jwtAction, String token) {
-        DecodedJWT decodedJWT = jwtAction.parse(token);
+    public final static Map<String, Object> parseForMap(JWTSession jwtSession, String token) {
+        DecodedJWT decodedJWT = jwtSession.parse(token);
 
         return toMap(decodedJWT);
     }
@@ -83,14 +83,14 @@ public class JWTCache {
         return map;
     }
 
-    public final static <T> T parseKey(JWTAction jwtAction, String token, String key) {
-        Map<String, Object> map = parseForMap(jwtAction, token);
+    public final static <T> T parseKey(JWTSession jwtSession, String token, String key) {
+        Map<String, Object> map = parseForMap(jwtSession, token);
         T t = (T) map.get(key);
         return t;
     }
 
-    public final static String parseForIssuer(JWTAction jwtAction, String token) {
-        DecodedJWT decodedJWT = jwtAction.parse(token);
+    public final static String parseForIssuer(JWTSession jwtSession, String token) {
+        DecodedJWT decodedJWT = jwtSession.parse(token);
         String issuer = decodedJWT.getIssuer();
         return issuer;
     }

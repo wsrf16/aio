@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class WatchClassLoaderTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         try {
             String name = "com.chinaunicom.software.origin.api.config.AAAA";
             WatchClassLoader classLoader = new WatchClassLoader("D:/AAAA/");

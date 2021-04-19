@@ -12,8 +12,8 @@ public interface Transcoder {
         return encode(plain, StandardCharsets.UTF_8);
     }
 
-    default String decode(String base64) {
-        return decode(base64, StandardCharsets.UTF_8);
+    default String decode(String cipher) {
+        return decode(cipher, StandardCharsets.UTF_8);
     }
 
 }

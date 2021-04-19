@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.TestComponent;
 @TestComponent
 public class LauncherTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         Launcher launcher = new Launcher(new AbstractTask() {
             @Override
             public void run() {

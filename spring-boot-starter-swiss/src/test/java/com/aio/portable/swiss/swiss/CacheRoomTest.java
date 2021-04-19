@@ -10,7 +10,7 @@ import java.util.Map;
 @TestComponent
 public class CacheRoomTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("a", "1");
         map.put("b", "2");

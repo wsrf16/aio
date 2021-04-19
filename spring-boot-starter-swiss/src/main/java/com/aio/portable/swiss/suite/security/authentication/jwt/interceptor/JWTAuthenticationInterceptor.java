@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt.interceptor;
 
-import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
 import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
 import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -14,10 +14,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.List;
 
-public class JWTAuthenticationInterceptor implements HandlerInterceptor {
+public abstract class JWTAuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
-    JWTAction jwtAction;
+    JWTSession jwtSession;
+
+    public abstract List<String> getScanBasePackages();
 
     private final static String AUTHORIZATION_HEAD = JWTAction.AUTHORIZATION_HEAD;
     private final String bearer = JWTAction.BEAR_PREFIX;
@@ -25,8 +28,7 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        JWTFactory jwtFactory = jwtAction.newFactory();
-        JWTProperties jwtProperties = jwtFactory.getJwtProperties();
+        JWTProperties jwtProperties = jwtSession.getJwtProperties();
 
         Method method;
         if (!(object instanceof HandlerMethod)) {
@@ -42,7 +44,7 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
             String bearToken = httpServletRequest.getHeader(AUTHORIZATION_HEAD);
             Class<?> declaringClass = method.getDeclaringClass();
 
-            boolean requiredByPackage = jwtProperties.getScanBasePackages().stream()
+            boolean requiredByPackage = getScanBasePackages().stream()
                     .anyMatch(c -> declaringClass.getPackage().getName().startsWith(c.trim()));
             if (requiredByPackage) {
                 boolean required;
@@ -58,7 +60,7 @@ public class JWTAuthenticationInterceptor implements HandlerInterceptor {
 
                 if (required && StringUtils.hasText(bearToken)) {
                     String token = StringSugar.removeStart(bearToken, bearer);
-                    if (!this.jwtAction.validate(token))
+                    if (!this.jwtSession.validate(token))
                         throw new BizException(BizStatusNativeEnum.staticUnauthorized().getCode(), BizStatusNativeEnum.staticUnauthorized().getMessage());
                 }
             }

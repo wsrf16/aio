@@ -15,7 +15,7 @@ import java.util.List;
 @TestComponent
 public class ClassTest {
     @Test
-    private static void todo() throws IOException {
+    private static void foobar() throws IOException {
         boolean b1 = ClassSugar.exist("Wood");
         boolean b2 = ClassSugar.exist("Wood");
 

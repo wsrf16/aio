@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class WatchServiceThreadTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         WatchServiceThread watchServiceOne = new WatchServiceThread("d:/AAAA/");
         watchServiceOne.setHandler((f) -> System.out.println(f.getPath()));
         watchServiceOne.listen();

@@ -19,7 +19,7 @@ public class ByteBuddyTest {
     }
 
     @Test
-    public static void todo() throws ClassNotFoundException {
+    public static void foobar() throws ClassNotFoundException {
         ByteBuddyAgent.install();
         ByteBuddySugar.redefineMethod(Foo.class, ElementMatchers.named("m"), MethodDelegation.to(Bar.class));
         System.out.println(new Foo().m());

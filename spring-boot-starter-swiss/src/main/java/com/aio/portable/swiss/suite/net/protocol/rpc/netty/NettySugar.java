@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.net.protocol.tcp.netty;
+package com.aio.portable.swiss.suite.net.protocol.rpc.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;

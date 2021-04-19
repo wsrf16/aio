@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +35,14 @@ public class HttpSwiftTest {
     }
 
     @Test
-    public static void todo() throws IOException {
-
-
+    public static void foobar() throws IOException {
         People people = new People();
         people.setName("John");
         String url = "http://www.baidu.com";
         HttpHost httpProxy = new HttpHost("127.0.0.1", 8888, "http");
         RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
         HttpSwift.setSerializer(new SerializerConverters.JacksonConverter());
-        StringEntity entity = HttpSwift.buildJsonObjectEntity(people, "utf-8");
+        StringEntity entity = HttpSwift.buildJsonObjectEntity(people, StandardCharsets.UTF_8);
         Header[] headers = newHeaders("sign");
 
         HttpPost httpPost = HttpSwift.buildPost(url, config, entity, headers);

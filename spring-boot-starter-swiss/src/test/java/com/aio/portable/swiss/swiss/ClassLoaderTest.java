@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 
 @TestComponent
 public class ClassLoaderTest {
-    private static void todo() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private static void foobar() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String name;
         boolean b;
         name = "java.lang.System";

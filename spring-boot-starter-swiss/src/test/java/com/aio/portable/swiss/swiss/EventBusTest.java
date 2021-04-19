@@ -25,7 +25,7 @@ package com.aio.portable.swiss.swiss;
 //    EventBus eventBus;
 //
 //    @Test
-//    public void todo() {
+//    public void foobar() {
 //        RestTemplateEventHandler.setRestTemplate(restTemplate);
 //
 //        importEventSubscriber();

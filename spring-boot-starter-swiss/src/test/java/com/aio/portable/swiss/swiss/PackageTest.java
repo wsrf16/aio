@@ -10,7 +10,7 @@ import java.util.List;
 @TestComponent
 public class PackageTest {
     @Test
-    public void todo() throws IOException, ClassNotFoundException {
+    public void foobar() throws IOException, ClassNotFoundException {
         List<String> list = PackageSugar.getQualifiedClassName(this.getClass().getPackage().getName());
         for (String name : list) {
 //            Class<?> clazz = Class.forName(name);

@@ -14,8 +14,6 @@ public interface JWTAction {
     String AUTHORIZATION_HEAD = JWTSugar.AUTHORIZATION_HEAD;
     String BEAR_PREFIX = "Bearer ";
 
-    JWTFactory newFactory();
-
     String sign(JWTCreator.Builder builder);
 
     DecodedJWT parse(String token);
@@ -28,38 +26,5 @@ public interface JWTAction {
         return v;
     }
 
-    default String sign() {
-        JWTCreator.Builder builder = newFactory().createJWTBuilder();
-        return sign(builder);
-    }
 
-    default String sign(String issuer) {
-        JWTCreator.Builder builder = newFactory().createJWTBuilderWithNewIssuer(issuer);
-        return sign(builder);
-    }
-
-    default String sign(String issuer, Map<String, Object> map) {
-        JWTCreator.Builder builder = newFactory().createJWTBuilderWithNewIssuer(issuer);
-        map.entrySet().forEach(c -> {
-            String key = c.getKey();
-            Object value = c.getValue();
-            JWTSugar.withClaim(builder, key, value);
-        });
-        return sign(builder);
-    }
-
-    default String sign(String issuer, int expireMinutes, Map<String, Object> map) {
-        JWTCreator.Builder builder = newFactory().createJWTBuilderWithNewIssuer(issuer);
-        Calendar now = DateTimeSugar.CalendarUtils.now();
-        Date issuedAt = now.getTime();
-        Date expiresAt = JWTSugar.getExpiredMinutes(now, Calendar.SECOND, expireMinutes * 60);
-        builder.withExpiresAt(expiresAt);
-
-        map.entrySet().forEach(c -> {
-            String key = c.getKey();
-            Object value = c.getValue();
-            JWTSugar.withClaim(builder, key, value);
-        });
-        return sign(builder);
-    }
 }

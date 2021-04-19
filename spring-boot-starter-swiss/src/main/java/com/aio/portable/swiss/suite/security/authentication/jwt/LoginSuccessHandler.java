@@ -16,16 +16,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final static String AUTHORIZATION_HEAD = JWTAction.AUTHORIZATION_HEAD;
 
     @Autowired
-    private JWTAction jwtAction;
+    private JWTSession jwtSession;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
 
-        JWTFactory jwt = jwtAction.newFactory();
-//        String secret = jwtClaims.getSecret();
-        JWTCreator.Builder builder = jwt.createJWTBuilder();
-        String token = jwtAction.sign(builder);
+        JWTCreator.Builder builder = jwtSession.createBuilder();
+        String token = jwtSession.sign(builder);
         httpServletResponse.setHeader(AUTHORIZATION_HEAD, token);
     }
 }

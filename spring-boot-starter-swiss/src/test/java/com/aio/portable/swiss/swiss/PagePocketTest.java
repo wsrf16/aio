@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class PagePocketTest {
 
     @Test
-    public void pagePocket() {
+    public void foobar() {
         List<Integer> ints = Stream.iterate(1, item -> item + 1).limit(101).collect(Collectors.toList());
         PagePocket<Integer> pocket = PagePocket.paging(ints, 3, 31);
         Integer currentPage = pocket.getPageIndex();

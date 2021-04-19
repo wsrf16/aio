@@ -20,6 +20,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -78,23 +79,23 @@ public class HttpSwift {
     }
 
     public final static UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);                // "UTF-8"
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);
         return entity;
     }
 
-    public final static StringEntity buildJsonEntity(String json, String charset) {
-        StringEntity entity = new StringEntity(json, charset);      // "UTF-8"
+    public final static StringEntity buildJsonEntity(String json, Charset charset) {
+        StringEntity entity = new StringEntity(json, charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public final static StringEntity buildJsonObjectEntity(Object body, String charset) {
-        StringEntity entity = new StringEntity(serializer.serialize(body), charset);      // "UTF-8"
+    public final static StringEntity buildJsonObjectEntity(Object body, Charset charset) {
+        StringEntity entity = new StringEntity(serializer.serialize(body), charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public final static StringEntity buildStringEntity(String body, String charset) {
+    public final static StringEntity buildStringEntity(String body, Charset charset) {
         StringEntity entity = new StringEntity(body, charset);
         // entity.setContentEncoding("UTF-8");
         return entity;
@@ -139,7 +140,7 @@ public class HttpSwift {
         return httpGet;
     }
 
-    public final static String getResult(HttpResponse response, String charset) throws IOException {
+    public final static String getResult(HttpResponse response, Charset charset) throws IOException {
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(entity, charset);

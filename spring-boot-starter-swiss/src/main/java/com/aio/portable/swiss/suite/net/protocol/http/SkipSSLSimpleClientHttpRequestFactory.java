@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.net.protocol.http.resttemplate;
+package com.aio.portable.swiss.suite.net.protocol.http;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 

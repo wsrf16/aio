@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.TestComponent;
 @TestComponent
 public class XXXTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
 
     }
 }

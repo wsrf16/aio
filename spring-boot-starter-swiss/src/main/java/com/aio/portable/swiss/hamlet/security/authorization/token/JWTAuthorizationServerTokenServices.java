@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.hamlet.security.authorization.token;
 
-import com.aio.portable.swiss.suite.security.authentication.jwt.JWTFactory;
 import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
 import com.aio.portable.swiss.suite.algorithm.transcode.TranscoderBase64;
 import com.aio.portable.swiss.suite.algorithm.transcode.Transcoding;
 import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
+import com.aio.portable.swiss.suite.security.authentication.jwt.JWTSession;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
@@ -20,11 +20,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import java.util.Date;
 
 /**
- * JWTAuthorizationServerTokenServices
+ * JWTAuthorizationServerTokenServices (DefaultTokenServices)
  * Method "configure(AuthorizationServerEndpointsConfigurer endpoints)" In AuthorizationServerConfigurerAdapter.class
  */
 public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices, Transcoding {
-    private JWTAction jwtAction;
+    private JWTSession jwtSession;
 
     /**
      * 配置AccessToken的存储方式:此处使用Redis存储
@@ -40,62 +40,62 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
     private Transcoder transcode = new TranscoderBase64();
 
     @Override
-    public Transcoder getTranscode() {
-        return transcode;
-    }
-
-    @Override
     public void setTranscode(Transcoder transcode) {
         this.transcode = transcode;
     }
 
 
 
-    public JWTAuthorizationServerTokenServices(JWTAction jwtAction, TokenStore tokenStore) {
-        this.jwtAction = jwtAction;
+    public JWTAuthorizationServerTokenServices(JWTSession jwtSession, TokenStore tokenStore) {
+        this.jwtSession = jwtSession;
         this.tokenStore = tokenStore;
     }
 
 
+    private final static DefaultOAuth2AccessToken createAccessToken(JWTSession jwtSession, OAuth2Authentication authentication) {
+        String issuer = authentication.getUserAuthentication().getName();
+        JWTSession.JWTDate jwtDate = jwtSession.generateDate();
+        Date issuedAt = jwtDate.getIssuedAt();
+        Date expiresAt = jwtDate.getExpiresAt();
 
-
-
-    private String create(JWTFactory jwt, String issuer) {
-        JWTCreator.Builder builder = com.auth0.jwt.JWT.create();
+        JWTCreator.Builder builder = jwtSession.createBuilder();
         builder.withIssuer(issuer);
         builder.withClaim("r", System.currentTimeMillis());
-        builder.withIssuedAt(jwt.getIssuedAt());
-        builder.withExpiresAt(jwt.getExpiresAt());
+        if (jwtDate.isValid()) {
+            builder.withIssuedAt(issuedAt);
+            builder.withExpiresAt(expiresAt);
+        }
+        String token = jwtSession.sign(builder);
 
-        String tokenWord = jwtAction.sign(builder);
-        return tokenWord;
-    }
-
-    private DefaultOAuth2AccessToken createAccessToken(JWTFactory jwt, OAuth2Authentication authentication) {
-        String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwt, issuer);
-        Date expiresAt = jwt.getExpiresAt();
-        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(value);
+        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(token);
         accessToken.setExpiration(expiresAt);
         accessToken.setScope(authentication.getOAuth2Request().getScope());
         return accessToken;
     }
 
-    private DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTFactory jwt, OAuth2Authentication authentication) {
+    private final static DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTSession jwtSession, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        String value = create(jwt, issuer);
-        Date expiresAt = jwt.getExpiresAt();
-        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(value, expiresAt);
+        JWTSession.JWTDate jwtDate = jwtSession.generateDate();
+        Date issuedAt = jwtDate.getIssuedAt();
+        Date expiresAt = jwtDate.getExpiresAt();
 
+        JWTCreator.Builder builder = jwtSession.createBuilder();
+        builder.withIssuer(issuer);
+        builder.withClaim("r", System.currentTimeMillis());
+        if (jwtDate.isValid()) {
+            builder.withIssuedAt(issuedAt);
+            builder.withExpiresAt(expiresAt);
+        }
+        String token = jwtSession.sign(builder);
+
+        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(token, expiresAt);
         return refreshToken;
     }
 
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        JWTFactory accessTokenJWT = jwtAction.newFactory();
-        DefaultOAuth2AccessToken accessToken = createAccessToken(accessTokenJWT, authentication);
-        JWTFactory refreshTokenJWT = jwtAction.newFactory();
-        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(refreshTokenJWT, authentication);
+        DefaultOAuth2AccessToken accessToken = createAccessToken(jwtSession, authentication);
+        DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(jwtSession, authentication);
 
         accessToken.setRefreshToken(refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);

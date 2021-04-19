@@ -16,7 +16,7 @@ import java.util.Map;
 public class LoghubTest {
 //
 //    @Test
-//    public static void sample() {
+//    public static void foobar() {
 //        {
 //            LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
 //            List<String> list = null;

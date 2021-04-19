@@ -60,7 +60,7 @@ public class ActorTest {
     }
 
     @Test
-    public static void todo1() {
+    public static void foobar1() {
         // 产生1到100的正整数，并分组
         Map<Integer, List<Integer>> collect1 = generatePrime();
         // 构建Message
@@ -90,7 +90,7 @@ public class ActorTest {
 
 
     @Test
-    public static void todo2() {
+    public static void foobar2() {
         Actor<Integer, Integer> actor1 = Actor
                 .build((Integer integer) -> integer * 2)
                 .push(new Message<>(121),

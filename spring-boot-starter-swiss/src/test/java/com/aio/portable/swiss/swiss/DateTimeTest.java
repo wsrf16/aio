@@ -11,7 +11,7 @@ import java.util.Date;
 @TestComponent
 public class DateTimeTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         long longg = DateTimeSugar.UnixTime.nowUnix();
         long longgg = DateTimeSugar.UnixTime.convertDateTime2Unix(LocalDateTime.now());
         LocalDateTime time = DateTimeSugar.UnixTime.convertUnix2DateTime(longg);

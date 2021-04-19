@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.algorithm.cipher.passwordencoder;
 
-import com.aio.portable.swiss.suite.algorithm.cipher.CipherSugar;
+import com.aio.portable.swiss.suite.algorithm.encode.SpringMD5Convert;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MD5Base64PasswordEncoder implements PasswordEncoder {
@@ -10,7 +10,7 @@ public class MD5Base64PasswordEncoder implements PasswordEncoder {
     }
 
     private final static String digest(CharSequence rawPassword) {
-        String encodedPassword = CipherSugar.SpringFrameWorkUtil.md5AsBase64(rawPassword.toString());
+        String encodedPassword = SpringMD5Convert.md5AsBase64(rawPassword.toString());
         return encodedPassword;
     }
 

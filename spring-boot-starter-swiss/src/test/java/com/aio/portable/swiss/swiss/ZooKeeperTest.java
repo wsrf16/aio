@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.TestComponent;
 @TestComponent
 public class ZooKeeperTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         try {
             ZooKeeper zooKeeper = ZooKeeperSugar.build("mecs.com:2181", 120000, null);
 

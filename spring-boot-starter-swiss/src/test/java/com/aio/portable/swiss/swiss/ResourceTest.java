@@ -132,7 +132,7 @@ public class ResourceTest {
 
 
     @Test
-    public static void todo() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static void foobar() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         ResourceSugar.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
         ResourceSugar.ByClassLoader.getResourcesByClass("Wood");
         ResourceSugar.ByClassLoader.getResourcesByClass(Book.class);

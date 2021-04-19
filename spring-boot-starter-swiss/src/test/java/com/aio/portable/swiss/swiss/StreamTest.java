@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @TestComponent
 public class StreamTest {
     @Test
-    public static void todo() {
+    public static void foobar() {
         List<Integer> list = StreamSugar.increase(1, n -> n + 1, 100).collect(Collectors.toList());
         StreamSugar.split(list, 8);
     }

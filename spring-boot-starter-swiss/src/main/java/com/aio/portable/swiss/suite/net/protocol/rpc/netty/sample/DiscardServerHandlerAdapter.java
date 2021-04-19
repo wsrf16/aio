@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.net.protocol.tcp.netty.sample;
+package com.aio.portable.swiss.suite.net.protocol.rpc.netty.sample;
 
 import com.aio.portable.swiss.global.Constant;
 import io.netty.buffer.ByteBuf;

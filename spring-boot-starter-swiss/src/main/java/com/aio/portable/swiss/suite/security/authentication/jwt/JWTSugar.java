@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt;
 
 import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.suite.algorithm.cipher.AlgorithmSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -11,10 +10,6 @@ import org.springframework.http.HttpHeaders;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.ECPublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -100,7 +95,6 @@ public abstract class JWTSugar {
     public final static DecodedJWT parse(String token, Algorithm algorithm) {
         JWTVerifier verifier = JWT.require(algorithm).build();
         return verifier.verify(token);
-//        return verifier.verify(new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8));
     }
 
 
@@ -215,11 +209,23 @@ public abstract class JWTSugar {
 //    }
 
 
+    public final static Date getExpiredSeconds(Calendar calendar, int seconds) {
+        return DateTimeSugar.CalendarUtils.add(calendar, Calendar.SECOND, seconds).getTime();
+    }
+
     public final static Date getExpiredMinutes(Calendar calendar, int minutes) {
         return DateTimeSugar.CalendarUtils.add(calendar, Calendar.MINUTE, minutes).getTime();
     }
 
-    public final static Date getExpiredMinutes(Calendar calendar, int calendarField, int mount) {
+    public final static Date getExpiredHours(Calendar calendar, int hours) {
+        return DateTimeSugar.CalendarUtils.add(calendar, Calendar.HOUR_OF_DAY, hours).getTime();
+    }
+
+    public final static Date getExpiredDays(Calendar calendar, int days) {
+        return DateTimeSugar.CalendarUtils.add(calendar, Calendar.DAY_OF_YEAR, days).getTime();
+    }
+
+    public final static Date getExpired(Calendar calendar, int calendarField, int mount) {
         return DateTimeSugar.CalendarUtils.add(calendar, calendarField, mount).getTime();
     }
 

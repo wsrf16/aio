@@ -39,7 +39,7 @@
         <guava.version>[24.1.1,)</guava.version>
         <mysql.version>8.0.13</mysql.version>
         <tk.mybatis.version>1.1.3</tk.mybatis.version>
-        <shiro.version>1.5.3</shiro.version>
+        <shiro.version>1.7.1</shiro.version>
         <cglib-nodep.version>3.2.8</cglib-nodep.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
 <!--        <zookeeper.version>3.4.14</zookeeper.version>-->

@@ -111,20 +111,22 @@ public class ResponseWrapper<T> {
      * 设置“状态码”和“文字消息”
      * @param statusCode
      * @param message
+     * @return
      */
-    public void set(int statusCode, String message) {
-        setCode(statusCode);
-        setMessage(message);
+    public ResponseWrapper<T> set(int statusCode, String message) {
+        return this.setCode(statusCode)
+                .setMessage(message);
     }
 
     /**
      * 设置“状态码”和“数据”
      * @param statusCode
      * @param data
+     * @return
      */
-    public void set(int statusCode, T data) {
-        setCode(statusCode);
-        setData(data);
+    public ResponseWrapper<T> set(int statusCode, T data) {
+        return this.setCode(statusCode)
+                .setData(data);
     }
 
     /**
@@ -132,11 +134,12 @@ public class ResponseWrapper<T> {
      * @param statusCode
      * @param message
      * @param data
+     * @return
      */
-    public void set(int statusCode, String message, T data) {
-        setCode(statusCode);
-        setMessage(message);
-        setData(data);
+    public ResponseWrapper<T> set(int statusCode, String message, T data) {
+        return this.setCode(statusCode)
+                .setMessage(message)
+                .setData(data);
     }
 
 
@@ -144,48 +147,54 @@ public class ResponseWrapper<T> {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public ResponseWrapper<T> setTraceId(String traceId) {
         this.traceId = traceId;
+        return this;
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public ResponseWrapper<T> setCode(int code) {
         this.code = code;
+        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public ResponseWrapper<T> setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     public T getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public ResponseWrapper<T> setData(T data) {
         this.data = data;
+        return this;
     }
 
     public Date getAccessTime() {
         return accessTime;
     }
 
-    public void setAccessTime(Date accessTime) {
+    public ResponseWrapper<T> setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
+        return this;
     }
 
     public Long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Long timeStamp) {
+    public ResponseWrapper<T> setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
+        return this;
     }
 
 }

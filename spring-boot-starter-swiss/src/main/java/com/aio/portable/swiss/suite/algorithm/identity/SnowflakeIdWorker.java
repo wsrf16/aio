@@ -92,27 +92,25 @@ public class SnowflakeIdWorker {
     //==============================Constructors=====================================
 
     /**
-     * 构造函数
-     *
+     * SnowflakeIdWorker
      * @param workerId     工作ID (0~31)
-     * @param datacenterId 数据中心ID (0~31)
+     * @param dataCenterId 数据中心ID (0~31)
      */
-    public SnowflakeIdWorker(long workerId, long datacenterId) {
+    public SnowflakeIdWorker(long workerId, long dataCenterId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
         }
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
+        if (dataCenterId > maxDatacenterId || dataCenterId < 0) {
             throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
         }
         this.workerId = workerId;
-        this.datacenterId = datacenterId;
+        this.datacenterId = dataCenterId;
     }
 
     // ==============================Methods==========================================
 
     /**
-     * 获得下一个ID (该方法是线程安全的)
-     *
+     * 获得下一个ID
      * @return SnowflakeId
      */
     public synchronized long nextId() {
@@ -150,7 +148,6 @@ public class SnowflakeIdWorker {
 
     /**
      * 阻塞到下一个毫秒，直到获得新的时间戳
-     *
      * @param lastTimestamp 上次生成ID的时间截
      * @return 当前时间戳
      */
@@ -171,7 +168,6 @@ public class SnowflakeIdWorker {
         return System.currentTimeMillis();
     }
 
-    //==============================Test=============================================
 
 
 }

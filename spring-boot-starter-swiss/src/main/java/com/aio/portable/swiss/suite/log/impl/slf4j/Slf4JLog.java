@@ -15,7 +15,7 @@ public class Slf4JLog extends LogSingle {
 
     public Slf4JLog(String name) {
         super(name);
-        logger = org.slf4j.LoggerFactory.getLogger(name);
+        this.logger = org.slf4j.LoggerFactory.getLogger(name);
     }
 
     public Slf4JLog(Class<?> clazz) {
@@ -26,57 +26,10 @@ public class Slf4JLog extends LogSingle {
         this(StackTraceSugar.Previous.getClassName());
     }
 
-//    public Slf4JLog build(String name) {
-//        Slf4JLog slf4jLogger = new Slf4JLog(name);
-//        return slf4jLogger;
-//    }
-
     @Override
     protected void initialPrinter() {
-        printer = new Slf4JPrinter(this.getName());
-
-//        String name = this.getName();
-//
-//        printer = (text, level) -> {
-//            switch (level)
-//            {
-//                case VERBOSE: {
-//                    Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
-//                }
-//                break;
-//                case TRACE: {
-//                    logger.trace(text);
-//                }
-//                break;
-//                case DEBUG: {
-//                    logger.debug(text);
-//                }
-//                break;
-//                case INFORMATION: {
-//                    logger.info(text);
-//                }
-//                break;
-//                case WARNING: {
-//                    logger.warn(text);
-//                }
-//                break;
-//                case ERROR: {
-//                    logger.error(text);
-//                }
-//                break;
-//                case FATAL: {
-//                    Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
-//                }
-//                break;
-//                default:{
-//                    Global.unsupportedOperationException(name + ": unknown level");
-//                }
-//                break;
-//            }
-//        };
-
+        this.printer = new Slf4JPrinter(this.getName());
     }
-
 
     private class Slf4JPrinter implements Printer {
         final String name;
@@ -87,8 +40,7 @@ public class Slf4JLog extends LogSingle {
 
         @Override
         public void println(String text, LevelEnum level) {
-            switch (level)
-            {
+            switch (level) {
                 case VERBOSE: {
                     Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
                 }
@@ -117,7 +69,7 @@ public class Slf4JLog extends LogSingle {
                     Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
                 }
                 break;
-                default:{
+                default: {
                     Global.unsupportedOperationException(name + ": unknown level");
                 }
                 break;

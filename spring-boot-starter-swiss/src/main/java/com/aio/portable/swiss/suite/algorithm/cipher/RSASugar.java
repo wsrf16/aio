@@ -6,12 +6,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -62,8 +57,7 @@ public class RSASugar {
 
     private final static String RSA = "RSA";
     public final static String SHA1WithRSA = "SHA1WithRSA";
-    // public
-//    private final static String X509 = "X.509";
+    private final static String X509 = "X.509";
 //    public final static CertificateFactory CERTIFICATE_FACTORY = certificateFactoryInstance();
 
     // private

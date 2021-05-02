@@ -6,6 +6,7 @@ import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -49,6 +50,18 @@ public class LogTest {
         log.debug("debug日志", "这里是待记录的日志内容");
         log.t("trace日志", "这里是待记录的日志内容");
         log.trace("trace日志", "这里是待记录的日志内容");
+
+        log.i("打印时间1", "当前时间{}", "null", null);
+        log.i("打印时间2", "当前时间{}", null);
+        log.i("打印时间3", "当前时间{}", new Object[]{new Date()});
+        log.i("打印时间4", "当前时间{}", new Date());
+        log.i("打印时间5", "当前时间{}", new Date(), new Date());
+        log.i("打印时间6", "当前时间{}", "1999 04 04 04");
+        log.i("打印时间7", "当前时间{}", "1999 04 04 04", "1999 04 04 04");
+        log.i("打印时间8", "当前时间", new Date());
+        log.i("打印时间9", "当前时间", new Date(), new Date());
+
+
         List<Integer> list = new ArrayList<>();
         try {
             list.add(0);

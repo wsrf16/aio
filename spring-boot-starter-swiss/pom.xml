@@ -32,7 +32,6 @@
 
         <xstream.version>1.4.16</xstream.version>
 <!--        <swagger.version>2.9.2</swagger.version>-->
-<!--        <knife4j.version>2.0.7</knife4j.version>-->
         <knife4j.version>3.0.2</knife4j.version>
         <cron-utils.version>7.0.6</cron-utils.version>
         <druid.version>1.1.18</druid.version>
@@ -56,7 +55,6 @@
 <!--        <slf4j.version>1.7.26</slf4j.version>-->
 <!--        <log4j2.version>2.11.2</log4j2.version>-->
 <!--        <logback.version>1.2.3</logback.version>-->
-
 <!--        <jackson.version>2.9.9</jackson.version>-->
 <!--        <gson.version>2.8.5</gson.version>-->
         <shiro.version>1.5.3</shiro.version>
@@ -309,7 +307,7 @@
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
-<!--        https://doc.xiaominfo.com/-->
+        <!-- https://doc.xiaominfo.com/-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
@@ -454,19 +452,18 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>1.1.1.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-jwt</artifactId>-->
+<!--            <version>1.1.1.RELEASE</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
 <!--        <dependency>-->
@@ -476,7 +473,7 @@
 <!--        </dependency>-->
 
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.yaml/snakeyaml &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
 <!--        <dependency>-->
 <!--            <groupId>org.yaml</groupId>-->
 <!--            <artifactId>snakeyaml</artifactId>-->
@@ -507,13 +504,13 @@
         </dependency>
 
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
 <!--        <dependency>-->
 <!--            <groupId>org.bouncycastle</groupId>-->
 <!--            <artifactId>bcpkix-jdk15on</artifactId>-->
 <!--            <version>1.66</version>-->
 <!--        </dependency>-->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk16 &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk16 -->
 <!--        <dependency>-->
 <!--            <groupId>org.bouncycastle</groupId>-->
 <!--            <artifactId>bcmail-jdk15on</artifactId>-->
@@ -529,7 +526,12 @@
         </dependency>
 
 
-
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-validation</artifactId>-->
+<!--            <version>2.1.18.RELEASE</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 
@@ -662,24 +664,16 @@
     </repositories>
 
     <distributionManagement>
-<!--        &lt;!&ndash;<repository>&ndash;&gt;-->
-<!--            &lt;!&ndash;<id>nexus-release</id>&ndash;&gt;-->
-<!--            &lt;!&ndash;<url>http://192.168.145.246:8081/nexus/content/repositories/releases/</url>&ndash;&gt;-->
-<!--        &lt;!&ndash;</repository>&ndash;&gt;-->
-<!--        &lt;!&ndash;<snapshotRepository>&ndash;&gt;-->
-<!--            &lt;!&ndash;<id>nexus-snapshot</id>&ndash;&gt;-->
-<!--            &lt;!&ndash;<url>http://192.168.145.246:8081/nexus/content/repositories/snapshots/</url>&ndash;&gt;-->
-<!--        &lt;!&ndash;</snapshotRepository>&ndash;&gt;-->
+        <!--<repository>-->
+            <!--<id>nexus-release</id>-->
+            <!--<url>http://192.168.145.246:8081/nexus/content/repositories/releases/</url>-->
+        <!--</repository>-->
+        <!--<snapshotRepository>-->
+            <!--<id>nexus-snapshot</id>-->
+            <!--<url>http://192.168.145.246:8081/nexus/content/repositories/snapshots/</url>-->
+        <!--</snapshotRepository>-->
 
 
-<!--        <repository>-->
-<!--            <id>nexus-release</id>-->
-<!--            <url>http://mvn2.qdingnet.com/nexus/content/repositories/releases/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshot</id>-->
-<!--            <url>http://mvn2.qdingnet.com/nexus/content/repositories/snapshots/</url>-->
-<!--        </snapshotRepository>-->
         <repository>
             <id>nexus-releases</id>
             <name>user release resp</name>

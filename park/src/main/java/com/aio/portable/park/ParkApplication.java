@@ -5,7 +5,7 @@ package com.aio.portable.park;
 //import com.aio.portable.park.other.jvm.MetaspaceTest;
 //import com.aio.portable.park.task.ThreadLocalTest;
 
-import com.aio.portable.swiss.suite.log.annotation.InitialLogProperties;
+import com.aio.portable.swiss.suite.log.annotation.Initial;
 import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -27,7 +27,7 @@ import org.springframework.core.env.Environment;
 }, scanBasePackages = "com.aio.portable")
 //@ComponentScan(lazyInit = true)
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
-@InitialLogProperties(initialBeanNames = PropertyBean.RABBITMQ_LOG_PROPERTIES)
+@Initial(value = PropertyBean.RABBITMQ_LOG_PROPERTIES)
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext

@@ -10,14 +10,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface InitialLogProperties {
+public @interface Initial {
     @AliasFor(
             annotation = DependsOn.class,
             attribute = "value"
     )
-    String[] initialBeanNames() default {};
-
-//    default void ffff() {
-//        com.aio.portable.swiss.suite.log.annotation.InitialLogProperties
-//    }
+    String[] value() default {};
 }

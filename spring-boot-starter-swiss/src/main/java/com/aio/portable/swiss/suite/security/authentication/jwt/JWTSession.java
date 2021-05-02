@@ -8,13 +8,11 @@ import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
 import com.aio.portable.swiss.suite.algorithm.transcode.TranscoderBase64;
 import com.aio.portable.swiss.suite.algorithm.transcode.Transcoding;
 import com.aio.portable.swiss.suite.security.authentication.jwt.encryption.TokenAlgorithm;
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.bouncycastle.asn1.eac.ECDSAPublicKey;
 
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
@@ -48,8 +46,6 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
     public void setAlgorithm(Algorithm algorithm) {
         this.algorithm = algorithm;
     }
-
-    static final String name = AlgorithmSugar.HMAC.HMAC256.name();
 
     public JWTSession(JWTProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
@@ -106,7 +102,7 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
     }
 
     public JWTCreator.Builder createBuilder() {
-        JWTCreator.Builder builder = com.auth0.jwt.JWT.create();
+        JWTCreator.Builder builder = JWT.create();
         if (jwtProperties.getKeyId() != null)
             builder.withKeyId(jwtProperties.getKeyId());
         if (jwtProperties.getIssuer() != null)
@@ -119,7 +115,7 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
             builder.withNotBefore(jwtProperties.getNotBefore());
         if (jwtProperties.getJWTId() != null)
             builder.withJWTId(jwtProperties.getJWTId());
-        final JWTDate jwtDate = generateDate();
+        final JWTDate jwtDate = this.generateDate();
         if (jwtDate.isValid()) {
             builder.withIssuedAt(jwtDate.getIssuedAt());
             builder.withExpiresAt(jwtDate.getExpiresAt());

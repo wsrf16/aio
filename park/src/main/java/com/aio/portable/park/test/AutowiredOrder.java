@@ -22,16 +22,17 @@ public class AutowiredOrder implements InitializingBean {
 
     @PostConstruct
     public void init6th() {
-        System.out.println("init");
+        System.out.println("init6");
     }
 
     @PreDestroy
     public void destroy8th() {
-        System.out.println("destroy");
+        System.out.println("destroy8");
     }
 
     @Autowired
     public UserInfoEntity userInfoEntity(UserInfoEntity userInfoEntity5th) {
+        System.out.println("--------");
         return new UserInfoEntity();
     }
 

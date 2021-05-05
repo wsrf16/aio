@@ -1,9 +1,11 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
-import com.aio.portable.swiss.autoconfigure.properties.RabbitMQProperties;
+import com.aio.portable.swiss.factories.autoconfigure.properties.RabbitMQProperties;
 import org.springframework.beans.factory.InitializingBean;
 
 public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean {
+    public final static String PREFIX = "spring.log.rabbitmq";
+
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
 
     private String esIndex;
@@ -25,11 +27,11 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        injectCurrentIntoSingletonInstance();
+        importSingleton(this);
     }
 
-    private void injectCurrentIntoSingletonInstance() {
-        instance = this;
+    public final static void importSingleton(RabbitMQLogProperties rabbitMQLogProperties) {
+        instance = rabbitMQLogProperties;
     }
 
 

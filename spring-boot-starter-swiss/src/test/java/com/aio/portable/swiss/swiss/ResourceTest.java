@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.sandbox.Wood;
-import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;

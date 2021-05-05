@@ -29,7 +29,6 @@ spring:
     password: Yixin4redis
 
   log:
-    enabled: true
     rabbitmq:
       enabled: false
       host: mecs.com

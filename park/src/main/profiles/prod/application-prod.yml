@@ -30,7 +30,6 @@ spring:
     password: Yixin4redis
 
   log:
-    enabled: true
     rabbitmq:
       enabled: true
       host: 10.4.8.7

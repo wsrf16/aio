@@ -79,9 +79,8 @@ spring:
 #    password: Yixin4redis
 
   log:
-    enabled: true
     rabbitmq:
-      enabled: false
+      enabled: true
       host: mecs.com
 #      host: 192.168.133.133
 #      host: 10.124.163.95
@@ -128,5 +127,4 @@ spring:
 #    service-url:
 #      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
 #    register-with-eureka: true
-
 

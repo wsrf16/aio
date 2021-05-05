@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
-import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.LogHubPool;
 import com.aio.portable.swiss.hamlet.bean.RequestRecord;

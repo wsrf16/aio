@@ -2,8 +2,8 @@ package com.aio.portable.swiss.suite.log.impl.es;
 
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import com.aio.portable.swiss.suite.log.parts.LogNote;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LogNote;
 
 import java.util.Date;
 
@@ -80,6 +80,14 @@ public class ESLogNote {
         this.exception = exception;
     }
 
+    public String getOutputType() {
+        return outputType;
+    }
+
+    public void setOutputType(String outputType) {
+        this.outputType = outputType;
+    }
+
     private String esIndex;
 
     private String timeStamp;
@@ -98,6 +106,8 @@ public class ESLogNote {
 
     public String exception;
 
+    public String outputType;
+
     public ESLogNote(LogNote logNote, String esIndex, String serverIp) {
         setSummary(logNote.getSummary());
         setLevel(logNote.getLevel());
@@ -105,6 +115,7 @@ public class ESLogNote {
         setMessage(logNote.getMessage());
         setData(JacksonSugar.obj2Json(logNote.getData()));
         setException(JacksonSugar.obj2Json(logNote.getException()));
+        setOutputType(logNote.getOutputType());
 
         setEsIndex(esIndex);
         setServerIp(serverIp);

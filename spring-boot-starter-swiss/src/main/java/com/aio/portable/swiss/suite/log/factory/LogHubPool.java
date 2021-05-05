@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.factory;
 
-import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.global.Constant;
 
 import java.util.HashMap;

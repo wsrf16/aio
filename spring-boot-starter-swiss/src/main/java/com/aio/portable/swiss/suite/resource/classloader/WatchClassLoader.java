@@ -1,13 +1,19 @@
 package com.aio.portable.swiss.suite.resource.classloader;
 
+import com.aio.portable.swiss.factories.context.LogHubApplicationListener;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.io.listen.WatchServiceThread;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WatchClassLoader extends WatchServiceThread {
 
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+    private static final Log logger = LogFactory.getLog(LogHubApplicationListener.class);
 
     private ByteCodeClassLoader folderClassLoader;
 
@@ -23,7 +29,7 @@ public class WatchClassLoader extends WatchServiceThread {
 
             loadedClass.keySet().forEach(name -> {
                 Class<?> clazz = loadClass(name);
-//                logger.info(f.getPath() + " reload：" + Arrays.asList(ReflectionUtils.getDeclaredFields(clazz)));
+                logger.debug(f.getPath() + " reload：" + Arrays.asList(BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz)));
             });
         });
         watchServiceThread.listen();

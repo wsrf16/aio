@@ -7,9 +7,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -38,15 +41,6 @@ public class SpringContextHolder implements ApplicationContextAware {
         SpringContextHolder.args = args;
     }
 
-    /**
-     * 获取静态变量中的ApplicationContext.
-     *
-     * @return
-     */
-    public final static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
     public final static boolean hasLoad() {
         return applicationContext != null;
     }
@@ -61,27 +55,28 @@ public class SpringContextHolder implements ApplicationContextAware {
         SpringContextHolder.applicationContext = applicationContext;
     }
 
-    public final static <T extends ApplicationContext> T getSimilarApplicationContext() {
+    /**
+     * 获取静态变量中的ApplicationContext.
+     *
+     * @return
+     */
+    public final static <T extends ApplicationContext> T getApplicationContext() {
         return (T) applicationContext;
     }
 
     public final static ConfigurableApplicationContext getConfigurableApplicationContext() {
-        return (ConfigurableApplicationContext) getSimilarApplicationContext();
+        return SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
     }
 
-    public final static <T extends BeanFactory> T getSimilarBeanFactory() {
+    public final static <T extends BeanFactory> T getBeanFactory() {
         return (T) getConfigurableApplicationContext().getBeanFactory();
     }
 
     public final static DefaultListableBeanFactory getDefaultListableBeanFactory() {
-        return ((DefaultListableBeanFactory) getSimilarBeanFactory());
+        return ((DefaultListableBeanFactory) getBeanFactory());
     }
 
     public final static ListableBeanFactory getListableBeanFactory() {
-        return getConfigurableApplicationContext().getBeanFactory();
-    }
-
-    public final static BeanFactory getBeanFactory() {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
@@ -158,6 +153,30 @@ public class SpringContextHolder implements ApplicationContextAware {
         return applicationContext.getEnvironment();
     }
 
+    /**
+     * getPropertiesBean
+     * @param environment
+     * @param name
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public final static <T> T getPropertiesBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
+        final BindResult<T> bind = Binder.get(environment).bind(name, clazz);
+        return bind.isBound() ? bind.get() : null;
+    }
+
+    /**
+     * getPropertiesBean
+     * @param name
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public final static <T> T getPropertiesBean(String name, Class<T> clazz) {
+        final BindResult<T> bind = Binder.get(getEnvironment()).bind(name, clazz);
+        return bind.isBound() ? bind.get() : null;
+    }
 
     /**
      * 清除SpringContextHolder中的ApplicationContext为Null.
@@ -166,9 +185,11 @@ public class SpringContextHolder implements ApplicationContextAware {
         applicationContext = null;
     }
 
-
+    /**
+     * restart
+     */
     public final static void restart() {
-        ((ConfigurableApplicationContext) applicationContext).close();
+        SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
         SpringApplication.run(primarySource, args);
     }
 }

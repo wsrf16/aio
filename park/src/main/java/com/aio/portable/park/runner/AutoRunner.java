@@ -6,7 +6,7 @@ import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.BeanOrder;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.ResourceTest;
-import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -26,11 +26,25 @@ public class AutoRunner implements ApplicationRunner {
 //    @Autowired
 //    LogTest logTest;
 
+//    static abstract class Abb {
+//        static Abb abb;
+//        abstract void ff();
+//        final static void f() {
+//            abb.ff();
+//        }
+//    }
+//    class Ab extends Abb {
+//        @Override
+//        void ff() {
+//            System.out.println("ok");
+//        }
+//    }
 
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) {
 //        com.auth0.jwt.algorithms.Algorithm
+//        log.getLogList().get(1)
 
         new BeanOrder(new UserInfoEntity());
         myDatabaseTest.blah();

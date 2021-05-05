@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.LogSingle;
-import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import com.aio.portable.swiss.suite.log.parts.LogNote;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LogNote;
 
 /**
  * Created by York on 2017/11/23.
@@ -43,6 +43,7 @@ public class RabbitMQLog extends LogSingle {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
+        logNote.setOutputType(this.getClass().getSimpleName());
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
         LevelEnum level = logNote.getLevel();

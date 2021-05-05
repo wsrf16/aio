@@ -1,23 +1,19 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.module.zookeeper.CuratorSugar;
-import com.aio.portable.swiss.module.zookeeper.ZooKeeperSugar;
+import com.aio.portable.swiss.middleware.zookeeper.CuratorSugar;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.transaction.CuratorOp;
 import org.apache.curator.framework.api.transaction.CuratorTransactionResult;
-import org.apache.curator.framework.recipes.cache.CuratorCache;
 import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @TestComponent
 public class CuratorTest {

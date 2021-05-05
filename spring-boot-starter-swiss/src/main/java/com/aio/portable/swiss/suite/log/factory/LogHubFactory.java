@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.LogHub;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {
@@ -16,8 +16,12 @@ public abstract class LogHubFactory {
     }
 
     protected static LogHubFactory singleton;
+    protected static boolean isInitial = false;
 
-//    static {
+    public static boolean isInitial() {
+        return isInitial;
+    }
+    //    static {
 //        if (SpringContextHolder.hasLoad()) {
 //            try {
 //                SpringContextHolder.getApplicationContext().getBeansOfType(RabbitMQLogProperties.class);
@@ -45,6 +49,7 @@ public abstract class LogHubFactory {
     protected LogHubFactory() {
         synchronized (LogHubFactory.class) {
             LogHubFactory.singleton = LogHubFactory.singleton == null ? this : LogHubFactory.singleton;
+            isInitial = true;
         }
     }
 

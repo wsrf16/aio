@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.suite.log.impl.slf4j;
 
 import com.aio.portable.swiss.global.Global;
-import com.aio.portable.swiss.suite.log.LogSingle;
+import com.aio.portable.swiss.suite.bean.CloneableSugar;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.Printer;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
-import com.aio.portable.swiss.suite.log.parts.LogNote;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.suite.log.facade.Printer;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LogNote;
 
 public class Slf4JLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());

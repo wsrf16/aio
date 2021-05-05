@@ -1,9 +1,9 @@
 package com.aio.portable.swiss.suite.log.impl.log4j;
 
 import com.aio.portable.swiss.global.Global;
-import com.aio.portable.swiss.suite.log.LogSingle;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.log4j.Logger;
 
 public class Log4JLog extends LogSingle {

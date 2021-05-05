@@ -5,7 +5,7 @@ import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapperUtils;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.suite.log.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
@@ -52,7 +52,7 @@ public class DemoController {
 
     @GetMapping("mqsend")
     public String mqsend() {
-        amqpTemplate.convertAndSend("tc.exchange","taoche", "aaaaaaaaaaaaa");
+        amqpTemplate.convertAndSend("tc.exchange", "taoche", "aaaaaaaaaaaaa");
         String msg = MessageFormat.format("现在的时间是{0}", DateTimeSugar.UnixTime.convertUnix2DateTime(DateTimeSugar.UnixTime.nowUnix()));
         amqpTemplate.convertAndSend("application-log-queue", msg);
         return msg;
@@ -61,10 +61,13 @@ public class DemoController {
 
     @GetMapping("throwe")
     public void throwe() {
-        if (new Random().nextBoolean())
+        if (new Random().nextBoolean()) {
+            System.out.println("111111111");
             throw new RuntimeException("throw exception");
-        else
+        } else {
+            System.out.println("222222222");
             throw new BizException(BizStatusEnum.staticInvalid().getCode(), "throw bizexception");
+        }
     }
 
     @GetMapping("date")

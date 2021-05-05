@@ -1,8 +1,11 @@
 package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
-public class KafkaLogProperties extends KafkaProperties {
+public class KafkaLogProperties extends KafkaProperties implements InitializingBean {
+    public final static String PREFIX = "spring.log.kafka";
+
     private Boolean enabled = true;
     private String topic;
     private String esIndex;
@@ -17,7 +20,16 @@ public class KafkaLogProperties extends KafkaProperties {
         instance = this;
     }
 
-    public Boolean isEnable() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        importSingleton(this);
+    }
+
+    public final static void importSingleton(KafkaLogProperties kafkaLogProperties) {
+        instance = kafkaLogProperties;
+    }
+
+    public Boolean isEnabled() {
         return enabled;
     }
 

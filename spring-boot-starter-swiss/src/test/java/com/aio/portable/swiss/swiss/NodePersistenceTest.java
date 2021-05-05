@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.module.zookeeper.ZooKeeperSugar;
+import com.aio.portable.swiss.middleware.zookeeper.ZooKeeperSugar;
 import com.aio.portable.swiss.suite.storage.persistence.zookeeper.ZooKeeperPO;
 import org.apache.zookeeper.ZooKeeper;
 import org.junit.Test;

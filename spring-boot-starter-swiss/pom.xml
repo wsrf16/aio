@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.15-SNAPSHOT</version>
+    <version>1.1.16-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>

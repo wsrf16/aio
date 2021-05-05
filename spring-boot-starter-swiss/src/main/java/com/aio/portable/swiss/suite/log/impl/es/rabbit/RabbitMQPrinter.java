@@ -1,10 +1,9 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
-import com.aio.portable.swiss.module.mq.rabbitmq.RabbitMQSugar;
-import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
-import com.aio.portable.swiss.suite.log.Printer;
+import com.aio.portable.swiss.middleware.mq.rabbitmq.RabbitBuilder;
+import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
@@ -20,7 +19,7 @@ public class RabbitMQPrinter implements Printer {
     private RabbitMQPrinter(String logName, RabbitMQLogProperties rabbitMQLogProperties) {
         this.logName = logName;
         this.rabbitMQLogProperties = rabbitMQLogProperties;
-        this.rabbitTemplate = RabbitMQSugar.buildRabbitTemplate(rabbitMQLogProperties);
+        this.rabbitTemplate = RabbitBuilder.buildTemplate(rabbitMQLogProperties);
     }
 
     private static Map<String, RabbitMQPrinter> instanceMaps = new HashMap<>();
@@ -47,7 +46,7 @@ public class RabbitMQPrinter implements Printer {
 
     @Override
     public void println(String line, LevelEnum level) {
-        if (rabbitMQLogProperties.isEnable()) {
+        if (rabbitMQLogProperties.isEnabled()) {
             rabbitMQLogProperties.getBindingList().forEach(c -> {
                 String exchange = c.getExchange();
                 String routingKey = c.getRoutingKey();

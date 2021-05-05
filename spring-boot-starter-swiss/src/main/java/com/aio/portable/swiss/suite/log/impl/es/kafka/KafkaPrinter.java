@@ -1,10 +1,9 @@
 package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
-import com.aio.portable.swiss.suite.document.method.PropertiesMapping;
-import com.aio.portable.swiss.suite.log.Printer;
+import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.module.mq.kafka.KafkaBuilder;
-import com.aio.portable.swiss.suite.log.parts.LevelEnum;
+import com.aio.portable.swiss.middleware.mq.kafka.KafkaBuilder;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.text.MessageFormat;
@@ -19,7 +18,7 @@ public class KafkaPrinter implements Printer {
     public KafkaPrinter(String logName, KafkaLogProperties kafkaLogProperties) {
         this.logName = logName;
         this.kafkaLogProperties = kafkaLogProperties;
-        this.kafkaTemplate = KafkaBuilder.kafkaTemplate(kafkaLogProperties);
+        this.kafkaTemplate = KafkaBuilder.buildTemplate(kafkaLogProperties);
     }
 
     private static Map<String, KafkaPrinter> instanceMaps = new HashMap<>();
@@ -46,7 +45,7 @@ public class KafkaPrinter implements Printer {
 
     @Override
     public void println(String line, LevelEnum level) {
-        if (kafkaLogProperties.isEnable()) {
+        if (kafkaLogProperties.isEnabled()) {
             kafkaTemplate.send(kafkaLogProperties.getTopic(), Thread.currentThread().getName(), line);
         }
     }

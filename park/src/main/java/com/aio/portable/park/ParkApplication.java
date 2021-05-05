@@ -1,12 +1,6 @@
 package com.aio.portable.park;
 
-//import com.aio.portable.park.beanprocessor.CustomImportBeanDefinitionRegistrar;
-//import com.aio.portable.park.ToMapTest;
-//import com.aio.portable.park.other.jvm.MetaspaceTest;
-//import com.aio.portable.park.task.ThreadLocalTest;
 
-import com.aio.portable.swiss.suite.log.annotation.Initial;
-import com.aio.portable.swiss.suite.log.impl.PropertyBean;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -27,18 +21,17 @@ import org.springframework.core.env.Environment;
 }, scanBasePackages = "com.aio.portable")
 //@ComponentScan(lazyInit = true)
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
-@Initial(value = PropertyBean.RABBITMQ_LOG_PROPERTIES)
+//@Prepare({PropertyBean.RABBITMQ_LOG_PROPERTIES, PropertyBean.KAFKA_LOG_PROPERTIES})
 public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext
-        ConfigurableApplicationContext configurableApplicationContext = SpringApplication.run(ParkApplication.class, args);
-        Environment environment = configurableApplicationContext.getEnvironment();
+        ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
+        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+        String[] beanNames = beanFactory.getBeanDefinitionNames();
+
+        Environment environment = context.getEnvironment();
         String[] activeProfiles = environment.getActiveProfiles();
         String[] defaultProfiles = environment.getDefaultProfiles();
-        String[] beanNames = configurableApplicationContext.getBeanDefinitionNames();
-
-        ConfigurableListableBeanFactory beanFactory = configurableApplicationContext.getBeanFactory();
-        Object bean = beanFactory.getBean(beanNames[0]);
     }
 
 }

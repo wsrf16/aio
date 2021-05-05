@@ -7,7 +7,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
 import java.io.*;
 
-public class Tar {
+public abstract class Tar {
     private static String TAR_EXTENTION = ".tar";
     private static String GZ_EXTENTION = ".gz";
 

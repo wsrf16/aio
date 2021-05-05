@@ -9,6 +9,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.stream.Stream;
+
 @Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
@@ -53,6 +55,10 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
 
 //            System.out.println(name + " bean properties: " + definition.getPropertyValues().toString());
         }
+//        Stream.of(names).filter(c -> c.equals("rabbitMQLogProperties")).findFirst().get()
+//        Object rabbitMQLogProperties = beanFactory.getBean("rabbitMQLogProperties");
+//        beanFactory.destroyBean(rabbitMQLogProperties);
+        System.out.println();
     }
 }
 

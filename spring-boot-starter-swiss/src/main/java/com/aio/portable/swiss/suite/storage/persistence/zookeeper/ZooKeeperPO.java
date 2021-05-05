@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.storage.persistence.zookeeper;
 
-import com.aio.portable.swiss.module.zookeeper.ZooKeeperSugar;
+import com.aio.portable.swiss.middleware.zookeeper.ZooKeeperSugar;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;

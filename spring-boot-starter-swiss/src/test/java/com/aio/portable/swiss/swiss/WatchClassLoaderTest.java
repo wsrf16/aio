@@ -1,13 +1,11 @@
 package com.aio.portable.swiss.swiss;
 
 import com.aio.portable.swiss.suite.resource.classloader.WatchClassLoader;
-import io.swagger.util.ReflectionUtils;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 
 public class WatchClassLoaderTest {
     @Test
@@ -17,8 +15,6 @@ public class WatchClassLoaderTest {
             WatchClassLoader classLoader = new WatchClassLoader("D:/AAAA/");
             Class<?> clazz = classLoader.loadClass(name);
             Object obj = clazz.newInstance();
-            System.out.println("reload：" + Arrays.asList(ReflectionUtils.getDeclaredFields(clazz)));
-
 
 
             URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL("file:/AAAA/")});

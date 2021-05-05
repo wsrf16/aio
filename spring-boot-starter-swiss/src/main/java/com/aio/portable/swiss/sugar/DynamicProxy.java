@@ -1,12 +1,9 @@
 package com.aio.portable.swiss.sugar;
 
-import com.aio.portable.swiss.suite.bean.type.BiFunction;
-import com.aio.portable.swiss.suite.log.LogHub;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.stream.Collectors;

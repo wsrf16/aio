@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
-import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
+import com.aio.portable.swiss.factories.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;

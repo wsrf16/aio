@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authentication.jwt;
 
-import com.aio.portable.swiss.autoconfigure.properties.JWTProperties;
+import com.aio.portable.swiss.factories.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.cipher.AlgorithmSugar;
 import com.aio.portable.swiss.suite.algorithm.cipher.RSASugar;

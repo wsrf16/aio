@@ -12,13 +12,13 @@ import java.util.Map;
 
 public class KafkaPrinter implements Printer {
     String logName;
-    KafkaLogProperties kafkaLogProperties;
+    KafkaLogProperties properties;
     KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaPrinter(String logName, KafkaLogProperties kafkaLogProperties) {
+    public KafkaPrinter(String logName, KafkaLogProperties properties) {
         this.logName = logName;
-        this.kafkaLogProperties = kafkaLogProperties;
-        this.kafkaTemplate = KafkaBuilder.buildTemplate(kafkaLogProperties);
+        this.properties = properties;
+        this.kafkaTemplate = KafkaBuilder.buildTemplate(properties);
     }
 
     private static Map<String, KafkaPrinter> instanceMaps = new HashMap<>();
@@ -45,8 +45,10 @@ public class KafkaPrinter implements Printer {
 
     @Override
     public void println(String line, LevelEnum level) {
-        if (kafkaLogProperties.isEnabled()) {
-            kafkaTemplate.send(kafkaLogProperties.getTopic(), Thread.currentThread().getName(), line);
+        if (properties.getEnabled()) {
+            properties.getBindingList().forEach(c -> {
+                kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), line);
+            });
         }
     }
 

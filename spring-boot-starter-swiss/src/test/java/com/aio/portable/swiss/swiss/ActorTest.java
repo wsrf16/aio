@@ -1,9 +1,9 @@
 package com.aio.portable.swiss.swiss;
 
-import com.aio.portable.swiss.designpattern.actor.Actor;
-import com.aio.portable.swiss.designpattern.actor.ActorManager;
-import com.aio.portable.swiss.designpattern.actor.message.Message;
-import com.aio.portable.swiss.designpattern.actor.message.MessageReturn;
+import com.aio.portable.swiss.design.actor.Actor;
+import com.aio.portable.swiss.design.actor.ActorManager;
+import com.aio.portable.swiss.design.actor.message.Message;
+import com.aio.portable.swiss.design.actor.message.MessageReturn;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

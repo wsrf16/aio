@@ -5,14 +5,19 @@ import com.aio.portable.swiss.sugar.CollectionSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.cglib.core.Converter;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public abstract class BeanSugar {
@@ -35,6 +40,7 @@ public abstract class BeanSugar {
 
     /**
      * matchCollection : like Objects.deepEquals()
+     *
      * @param matchList
      * @param beanList
      * @param <T>
@@ -74,29 +80,86 @@ public abstract class BeanSugar {
         });
     }
 
-    public final static String[] getNullProperties(Object src) {
-        //1.获取Bean
-        BeanWrapper srcBean = new BeanWrapperImpl(src);
-        //2.获取Bean的属性描述
-        PropertyDescriptor[] pds = srcBean.getPropertyDescriptors();
-        //3.获取Bean的空属性
-        Set<String> properties = new HashSet<>();
-        for (PropertyDescriptor propertyDescriptor : pds) {
-            String propertyName = propertyDescriptor.getName();
-            Object propertyValue = srcBean.getPropertyValue(propertyName);
-            if (StringUtils.isEmpty(propertyValue)) {
-                srcBean.setPropertyValue(propertyName, null);
-                properties.add(propertyName);
+
+
+    public abstract static class Cloneable {
+        private static ConcurrentMap<Class<?>, BeanCopier> beanCopiers = new ConcurrentHashMap<Class<?>, BeanCopier>();
+
+        public static Object clone(Object source) {
+            try {
+                Object target = source.getClass().getConstructor().newInstance();
+                copy(source, target);
+                return target;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
-        return properties.toArray(new String[0]);
+
+        public static void copy(Object source, Object target) {
+            BeanCopier copier = createCopier(source.getClass());
+            copier.copy(source, target, new BeanConverter());
+        }
+
+        private static BeanCopier createCopier(Class<?> clazz) {
+            if (beanCopiers.containsKey(clazz))
+                return beanCopiers.get(clazz);
+            beanCopiers.putIfAbsent(clazz, BeanCopier.create(clazz, clazz, true));
+            return beanCopiers.get(clazz);
+
+        }
+
+        private static class BeanConverter implements Converter {
+            @Override
+            public Object convert(Object bean, Class fieldType, Object fieldName) {
+                return _clone(bean);
+            }
+
+            private static Object _clone(Object bean) {
+                if (bean == null) {
+                    return null;
+                } else {
+                    if (bean.getClass().isArray() && !bean.getClass().getComponentType().equals(byte.class)) {
+                        int length = Array.getLength(bean);
+                        Object clone = Array.newInstance(bean.getClass().getComponentType(), length);
+                        for (int i = 0; i < length; i++) {
+                            Array.set(clone, i, _clone(Array.get(bean, i)));
+                        }
+                        return clone;
+                    } else {
+                        return bean;
+                    }
+                }
+            }
+        }
     }
 
-    public final static void copyNotNullProperties(Object source, Object target) {
-        BeanUtils.copyProperties(source, target, BeanSugar.getNullProperties(source));
+    public abstract static class Properties {
+        public final static String[] getNullProperties(Object src) {
+            //1.获取Bean
+            BeanWrapper srcBean = new BeanWrapperImpl(src);
+            //2.获取Bean的属性描述
+            PropertyDescriptor[] pds = srcBean.getPropertyDescriptors();
+            //3.获取Bean的空属性
+            Set<String> properties = new HashSet<>();
+            for (PropertyDescriptor propertyDescriptor : pds) {
+                String propertyName = propertyDescriptor.getName();
+                Object propertyValue = srcBean.getPropertyValue(propertyName);
+                if (StringUtils.isEmpty(propertyValue)) {
+                    srcBean.setPropertyValue(propertyName, null);
+                    properties.add(propertyName);
+                }
+            }
+            return properties.toArray(new String[0]);
+        }
+
+        public final static void copyNotNullProperties(Object source, Object target) {
+            BeanUtils.copyProperties(source, target, Properties.getNullProperties(source));
+        }
+
+        public final static void copyAllProperties(Object source, Object target) {
+            BeanUtils.copyProperties(source, target);
+        }
     }
-
-
 
     public abstract static class PropertyDescriptors {
         public final static PropertyDescriptor getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {

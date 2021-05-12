@@ -38,12 +38,12 @@ public class ClassTest {
     }
 
     @Test
-    public static boolean existJackson() throws IOException {
+    public static boolean existJackson() {
         return ClassSugar.exist(("com.fasterxml.jackson.databind.JsonSerializer"));
     }
 
     @Test
-    public static boolean existGson() throws IOException {
+    public static boolean existGson() {
         return ClassSugar.exist(("com.google.gson.Gson"));
     }
 
@@ -60,6 +60,6 @@ public class ClassTest {
     @Test
     public void getClassName() throws IOException {
         String packageName = StackTraceSugar.Current.getClassName();
-        List<String> list = PackageSugar.getQualifiedClassName(packageName);
+        List<String> list = PackageSugar.getCompleteClassName(packageName);
     }
 }

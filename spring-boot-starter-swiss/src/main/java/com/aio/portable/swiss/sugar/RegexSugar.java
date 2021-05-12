@@ -2,7 +2,6 @@ package com.aio.portable.swiss.sugar;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 
 public abstract class RegexSugar {
 //    private final static String REGEX_PHONE = "^(1)\\d{10}$";
-    private final static String REGEX_PHONE_BLUR = "(\\^1d{2})\\d{4}(\\d{4})";
+    private final static String REGEX_PHONE_BLUR = "(^1\\d{2})\\d{4}(\\d{4})";
     private final static String REGEX_PHONE_BLUR_REPLACE = "$1****$2";
     private final static String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
     private final static String FAKE_TEXT = "****";
@@ -19,7 +18,7 @@ public abstract class RegexSugar {
             "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
 
     public static class Application {
-        public final static boolean matchPhone(String phone) {
+        public final static boolean validatePhone(String phone) {
             return Pattern.compile(FULL_REGEX_PHONE).matcher(phone).find();
         }
 
@@ -41,7 +40,7 @@ public abstract class RegexSugar {
 //        }
 
         public static final String blurPhone(String phone) {
-            boolean checkFlag = matchPhone(phone);
+            boolean checkFlag = validatePhone(phone);
             if (!checkFlag) {
                 throw new IllegalArgumentException(MessageFormat.format("{0} is illegal.", phone));
             }

@@ -8,7 +8,7 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogFatal {
     void fatal(String message);
 
-    default void fatal(String message, Object... arguments) {
+    default void fatal(String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         fatal(message);

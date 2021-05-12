@@ -36,7 +36,6 @@ public abstract class RabbitBuilder {
         rabbitAdmin.declareQueue(queue);
 
         switch (type) {
-            // BuiltinExchangeType
             case Exchange.DIRECT: {
                 DirectExchange exchange = new DirectExchange(exchangeText, true, false, null);
                 rabbitAdmin.declareExchange(exchange);
@@ -183,7 +182,7 @@ public abstract class RabbitBuilder {
                     rabbitTemplate.setMandatory(mandatory);
 //                    Channel channel = connectionFactory.createConnection().createChannel(false);
 
-                    boolean autoDeclare = properties.isAutoDeclare();
+                    boolean autoDeclare = properties.getAutoDeclare();
                     if (autoDeclare) {
                         RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
                         RabbitBuilder.binding(rabbitAdmin, properties);

@@ -48,13 +48,10 @@ public class KafkaLog extends LogSingle {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        logNote.setOutputType(this.getClass().getSimpleName());
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
-        LevelEnum level = logNote.getLevel();
         ESLogNote esLogNote = new ESLogNote(logNote, esIndex, ip);
-        String text = serializer.serialize(esLogNote);
-        super.output(printer, text, level);
+        super.output(printer, esLogNote);
     }
 
 

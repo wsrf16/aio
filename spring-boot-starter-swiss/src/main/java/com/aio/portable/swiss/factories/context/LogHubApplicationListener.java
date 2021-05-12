@@ -1,7 +1,12 @@
 package com.aio.portable.swiss.factories.context;
 
+import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
+import com.aio.portable.swiss.suite.log.support.LogHubProperties;
+import com.aio.portable.swiss.suite.log.support.LogHubUtils;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -10,26 +15,32 @@ import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEven
 import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.GenericApplicationListener;
+import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public class LogHubApplicationListener implements GenericApplicationListener {
+// GenericApplicationListener
+// SmartApplicationListener
+// ConfigFileApplicationListener
+public class LogHubApplicationListener implements EnvironmentPostProcessor, GenericApplicationListener, Ordered {
     public static final int DEFAULT_ORDER = Integer.MIN_VALUE + 20;
-    private static final Class<?>[] EVENT_TYPES = { ApplicationStartingEvent.class,
+    private static final Class<?>[] EVENT_TYPES = {ApplicationStartingEvent.class,
             ApplicationEnvironmentPreparedEvent.class, ApplicationPreparedEvent.class, ContextClosedEvent.class,
-            ApplicationFailedEvent.class };
-    private static final Class<?>[] SOURCE_TYPES = { SpringApplication.class, ApplicationContext.class };
-    private static final AtomicBoolean shutdownHookRegistered = new AtomicBoolean();
+            ApplicationFailedEvent.class};
+    private static final Class<?>[] SOURCE_TYPES = {SpringApplication.class, ApplicationContext.class};
     private static final Log logger = LogFactory.getLog(LogHubApplicationListener.class);
     private int order = DEFAULT_ORDER;
+
+//    @Override
+//    public boolean supportsEventType(Class<? extends ApplicationEvent> resolvableType) {
+//        return this.isAssignableFrom(resolvableType, EVENT_TYPES);
+//    }
 
     @Override
     public boolean supportsEventType(ResolvableType resolvableType) {
@@ -44,15 +55,15 @@ public class LogHubApplicationListener implements GenericApplicationListener {
     private boolean isAssignableFrom(Class<?> type, Class<?>... supportedTypes) {
         if (type != null) {
             for (Class<?> supportedType : supportedTypes) {
-                    if (supportedType.isAssignableFrom(type)) {
+                if (supportedType.isAssignableFrom(type)) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
+    @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ApplicationStartingEvent) {
             this.onApplicationStartingEvent((ApplicationStartingEvent) event);
@@ -72,7 +83,7 @@ public class LogHubApplicationListener implements GenericApplicationListener {
     }
 
     private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
-        this.initialize(event.getEnvironment());
+        this.postProcessEnvironment(event.getEnvironment(), event.getSpringApplication());
     }
 
     private void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
@@ -104,42 +115,35 @@ public class LogHubApplicationListener implements GenericApplicationListener {
         return value != null && !value.equals("false");
     }
 
-    private void initialize(ConfigurableEnvironment environment) {
+//    private void initialize(ConfigurableEnvironment environment) {
+//        initializeLogProperties(environment);
+//    }
+
+    @Override
+    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        logger.debug("LogHubApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
         initializeLogProperties(environment);
     }
 
     private static void initializeLogProperties(ConfigurableEnvironment environment) {
         final Binder binder = Binder.get(environment);
         try {
-            bindRabbitLog(binder);
-            bindKafkaLog(binder);
+            if (LogHubUtils.RabbitMQ.existDependency())
+                RabbitMQLogProperties.importSingleton(binder);
+            if (LogHubUtils.Kafka.existDependency())
+                KafkaLogProperties.importSingleton(binder);
+            Slf4jLogProperties.importSingleton(binder);
+            ConsoleLogProperties.importSingleton(binder);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Cannot bind to SpringApplication", e);
-            throw new IllegalStateException("Cannot bind to SpringApplication", e);
+            logger.error("initializeLogProperties error", e);
+//            throw new IllegalStateException("initializeLogProperties error", e);
 
+//            logger.error("Cannot bind to SpringApplication", e);
+//            throw new IllegalStateException("Cannot bind to SpringApplication", e);
         }
     }
 
-    private static void bindRabbitLog(Binder binder) {
-        final BindResult<RabbitMQLogProperties> rabbitBindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
-        if (rabbitBindResult.isBound()) {
-            RabbitMQLogProperties.importSingleton(rabbitBindResult.get());
-        } else {
-            if (RabbitMQLogProperties.singletonInstance() != null)
-                RabbitMQLogProperties.singletonInstance().setEnabled(false);
-        }
-    }
-
-    private static void bindKafkaLog(Binder binder) {
-        final BindResult<KafkaLogProperties> kafkaBindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
-        if (kafkaBindResult.isBound()) {
-            KafkaLogProperties.importSingleton(kafkaBindResult.get());
-        } else {
-            if (KafkaLogProperties.singletonInstance() != null)
-                KafkaLogProperties.singletonInstance().setEnabled(false);
-        }
-    }
 
 //    private void registerShutdownHookIfNecessary(Environment environment, LoggingSystem loggingSystem) {
 //        boolean registerShutdownHook = (Boolean)environment.getProperty("logging.register-shutdown-hook", Boolean.class, false);
@@ -155,12 +159,10 @@ public class LogHubApplicationListener implements GenericApplicationListener {
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    @Override
+    public int getOrder() {
+        return order;
     }
 
-    public int getOrder() {
-        return this.order;
-    }
 
 }

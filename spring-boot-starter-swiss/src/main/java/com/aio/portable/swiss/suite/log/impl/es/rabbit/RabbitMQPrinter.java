@@ -46,17 +46,15 @@ public class RabbitMQPrinter implements Printer {
 
     @Override
     public void println(String line, LevelEnum level) {
-        if (rabbitMQLogProperties.isEnabled()) {
+        if (rabbitMQLogProperties.getEnabled()) {
             rabbitMQLogProperties.getBindingList().forEach(c -> {
-                String exchange = c.getExchange();
-                String routingKey = c.getRoutingKey();
-//                String message = MessageBuilder
+//                String line = MessageBuilder
 //                        .withBody(orderJson.getBytes())
 //                        .setContentType(MessageProperties.CONTENT_TYPE_JSON)
 //                        .build();
 
                 try {
-                    rabbitTemplate.convertAndSend(exchange, routingKey, line);
+                    rabbitTemplate.convertAndSend(c.getExchange(), c.getRoutingKey(), line);
                 } catch (AmqpException e) {
                     e.printStackTrace();
                 }

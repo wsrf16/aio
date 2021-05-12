@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.suite.resource;
 
+import org.springframework.util.ReflectionUtils;
+
 import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +22,8 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public final static String getPath(final Class<?> clazz) throws MalformedURLException {
-        final String clazzFile = convertQualifiedName2ResourcePath(clazz.getTypeName());
+    public final static String getPath(final Class<?> clazz) {
+        final String clazzFile = convertCompleteName2ResourcePath(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
@@ -31,10 +33,20 @@ public abstract class ClassSugar {
                 if (org.springframework.util.ResourceUtils.URL_PROTOCOL_FILE.equals(location.getProtocol())) {
                     if (location.toExternalForm().endsWith(".jar") ||
                             location.toExternalForm().endsWith(".zip"))
-                        location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
-                                .concat("!/").concat(clazzFile));
+                        try {
+                            location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
+                                    .concat("!/").concat(clazzFile));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
                     else if (new File(location.getFile()).isDirectory())
-                        location = new URL(location, clazzFile);
+                        try {
+                            location = new URL(location, clazzFile);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
                 }
             }
         }
@@ -55,23 +67,23 @@ public abstract class ClassSugar {
     /**
      * hasClassByCurrentThreadClassLoader 判断是否存在某一个类
      *
-     * @param qualifiedClassName eg. com.art.Book
+     * @param completeClassName eg. com.art.Book
      * @return
      * @throws IOException
      */
-    public static boolean exist(String qualifiedClassName) throws IOException {
-        String resource = convertQualifiedName2ResourcePath(qualifiedClassName);
+    public static boolean exist(String completeClassName) {
+        String resource = convertCompleteName2ResourcePath(completeClassName);
         return ResourceSugar.ByClassLoader.existResource(resource);
     }
 
 
     /**
      * getShortName -> org.springframework.util.ClassUtils
-     * @param qualifiedClassName
+     * @param completeClassName
      * @return
      */
-    public static String getShortName(String qualifiedClassName) {
-        String shortClassName = org.springframework.util.ClassUtils.getShortName(qualifiedClassName);
+    public static String getShortName(String completeClassName) {
+        String shortClassName = org.springframework.util.ClassUtils.getShortName(completeClassName);
         return shortClassName;
     }
 
@@ -107,48 +119,32 @@ public abstract class ClassSugar {
 
 
     /**
-     * convertQualifiedName2ResourcePath
+     * convertCompleteName2ResourcePath
      *
-     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
+     * @param completeName className/packageName eg. com.company.biz | com.company.biz.Book
      * @return com/company/biz | com/company/biz/Book
      */
-    public static String convertQualifiedName2ResourcePath(String qualifiedName) {
+    public static String convertCompleteName2ResourcePath(String completeName) {
         String path;
-//        path = qualifiedName.replace('.', '/').concat(".class");
-        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName);
+//        path = completeName.replace('.', '/').concat(".class");
+        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(completeName);
         path = path.concat(".class");
         return path;
     }
 
 
 //    /**
-//     * convertQualifiedName2ResourceFilePath
+//     * convertCompleteName2ResourceFilePath
 //     *
-//     * @param qualifiedName className/packageName eg. com.company.biz | com.company.biz.Book
+//     * @param completeName className/packageName eg. com.company.biz | com.company.biz.Book
 //     * @return com/company/biz | com/company/biz/Book
 //     */
-//    private static String convertQualifiedName2ResourceFilePath(String qualifiedName) {
+//    private static String convertCompleteName2ResourceFilePath(String completeName) {
 //        String path;
 ////        path = fullName.replace('.', '/').concat(".class");
-//        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(qualifiedName).concat(".class");
+//        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(completeName).concat(".class");
 //        return path;
 //    }
-
-
-    /**
-     * newDeclaredInstance
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    public synchronized final static <T> T newDeclaredInstance(Class<T> clazz) {
-        try {
-            return clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
 
 
     /**
@@ -174,10 +170,10 @@ public abstract class ClassSugar {
      * @param <T>
      * @return
      */
-    public synchronized final static <T> T declaredNewInstance(Class<T> clazz, Class<?>... parameterTypes) {
+    public synchronized final static <T> T newDeclaredInstance(Class<T> clazz, Class<?>... parameterTypes) {
         try {
-            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor(parameterTypes);
-            declaredConstructor.setAccessible(true);
+            Constructor<T> declaredConstructor = parameterTypes == null ? clazz.getDeclaredConstructor() : clazz.getDeclaredConstructor(parameterTypes);
+            ReflectionUtils.makeAccessible(declaredConstructor);
             return declaredConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();

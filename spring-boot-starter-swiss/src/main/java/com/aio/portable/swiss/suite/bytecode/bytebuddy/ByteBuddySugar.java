@@ -25,22 +25,22 @@ public abstract class ByteBuddySugar {
     /**
      * redefineClass
      * @param sourceClazz
-     * @param targetQualifiedClassName "com.sandbox.console.Foo1"
+     * @param targetCompleteClassName "com.sandbox.console.Foo1"
      * @param <S>
      */
-    public final static <S> void redefineClass(String targetQualifiedClassName, Class<S> sourceClazz) throws ClassNotFoundException {
+    public final static <S> void redefineClass(String targetCompleteClassName, Class<S> sourceClazz) throws ClassNotFoundException {
         ClassReloadingStrategy fromInstalledAgent = ClassReloadingStrategy.fromInstalledAgent();
 
         DynamicType.Builder<S> builder = new ByteBuddy()
                 .redefine(sourceClazz)
 //                .implement(MInterface.class)
-                .name(targetQualifiedClassName)
+                .name(targetCompleteClassName)
 //                .modifiers(Visibility.PUBLIC)
 //                .defineConstructor(Visibility.PUBLIC)
 //                .intercept(MethodCall.invoke(Bar.class.getDeclaredConstructor()))
                 ;
         DynamicType.Unloaded<S> unloaded = builder.make();
-//        DynamicType.Loaded<S> load = unloaded.load(Class.forName(targetQualifiedClassName).getClassLoader(), fromInstalledAgent);
+//        DynamicType.Loaded<S> load = unloaded.load(Class.forName(targetCompleteClassName).getClassLoader(), fromInstalledAgent);
         DynamicType.Loaded<S> load = unloaded.load(sourceClazz.getClassLoader(), fromInstalledAgent);
 //        Class<? extends S> toClazz = load.getLoaded();
     }

@@ -331,7 +331,8 @@ public abstract class CollectionSugar {
     }
 
     public final static <T> List<T> toList(T[] array) {
-        List<T> list = new ArrayList<>(Arrays.asList((T[]) new Object[array.length]));
+//        List<T> list = new ArrayList<>(Arrays.asList((T[]) new Object[array.length]));
+        List<T> list = new ArrayList<>(Arrays.asList(array));
         return list;
     }
 

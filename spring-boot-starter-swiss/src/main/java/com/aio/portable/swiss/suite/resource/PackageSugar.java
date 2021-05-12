@@ -37,7 +37,7 @@ public abstract class PackageSugar {
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public final static List<String> getQualifiedClassName(String packageName) throws IOException {
+    public final static List<String> getCompleteClassName(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
         List<URL> urlList = ResourceSugar.ByClassLoader.getResources(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
@@ -47,11 +47,11 @@ public abstract class PackageSugar {
                 if (ResourceUtils.isFileURL(url)) {
 //                if (url.getProtocol().equals(ProtocolType.file)) {
                     // "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
-                    _classList = getQualifiedClassNameByPath(path);
+                    _classList = getCompleteClassNameByPath(path);
                 } else if (ResourceUtils.isJarURL(url)) {
 //                } else if (url.getProtocol().equals(ProtocolType.jar)) {
                     // "jar:file:/E:/Users/PPC/IdeaProjects/swiss/target/main.java.com.aio.solomid-0.0.1-SNAPSHOT.jar!/com/aio/com.aio.solomid"
-                    _classList = getQualifiedClassNameByJar(path);
+                    _classList = getCompleteClassNameByJar(path);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,7 +75,7 @@ public abstract class PackageSugar {
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    public final static List<String> getQualifiedClassNameByPath(String packagePath) {
+    public final static List<String> getCompleteClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -83,7 +83,7 @@ public abstract class PackageSugar {
             return classList;
         for (File childFile : childFiles) {
             if (childFile.isDirectory()) {
-                classList.addAll(getQualifiedClassNameByPath(childFile.getPath()));
+                classList.addAll(getCompleteClassNameByPath(childFile.getPath()));
             } else {
                 String childFilePath = childFile.getPath();
 //                String extension = StringUtils.getFilenameExtension(childFilePath);
@@ -97,7 +97,7 @@ public abstract class PackageSugar {
                         List<URL> resourcesInJar = ResourceSugar.listResourcesInJar(childFilePath);
                         List<String> classNameList = resourcesInJar.stream()
                                 .filter(c -> c.toString().endsWith(EXT_DOT_CLASS))
-                                .map(c -> ResourceSugar.toQualifiedClassName(c.toString()))
+                                .map(c -> ResourceSugar.toCompleteClassName(c.toString()))
                                 .collect(Collectors.toList());
 
                         classList.addAll(classNameList);
@@ -116,7 +116,7 @@ public abstract class PackageSugar {
      * @return
      * @throws IOException
      */
-    public final static List<String> getQualifiedClassNameByJar(String packageURLInJar) throws IOException {
+    public final static List<String> getCompleteClassNameByJar(String packageURLInJar) throws IOException {
         String[] jarInfo = packageURLInJar.split("!");
         String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);

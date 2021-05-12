@@ -7,23 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RabbitMQProperties extends RabbitProperties {
-    private boolean enabled = true;
-    private boolean autoDeclare = true;
+    private Boolean enabled = true;
+    private Boolean autoDeclare = true;
     private List<RabbitMQBindingProperty> bindingList = new ArrayList<>();
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    public boolean isAutoDeclare() {
+    public Boolean getAutoDeclare() {
         return autoDeclare;
     }
 
-    public void setAutoDeclare(boolean autoDeclare) {
+    public void setAutoDeclare(Boolean autoDeclare) {
         this.autoDeclare = autoDeclare;
     }
 

@@ -9,7 +9,7 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogTrace {
     void trace(String message);
 
-    default void trace(String message, Object... arguments) {
+    default void trace(String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         trace(message);
@@ -19,7 +19,7 @@ public interface LogTrace {
 
     void trace(String summary, String message);
 
-    default void trace(String summary, String message, Object... arguments) {
+    default void trace(String summary, String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         trace(summary, message);
@@ -33,7 +33,7 @@ public interface LogTrace {
         trace(message);
     }
 
-    default void t(String message, Object... arguments) {
+    default void t(String message, Object[] arguments) {
         trace(message, arguments);
     }
 
@@ -45,7 +45,7 @@ public interface LogTrace {
         trace(summary, message);
     }
 
-    default void t(String summary, String message, Object... arguments) {
+    default void t(String summary, String message, Object[] arguments) {
         trace(summary, message, arguments);
     }
 

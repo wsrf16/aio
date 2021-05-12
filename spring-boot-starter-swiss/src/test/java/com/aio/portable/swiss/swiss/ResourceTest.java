@@ -3,7 +3,7 @@ package com.aio.portable.swiss.swiss;
 import com.aio.portable.swiss.sandbox.Wood;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLog;
 import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.suite.resource.PackageSugar;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
@@ -22,7 +22,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = LogHub.build(new Slf4JLog());
+    LogHub log = LogHub.build(new Slf4jLog());
 
     {
         try {
@@ -38,13 +38,13 @@ public class ResourceTest {
 
             URL url = urls.get(156);
             Class<?> clazz1 = ClassLoaderSugar.loadedClass(url);
-            String className = ResourceSugar.toQualifiedClassName(url.toString());
+            String className = ResourceSugar.toCompleteClassName(url.toString());
             Class<?> clazz2 = ClassLoaderSugar.loadedClass(urls, className);
 
-            List<String> qualifiedClassNameList = PackageSugar.getQualifiedClassNameByPath("./park/target");
-//            List<String> qualifiedClassNameByJar = PackageSugar.getQualifiedClassNameByJar(jar);
+            List<String> completeClassNameList = PackageSugar.getCompleteClassNameByPath("./park/target");
+//            List<String> completeClassNameByJar = PackageSugar.getCompleteClassNameByJar(jar);
 
-            List<String> qualifiedClassName = PackageSugar.getQualifiedClassName("com.aio.portable.swiss.global");
+            List<String> completeClassName = PackageSugar.getCompleteClassName("com.aio.portable.swiss.global");
             Thread.sleep(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,7 +144,7 @@ public class ResourceTest {
         List<URL> urlList = ResourceSugar.listResourcesInJar(jarPath);
 
         {
-            String className = ResourceSugar.path2QualifiedClassName(resourceInJar);
+            String className = ResourceSugar.path2CompleteClassName(resourceInJar);
             Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
             className = "Wood";
             Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);

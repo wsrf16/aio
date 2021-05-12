@@ -28,7 +28,7 @@
 
     <properties>
 <!--        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>-->
-        <spring-boot.version>${parent.version}</spring-boot.version>
+        <spring-boot.version>${project.parent.version}</spring-boot.version>
 
         <xstream.version>1.4.16</xstream.version>
 <!--        <swagger.version>2.9.2</swagger.version>-->

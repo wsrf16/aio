@@ -48,10 +48,11 @@ spring:
     kafka:
       enabled: true
       es-index: @project.deploy.finalName@-@profiles.active@-log
-      topic: basic_application_log
       bootstrap-servers: 10.4.8.31:9092
       template:
-        defaultTopic: basic_application_log
+        defaultTopic: basic-application-log
+      binding-list:
+        - topic: application-log
       producer:
 #        bootstrap-servers: 172.28.3.165:9092,172.28.3.166:9092,172.28.3.167:9092
         bootstrap-servers: 10.4.8.31:9092

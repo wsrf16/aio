@@ -27,16 +27,18 @@ public class ConsolePrinter implements Printer {
 
     private String emptyLines = String.join(Constant.EMPTY, Stream.of(Constant.LINE_SEPARATOR).limit(EMPTY_LINES).collect(Collectors.toList()));
 
-    protected ConsolePrinter() throws Exception {
-        throw new Exception("This is a invalid construction method.");
-    }
+//    private ConsolePrinter() throws Exception {
+//        throw new Exception("This is a invalid construction method.");
+//    }
 
-    String name;
-    String prefix;
+    private String name;
+    private String prefix;
+    private ConsoleLogProperties properties;
 
-    private ConsolePrinter(String name, String prefix) {
+    private ConsolePrinter(String name, String prefix, ConsoleLogProperties properties) {
         this.name = name;
         this.prefix = prefix;
+        this.properties = properties;
     }
 
     private static Map<String, ConsolePrinter> instanceMaps = new HashMap<>();
@@ -48,13 +50,13 @@ public class ConsolePrinter implements Printer {
      * @param logFilePrefix
      * @return 返回日志格式：[ROOT_LOGFOLDER]\[logName]\[logFilePrefix][SEPARATOR_CHAR][OCCUPY_MAX][SEPARATOR_CHAR][TIMEFORMAT][LOG_EXTENSION]
      */
-    public static synchronized ConsolePrinter instance(String logName, String logFilePrefix) {
+    public static synchronized ConsolePrinter instance(String logName, String logFilePrefix, ConsoleLogProperties consoleLogProperties) {
         String section = String.join(Constant.EMPTY, logName, SECTION_SEPARATOR, logFilePrefix);
         {
             if (instanceMaps.keySet().contains(section))
                 return instanceMaps.get(section);
             else {
-                ConsolePrinter _loc = new ConsolePrinter(logName, logFilePrefix);
+                ConsolePrinter _loc = new ConsolePrinter(logName, logFilePrefix, consoleLogProperties);
                 instanceMaps.put(section, _loc);
                 return _loc;
             }
@@ -62,8 +64,7 @@ public class ConsolePrinter implements Printer {
     }
 
 
-//    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
-
+    //    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
     protected String nowTime() {
         String dateTime = DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_NORMAL_LONGEST, new Date());
 //        String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());
@@ -96,46 +97,47 @@ public class ConsolePrinter implements Printer {
      */
     @Override
     public void println(String line, LevelEnum level) {
-        String _level;
-        switch (level)
-        {
-            case VERBOSE: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+        if (properties.getEnabled()) {
+            String _level;
+            switch (level) {
+                case VERBOSE: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                }
+                break;
+                case TRACE: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                }
+                break;
+                case DEBUG: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
+                }
+                break;
+                case INFORMATION: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
+                }
+                break;
+                case WARNING: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED);
+                }
+                break;
+                case ERROR: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
+                }
+                break;
+                case FATAL: {
+                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
+                }
+                break;
+                default: {
+                    _level = null;
+                    Global.unsupportedOperationException(name + ": unknown level");
+                }
+                break;
             }
-            break;
-            case TRACE: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
-            }
-            break;
-            case DEBUG: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
-            }
-            break;
-            case INFORMATION: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
-            }
-            break;
-            case WARNING: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED);
-            }
-            break;
-            case ERROR: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
-            }
-            break;
-            case FATAL: {
-                _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
-            }
-            break;
-            default:{
-                _level = null;
-                Global.unsupportedOperationException(name + ": unknown level");
-            }
-            break;
+            String output = MessageFormat.format("{1} {2}{0}{3}", LINE_SEPARATOR, prefix(), _level, line);
+            System.out.println(output);
         }
-        String output = MessageFormat.format("{1} {2}{0}{3}", LINE_SEPARATOR, prefix(), _level, line);
-        System.out.println(output);
-//        System.out.print(emptyLines);
+
     }
 
     /**

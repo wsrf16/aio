@@ -54,18 +54,15 @@ public class RestTemplater {
     }
 
     public final static class Build {
-        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port, String username, String password) {
+        public final static RestTemplate setProxyRestTemplate(RestTemplate restTemplate, String host, int port, String username, String password) {
             HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
 
-            RestTemplate restTemplate = restTemplateBuilder.build();
             restTemplate.setRequestFactory(factory);
             return restTemplate;
         }
 
-        public final static RestTemplate buildProxyRestTemplate(RestTemplateBuilder restTemplateBuilder, String host, int port) {
+        public final static RestTemplate setProxyRestTemplate(RestTemplate restTemplate, String host, int port) {
             SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
-
-            RestTemplate restTemplate = restTemplateBuilder.build();
             restTemplate.setRequestFactory(factory);
             return restTemplate;
         }
@@ -76,16 +73,12 @@ public class RestTemplater {
 //            return new RestTemplate(factory);
 //        }
 
-        public final static RestTemplate buildSkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder, ClientHttpRequestFactory factory){
-            RestTemplate restTemplate = restTemplateBuilder.build();
+        public final static RestTemplate setSkipSSLRestTemplate(RestTemplate restTemplate){
+            SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory();
             restTemplate.setRequestFactory(factory);
             return restTemplate;
         }
 
-        public final static RestTemplate buildSkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder){
-            SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory();
-            return buildSkipSSLRestTemplate(restTemplateBuilder, factory);
-        }
     }
 
     public static class HttpRequestFactory {
@@ -132,7 +125,7 @@ public class RestTemplater {
     }
 
 
-    public static Map.Entry buildBasicAuthorizationHead(String username, int password) {
+    public static Map.Entry setBasicAuthorizationHead(String username, int password) {
         final String plainCreds = MessageFormat.format("{0}:{1}", username, password);
         final String base64Creds = JDKBase64Convert.encodeToString(plainCreds.getBytes());
 

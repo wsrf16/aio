@@ -80,7 +80,7 @@ spring:
 
   log:
     rabbitmq:
-      enabled: true
+      enabled: false
       host: mecs.com
 #      host: 192.168.133.133
 #      host: 10.124.163.95
@@ -99,15 +99,16 @@ spring:
         exchange: application-log-exchange
 
     kafka:
-      enabled: false
+      enabled: true
       esIndex: @project.deploy.finalName@-@profiles.active@-log
-      topic: application-log
       bootstrap-servers: 192.168.133.133:9092
       template:
         defaultTopic: application-log
 #      producer:
 #        bootstrap-servers: mecs.com:9092
 #        bootstrap-servers: 192.168.133.133:9092
+      binding-list:
+      - topic: application-log
       properties:
         linger-ms: 100
         max-block-ms: 3000
@@ -115,7 +116,10 @@ spring:
         transaction-timeout-ms: 1000
         compression-type: gzip
         acks: 1
-
+    console:
+      enabled: false
+    slf4j:
+      enabled: false
 
 #eureka:
 #  instance:

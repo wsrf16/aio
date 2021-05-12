@@ -8,7 +8,7 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogError {
     void error(String message);
 
-    default void error(String message, Object... arguments) {
+    default void error(String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         error(message);
@@ -20,7 +20,7 @@ public interface LogError {
 
     void error(String summary, String message);
 
-    default void error(String summary, String message, Object... arguments) {
+    default void error(String summary, String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         error(summary, message);
@@ -38,7 +38,7 @@ public interface LogError {
         error(message);
     }
 
-    default void e(String message, Object... arguments) {
+    default void e(String message, Object[] arguments) {
         error(message, arguments);
     }
 
@@ -54,7 +54,7 @@ public interface LogError {
         error(summary, message);
     }
 
-    default void e(String summary, String message, Object... arguments) {
+    default void e(String summary, String message, Object[] arguments) {
         error(summary, message, arguments);
     }
 

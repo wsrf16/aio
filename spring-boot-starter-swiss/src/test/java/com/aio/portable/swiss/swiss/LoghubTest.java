@@ -30,7 +30,7 @@ public class LoghubTest {
 //
 //        {
 ////            LogHub loggerSet = LogHub.build(ConsoleLog.build(), FileLog.build());
-////            loggerSet = LogHub.build(Slf4JLog.build());
+////            loggerSet = LogHub.build(Slf4jLog.build());
 ////            loggerSet.d("this is loghub.");
 //        }
 ////            {
@@ -38,7 +38,7 @@ public class LoghubTest {
 ////                log4j2Logger.i("this is log4j2logger.");
 ////            }
 //        {
-////            Slf4JLog slf4jLogger = Slf4JLog.build();
+////            Slf4jLog slf4jLogger = Slf4jLog.build();
 ////            slf4jLogger.i("this is logback.");
 //        }
 //        {

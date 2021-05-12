@@ -2,7 +2,20 @@ package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
+import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
+import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLog;
+import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLog;
+import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LogHubUtils;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
+
+import java.util.ArrayList;
 
 //@FunctionalInterface
 public abstract class LogHubFactory {
@@ -57,7 +70,23 @@ public abstract class LogHubFactory {
 
     LevelEnum level = LevelEnum.VERBOSE;
 
-    public abstract LogHub build(String className);
+    public LogHub build(String className) {
+        final ArrayList<LogSingle> list = new ArrayList<>();
+        if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
+            list.add(new RabbitMQLog(className));
+        }
+        if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
+            list.add(new KafkaLog(className));
+        }
+        if (ConsoleLogProperties.singletonInstance().getEnabled())
+            list.add(new ConsoleLog(className));
+        if (Slf4jLogProperties.singletonInstance().getEnabled())
+            list.add(new Slf4jLog(className));
+
+        LogHub logger = LogHub.build(list)
+                .setEnabledLevel(LevelEnum.INFORMATION);
+        return logger;
+    }
 
     public LogHub build(Class clazz) {
         String className = clazz.getTypeName();
@@ -160,7 +189,7 @@ public abstract class LogHubFactory {
 //    }
 //
 //    public LogHub _build(String className) {
-//        LogHub logger = LogHub.build(new Slf4JLog(className));
+//        LogHub logger = LogHub.build(new Slf4jLog(className));
 //        logger.setEnable(this.isEnable());
 //        logger.setBaseLevel(this.getLevel());
 //        return logger;

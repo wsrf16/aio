@@ -8,7 +8,7 @@ import com.aio.portable.swiss.sugar.StringSugar;
 public interface LogWarning {
     void warn(String message);
 
-    default void warn(String message, Object... arguments) {
+    default void warn(String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         warn(message);
@@ -20,7 +20,7 @@ public interface LogWarning {
 
     void warn(String summary, String message);
 
-    default void warn(String summary, String message, Object... arguments) {
+    default void warn(String summary, String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
         warn(summary, message);
@@ -38,7 +38,7 @@ public interface LogWarning {
         warn(message);
     }
 
-    default void w(String message, Object... arguments) {
+    default void w(String message, Object[] arguments) {
         warn(message, arguments);
     }
 
@@ -54,7 +54,7 @@ public interface LogWarning {
         warn(summary, message);
     }
 
-    default void w(String summary, String message, Object... arguments) {
+    default void w(String summary, String message, Object[] arguments) {
         warn(summary, message, arguments);
     }
 

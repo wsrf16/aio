@@ -2,6 +2,7 @@ package com.aio.portable.swiss.suite.resource;
 
 
 import com.aio.portable.swiss.sugar.StringSugar;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -25,10 +26,8 @@ public abstract class ClassLoaderSugar {
      * @throws NoSuchMethodException
      */
     public final static Class<?> findLoadedClass(ClassLoader classLoader, String className) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-//        final String classLoaderClassName = "java.lang.ClassLoader";
-//        Class<?> cl = Class.forName(classLoaderClassName, false, Thread.currentThread().getContextClassLoader());
         Method method = classLoader.getClass().getDeclaredMethod("findLoadedClass", new Class[]{String.class});
-        method.setAccessible(true);
+        ReflectionUtils.makeAccessible(method);
 
         Class<?> clazz = (Class<?>) method.invoke(classLoader, className);
         return clazz;
@@ -46,11 +45,6 @@ public abstract class ClassLoaderSugar {
      * @throws NoSuchMethodException
      */
     public final static boolean hasLoaded(ClassLoader classLoader, String className) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
-//        final String classLoaderClassName = "java.lang.ClassLoader";
-//        Class<?> cl = Class.forName(classLoaderClassName, false, Thread.currentThread().getContextClassLoader());
-//        Method method = cl.getDeclaredMethod("findLoadedClass", new Class[]{String.class});
-//        method.setAccessible(true);
-
         boolean hasLoaded = findLoadedClass(classLoader, className) != null ? true : false;
         return hasLoaded;
     }
@@ -136,7 +130,7 @@ public abstract class ClassLoaderSugar {
      */
     public final static Class<?> loadedClass(URL url) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        String className = ResourceSugar.toQualifiedClassName(url.toString());
+        String className = ResourceSugar.toCompleteClassName(url.toString());
 //        className = StringSugar.removeStart(className, ".");
         Class<?> aClass = classLoader.loadClass(className);
         return aClass;

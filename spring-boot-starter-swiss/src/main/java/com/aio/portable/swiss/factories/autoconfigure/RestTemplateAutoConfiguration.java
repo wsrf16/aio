@@ -22,40 +22,41 @@ public class RestTemplateAutoConfiguration {
     @ConditionalOnMissingBean(RestTemplateProperties.class)
     @ConfigurationProperties("spring.rest")
     @ConditionalOnProperty("spring.rest.agent.port")
-    public RestTemplateProperties restTemplateConfig() {
+    public RestTemplateProperties restTemplateProperties() {
         return new RestTemplateProperties();
     }
 
     @Bean
-    @ConditionalOnBean({RestTemplateProperties.class, RestTemplateBuilder.class})
-//    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
+    @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class, })
+    public RestTemplate proxyRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
         boolean agent = restTemplateProperties.getAgent().isEnabled();
         String agentHost = restTemplateProperties.getAgent().getHost();
         int agentPort = restTemplateProperties.getAgent().getPort();
         RestTemplate restTemplate;
         if (agent)
-            restTemplate = RestTemplater.Build.buildProxyRestTemplate(restTemplateBuilder, agentHost, agentPort);
+            restTemplate = RestTemplater.Build.setProxyRestTemplate(restTemplateBuilder.build(), agentHost, agentPort);
         else
             restTemplate = restTemplateBuilder.build();
         return restTemplate;
     }
 
     @Bean
-//    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        RestTemplate restTemplate = RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder);
-        return restTemplate;
-    }
-
-
-    @Bean
     @ConditionalOnBean({RestTemplateBuilder.class})
-    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate officialRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+    @ConditionalOnMissingBean(RestTemplateProperties.class)
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         return restTemplate;
     }
+
+    @Bean
+    @ConditionalOnBean({RestTemplateBuilder.class})
+    public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+        RestTemplate restTemplate = RestTemplater.Build.setSkipSSLRestTemplate(restTemplateBuilder.build());
+        return restTemplate;
+    }
+
+
+
 
 
 }

@@ -6,7 +6,7 @@ import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLog;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -25,7 +25,7 @@ public abstract class HamletExceptionAdvice {
             log = new LogHubFactory(){
                 @Override
                 public LogHub build(String className) {
-                    return LogHub.build(new Slf4JLog(className));
+                    return LogHub.build(new Slf4jLog(className));
                 }
             }.build(getClass());
     }

@@ -102,7 +102,7 @@ public abstract class ResourceSugar {
      * @param path className/packageName eg. com/company/biz | com/company/biz/Book
      * @return com.company.biz | com.company.biz.Book
      */
-    public final static String path2QualifiedClassName(String path) {
+    public final static String path2CompleteClassName(String path) {
         path = StringSugar.removeEnd(path, ".class");
         String fullName = path.replace("/", ".");
         fullName = StringSugar.removeStart(fullName, ".");
@@ -138,11 +138,11 @@ public abstract class ResourceSugar {
 //    }
 
     /**
-     * toQualifiedClassName
+     * toCompleteClassName
      * @param resource jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
      * @return
      */
-    public final static String toQualifiedClassName(String resource) {
+    public final static String toCompleteClassName(String resource) {
         // jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
         // ->
         // /BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
@@ -150,9 +150,9 @@ public abstract class ResourceSugar {
         // -> com/aio/portable/park/config/BeanConfig.class
         String classFilePath = resourceRelative.contains("classes/") ? resourceRelative.split("classes/")[1] : resourceRelative;
         // -> com.aio.portable.park.config.BeanConfig
-        String qualifiedClassName = StringSugar.removeEnd(classFilePath, ".class").replace("/", ".");
-        qualifiedClassName = StringSugar.removeStart(qualifiedClassName, ".");
-        return qualifiedClassName;
+        String completeClassName = StringSugar.removeEnd(classFilePath, ".class").replace("/", ".");
+        completeClassName = StringSugar.removeStart(completeClassName, ".");
+        return completeClassName;
     }
 
     /**
@@ -210,10 +210,15 @@ public abstract class ResourceSugar {
          * @return
          * @throws IOException
          */
-        public final static boolean existResource(String resourceLocation) throws IOException {
-            List<URL> urlList = ResourceSugar.ByClassLoader.getResources(resourceLocation);
-            boolean exist = urlList != null && urlList.size() > 0;
-            return exist;
+        public final static boolean existResource(String resourceLocation) {
+            try {
+                List<URL> urlList = ByClassLoader.getResources(resourceLocation);
+                boolean exist = urlList != null && urlList.size() > 0;
+                return exist;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
 
         /**
@@ -235,7 +240,7 @@ public abstract class ResourceSugar {
          * @throws IOException
          */
         public final static List<URL> getResourcesByClass(final String className) throws IOException {
-            final String resourceRelationPath = ClassSugar.convertQualifiedName2ResourcePath(className);
+            final String resourceRelationPath = ClassSugar.convertCompleteName2ResourcePath(className);
             return getResources(resourceRelationPath);
         }
     }

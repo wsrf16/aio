@@ -7,6 +7,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -122,7 +123,7 @@ public abstract class JWTSugar {
         Class<JWTCreator.Builder> clazz = JWTCreator.Builder.class;
         try {
             Method method = clazz.getDeclaredMethod("addClaim", new Class[]{String.class, Object.class});
-            method.setAccessible(true);
+            ReflectionUtils.makeAccessible(method);
             Object invoke = method.invoke(builder, new Object[]{name, value});
             return builder;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

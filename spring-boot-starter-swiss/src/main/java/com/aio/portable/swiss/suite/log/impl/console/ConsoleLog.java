@@ -1,10 +1,7 @@
 package com.aio.portable.swiss.suite.log.impl.console;
 
-import com.aio.portable.swiss.suite.bean.CloneableSugar;
-import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.log.facade.Printer;
-import com.aio.portable.swiss.suite.log.support.LogNote;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 
 /**
  * Created by York on 2017/11/23.
@@ -36,9 +33,12 @@ public class ConsoleLog extends LogSingle {
         this(StackTraceSugar.Previous.getClassName());
     }
 
+    ConsoleLogProperties properties;
+
     @Override
     protected void initialPrinter() {
         String name = this.getName();
-        printer = ConsolePrinter.instance(name, "");
+        properties = ConsoleLogProperties.singletonInstance();
+        printer = ConsolePrinter.instance(name, "", properties);
     }
 }

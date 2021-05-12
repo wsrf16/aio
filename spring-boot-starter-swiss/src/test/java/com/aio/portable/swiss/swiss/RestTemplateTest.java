@@ -29,7 +29,7 @@ public class RestTemplateTest {
     public void foobar() {
         ResponseEntity<String> stringResponseEntity1 = RestTemplater.getJsonUTF8(restTemplate, "https://10.124.154.8/a/login", RestTemplater.Http.jsonHttpHead(), String.class);
         ResponseEntity<String> stringResponseEntity2 = RestTemplater.getJsonUTF8(skipSSLRestTemplate, "https://10.124.154.8/a/login", RestTemplater.Http.jsonHttpHead(), String.class);
-        ResponseEntity<String> stringResponseEntity3 = RestTemplater.getJsonUTF8(RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder), "https://10.124.154.8/a/login", RestTemplater.Http.jsonHttpHead(), String.class);
+        ResponseEntity<String> stringResponseEntity3 = RestTemplater.getJsonUTF8(RestTemplater.Build.setSkipSSLRestTemplate(restTemplate), "https://10.124.154.8/a/login", RestTemplater.Http.jsonHttpHead(), String.class);
 
     }
 

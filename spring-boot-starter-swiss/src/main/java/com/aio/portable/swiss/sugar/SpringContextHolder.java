@@ -185,6 +185,10 @@ public class SpringContextHolder implements ApplicationContextAware {
         applicationContext = null;
     }
 
+//    public final static void importApplicationContext(ApplicationContext applicationContext) {
+//        SpringContextHolder.applicationContext = applicationContext;
+//    }
+
     /**
      * restart
      */

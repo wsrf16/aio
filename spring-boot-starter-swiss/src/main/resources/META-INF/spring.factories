@@ -9,3 +9,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   
 org.springframework.context.ApplicationListener=\
   com.aio.portable.swiss.factories.context.LogHubApplicationListener
+

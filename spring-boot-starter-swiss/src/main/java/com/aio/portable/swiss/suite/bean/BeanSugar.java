@@ -85,17 +85,17 @@ public abstract class BeanSugar {
     public abstract static class Cloneable {
         private static ConcurrentMap<Class<?>, BeanCopier> beanCopiers = new ConcurrentHashMap<Class<?>, BeanCopier>();
 
-        public static Object clone(Object source) {
+        public static <T> T deepClone(T source) {
             try {
-                Object target = source.getClass().getConstructor().newInstance();
-                copy(source, target);
+                T target = (T)source.getClass().getConstructor().newInstance();
+                deepCopy(source, target);
                 return target;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        public static void copy(Object source, Object target) {
+        public static <S, T> void deepCopy(S source, T target) {
             BeanCopier copier = createCopier(source.getClass());
             copier.copy(source, target, new BeanConverter());
         }

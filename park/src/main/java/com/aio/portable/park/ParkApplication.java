@@ -18,7 +18,7 @@ import org.springframework.core.env.Environment;
 //        MybatisAutoConfiguration.class,
         KafkaAutoConfiguration.class,
         RabbitAutoConfiguration.class,
-}, scanBasePackages = "com.aio.portable")
+}, scanBasePackages = "com.aio.portable.park")
 //@ComponentScan(lazyInit = true)
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
 //@Prepare({PropertyBean.RABBITMQ_LOG_PROPERTIES, PropertyBean.KAFKA_LOG_PROPERTIES})

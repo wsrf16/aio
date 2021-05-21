@@ -1,9 +1,11 @@
 package com.aio.portable.swiss.suite.log.impl.es.kafka;
 
-import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.middleware.mq.kafka.KafkaBuilder;
+import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.text.MessageFormat;
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KafkaPrinter implements Printer {
+    private final static Log log = LogFactory.getLog(KafkaPrinter.class);
+
     String logName;
     KafkaLogProperties properties;
     KafkaTemplate<String, String> kafkaTemplate;
@@ -37,7 +41,7 @@ public class KafkaPrinter implements Printer {
             else {
                 KafkaPrinter _loc = new KafkaPrinter(logName, properties);
                 instanceMaps.put(section, _loc);
-                System.out.println(MessageFormat.format("Initial Kafka Printer Host: {0}, Name: {1}", properties.getBootstrapServers(), logName));
+                log.debug(MessageFormat.format("Initial Kafka Printer Host: {0}, Name: {1}", properties.getBootstrapServers(), logName));
                 return _loc;
             }
         }
@@ -47,7 +51,12 @@ public class KafkaPrinter implements Printer {
     public void println(String line, LevelEnum level) {
         if (properties.getEnabled()) {
             properties.getBindingList().forEach(c -> {
-                kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), line);
+                try {
+                    kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), line);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("kafka println error", e);
+                }
             });
         }
     }

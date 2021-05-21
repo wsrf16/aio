@@ -80,7 +80,7 @@ spring:
 
   log:
     rabbitmq:
-      enabled: false
+      enabled: true
       host: mecs.com
 #      host: 192.168.133.133
 #      host: 10.124.163.95
@@ -99,7 +99,7 @@ spring:
         exchange: application-log-exchange
 
     kafka:
-      enabled: true
+      enabled: false
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       bootstrap-servers: 192.168.133.133:9092
       template:

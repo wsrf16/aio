@@ -5,77 +5,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by York on 2017/11/22.
  */
-public class LogNote {
-    @JsonProperty("level")
-    public LevelEnum level;
-    @JsonProperty("name")
-    public String name;
-    @JsonProperty("summary")
-    public String summary;
-    @JsonProperty("message")
-    public String message;
-    @JsonProperty("data")
-    public Object data;
-    @JsonProperty("exception")
-    public LogThrowable exception;
-    @JsonProperty("outputType")
-    public String outputType;
+public interface LogNote {
+    LevelEnum getLevel();
 
+    void setLevel(LevelEnum level);
 
-    public LevelEnum getLevel() {
-        return level;
-    }
+    String getName();
 
-    public void setLevel(LevelEnum level) {
-        this.level = level;
-    }
+    void setName(String name);
 
-    public String getName() {
-        return name;
-    }
+    String getSummary();
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    void setSummary(String summary);
 
-    public String getSummary() {
-        return summary;
-    }
+    String getMessage();
 
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
+    void setMessage(String message);
 
-    public String getMessage() {
-        return message;
-    }
+    Object getData();
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    void setData(Object data);
 
-    public Object getData() {
-        return data;
-    }
+    LogThrowable getException();
 
-    public void setData(Object data) {
-        this.data = data;
-    }
+    void setException(LogThrowable exception);
 
-    public LogThrowable getException() {
-        return exception;
-    }
+    String getOutputType();
 
-    public void setException(LogThrowable exception) {
-        this.exception = exception;
-    }
-
-    public String getOutputType() {
-        return outputType;
-    }
-
-    public void setOutputType(String outputType) {
-        this.outputType = outputType;
-    }
+    void setOutputType(String outputType);
 }
 

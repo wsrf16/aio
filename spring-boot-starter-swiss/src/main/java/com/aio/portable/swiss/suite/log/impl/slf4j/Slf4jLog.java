@@ -9,7 +9,20 @@ import com.aio.portable.swiss.suite.log.support.LevelEnum;
 public class Slf4jLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 //    private org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(this.getClass());
+    Slf4jLogProperties properties;
     private org.slf4j.Logger logger;
+
+    public Slf4jLogProperties getProperties() {
+        return properties;
+    }
+
+    public Slf4jLog setProperties(Slf4jLogProperties properties) {
+        this.properties = properties;
+        return this;
+    }
+
+
+
 
     public Slf4jLog(String name) {
         super(name);

@@ -1,19 +1,19 @@
 package com.aio.portable.swiss.suite.storage.db.freedatasource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 public abstract class FreeDataSourceAspect {
-    public final static Logger logger = LoggerFactory.getLogger(FreeDataSourceAspect.class);
+    private final static Log logger = LogFactory.getLog(FreeDataSourceAspect.class);
     public final static String POINTCUT = "pointcut()";
 
     @Pointcut("@annotation(com.aio.portable.swiss.suite.storage.db.freedatasource.TargetDataSource)" +

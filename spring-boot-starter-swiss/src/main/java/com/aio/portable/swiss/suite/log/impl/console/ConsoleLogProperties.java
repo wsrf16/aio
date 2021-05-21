@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.impl.console;
 
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 public class ConsoleLogProperties implements InitializingBean {
     public final static String PREFIX = "spring.log.console";
 
-    private final static Logger logger = LoggerFactory.getLogger(ConsoleLogProperties.class);
+    private final static Log logger = LogFactory.getLog(ConsoleLogProperties.class);
 
     private Boolean enabled = true;
 

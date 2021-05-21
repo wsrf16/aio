@@ -1,8 +1,10 @@
 package com.aio.portable.swiss.suite.log.facade;
 
-import com.aio.portable.swiss.global.ColorEnum;
+import com.aio.portable.swiss.factories.context.LogHubApplicationListener;
 import com.aio.portable.swiss.sugar.DynamicProxy;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
@@ -16,6 +18,9 @@ import java.util.*;
  * Created by York on 2017/11/23.
  */
 public class LogHub extends LogBundle implements Logger {
+    private static final Log log = LogFactory.getLog(LogHubApplicationListener.class);
+
+
     private final static float DEFAULT_SAMPLER_RATE = 1f;
 
     private boolean enabled = true;
@@ -39,11 +44,12 @@ public class LogHub extends LogBundle implements Logger {
         try {
             throw new IllegalArgumentException(MessageFormat.format("{0} is Empty.Please register and try again!", LogHub.class.getTypeName()));
         } catch (IllegalArgumentException e) {
-            System.out.println(MessageFormat.format("{0}{1}{2}", ColorEnum.begin(ColorEnum.FG_YELLOW), e.getMessage(), ColorEnum.end()));
+//            System.out.println(MessageFormat.format("{0}{1}{2}", ColorEnum.begin(ColorEnum.FG_YELLOW), e.getMessage(), ColorEnum.end()));
+            log.warn(e.getMessage(), e);
         }
     }
 
-    private void check() {
+    private void validate() {
         boolean b = getLogList() != null && getLogList().size() > 0;
         if (!b)
             throwEmptyList();
@@ -136,7 +142,7 @@ public class LogHub extends LogBundle implements Logger {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                     final LogHub hub = logHub;
-                    hub.check();
+                    hub.validate();
                     Object invoke = null;
 
                     switch (_method.getName()) {
@@ -200,7 +206,7 @@ public class LogHub extends LogBundle implements Logger {
                         @Override
                         public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                             LogHub hub = logHub;
-                            hub.check();
+                            hub.validate();
                             Object invoke = null;
                             switch (_method.getName().toLowerCase()) {
                                 case "verbose":

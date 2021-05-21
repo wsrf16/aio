@@ -2,6 +2,8 @@ package com.aio.portable.swiss.suite.resource.classloader;
 
 import com.aio.portable.swiss.suite.io.IOSugar;
 import com.aio.portable.swiss.suite.io.NIOSugar;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 class ByteCodeClassLoader extends ClassLoader {
-    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+    private final static Log logger = LogFactory.getLog(ByteCodeClassLoader.class);
 
     private native Class<?> findBootstrapClass(String name);
 

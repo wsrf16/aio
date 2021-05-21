@@ -1,24 +1,22 @@
 package com.aio.portable.swiss.suite.log.impl.log4j;
 
-import com.aio.portable.swiss.global.Global;
-import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.log4j.Logger;
 
-public class Log4JLog extends LogSingle {
+public class Log4jLog extends LogSingle {
     private Logger logger = Logger.getLogger(this.getClass());
 
-
-    public Log4JLog(String name) {
+    public Log4jLog(String name) {
         super(name);
     }
 
-    public Log4JLog(Class<?> clazz) {
+    public Log4jLog(Class<?> clazz) {
         this(clazz.toString());
     }
 
-    public Log4JLog() {
+    public Log4jLog() {
         this(StackTraceSugar.Previous.getClassName());
     }
 
@@ -46,7 +44,9 @@ public class Log4JLog extends LogSingle {
             switch (level)
             {
                 case VERBOSE: {
-                    Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
+//                    Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
+                    String msg = name + ": " + LevelEnum.VERBOSE.getName();
+                    logger.warn(msg);
                 }
                 break;
                 case TRACE: {
@@ -70,11 +70,15 @@ public class Log4JLog extends LogSingle {
                 }
                 break;
                 case FATAL: {
-                    Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
+//                    Global.unsupportedOperationException(name + ": " + LevelEnum.FATAL.getName());
+                    String msg = name + ": " + LevelEnum.FATAL.getName();
+                    logger.warn(msg);
                 }
                 break;
                 default:{
-                    Global.unsupportedOperationException(name + ": known");
+//                    Global.unsupportedOperationException(name + ": known");
+                    String msg = name + ": known";
+                    logger.warn(msg);
                 }
                 break;
             }

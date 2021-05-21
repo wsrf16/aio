@@ -1,5 +1,7 @@
 package com.aio.portable.park.beanprocessor;
 
+import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -8,10 +10,11 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 
 import java.util.stream.Stream;
 
-@Configuration
+//@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean
@@ -50,6 +53,20 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
             String name = names[i];
 
             BeanDefinition definition = beanFactory.getBeanDefinition(name);
+            if (definition.getBeanClassName() == null)
+                System.out.println();
+            else if (definition.getBeanClassName().contains("Hub")) {
+                if ((definition instanceof ScannedGenericBeanDefinition && ((ScannedGenericBeanDefinition) definition).getMetadata().getSuperClassName().equals(LogHubFactory.class.getTypeName())))
+                {
+                    try {
+                        final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(Thread.currentThread().getContextClassLoader());
+                        clazz.newInstance();
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
 //            String shortClassName = ClassUtils.getShortName(definition.getBeanClassName());
 //            String beanName = Introspector.decapitalize(shortClassName);
 

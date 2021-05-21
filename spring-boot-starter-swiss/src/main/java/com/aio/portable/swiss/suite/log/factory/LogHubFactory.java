@@ -34,30 +34,6 @@ public abstract class LogHubFactory {
     public static boolean isInitial() {
         return isInitial;
     }
-    //    static {
-//        if (SpringContextHolder.hasLoad()) {
-//            try {
-//                SpringContextHolder.getApplicationContext().getBeansOfType(RabbitMQLogProperties.class);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                SpringContextHolder.getApplicationContext().getBeansOfType(KafkaLogProperties.class);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            try {
-//                throw new BeanInitializationException(SpringContextHolder.class.toString());
-//            } catch (Exception e) {
-//                if (e.getStackTrace()[0] != null){
-//                    System.err.println(MessageFormat.format("{0}: {1}", NullPointerException.class.getTypeName(), SpringContextHolder.class.getTypeName()));
-//                    System.err.println("\t\t" + e.getStackTrace()[0]);
-//                }
-////                e.printStackTrace();
-//            }
-//        }
-//    }
 
     protected LogHubFactory() {
         synchronized (LogHubFactory.class) {

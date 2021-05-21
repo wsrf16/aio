@@ -3,10 +3,11 @@ package com.aio.portable.swiss.suite.log.impl.es;
 import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.support.LogNote;
+import com.aio.portable.swiss.suite.log.support.StandardLogNote;
 
 import java.util.Date;
 
-public class ESLogNote extends LogNote {
+public class ESLogNote extends StandardLogNote {
     public String getEsIndex() {
         return esIndex;
     }
@@ -48,7 +49,7 @@ public class ESLogNote extends LogNote {
     public ESLogNote() {}
 
     public ESLogNote(LogNote logNote, String esIndex, String serverIp) {
-        BeanSugar.Cloneable.copy(logNote, this);
+        BeanSugar.Cloneable.deepCopy(logNote, this);
 
         setEsIndex(esIndex);
         setServerIp(serverIp);

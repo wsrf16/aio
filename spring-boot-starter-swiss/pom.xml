@@ -438,19 +438,21 @@
         </dependency>
 
         <!-- springboot2.0已经将oauth2.0与security整合在一起 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--            <version>2.4.5</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
+        <!-- deprecated -->
         <!-- https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2 -->
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-            <version>2.5.1.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security.oauth</groupId>-->
+<!--            <artifactId>spring-security-oauth2</artifactId>-->
+<!--            <version>2.5.1.RELEASE</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.security</groupId>-->
@@ -458,6 +460,37 @@
 <!--            <version>1.1.1.RELEASE</version>-->
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
+        
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <version>2.2.5.RELEASE</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-client</artifactId>-->
+<!--            <version>5.4.6</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
+<!--&lt;!&ndash;            <version>5.4.6</version>&ndash;&gt;-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
+
+
+
+
+
+
 
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.security</groupId>-->
@@ -465,12 +498,7 @@
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-oauth2</artifactId>-->
-<!--            <version>2.1.5.RELEASE</version>-->
-<!--        </dependency>-->
+
 
 
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->

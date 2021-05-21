@@ -1,14 +1,15 @@
 package com.aio.portable.swiss.factories.context;
 
+import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
-import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
@@ -19,11 +20,16 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.GenericApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 // GenericApplicationListener
 // SmartApplicationListener
@@ -34,7 +40,7 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
             ApplicationEnvironmentPreparedEvent.class, ApplicationPreparedEvent.class, ContextClosedEvent.class,
             ApplicationFailedEvent.class};
     private static final Class<?>[] SOURCE_TYPES = {SpringApplication.class, ApplicationContext.class};
-    private static final Log logger = LogFactory.getLog(LogHubApplicationListener.class);
+    private static final Log log = LogFactory.getLog(LogHubApplicationListener.class);
     private int order = DEFAULT_ORDER;
 
 //    @Override
@@ -90,6 +96,25 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
         ConfigurableListableBeanFactory beanFactory = event.getApplicationContext().getBeanFactory();
     }
 
+    private static void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
+        String[] names = beanFactory.getBeanDefinitionNames();
+
+        for (int i = 0; i < names.length; i++) {
+            BeanDefinition definition = beanFactory.getBeanDefinition(names[i]);
+            if (definition.getBeanClassName() != null && definition instanceof ScannedGenericBeanDefinition) {
+                if (((ScannedGenericBeanDefinition) definition).getMetadata().getSuperClassName().equals(LogHubFactory.class.getTypeName())) {
+                    try {
+                        final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(Thread.currentThread().getContextClassLoader());
+                        clazz.newInstance();
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                        log.warn("Failed to initial LogHubFactory singleton instance.", e);
+                    }
+                }
+            }
+        }
+    }
+
     private void onContextClosedEvent() {
     }
 
@@ -121,7 +146,8 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        logger.debug("LogHubApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
+//        application.
+        log.debug("LogHubApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
         initializeLogProperties(environment);
     }
 
@@ -136,7 +162,7 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
             ConsoleLogProperties.importSingleton(binder);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("initializeLogProperties error", e);
+            log.error("initializeLogProperties error", e);
 //            throw new IllegalStateException("initializeLogProperties error", e);
 
 //            logger.error("Cannot bind to SpringApplication", e);

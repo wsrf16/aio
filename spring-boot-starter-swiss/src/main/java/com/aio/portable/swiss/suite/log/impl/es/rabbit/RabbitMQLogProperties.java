@@ -1,17 +1,16 @@
 package com.aio.portable.swiss.suite.log.impl.es.rabbit;
 
+import com.aio.portable.swiss.design.clone.DeepCloneable;
 import com.aio.portable.swiss.factories.autoconfigure.properties.RabbitMQProperties;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
-public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean {
-    private final static Logger logger = LoggerFactory.getLogger(RabbitMQLogProperties.class);
+public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean, DeepCloneable {
+    private final static Log log = LogFactory.getLog(RabbitMQLogProperties.class);
     public final static String PREFIX = "spring.log.rabbitmq";
 
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
@@ -30,7 +29,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
         return instance;
     }
 
-    protected RabbitMQLogProperties() {
+    public RabbitMQLogProperties() {
     }
 
     @Override
@@ -40,7 +39,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
 
     public final static void importSingleton(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
-        logger.info("RabbitMQLogProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
+        log.info("RabbitMQLogProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
     }
 
     public final static void importSingleton(Binder binder) {

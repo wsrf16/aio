@@ -7,23 +7,24 @@ import com.aio.portable.swiss.suite.log.support.LogNote;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
 
+import java.util.function.Function;
+
 /**
  * Created by York on 2017/11/23.
  */
 public class KafkaLog extends LogSingle {
-//    public final static KafkaLog build() {
-//        String name = StackTraceSugar.Previous.getClassName();
-//        return build(name);
-//    }
-//
-//    public final static KafkaLog build(String name) {
-//        return new KafkaLog(name);
-//    }
-//
-//    public final static KafkaLog build(Class clazz) {
-//        String name = clazz.getTypeName();
-//        return build(name);
-//    }
+    KafkaLogProperties properties;
+
+    public KafkaLogProperties getProperties() {
+        return properties;
+    }
+
+    public KafkaLog setProperties(KafkaLogProperties properties) {
+        this.properties = properties;
+        return this;
+    }
+
+
 
     public KafkaLog(String name) {
         super(name);
@@ -37,7 +38,7 @@ public class KafkaLog extends LogSingle {
         this(StackTraceSugar.Previous.getClassName());
     }
 
-    KafkaLogProperties properties;
+
 
     @Override
     protected void initialPrinter() {
@@ -48,11 +49,12 @@ public class KafkaLog extends LogSingle {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
-        String ip = LogSingle.getLocalIp();
-        String esIndex = properties.getEsIndex();
-        ESLogNote esLogNote = new ESLogNote(logNote, esIndex, ip);
-        super.output(printer, esLogNote);
+        super.output(printer, convert(logNote));
     }
 
-
+    public ESLogNote convert(LogNote logNote) {
+        String ip = LogSingle.getLocalIp();
+        String esIndex = properties.getEsIndex();
+        return new ESLogNote(logNote, esIndex, ip);
+    }
 }

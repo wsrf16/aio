@@ -7,18 +7,24 @@ import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogNote;
 
+import java.util.function.Function;
+
 /**
  * Created by York on 2017/11/23.
  */
 public class RabbitMQLog extends LogSingle {
-//    public final static RabbitMQLog build(String name) {
-//        return new RabbitMQLog(name);
-//    }
-//
-//    public final static RabbitMQLog build(Class clazz) {
-//        String name = clazz.getTypeName();
-//        return build(name);
-//    }
+    private RabbitMQLogProperties properties;
+
+    public RabbitMQLogProperties getProperties() {
+        return properties;
+    }
+
+    public RabbitMQLog setProperties(RabbitMQLogProperties properties) {
+        this.properties = properties;
+        return this;
+    }
+
+
 
     public RabbitMQLog(String name) {
         super(name);
@@ -32,8 +38,6 @@ public class RabbitMQLog extends LogSingle {
         this(StackTraceSugar.Previous.getClassName());
     }
 
-    RabbitMQLogProperties properties;
-
     @Override
     protected void initialPrinter() {
         String name = this.getName();
@@ -43,9 +47,12 @@ public class RabbitMQLog extends LogSingle {
 
     @Override
     protected void output(Printer printer, LogNote logNote) {
+        super.output(printer, convert(logNote));
+    }
+
+    public ESLogNote convert(LogNote logNote) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
-        ESLogNote esLogNote = new ESLogNote(logNote, esIndex, ip);
-        super.output(printer, esLogNote);
+        return new ESLogNote(logNote, esIndex, ip);
     }
 }

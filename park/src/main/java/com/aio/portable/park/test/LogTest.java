@@ -11,12 +11,6 @@ import java.util.List;
 
 @Component
 public class LogTest {
-    LogHub dynamicLogger;
-
-    public LogTest(LogHubFactory logHubFactory) {
-        dynamicLogger = logHubFactory.build();
-    }
-
 //    LogHub logger = AppLogHubFactory.singletonInstance()
 //            .build("随便写哒")
 //            .setBaseLevel(LevelEnum.DEBUG);

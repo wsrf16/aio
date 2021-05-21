@@ -5,8 +5,8 @@ import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 public class LogHubProperties implements InitializingBean {
     public final static String PREFIX = "spring.log";
 
-    private final static Logger logger = LoggerFactory.getLogger(LogHubProperties.class);
+    private final static Log logger = LogFactory.getLog(LogHubProperties.class);
 
     private KafkaLogProperties kafka;
 

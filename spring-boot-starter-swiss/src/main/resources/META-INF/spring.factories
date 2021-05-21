@@ -5,8 +5,9 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.aio.portable.swiss.factories.autoconfigure.SwissElasticsearchAutoConfiguration,\
   com.aio.portable.swiss.factories.autoconfigure.MailToAutoConfiguration,\
   com.aio.portable.swiss.factories.autoconfigure.JWTAutoConfiguration,\
-  com.aio.portable.swiss.factories.autoconfigure.RestTemplateAutoConfiguration\
-  
+  com.aio.portable.swiss.factories.autoconfigure.RestTemplateAutoConfiguration,\
+  com.aio.portable.swiss.factories.context.LogHubBeanDefinitionRegistryPostProcessor
+
 org.springframework.context.ApplicationListener=\
   com.aio.portable.swiss.factories.context.LogHubApplicationListener
 

@@ -42,15 +42,16 @@ class AbstractWebLogAspect {
     protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarkerExcept";
 
     protected final static String POINTCUT_SPECIAL__ = "" +
-            "(@within(" + LOG_MARKER_TYPENAME + ")" + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")" +
-            " && (" + POINTCUT_MAPPING + "))" +
-            " || @annotation("+ LOG_MARKER_TYPENAME +")";
+            "(@within(" + LOG_MARKER_TYPENAME + ")"
+            + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")"
+            + " && (" + POINTCUT_MAPPING + "))"
+            + " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
 
     protected final static String POINTCUT_SPECIAL = "" +
-            "(@within(" + LOG_MARKER_TYPENAME + ")" + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")" +
-            ")" +
-            " || @annotation("+ LOG_MARKER_TYPENAME +")";
+            "(@within(" + LOG_MARKER_TYPENAME + ")"
+            + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + "))"
+            + " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
     public void doBefore(ProceedingJoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

@@ -38,18 +38,18 @@ public class ConsoleLogProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingleton(this);
+        importSingletonInstance(this);
     }
 
-    public final static void importSingleton(ConsoleLogProperties properties) {
+    public final static void importSingletonInstance(ConsoleLogProperties properties) {
         instance = properties;
-        logger.info("ConsoleLogProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
+        logger.info("ConsoleLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
-    public final static void importSingleton(Binder binder) {
+    public final static void importSingletonInstance(Binder binder) {
         final BindResult<ConsoleLogProperties> bindResult = binder.bind(ConsoleLogProperties.PREFIX, ConsoleLogProperties.class);
         if (bindResult.isBound()) {
-            ConsoleLogProperties.importSingleton(bindResult.get());
+            ConsoleLogProperties.importSingletonInstance(bindResult.get());
         } else {
 //            if (instance != null)
 //                instance.setEnabled(false);

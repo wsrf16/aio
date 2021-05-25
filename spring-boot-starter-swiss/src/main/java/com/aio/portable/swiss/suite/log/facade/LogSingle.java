@@ -8,15 +8,19 @@ import com.aio.portable.swiss.suite.log.support.LogNote;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
 import com.aio.portable.swiss.suite.log.support.StandardLogNote;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.Map;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class LogSingle implements LogAction {
+    private static final String IP_UNKNOWN = "UNKNOWN";
+    private static final Log log = LogFactory.getLog(LogSingle.class);
+
     private String name;
     public String getName() {
         return name;
@@ -53,21 +57,16 @@ public abstract class LogSingle implements LogAction {
         this.async = async;
     }
 
-    public final static ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
+//    public final static ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
+    public final static ExecutorService executor = new ThreadPoolExecutor(
+        LogSingleThreadExecutor.CORE_POOL_SIZE,
+        LogSingleThreadExecutor.MAX_POOL_SIZE,
+        0L,
+        TimeUnit.MILLISECONDS,
+        new LinkedBlockingQueue<Runnable>(LogSingleThreadExecutor.QUEUE_CAPACITY),
+        new LogSingleThreadFactory());
 
-//    protected Printer verbosePrinter;
-//    protected Printer infoPrinter;
-//    protected Printer tracePrinter;
-//    protected Printer debugPrinter;
-//    protected Printer warnPrinter;
-//    protected Printer errorPrinter;
-//    protected Printer fatalPrinter;
     protected Printer printer;
-
-//    LogSingle() {
-////        String name = StackTraceSugar.Previous.getClassName();
-//        this(StackTraceSugar.Previous.getClassName());
-//    }
 
     public LogSingle(String name) {
         setName(name);
@@ -75,24 +74,7 @@ public abstract class LogSingle implements LogAction {
         initialPrinter();
     }
 
-//    public LogSingle(Class clazz) {
-//        this(clazz.toString());
-//    }
-
-
     protected abstract void initialPrinter();
-
-//    public abstract LogSingle build(String name);
-
-//    public LogSingle build() {
-//        return build(name);
-//    }
-
-//    public LogSingle build(Class clazz) {
-//        String name = clazz.toString();
-//        return build(name);
-//    }
-
 
     protected void output(Printer printer, String text, LevelEnum level) {
         try {
@@ -104,18 +86,26 @@ public abstract class LogSingle implements LogAction {
                 printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level);
         } catch (Exception e) {
             e.printStackTrace();
+            log.warn("logSingle output failed.", e);
         }
     }
 
     protected void output(Printer printer, LogNote logNote) {
-        logNote.setOutputType(this.getClass().getSimpleName());
         String text = serializer.serialize(logNote);
         output(printer, text, logNote.getLevel());
     }
 
+    protected void output(Printer printer, Map logNote, LevelEnum level) {
+        String text = serializer.serialize(logNote);
+        output(printer, text, level);
+    }
+
+    public void wrap(LogNote note) {
+        note.setOutputType(this.getClass().getSimpleName());
+    }
+
     /**
      * verbose
-     *
      * @param message
      */
     @Override
@@ -126,12 +116,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.VERBOSE);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * verbose
-     *
      * @param message
      * @param arguments
      */
@@ -143,7 +133,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * verbose
-     *
      * @param summary
      * @param message
      */
@@ -156,12 +145,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * verbose
-     *
      * @param summary
      * @param message
      * @param arguments
@@ -174,7 +163,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * verbose
-     *
      * @param t
      * @param <T>
      */
@@ -186,12 +174,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.VERBOSE);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * verbose
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -205,12 +193,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * verbose
-     *
      * @param summary
      * @param message
      * @param t
@@ -226,12 +214,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * trace
-     *
      * @param message
      */
     @Override
@@ -242,12 +230,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.TRACE);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * trace
-     *
      * @param message
      * @param arguments
      */
@@ -259,7 +247,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * trace
-     *
      * @param summary
      * @param message
      */
@@ -272,12 +259,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * trace
-     *
      * @param summary
      * @param message
      * @param arguments
@@ -290,7 +277,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * trace
-     *
      * @param t
      * @param <T>
      */
@@ -302,12 +288,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.TRACE);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * trace
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -321,6 +307,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -341,12 +328,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * info
-     *
      * @param message
      */
     @Override
@@ -357,12 +344,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.INFORMATION);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * info
-     *
      * @param message
      * @param arguments
      */
@@ -374,7 +361,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * info
-     *
      * @param summary
      * @param message
      */
@@ -387,12 +373,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * info
-     *
      * @param summary
      * @param message
      * @param arguments
@@ -405,7 +391,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * info
-     *
      * @param t
      * @param <T>
      */
@@ -417,12 +402,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.INFORMATION);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * info
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -436,6 +421,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -456,12 +442,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * debug
-     *
      * @param message
      */
     @Override
@@ -472,12 +458,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.DEBUG);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * debug
-     *
      * @param message
      * @param arguments
      */
@@ -489,7 +475,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * debug
-     *
      * @param summary
      * @param message
      */
@@ -502,12 +487,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * debug
-     *
      * @param summary
      * @param message
      * @param arguments
@@ -520,7 +505,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * debug
-     *
      * @param t
      * @param <T>
      */
@@ -532,12 +516,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.DEBUG);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * debug
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -551,6 +535,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -571,12 +556,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
-     * warning
-     *
+     * warn
      * @param message
      */
     @Override
@@ -587,6 +572,7 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.WARNING);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -602,8 +588,7 @@ public abstract class LogSingle implements LogAction {
 //    }
 
     /**
-     * warning
-     *
+     * warn
      * @param e
      */
     @Override
@@ -614,12 +599,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.WARNING);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
-     * warning
-     *
+     * warn
      * @param summary
      * @param message
      */
@@ -632,6 +617,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -648,8 +634,7 @@ public abstract class LogSingle implements LogAction {
 //    }
 
     /**
-     * warning
-     *
+     * warn
      * @param summary
      * @param e
      */
@@ -662,12 +647,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
-     * warning
-     *
+     * warn
      * @param summary
      * @param message
      * @param e
@@ -682,12 +667,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
-     * warning
-     *
+     * warn
      * @param summary
      * @param t
      * @param <T>
@@ -701,12 +686,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
-     * warning
-     *
+     * warn
      * @param summary
      * @param t
      * @param e
@@ -722,12 +707,12 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * warn
-     *
      * @param summary
      * @param message
      * @param t
@@ -745,12 +730,12 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param message
      */
     @Override
@@ -761,6 +746,7 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.ERROR);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -777,7 +763,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * error
-     *
      * @param e
      */
     @Override
@@ -788,12 +773,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.ERROR);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param summary
      * @param message
      */
@@ -806,6 +791,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -823,7 +809,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * error
-     *
      * @param summary
      * @param e
      */
@@ -836,12 +821,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param summary
      * @param message
      * @param e
@@ -856,12 +841,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -875,12 +860,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param summary
      * @param t
      * @param e
@@ -896,12 +881,12 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * error
-     *
      * @param summary
      * @param message
      * @param t
@@ -919,12 +904,12 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param message
      */
     @Override
@@ -935,6 +920,7 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.FATAL);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -951,7 +937,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * fatal
-     *
      * @param e
      */
     @Override
@@ -962,12 +947,12 @@ public abstract class LogSingle implements LogAction {
             note.setLevel(LevelEnum.FATAL);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param summary
      * @param e
      */
@@ -980,12 +965,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param summary
      * @param message
      */
@@ -998,6 +983,7 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setMessage(message);
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -1015,7 +1001,6 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * fatal
-     *
      * @param summary
      * @param message
      * @param e
@@ -1030,12 +1015,12 @@ public abstract class LogSingle implements LogAction {
             note.setMessage(message);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param summary
      * @param t
      * @param <T>
@@ -1049,12 +1034,12 @@ public abstract class LogSingle implements LogAction {
             note.setSummary(summary);
             note.setData(t);
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param summary
      * @param message
      * @param t
@@ -1072,12 +1057,12 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
     /**
      * fatal
-     *
      * @param summary
      * @param t
      * @param e
@@ -1093,6 +1078,7 @@ public abstract class LogSingle implements LogAction {
             note.setData(t);
             note.setException(LogThrowable.build(e));
         }
+        wrap(note);
         output(printer, note);
     }
 
@@ -1105,12 +1091,7 @@ public abstract class LogSingle implements LogAction {
     }
 
     protected static String getLocalIp() {
-        String ip = Constant.EMPTY;
-        try {
-            ip = HostInfo.getLocalHostLANAddress().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        String ip = HostInfo.getLocalHostLANAddress().getHostAddress();
         return ip;
     }
 
@@ -1118,6 +1099,11 @@ public abstract class LogSingle implements LogAction {
 
 
 
+    static class LogSingleThreadExecutor {
+        private final static int QUEUE_CAPACITY = 1024 * 128;
+        private final static int CORE_POOL_SIZE = 4;
+        private final static int MAX_POOL_SIZE = 1024 * 128;
+    }
 
     static class LogSingleThreadFactory implements ThreadFactory {
         private static final AtomicInteger poolNumber = new AtomicInteger(1);
@@ -1134,6 +1120,7 @@ public abstract class LogSingle implements LogAction {
                     "-thread-";
         }
 
+        @Override
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r,
                     namePrefix + threadNumber.getAndIncrement(),

@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Prepare {
+@interface Prepare {
     @AliasFor(
             annotation = DependsOn.class,
             attribute = "value"

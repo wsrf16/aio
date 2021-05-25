@@ -24,21 +24,10 @@ import java.util.Map;
 public class SpringContextHolder implements ApplicationContextAware {
     private static ApplicationContext applicationContext = null;
 
-    private static Class<?> primarySource;
-
     private static String[] args;
-
-    public static Class<?> getPrimarySource() {
-        return primarySource;
-    }
 
     public static String[] getArgs() {
         return args;
-    }
-
-    public static void beReadyForStarting(Class<?> primarySource, String[] args) {
-        SpringContextHolder.primarySource = primarySource;
-        SpringContextHolder.args = args;
     }
 
     public final static boolean hasLoad() {
@@ -185,14 +174,14 @@ public class SpringContextHolder implements ApplicationContextAware {
         applicationContext = null;
     }
 
-//    public final static void importApplicationContext(ApplicationContext applicationContext) {
-//        SpringContextHolder.applicationContext = applicationContext;
-//    }
+    public final static void importApplicationContext(ApplicationContext applicationContext) {
+        SpringContextHolder.applicationContext = applicationContext;
+    }
 
     /**
      * restart
      */
-    public final static void restart() {
+    public final static void restart(Class<?> primarySource, String[] args) {
         SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
         SpringApplication.run(primarySource, args);
     }

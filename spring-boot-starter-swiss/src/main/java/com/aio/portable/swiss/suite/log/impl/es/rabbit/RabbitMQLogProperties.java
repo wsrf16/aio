@@ -34,18 +34,18 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingleton(this);
+        importSingletonInstance(this);
     }
 
-    public final static void importSingleton(RabbitMQLogProperties rabbitMQLogProperties) {
+    public final static void importSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
-        log.info("RabbitMQLogProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
+        log.info("RabbitMQLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
-    public final static void importSingleton(Binder binder) {
+    public final static void importSingletonInstance(Binder binder) {
         final BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
         if (bindResult.isBound()) {
-            RabbitMQLogProperties.importSingleton(bindResult.get());
+            RabbitMQLogProperties.importSingletonInstance(bindResult.get());
         } else {
             if (RabbitMQLogProperties.singletonInstance() != null)
                 RabbitMQLogProperties.singletonInstance().setEnabled(false);

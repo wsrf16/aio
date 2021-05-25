@@ -6,12 +6,23 @@ import com.aio.portable.park.config.ApplicationConfig;
 import com.aio.portable.park.test.BeanOrder;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.ResourceTest;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
+import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
+import com.aio.portable.swiss.suite.log.support.StandardLogNote;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.util.UrlPathHelper;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.Map;
 
 @Configuration
 public class AutoRunner implements ApplicationRunner {
@@ -45,8 +56,36 @@ public class AutoRunner implements ApplicationRunner {
     public void run(ApplicationArguments applicationArguments) {
 //        com.auth0.jwt.algorithms.Algorithm
 //        log.getLogList().get(1)
+        cert(11111111);
 
+//        new UrlPathHelper().getLookupPathForRequest(null)
         new BeanOrder(new UserInfoEntity());
+        final StandardLogNote esLogNote = new ESLogNote();
+        esLogNote.setName("aaa");
+
+
+        final Field field = BeanSugar.Fields.getDeclaredFieldIncludeParents(StandardLogNote.class).get(1);
+        final JsonProperty annotation = field.getAnnotation(JsonProperty.class);
+
+        try {
+            InvocationHandler h = Proxy.getInvocationHandler(annotation);
+            // 获取 AnnotationInvocationHandler 的 memberValues 字段
+            Field hField = h.getClass().getDeclaredField("memberValues");
+            // 因为这个字段事 private final 修饰，所以要打开权限
+            hField.setAccessible(true);
+            // 获取 memberValues
+            Map memberValues = (Map) hField.get(h);
+            // 修改 value 属性值
+            memberValues.put("value", "nnnname");
+            System.out.println(JacksonSugar.obj2ShortJson(esLogNote));
+
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
         myDatabaseTest.blah();
 
 
@@ -60,7 +99,6 @@ public class AutoRunner implements ApplicationRunner {
             e.printStackTrace();
         }
     }
-
 
 
 

@@ -41,18 +41,18 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingleton(this);
+        importSingletonInstance(this);
     }
 
-    public final static void importSingleton(KafkaLogProperties kafkaLogProperties) {
+    public final static void importSingletonInstance(KafkaLogProperties kafkaLogProperties) {
         instance = kafkaLogProperties;
-        log.info("KafkaLogProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
+        log.info("KafkaLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
-    public final static void importSingleton(Binder binder) {
+    public final static void importSingletonInstance(Binder binder) {
         final BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
         if (bindResult.isBound()) {
-            KafkaLogProperties.importSingleton(bindResult.get());
+            KafkaLogProperties.importSingletonInstance(bindResult.get());
         } else {
             if (instance != null)
                 instance.setEnabled(false);

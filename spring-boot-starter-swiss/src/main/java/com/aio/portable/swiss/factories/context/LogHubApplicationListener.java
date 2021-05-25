@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.factories.context;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.SpringContextHolder;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
@@ -18,18 +18,15 @@ import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.GenericApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 // GenericApplicationListener
 // SmartApplicationListener
@@ -93,7 +90,8 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
     }
 
     private void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
-        ConfigurableListableBeanFactory beanFactory = event.getApplicationContext().getBeanFactory();
+        if (event.getApplicationContext().getClass().equals(AnnotationConfigServletWebServerApplicationContext.class) && !SpringContextHolder.hasLoad())
+            SpringContextHolder.importApplicationContext(event.getApplicationContext());
     }
 
     private static void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
@@ -155,11 +153,11 @@ public class LogHubApplicationListener implements EnvironmentPostProcessor, Gene
         final Binder binder = Binder.get(environment);
         try {
             if (LogHubUtils.RabbitMQ.existDependency())
-                RabbitMQLogProperties.importSingleton(binder);
+                RabbitMQLogProperties.importSingletonInstance(binder);
             if (LogHubUtils.Kafka.existDependency())
-                KafkaLogProperties.importSingleton(binder);
-            Slf4jLogProperties.importSingleton(binder);
-            ConsoleLogProperties.importSingleton(binder);
+                KafkaLogProperties.importSingletonInstance(binder);
+            Slf4jLogProperties.importSingletonInstance(binder);
+            ConsoleLogProperties.importSingletonInstance(binder);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("initializeLogProperties error", e);

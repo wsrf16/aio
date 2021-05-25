@@ -86,18 +86,18 @@ public class LogHubProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingleton(this);
+        importSingletonInstance(this);
     }
 
-    public final static void importSingleton(LogHubProperties properties) {
+    public final static void importSingletonInstance(LogHubProperties properties) {
         instance = properties;
-        logger.info("LogHubProperties importSingleton: " + JacksonSugar.obj2ShortJson(instance));
+        logger.info("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
-    public final static void importSingleton(Binder binder) {
+    public final static void importSingletonInstance(Binder binder) {
         final BindResult<LogHubProperties> bindResult = binder.bind(LogHubProperties.PREFIX, LogHubProperties.class);
         if (bindResult.isBound()) {
-            LogHubProperties.importSingleton(bindResult.get());
+            LogHubProperties.importSingletonInstance(bindResult.get());
         } else {
             if (instance != null)
                 instance.setEnabled(false);

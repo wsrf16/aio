@@ -56,25 +56,36 @@ public class HostInfo {
     }
 
 
-    public static InetAddress getInetAddress() throws UnknownHostException {
-        return InetAddress.getLocalHost();
+    public static InetAddress getInetAddress() {
+        try {
+            return InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-    public static String getHostIp() throws UnknownHostException {
+    public static String getHostIp() {
         InetAddress inetAddress = getInetAddress();
         String ip = null == inetAddress ? null : inetAddress.getHostAddress();
         return ip;
     }
 
-    public static String getHostName() throws UnknownHostException {
+    public static String getHostName() {
         InetAddress inetAddress = getInetAddress();
         String name = null == inetAddress ? null : inetAddress.getHostName(); //get the host address
         return name;
     }
 
-    public static Map<String, InetAddress> getInetAddresses() throws SocketException {
+    public static Map<String, InetAddress> getInetAddresses() {
         Map<String, InetAddress> map = new HashMap<>();
-        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        Enumeration<NetworkInterface> networkInterfaces;
+        try {
+            networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         while (networkInterfaces.hasMoreElements()) {
             NetworkInterface networkInterface = networkInterfaces.nextElement();
             Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
@@ -102,18 +113,26 @@ public class HostInfo {
         return map;
     }
 
-    public static boolean ping(String address, int timeout) throws IOException {
-        InetAddress inetAddress = InetAddress.getByName(address);
-        boolean b = inetAddress.isReachable(timeout);
-        return b;
+    public static boolean ping(String address, int timeout) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(address);
+            return inetAddress.isReachable(timeout);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-    public static InetAddress parse(String hostName) throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getByName(hostName);
-        return inetAddress;
+    public static InetAddress parse(String hostName) {
+        try {
+            return InetAddress.getByName(hostName);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-    public static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+    public static InetAddress getLocalHostLANAddress() {
         try {
             InetAddress candidateAddress = null;
             // 遍历所有的网络接口
@@ -143,10 +162,7 @@ public class HostInfo {
             }
             return jdkSuppliedAddress;
         } catch (Exception e) {
-            UnknownHostException unknownHostException = new UnknownHostException(
-                    "Failed to determine LAN address: " + e);
-            unknownHostException.initCause(e);
-            throw unknownHostException;
+            throw new RuntimeException(e);
         }
     }
 }

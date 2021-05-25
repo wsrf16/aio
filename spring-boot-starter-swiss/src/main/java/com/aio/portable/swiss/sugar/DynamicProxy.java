@@ -1,14 +1,16 @@
 package com.aio.portable.swiss.sugar;
 
 import org.springframework.cglib.proxy.Enhancer;
+//import org.springframework.cglib.proxy.InvocationHandler;
 import org.springframework.cglib.proxy.MethodInterceptor;
+//import org.springframework.cglib.proxy.Proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class DynamicProxy<T> {
+public class DynamicProxy {
     public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor){
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);

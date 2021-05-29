@@ -27,17 +27,17 @@
     </parent>
 
     <properties>
-<!--        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <spring-boot.version>${project.parent.version}</spring-boot.version>
 
         <xstream.version>1.4.16</xstream.version>
-<!--        <swagger.version>2.9.2</swagger.version>-->
         <knife4j.version>3.0.2</knife4j.version>
         <cron-utils.version>7.0.6</cron-utils.version>
         <druid.version>1.1.18</druid.version>
         <mybatis.version>2.1.1</mybatis.version>
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
-<!--        <zookeeper.version>3.6.2</zookeeper.version>-->
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <java-jwt.version>3.15.0</java-jwt.version>
         <xxl-job-core.version>2.0.2</xxl-job-core.version>
@@ -45,6 +45,7 @@
         <netty-all.version>4.1.44.Final</netty-all.version>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
 
+<!--        <zookeeper.version>3.6.2</zookeeper.version>-->
 <!--        <commons-lang3.version>3.8.1</commons-lang3.version>-->
 <!--        <httpclient.version>4.5.9</httpclient.version>-->
 <!--        <commons-beanutils.version>1.9.3</commons-beanutils.version>-->
@@ -183,7 +184,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>2.2.6.RELEASE</version>
+<!--            <version>2.2.6.RELEASE</version>-->
             <optional>true</optional>
         </dependency>
 
@@ -560,6 +561,12 @@
 <!--            <artifactId>spring-boot-starter-validation</artifactId>-->
 <!--            <version>2.1.18.RELEASE</version>-->
 <!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 
@@ -575,13 +582,13 @@
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <skip>true</skip>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.8</version>
-                        </path>
-                    </annotationProcessorPaths>
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                            <version>1.18.8</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
 <!--                    <compilerArgument>-Xlint:unchecked</compilerArgument>-->
                 </configuration>
             </plugin>

@@ -9,11 +9,10 @@ import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLog;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLog;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLog;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
 
 import java.util.ArrayList;
 
@@ -30,10 +29,30 @@ public abstract class LogHubFactory {
 
     protected static LogHubFactory singleton;
     protected static boolean isInitial = false;
+    boolean enable = true;
+    LevelEnum level = LevelEnum.ALL;
 
     public static boolean isInitial() {
         return isInitial;
     }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public LevelEnum getLevel() {
+        return level;
+    }
+
+    public void setLevel(LevelEnum level) {
+        this.level = level;
+    }
+
+
 
     protected LogHubFactory() {
         synchronized (LogHubFactory.class) {
@@ -42,26 +61,8 @@ public abstract class LogHubFactory {
         }
     }
 
-    boolean enable = true;
-
-    LevelEnum level = LevelEnum.VERBOSE;
-
     public LogHub build(String className) {
-        final ArrayList<LogSingle> list = new ArrayList<>();
-        if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
-            list.add(new RabbitMQLog(className));
-        }
-        if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
-            list.add(new KafkaLog(className));
-        }
-        if (ConsoleLogProperties.singletonInstance().getEnabled())
-            list.add(new ConsoleLog(className));
-        if (Slf4jLogProperties.singletonInstance().getEnabled())
-            list.add(new Slf4jLog(className));
-
-        LogHub logger = LogHub.build(list)
-                .setEnabledLevel(LevelEnum.INFORMATION);
-        return logger;
+        return detectAndBuild(className);
     }
 
     public LogHub build(Class clazz) {
@@ -77,30 +78,6 @@ public abstract class LogHubFactory {
     public LogHub build(int previous) {
         String className = StackTraceSugar.Previous.getClassName(previous);
         return build(className);
-    }
-
-    public LogHub buildSync(String className) {
-        LogHub logHub = build(className);
-        logHub.setAsync(false);
-        return logHub;
-    }
-
-    public LogHub buildSync(Class clazz) {
-        LogHub logHub = build(clazz);
-        logHub.setAsync(false);
-        return logHub;
-    }
-
-    public LogHub buildSync() {
-        LogHub logHub = build();
-        logHub.setAsync(false);
-        return logHub;
-    }
-
-    public LogHub buildSync(int previous) {
-        LogHub logHub = build(previous);
-        logHub.setAsync(false);
-        return logHub;
     }
 
     public final static LogHub staticBuild(String className) {
@@ -122,54 +99,25 @@ public abstract class LogHubFactory {
         return singleton.build(className);
     }
 
-    public final static LogHub staticBuildSync(String className) {
-        LogHub logHub = singleton.build(className);
-        logHub.setAsync(false);
-        return logHub;
-    }
+    private static LogHub detectAndBuild(String className) {
+        final ArrayList<LogSingle> list = new ArrayList<>(127);
+        if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
+            list.add(new RabbitMQLog(className));
+        }
+        if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
+            list.add(new KafkaLog(className));
+        }
+        if (ConsoleLogProperties.singletonInstance().getEnabled())
+            list.add(new ConsoleLog(className));
+        if (Slf4JLogProperties.singletonInstance().getEnabled())
+            list.add(new Slf4JLog(className));
 
-    public final static LogHub staticBuildSync(Class clazz) {
-        LogHub logHub = singleton.build(clazz);
-        logHub.setAsync(false);
-        return logHub;
-    }
-
-    public final static LogHub staticBuildSync() {
-        LogHub logHub = singleton.build();
-        logHub.setAsync(false);
-        return logHub;
-    }
-
-    public final static LogHub staticBuildSync(int previous) {
-        LogHub logHub = singleton.build(previous);
-        logHub.setAsync(false);
-        return logHub;
+        LogHub logger = LogHub.build(list)
+                .setEnabledLevel(LevelEnum.INFORMATION);
+        return logger;
     }
 
 
-//    public <T extends LogSingle> LogHub build(List<Class<T>> clazzList, String className) {
-//        List<LogSingle> logSingleList = clazzList.stream().map(clazz -> {
-//            try {
-//                Constructor<T> constructor = clazz.getConstructor(new Class[]{String.class});
-//                LogSingle t = constructor.newInstance(className);
-//                return t;
-//            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-//                e.printStackTrace();
-//                throw new RuntimeException(e);
-//            }
-//        }).collect(Collectors.toList());
-//        LogHub logger = LogHub.build(logSingleList);
-//        logger.setEnable(this.isEnable());
-//        logger.setBaseLevel(this.getLevel());
-//        return logger;
-//    }
-//
-//    public LogHub _build(String className) {
-//        LogHub logger = LogHub.build(new Slf4jLog(className));
-//        logger.setEnable(this.isEnable());
-//        logger.setBaseLevel(this.getLevel());
-//        return logger;
-//    }
 
 
 
@@ -179,19 +127,5 @@ public abstract class LogHubFactory {
 
 
 
-    public boolean isEnable() {
-        return enable;
-    }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    public LevelEnum getLevel() {
-        return level;
-    }
-
-    public void setLevel(LevelEnum level) {
-        this.level = level;
-    }
 }

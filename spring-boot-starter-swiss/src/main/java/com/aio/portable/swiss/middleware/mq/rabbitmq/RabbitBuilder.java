@@ -3,6 +3,8 @@ package com.aio.portable.swiss.middleware.mq.rabbitmq;
 import com.aio.portable.swiss.factories.autoconfigure.properties.RabbitMQProperties;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
 import com.rabbitmq.client.Channel;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class RabbitBuilder {
+    private final static Log log = LogFactory.getLog(RabbitBuilder.class);
+
     private static class Exchange {
         public final static String DIRECT = "direct";
         public final static String TOPIC = "topic";
@@ -88,7 +92,7 @@ public abstract class RabbitBuilder {
             @Override
             public void onMessage(Message message, Channel channel) throws Exception {
                 byte[] body = message.getBody();
-                System.out.println("receive msg : " + new String(body, StandardCharsets.UTF_8));//////////
+                log.info("receive msg : " + new String(body, StandardCharsets.UTF_8));
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             }
         });
@@ -103,7 +107,7 @@ public abstract class RabbitBuilder {
             @Override
             public void onMessage(Message message, Channel channel) throws Exception {
                 byte[] body = message.getBody();
-                System.out.println("receive msg : " + new String(body, StandardCharsets.UTF_8));//////////
+                log.info("receive msg : " + new String(body, StandardCharsets.UTF_8));
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             }
         });
@@ -134,7 +138,9 @@ public abstract class RabbitBuilder {
             synchronized (RabbitBuilder.class) {
                 if (connectionFactory == null) {
 //                    validProperties();
-                    connectionFactory = new CachingConnectionFactory(properties.getHost(), properties.getPort());
+                    String host = properties.getHost();
+                    int port = properties.getPort();
+                    connectionFactory = new CachingConnectionFactory(host, port);
                     connectionFactory.setUsername(properties.getUsername());
                     connectionFactory.setPassword(properties.getPassword());
                     connectionFactory.setVirtualHost(properties.getVirtualHost());
@@ -156,7 +162,7 @@ public abstract class RabbitBuilder {
                     connectionFactory.setCacheMode(connection.getMode());
                     if (connection.getSize() != null)
                         connectionFactory.setConnectionCacheSize(connection.getSize());
-                    connectionFactory.setPublisherConfirms(properties.isPublisherConfirms());
+//                    connectionFactory.setPublisherConfirms(properties.isPublisherConfirms());
                     connectionFactory.setPublisherReturns(properties.isPublisherReturns());
                 }
             }

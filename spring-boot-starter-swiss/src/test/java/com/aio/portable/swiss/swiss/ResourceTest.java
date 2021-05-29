@@ -3,7 +3,7 @@ package com.aio.portable.swiss.swiss;
 import com.aio.portable.swiss.sandbox.Wood;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLog;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.suite.resource.PackageSugar;
 import com.aio.portable.swiss.suite.resource.ResourceSugar;
@@ -22,7 +22,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = LogHub.build(new Slf4jLog());
+    LogHub log = LogHub.build(new Slf4JLog());
 
     {
         try {

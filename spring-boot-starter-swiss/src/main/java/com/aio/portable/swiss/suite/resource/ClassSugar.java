@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.resource;
 
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
@@ -190,5 +191,64 @@ public abstract class ClassSugar {
         return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
     }
 
+    /**
+     * isSuper
+     * @param superClazz
+     * @param extendClazz
+     * @return
+     */
+    public static boolean isSuper(Class<?> superClazz, Class<?> extendClazz) {
+        return superClazz.isAssignableFrom(extendClazz);
+    }
+
+    /**
+     * isSuper
+     * @param superClazz
+     * @param extendClassName
+     * @return
+     */
+    public static boolean isSuper(Class<?> superClazz, String extendClassName) {
+        Class<?> extendClazz = null;
+        try {
+            extendClazz = Class.forName(extendClassName);
+            return superClazz.isAssignableFrom(extendClazz);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * isSuper
+     * @param superClassName
+     * @param extendClazz
+     * @return
+     */
+    public static boolean isSuper(String superClassName, Class<?> extendClazz) {
+        try {
+            Class<?> superClazz = Class.forName(superClassName);
+            return superClazz.isAssignableFrom(extendClazz);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * isSuper
+     * @param superClassName
+     * @param extendClassName
+     * @return
+     */
+    public static boolean isSuper(String superClassName, String extendClassName) {
+        try {
+            Class<?> superClazz = Class.forName(superClassName);
+            Class<?> extendClazz = Class.forName(extendClassName);
+            return superClazz.isAssignableFrom(extendClazz);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
 }

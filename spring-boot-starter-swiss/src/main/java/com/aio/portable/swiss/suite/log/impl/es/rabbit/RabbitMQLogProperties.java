@@ -47,8 +47,8 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
         if (bindResult.isBound()) {
             RabbitMQLogProperties.importSingletonInstance(bindResult.get());
         } else {
-            if (RabbitMQLogProperties.singletonInstance() != null)
-                RabbitMQLogProperties.singletonInstance().setEnabled(false);
+            if (instance != null)
+                instance.setEnabled(false);
         }
     }
 

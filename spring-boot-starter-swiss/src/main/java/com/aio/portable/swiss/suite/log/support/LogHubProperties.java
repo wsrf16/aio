@@ -4,7 +4,7 @@ import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4jLogProperties;
+import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -23,7 +23,7 @@ public class LogHubProperties implements InitializingBean {
 
     private ConsoleLogProperties console;
 
-    private Slf4jLogProperties slf4j;
+    private Slf4JLogProperties slf4j;
 
     private Boolean enabled = true;
 
@@ -51,11 +51,11 @@ public class LogHubProperties implements InitializingBean {
         this.console = console;
     }
 
-    public Slf4jLogProperties getSlf4j() {
+    public Slf4JLogProperties getSlf4j() {
         return slf4j;
     }
 
-    public void setSlf4j(Slf4jLogProperties slf4j) {
+    public void setSlf4j(Slf4JLogProperties slf4j) {
         this.slf4j = slf4j;
     }
 

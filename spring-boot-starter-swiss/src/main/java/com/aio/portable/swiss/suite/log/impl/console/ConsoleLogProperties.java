@@ -51,8 +51,8 @@ public class ConsoleLogProperties implements InitializingBean {
         if (bindResult.isBound()) {
             ConsoleLogProperties.importSingletonInstance(bindResult.get());
         } else {
-//            if (instance != null)
-//                instance.setEnabled(false);
+            if (instance != null)
+                instance.setEnabled(false);
         }
     }
 }

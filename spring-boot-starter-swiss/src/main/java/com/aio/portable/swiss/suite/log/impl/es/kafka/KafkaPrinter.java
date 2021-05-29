@@ -39,10 +39,10 @@ public class KafkaPrinter implements Printer {
             if (instanceMaps.keySet().contains(section))
                 return instanceMaps.get(section);
             else {
-                KafkaPrinter _loc = new KafkaPrinter(logName, properties);
-                instanceMaps.put(section, _loc);
+                KafkaPrinter printer = new KafkaPrinter(logName, properties);
+                instanceMaps.put(section, printer);
                 log.debug(MessageFormat.format("Initial Kafka Printer Host: {0}, Name: {1}", properties.getBootstrapServers(), logName));
-                return _loc;
+                return printer;
             }
         }
     }

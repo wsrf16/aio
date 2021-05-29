@@ -41,10 +41,10 @@ public class RabbitMQPrinter implements Printer {
             if (instanceMaps.keySet().contains(section))
                 return instanceMaps.get(section);
             else {
-                RabbitMQPrinter _loc = new RabbitMQPrinter(logName, properties);
-                instanceMaps.put(section, _loc);
+                RabbitMQPrinter printer = new RabbitMQPrinter(logName, properties);
+                instanceMaps.put(section, printer);
                 log.debug(MessageFormat.format("Initial RabbitMQ Printer Host: {0}, Name: {1}", properties.getHost(), logName));
-                return _loc;
+                return printer;
             }
         }
     }

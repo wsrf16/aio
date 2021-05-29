@@ -33,8 +33,7 @@ public class ConsoleLog extends LogSingle {
 
     @Override
     protected void initialPrinter() {
-        String name = this.getName();
         properties = ConsoleLogProperties.singletonInstance();
-        printer = ConsolePrinter.instance(name, "", properties);
+        printer = ConsolePrinter.instance(this.getName(), "", properties);
     }
 }

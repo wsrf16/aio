@@ -7,10 +7,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
-public class Slf4jLogProperties implements InitializingBean {
+public class Slf4JLogProperties implements InitializingBean {
     public final static String PREFIX = "spring.log.slf4j";
 
-    private final static Logger logger = LoggerFactory.getLogger(Slf4jLogProperties.class);
+    private final static Logger logger = LoggerFactory.getLogger(Slf4JLogProperties.class);
 
     private Boolean enabled = true;
 
@@ -27,13 +27,13 @@ public class Slf4jLogProperties implements InitializingBean {
 
 
 
-    private static Slf4jLogProperties instance = new Slf4jLogProperties();
+    private static Slf4JLogProperties instance = new Slf4JLogProperties();
 
-    public synchronized static Slf4jLogProperties singletonInstance() {
+    public synchronized static Slf4JLogProperties singletonInstance() {
         return instance;
     }
 
-    protected Slf4jLogProperties() {
+    protected Slf4JLogProperties() {
     }
 
     @Override
@@ -41,18 +41,18 @@ public class Slf4jLogProperties implements InitializingBean {
         importSingletonInstance(this);
     }
 
-    public final static void importSingletonInstance(Slf4jLogProperties properties) {
+    public final static void importSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
         logger.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
     public final static void importSingletonInstance(Binder binder) {
-        final BindResult<Slf4jLogProperties> bindResult = binder.bind(Slf4jLogProperties.PREFIX, Slf4jLogProperties.class);
+        final BindResult<Slf4JLogProperties> bindResult = binder.bind(Slf4JLogProperties.PREFIX, Slf4JLogProperties.class);
         if (bindResult.isBound()) {
-            Slf4jLogProperties.importSingletonInstance(bindResult.get());
+            Slf4JLogProperties.importSingletonInstance(bindResult.get());
         } else {
-//            if (instance != null)
-//                instance.setEnabled(false);
+            if (instance != null)
+                instance.setEnabled(true);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.facade;
 
-import com.aio.portable.swiss.factories.context.LogHubApplicationListener;
+import com.aio.portable.swiss.factories.context.SwissApplicationListener;
 import com.aio.portable.swiss.sugar.DynamicProxy;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
@@ -18,7 +18,7 @@ import java.util.*;
  * Created by York on 2017/11/23.
  */
 public class LogHub extends LogBundle implements Logger {
-    private static final Log log = LogFactory.getLog(LogHubApplicationListener.class);
+    private static final Log log = LogFactory.getLog(SwissApplicationListener.class);
 
 
     private final static float DEFAULT_SAMPLER_RATE = 1f;

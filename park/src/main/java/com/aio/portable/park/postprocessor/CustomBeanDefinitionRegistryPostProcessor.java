@@ -1,6 +1,5 @@
-package com.aio.portable.park.beanprocessor;
+package com.aio.portable.park.postprocessor;
 
-import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -12,9 +11,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 
-import java.util.stream.Stream;
-
-//@Configuration
+@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean

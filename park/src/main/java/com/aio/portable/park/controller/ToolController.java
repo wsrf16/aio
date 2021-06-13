@@ -1,6 +1,7 @@
 package com.aio.portable.park.controller;
 
 import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.park.config.root.ApplicationConfig;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 import io.swagger.annotations.ApiOperation;
@@ -32,14 +33,14 @@ public class ToolController {
     @Autowired
     private HttpServletRequest request;
 
-    @ApiOperation(value = "upload接口")
+//    @ApiOperation(value = "upload接口")
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public String upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
         String originalFilename = multipartFile.getOriginalFilename();
-        Path targetFile = Paths.get(targetDirectory.toString(), originalFilename);
+        Path targetFile = Paths.get(UPLOAD_DIRECTORY, originalFilename);
         multipartFile.transferTo(targetFile);
 
         String realIP = HostInfo.getClientIpAddress(request);
@@ -56,7 +57,7 @@ public class ToolController {
 
 
     @PostMapping(value = "/uploads", headers = UPLOADS_CONTENT_TYPE)
-    public List<String> uploads(@RequestParam(value = "files") MultipartFile[] multipartFiles) throws IOException {
+    public List<String> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
@@ -65,7 +66,7 @@ public class ToolController {
             String originalFilename = multipartFile.getOriginalFilename();
 
             try {
-                Path targetFile = Paths.get(targetDirectory.toString(), originalFilename);
+                Path targetFile = Paths.get(UPLOAD_DIRECTORY, originalFilename);
                 multipartFile.transferTo(targetFile);
 
                 String realIP = HostInfo.getClientIpAddress(request);

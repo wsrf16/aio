@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 public abstract class Looper {
     public boolean running = true;
 
-    public void runLoop(Supplier<Void> supplier, int atLeastInterval) {
+    public void runLoop(Supplier<Void> supplier, int intervalMillisecondAtLeast) {
         long prevTime;
         long nextTime;
 
@@ -13,7 +13,7 @@ public abstract class Looper {
             prevTime = System.currentTimeMillis();
             supplier.get();
             nextTime = System.currentTimeMillis();
-            if (nextTime - prevTime < atLeastInterval) {
+            if (nextTime - prevTime < intervalMillisecondAtLeast) {
                 try {
                     // prevent running on empty
                     Thread.sleep(50);

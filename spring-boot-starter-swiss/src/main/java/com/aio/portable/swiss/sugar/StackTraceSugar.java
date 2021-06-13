@@ -41,11 +41,11 @@ public abstract class StackTraceSugar {
         }
 
         private static StackTraceElement getStackTraceByException() {
-            return new Exception().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION];
+            return new RuntimeException().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION];
         }
 
         private static StackTraceElement getStackTraceByException(int previous) {
-            return new Exception().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION + previous];
+            return new RuntimeException().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION + previous];
         }
 
         public static String getFileName() {

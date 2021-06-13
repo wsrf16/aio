@@ -2,7 +2,6 @@ package com.aio.portable.swiss.factories.autoconfigure;
 
 import com.aio.portable.swiss.factories.autoconfigure.properties.RestTemplateProperties;
 import com.aio.portable.swiss.suite.net.protocol.http.RestTemplater;
-import org.apache.http.client.HttpClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -11,12 +10,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
 //@Configuration
-@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class, HttpClient.class})
+@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class})
 //@EnableConfigurationProperties(RestTemplateProperties.class)
+@ConditionalOnMissingBean({RestTemplate.class})
 @AutoConfigureAfter(org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration.class)
+//@ConditionalOnProperty(value = "spring.rest.agent.enabled", havingValue = "true", matchIfMissing = true)
 public class RestTemplateAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(RestTemplateProperties.class)
@@ -26,21 +28,20 @@ public class RestTemplateAutoConfiguration {
         return new RestTemplateProperties();
     }
 
-    @Bean
-    @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class, })
+    @Bean("restTemplate")
+    @Primary
+    @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class})
     public RestTemplate proxyRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
-        boolean agent = restTemplateProperties.getAgent().isEnabled();
-        String agentHost = restTemplateProperties.getAgent().getHost();
-        int agentPort = restTemplateProperties.getAgent().getPort();
-        RestTemplate restTemplate;
-        if (agent)
-            restTemplate = RestTemplater.Build.setProxyRestTemplate(restTemplateBuilder.build(), agentHost, agentPort);
-        else
-            restTemplate = restTemplateBuilder.build();
+        RestTemplateProperties.Agent agent = restTemplateProperties.getAgent();
+        boolean enabled = agent.isEnabled();
+        String agentHost = agent.getHost();
+        int agentPort = agent.getPort();
+        RestTemplate restTemplate = enabled ? RestTemplater.Build.buildProxyRestTemplate(restTemplateBuilder.build(), agentHost, agentPort) : restTemplateBuilder.build();
         return restTemplate;
     }
 
-    @Bean
+    @Bean("restTemplate")
+    @Primary
     @ConditionalOnBean({RestTemplateBuilder.class})
     @ConditionalOnMissingBean(RestTemplateProperties.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
@@ -48,13 +49,26 @@ public class RestTemplateAutoConfiguration {
         return restTemplate;
     }
 
-    @Bean
-    @ConditionalOnBean({RestTemplateBuilder.class})
-    public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        RestTemplate restTemplate = RestTemplater.Build.setSkipSSLRestTemplate(restTemplateBuilder.build());
+
+
+    @Bean("skipSSLRestTemplate")
+    @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class})
+    public RestTemplate proxySkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
+        RestTemplateProperties.Agent agent = restTemplateProperties.getAgent();
+        boolean enabled = agent.isEnabled();
+        String agentHost = agent.getHost();
+        int agentPort = agent.getPort();
+        RestTemplate restTemplate = enabled ? RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder.build(), agentHost, agentPort) : restTemplateBuilder.build();
+
         return restTemplate;
     }
 
+    @Bean("skipSSLRestTemplate")
+    @ConditionalOnBean({RestTemplateBuilder.class})
+    public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+        RestTemplate restTemplate = RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder.build());
+        return restTemplate;
+    }
 
 
 

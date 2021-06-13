@@ -2,6 +2,7 @@ package com.aio.portable.park.controller;
 
 import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.park.postprocessor.UserInfoEntity;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapperUtils;
 import com.aio.portable.swiss.hamlet.exception.BizException;
@@ -83,6 +84,19 @@ public class DemoController {
 
     @GetMapping("lock")
     public String lock() {
+        String identify;
+
+        identify = redisLock.tryLock("robot", 60000, 5000);
+        redisLock.releaseLock("robot");
+
+        identify = redisLock.tryLock("robot", 10000L, 10000L);
+        redisLock.releaseLock("robot");
+
+        return MessageFormat.format("lock : {0}", identify);
+    }
+
+    @GetMapping("multiple")
+    public String multiple(@ModelAttribute UserInfoEntity entity) {
         String identify;
 
         identify = redisLock.tryLock("robot", 60000, 5000);

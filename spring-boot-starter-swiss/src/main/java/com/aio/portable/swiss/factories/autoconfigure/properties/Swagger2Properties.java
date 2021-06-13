@@ -4,10 +4,7 @@ package com.aio.portable.swiss.factories.autoconfigure.properties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Response;
-import springfox.documentation.service.ResponseMessage;
-import springfox.documentation.service.VendorExtension;
+import springfox.documentation.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,8 @@ public class Swagger2Properties {
     private String packageName;
 
     private String host = "";
+
+    private List<RequestParameter> requestParameters;
 
     public boolean getEnabled() {
         return enabled;
@@ -101,7 +100,15 @@ public class Swagger2Properties {
         this.host = host;
     }
 
-//    private springfox.documentation.service.ApiInfo apiInfo() {
+    public List<RequestParameter> getRequestParameters() {
+        return requestParameters;
+    }
+
+    public void setRequestParameters(List<RequestParameter> requestParameters) {
+        this.requestParameters = requestParameters;
+    }
+
+    //    private springfox.documentation.service.ApiInfo apiInfo() {
 //        return new ApiInfoBuilder()
 //                .title("CRM接口在线文档")
 //                .description("包括C1、C2、拍卖、门店C1、门店C2等业务")

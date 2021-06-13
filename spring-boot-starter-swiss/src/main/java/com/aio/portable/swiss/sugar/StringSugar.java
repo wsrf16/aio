@@ -6,6 +6,8 @@ import org.springframework.util.StringUtils;
 import java.text.MessageFormat;
 
 public class StringSugar {
+    public final static String EMPTY = "";
+
     public final static String removeEnd(String str, String remove) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(remove)) {
             return str.endsWith(remove) ? str.substring(0, str.length() - remove.length()) : str;

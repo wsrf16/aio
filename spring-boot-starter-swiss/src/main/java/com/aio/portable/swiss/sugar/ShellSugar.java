@@ -35,9 +35,12 @@ public abstract class ShellSugar {
         return result;
     }
 
-
-
+    @Deprecated
     public static List<String> run(String... cmd) {
+        return exec(cmd);
+    }
+
+    public static List<String> exec(String... cmd) {
         List<String> feedbackList = Arrays.stream(cmd).map(c -> {
             try {
                 Process process = Runtime.getRuntime().exec(c);
@@ -55,5 +58,12 @@ public abstract class ShellSugar {
             }
         }).collect(Collectors.toList());
         return feedbackList;
+    }
+
+    public static class Windows {
+        public static void loadURL(String url) {
+//            exec("rundll32 url.dll,FileProtocolHandler " + url);
+            exec("cmd /c start " + url);
+        }
     }
 }

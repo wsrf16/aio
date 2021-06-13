@@ -38,18 +38,18 @@ public class Slf4JLogProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingletonInstance(this);
+        initialSingletonInstance(this);
     }
 
-    public final static void importSingletonInstance(Slf4JLogProperties properties) {
+    public final static void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
         logger.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
-    public final static void importSingletonInstance(Binder binder) {
+    public final static void initialSingletonInstance(Binder binder) {
         final BindResult<Slf4JLogProperties> bindResult = binder.bind(Slf4JLogProperties.PREFIX, Slf4JLogProperties.class);
         if (bindResult.isBound()) {
-            Slf4JLogProperties.importSingletonInstance(bindResult.get());
+            Slf4JLogProperties.initialSingletonInstance(bindResult.get());
         } else {
             if (instance != null)
                 instance.setEnabled(true);

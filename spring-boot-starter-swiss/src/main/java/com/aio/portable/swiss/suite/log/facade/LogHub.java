@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.factories.context.SwissApplicationListener;
-import com.aio.portable.swiss.sugar.DynamicProxy;
+import com.aio.portable.swiss.sugar.ProxySugar;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * Created by York on 2017/11/23.
  */
-public class LogHub extends LogBundle implements Logger {
+public class LogHub extends LogBundle implements LogHubProxy {
     private static final Log log = LogFactory.getLog(SwissApplicationListener.class);
 
 
@@ -96,33 +96,40 @@ public class LogHub extends LogBundle implements Logger {
 
 
 
+    @Override
     public float getSamplerRate() {
         return samplerRate;
     }
 
+    @Override
     public LogHub setSamplerRate(float samplerRate) {
         this.samplerRate = samplerRate;
         return this;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public LogHub setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
     }
 
+    @Override
     public LevelEnum getEnabledLevel() {
         return enabledLevel;
     }
 
+    @Override
     public LogHub setEnabledLevel(LevelEnum enabledLevel) {
         this.enabledLevel = enabledLevel;
         return this;
     }
 
+    @Override
     public LogHub setAsync(boolean async) {
         getLogList().forEach(c -> c.setAsync(async));
         return this;
@@ -138,7 +145,7 @@ public class LogHub extends LogBundle implements Logger {
         }
 
         protected static LogHub toCGLIBProxy(LogHub logHub) {
-            LogHub proxy = DynamicProxy.cglibProxy(LogHub.class, new MethodInterceptor() {
+            LogHub proxy = ProxySugar.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                     final LogHub hub = logHub;
@@ -201,8 +208,8 @@ public class LogHub extends LogBundle implements Logger {
             return proxy;
         }
 
-        protected static Logger toJDKProxy(LogHub logHub) {
-            Logger proxy = DynamicProxy.jdkProxy(logHub.getClass(), new InvocationHandler() {
+        protected static LogHubProxy toJDKProxy(LogHub logHub) {
+            LogHubProxy proxy = ProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
                         @Override
                         public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                             LogHub hub = logHub;
@@ -257,7 +264,6 @@ public class LogHub extends LogBundle implements Logger {
                     });
             return proxy;
         }
-
     }
 
 }

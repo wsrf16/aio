@@ -26,14 +26,14 @@ public class LogHubUtils {
         }
     }
 
-    public final static void importSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
+    private final static void importSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
         String[] names = beanFactory.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = beanFactory.getBeanDefinition(names[i]);
             if (definition.getBeanClassName() != null && definition instanceof ScannedGenericBeanDefinition) {
                 ScannedGenericBeanDefinition scannedGenericBeanDefinition = (ScannedGenericBeanDefinition) definition;
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
-                if (metadata != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
+                if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
                         final Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(Thread.currentThread().getContextClassLoader());
                         clazz.newInstance();
@@ -46,14 +46,14 @@ public class LogHubUtils {
         }
     }
 
-    public final static void importSingletonLogFactory(BeanDefinitionRegistry registry) {
+    private final static void importSingletonLogFactory(BeanDefinitionRegistry registry) {
         String[] names = registry.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = registry.getBeanDefinition(names[i]);
             if (definition.getBeanClassName() != null && definition instanceof ScannedGenericBeanDefinition) {
                 ScannedGenericBeanDefinition scannedGenericBeanDefinition = (ScannedGenericBeanDefinition) definition;
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
-                if (metadata != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
+                if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
                         final Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(Thread.currentThread().getContextClassLoader());
                         clazz.newInstance();

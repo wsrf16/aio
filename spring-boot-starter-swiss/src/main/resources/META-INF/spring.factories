@@ -5,7 +5,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.aio.portable.swiss.factories.autoconfigure.MailToAutoConfiguration,\
   com.aio.portable.swiss.factories.autoconfigure.JWTAutoConfiguration,\
   com.aio.portable.swiss.factories.autoconfigure.RestTemplateAutoConfiguration,\
-  com.aio.portable.swiss.factories.context.LogHubBeanDefinitionRegistryPostProcessor
+  com.aio.portable.swiss.factories.processor.LogHubBeanDefinitionRegistryPostProcessor
 
 org.springframework.context.ApplicationListener=\
   com.aio.portable.swiss.factories.context.SwissApplicationListener

@@ -38,13 +38,13 @@ public class ResponseWrapper<T> {
      * 标识一次请求的返回时间（不需赋值）
      */
     @ApiModelProperty("时间戳")
-    private Long timeStamp;
+    private Long timestamp;
 
 
     protected ResponseWrapper() {
         this.traceId = IDS.uuid();
         this.accessTime = new Date();
-        this.timeStamp = System.currentTimeMillis();
+        this.timestamp = System.currentTimeMillis();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
@@ -53,7 +53,7 @@ public class ResponseWrapper<T> {
         this.message = message;
         this.data = data;
         this.accessTime = new Date();
-        this.timeStamp = System.currentTimeMillis();
+        this.timestamp = System.currentTimeMillis();
     }
 
     /**
@@ -188,12 +188,12 @@ public class ResponseWrapper<T> {
         return this;
     }
 
-    public Long getTimeStamp() {
-        return timeStamp;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public ResponseWrapper<T> setTimeStamp(Long timeStamp) {
-        this.timeStamp = timeStamp;
+    public ResponseWrapper<T> setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
         return this;
     }
 

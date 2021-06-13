@@ -22,11 +22,11 @@ spring:
   boot:
     enableautoconfiguration: true
 
-#  rest:
-#    agent:
-#      enabled: false
-#      host: 127.0.0.1
-#      port: 8888
+  rest:
+    agent:
+      enabled: false
+      host: 127.0.0.1
+      port: 8888
 
   jwt:
     require: true

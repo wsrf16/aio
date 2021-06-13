@@ -1,21 +1,15 @@
-package com.aio.portable.park.config;
+package com.aio.portable.park.config.root;
 
-import com.aio.portable.swiss.config.MixedPropertySourceFactory;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "config")
 //@PropertySource(value = "classpath:application.yml", factory = MixedPropertySourceFactory.class)
+@Data
 public class ApplicationConfig {
     private String abc;
-
-    public String getAbc() {
-        return abc;
-    }
-
-    public void setAbc(String abc) {
-        this.abc = abc;
-    }
 }
+

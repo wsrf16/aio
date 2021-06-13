@@ -57,10 +57,11 @@ public abstract class LogSingle implements LogAction {
     }
 
 //    public final static ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
+    private final static long KEEP_ALIVE_TIME = 1000 * 10;
     public final static ExecutorService executor = new ThreadPoolExecutor(
         LogSingleThreadExecutor.CORE_POOL_SIZE,
         LogSingleThreadExecutor.MAX_POOL_SIZE,
-        0L,
+        KEEP_ALIVE_TIME,
         TimeUnit.MILLISECONDS,
         new LinkedBlockingQueue<Runnable>(LogSingleThreadExecutor.QUEUE_CAPACITY),
         new LogSingleThreadFactory());

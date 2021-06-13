@@ -1,6 +1,5 @@
-package com.aio.portable.swiss.factories.context;
+package com.aio.portable.swiss.factories.processor;
 
-import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,13 +17,14 @@ public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinition
      * @param registry
      * @throws BeansException
      */
+    @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        try {
-            LogHubUtils.initLogHubFactory(registry);
-        } catch (Exception e) {
-//            e.printStackTrace();
-            log.warn("InitLogHubFactory failed.", e);
-        }
+//        try {
+//            LogHubUtils.initLogHubFactory(registry);
+//        } catch (Exception e) {
+////            e.printStackTrace();
+//            log.warn("InitLogHubFactory failed.", e);
+//        }
     }
 
 
@@ -35,8 +35,14 @@ public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinition
      * @param beanFactory
      * @throws BeansException
      */
+    @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-//        LogHubUtils.initLogHubFactory(beanFactory);
+        try {
+            LogHubUtils.initLogHubFactory(beanFactory);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.warn("InitLogHubFactory failed.", e);
+        }
     }
 
 }

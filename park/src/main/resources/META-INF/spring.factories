@@ -1,0 +1,8 @@
+org.springframework.context.ApplicationListener=\
+  com.aio.portable.park.postprocessor.MutatePropertySourceApplicationListener
+
+
+
+#
+#org.springframework.context.ApplicationContextInitializer=\
+#  org.springframework.boot.demo.common.MyApplicationContextInitializer

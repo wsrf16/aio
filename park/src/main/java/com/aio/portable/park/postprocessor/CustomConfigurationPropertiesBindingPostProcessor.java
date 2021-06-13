@@ -1,4 +1,4 @@
-package com.aio.portable.park.beanprocessor;
+package com.aio.portable.park.postprocessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;

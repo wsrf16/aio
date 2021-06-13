@@ -27,10 +27,10 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     }
 
-    @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.clear();
-        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+//    @Override
+//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        converters.clear();
+//        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 //        converters.add(mappingJackson2HttpMessageConverter);
 //        converters.add(new MappingJackson2XmlHttpMessageConverter(factory.xml().build()));
 
@@ -42,7 +42,7 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 //        converters.add(new AllEncompassingFormHttpMessageConverter());
 //        converters.add(new MappingJackson2HttpMessageConverter());
 //        converters.add(new StringHttpMessageConverter());
-    }
+//    }
 
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {

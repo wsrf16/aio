@@ -65,17 +65,17 @@ public abstract class LogHubFactory {
         return detectAndBuild(className);
     }
 
-    public LogHub build(Class clazz) {
+    public final LogHub build(Class clazz) {
         String className = clazz.getTypeName();
         return build(className);
     }
 
-    public LogHub build() {
+    public final LogHub build() {
         String className = StackTraceSugar.Previous.getClassName();
         return build(className);
     }
 
-    public LogHub build(int previous) {
+    public final LogHub build(int previous) {
         String className = StackTraceSugar.Previous.getClassName(previous);
         return build(className);
     }
@@ -101,16 +101,16 @@ public abstract class LogHubFactory {
 
     private static LogHub detectAndBuild(String className) {
         final ArrayList<LogSingle> list = new ArrayList<>(127);
+        if (ConsoleLogProperties.singletonInstance().getEnabled())
+            list.add(new ConsoleLog(className));
+        if (Slf4JLogProperties.singletonInstance().getEnabled())
+            list.add(new Slf4JLog(className));
         if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
             list.add(new RabbitMQLog(className));
         }
         if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
             list.add(new KafkaLog(className));
         }
-        if (ConsoleLogProperties.singletonInstance().getEnabled())
-            list.add(new ConsoleLog(className));
-        if (Slf4JLogProperties.singletonInstance().getEnabled())
-            list.add(new Slf4JLog(className));
 
         LogHub logger = LogHub.build(list)
                 .setEnabledLevel(LevelEnum.INFORMATION);

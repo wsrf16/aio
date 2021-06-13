@@ -1,4 +1,4 @@
-package com.aio.portable.park.beanprocessor;
+package com.aio.portable.park.postprocessor;
 
 import org.springframework.stereotype.Component;
 

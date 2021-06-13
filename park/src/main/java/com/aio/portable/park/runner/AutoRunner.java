@@ -1,27 +1,36 @@
 package com.aio.portable.park.runner;
 
-import com.aio.portable.park.beanprocessor.UserInfoEntity;
+import com.aio.portable.park.postprocessor.UserInfoEntity;
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.config.ApplicationConfig;
+import com.aio.portable.park.config.root.ApplicationConfig;
 import com.aio.portable.park.test.BeanOrder;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.park.test.ResourceTest;
+import com.aio.portable.swiss.global.Constant;
+import com.aio.portable.swiss.sugar.*;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.io.PathSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import com.aio.portable.swiss.suite.log.impl.es.ESLogNote;
 import com.aio.portable.swiss.suite.log.support.StandardLogNote;
+import com.aio.portable.swiss.suite.systeminfo.OSInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UrlPathHelper;
+import org.springframework.context.event.EventListener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -35,28 +44,39 @@ public class AutoRunner implements ApplicationRunner {
     ApplicationConfig rootConfig;
 
 //    @Autowired
-//    LogTest logTest;
+//    RestTemplate restTemplate;
 
-//    static abstract class Abb {
-//        static Abb abb;
-//        abstract void ff();
-//        final static void f() {
-//            abb.ff();
-//        }
-//    }
-//    class Ab extends Abb {
-//        @Override
-//        void ff() {
-//            System.out.println("ok");
-//        }
-//    }
+    @Value("${swagger.api-info.title:}")
+    String swaggerApiInfoTitle;
 
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) {
 //        com.auth0.jwt.algorithms.Algorithm
 //        log.getLogList().get(1)
-        cert(11111111);
+//        final int order = propertySourcesPlaceholderConfigurerrr.getOrder();
+        List<Integer> list = new ArrayList<>();
+        list.add(0);
+        list.add(1);
+
+        final Integer[] integers1 = CollectionSugar.toArray(list, Integer.class);
+        final Integer[] integers2 = CollectionSugar.toArrayNullable(list);
+
+        log.error("6666666666666666666");
+
+
+        try {
+            ThrowableSugar.catchThenReturn(() -> {
+                        int a = 1;
+                        int b = 0;
+                        int c = a / b;
+                        return c;
+                    }, (e) -> null
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 //        new UrlPathHelper().getLookupPathForRequest(null)
         new BeanOrder(new UserInfoEntity());
@@ -78,8 +98,6 @@ public class AutoRunner implements ApplicationRunner {
             // 修改 value 属性值
             memberValues.put("value", "nnnname");
             System.out.println(JacksonSugar.obj2ShortJson(esLogNote));
-
-
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -90,44 +108,25 @@ public class AutoRunner implements ApplicationRunner {
 
 
         try {
-//            StringSugar.rightPad(22,22)
-
             Thread.sleep(0);
 //            Class.forName(ResourceTest.class.toString());
-            ResourceTest resourceTest = new ResourceTest();
+//            ResourceTest resourceTest = new ResourceTest();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-
-
-
-
-    public void cert(int sth) {
-        System.out.println(sth);
-//            DataCertCreate dataCertCreate = new DataCertCreate();
-//            String[] info = { "huahua_user", "hnu", "university", "china", "hunan", "changsha", "111111", "11111111", "1" };
-//            // 生成公钥
-//            boolean createPublicKey = dataCertCreate.createPublicKey(info);
-//            System.out.println("PUBLIC KEY CREATE OK, result==" + createPublicKey);
-//
-//            boolean createPublicKeyBYDecode = dataCertCreate.createPublicKeyBYDecode(info);
-//            System.out.println("PUBLIC KEY BY BASE64Encoder CREATE OK, result==" + createPublicKeyBYDecode);
-//
-//            boolean createPrivateKey = dataCertCreate.createPrivateKey(info);
-//            System.out.println("PRIVATE KEY CREATE OK, result==" + createPrivateKey);
-//
-//            Boolean pfx = dataCertCreate.toPFX(info);
-//            System.out.println("transToPFX OK, result==" + pfx);
-//
-//
-//
-//
-//            CertSugar.createKeyStore(new File("d:\\a"), "", new X500Name(""), "");
-//            CertSugar.CertInfo certInfo = new CertSugar.CertInfo();
-//            CertSugar.createSubjectCert(certInfo, "","", new File("d:\\a"), "", "cn", "");
+//    @EventListener({ApplicationReadyEvent.class})
+    void applicationReadyEvent() {
+        if (OSInfo.isWindows()) {
+            String port = SpringContextHolder.getEnvironment().getProperty("server.port", StringSugar.EMPTY);
+            String contextPath = SpringContextHolder.getEnvironment().getProperty("server.servlet.contextPath", StringSugar.EMPTY);
+            String concat = PathSugar.concatBy("/", port, contextPath);
+//        String url = MessageFormat.format("http://localhost:{0}/v2/api-docs", concat);
+            String url = MessageFormat.format("http://localhost:{0}/doc.html", concat);
+            ShellSugar.Windows.loadURL(url);
+        }
     }
 }
 

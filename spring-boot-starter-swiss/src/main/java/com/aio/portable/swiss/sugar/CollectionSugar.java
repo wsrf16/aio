@@ -1,10 +1,13 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -136,7 +139,8 @@ public abstract class CollectionSugar {
     public final static <T> List<T> concat(Collection<T>... collections) {
         List<T> _list = new ArrayList<>();
         for (Collection<T> collection : collections) {
-            _list.addAll(collection.stream().collect(Collectors.toList()));
+            if (collection != null)
+                _list.addAll(collection.stream().collect(Collectors.toList()));
         }
         return _list;
     }
@@ -330,7 +334,7 @@ public abstract class CollectionSugar {
         return toList(iterator, 10);
     }
 
-    public final static <T> List<T> toList(T[] array) {
+    public final static <T> List<T> toList(T... array) {
 //        List<T> list = new ArrayList<>(Arrays.asList((T[]) new Object[array.length]));
         List<T> list = new ArrayList<>(Arrays.asList(array));
         return list;
@@ -345,17 +349,37 @@ public abstract class CollectionSugar {
         return java.util.Collections.enumeration(c);
     }
 
-    public final static Object[] toArray(List<?> list) {
-        return list.stream().toArray();
-    }
+//    public final static Object[] toArray(List<?> list) {
+//        return list.stream().toArray();
+//    }
 
     public final static <T> T[] toArray(List<T> list, IntFunction<T[]> generator) {
         return list.stream().toArray(generator);
     }
 
-//    public final static <T> T[] toArray(List<T> list) {
-//        return (T[])(list.stream().toArray());
-//    }
+    public final static <T> T[] toArrayNullable(List<T> list) {
+        return list.size() < 1 ? null : toArray(list, (Class<T>)list.get(0).getClass());
+    }
+
+    public final static <T> T[] toArray(List<T> list, Class<T> componentType) {
+        T[] array = (T[])Array.newInstance(componentType, list.size());
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
+    /**
+     * toArray
+     * @param list
+     * @param t eg. "new Integer[0]"
+     * @param <T>
+     * @return
+     */
+    public final static <T> T[] toArray(List<T> list, T[] t) {
+        return list.toArray(t);
+    }
 
     public final static <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
         HashMap<K, V> map = stream.collect(HashMap::new, (_map, _entity) -> _map.put(keyMapper.apply(_entity), valueMapper.apply(_entity)), HashMap::putAll);
@@ -381,18 +405,5 @@ public abstract class CollectionSugar {
         return list.stream().collect(Collectors.joining(delimiter));
     }
 
-    private static void taolu() {
-        {
-            Iterator<String> iterator = java.util.Collections.emptyIterator();
-            List<String> list = CollectionSugar.toList(iterator);
-        }
-        {
-            Enumeration<String> enumeration = java.util.Collections.emptyEnumeration();
-            List<String> arrayList = java.util.Collections.list(enumeration);
-        }
-        {
-            List<String> arrayList = java.util.Collections.emptyList();
-            Enumeration<String> enumeration = java.util.Collections.enumeration(arrayList);
-        }
-    }
+
 }

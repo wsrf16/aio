@@ -69,6 +69,9 @@ public class SpringContextHolder implements ApplicationContextAware {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
+//    public final static void mainApplicationClass() {
+//    }
+
     public static class BeanCenter {
         public static String getBeanName(@Nullable String simpleClassName) {
             return Introspector.decapitalize(simpleClassName);
@@ -174,7 +177,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         applicationContext = null;
     }
 
-    public final static void importApplicationContext(ApplicationContext applicationContext) {
+    public final static void initialApplicationContext(ApplicationContext applicationContext) {
         SpringContextHolder.applicationContext = applicationContext;
     }
 

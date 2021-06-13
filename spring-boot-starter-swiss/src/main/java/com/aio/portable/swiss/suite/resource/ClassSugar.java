@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.resource;
 
-import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.sugar.CollectionSugar;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
@@ -13,8 +13,11 @@ import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public abstract class ClassSugar {
     /**
@@ -251,4 +254,66 @@ public abstract class ClassSugar {
         }
     }
 
+
+    /**
+     * collectSuperObject
+     * @param clazz
+     * @param includeClass
+     * @return
+     */
+    private static List<Class<?>> collectSuperObject(Class<?> clazz, boolean includeClass) {
+        List<Class<?>> clazzList = new ArrayList<>(CollectionSugar.toList(clazz));
+        return collectSuperObject(clazzList, includeClass);
+    }
+
+    /**
+     * collectSuperObject
+     * @param clazzList
+     * @param includeClass
+     * @return
+     */
+    private static List<Class<?>> collectSuperObject(List<Class<?>> clazzList, boolean includeClass) {
+        List<Class<?>> collect = clazzList
+                .stream()
+                .filter(c -> c.getInterfaces().length > 0 || c.getSuperclass() != null)
+                .flatMap(c -> {
+
+                    List<Class<?>> list = new ArrayList();
+                    List<Class<?>> interfaces = CollectionSugar.toList(c.getInterfaces());
+                    if (!CollectionSugar.isEmpty(interfaces))
+                        list.addAll(interfaces);
+
+                    List<Class<?>> superInterfaces = CollectionSugar.toList(c.getInterfaces());
+                    if (!CollectionSugar.isEmpty(superInterfaces))
+                        list.addAll(collectSuperObject(superInterfaces, true));
+
+                    Class<?> superclass = c.getSuperclass();
+                    if (superclass != null)
+                        list.addAll(collectSuperObject(superclass, true));
+
+                    return list.stream();
+                })
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (!includeClass)
+            collect = collect.stream().filter(c -> c.isInterface()).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    /**
+     * collectSuperInterfaces
+     * @param clazz
+     * @return
+     */
+    public static Class<?>[] collectSuperInterfaces(Class<?> clazz) {
+        final List<Class<?>> classList = collectSuperObject(clazz, false);
+        return classList.toArray(new Class<?>[0]);
+    }
+//
+//    public static Class<?>[] collectSuperInterfaces(Class<?> clazz, Class<Object> returnClazz) {
+//        final List<Class<?>> classList = collectSuperObject(clazz, false);
+//        return CollectionSugar.toArray(classList, returnClazz);
+//    }
 }

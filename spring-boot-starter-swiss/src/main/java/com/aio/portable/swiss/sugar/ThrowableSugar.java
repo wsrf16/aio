@@ -24,6 +24,15 @@ public abstract class ThrowableSugar {
         }
     }
 
+    public static <R> R catchThenThrowRuntimeException(Supplier<R> supplier) {
+        try {
+            R r = supplier.get();
+            return r;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void catchThenHandle(Runnable runnable, Consumer<Throwable> failHandler) {
         try {
             runnable.run();
@@ -32,15 +41,20 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static void catchThenHandleThrowRuntimeException(Runnable runnable) {
+    public static void catchThenThrowRuntimeException(Runnable runnable) {
         catchThenHandle(runnable, e -> {
             throw new RuntimeException(e);
         });
     }
 
-    public static void catchThenHandlePrintStackTrace(Runnable runnable) {
+    public static void catchThenPrintStackTrace(Runnable runnable) {
         catchThenHandle(runnable, e -> {
             e.printStackTrace();
+        });
+    }
+
+    public static void catchThenSilent(Runnable runnable) {
+        catchThenHandle(runnable, e -> {
         });
     }
 }

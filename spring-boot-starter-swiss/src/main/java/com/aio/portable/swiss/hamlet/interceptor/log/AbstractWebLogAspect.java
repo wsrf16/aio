@@ -16,12 +16,12 @@ import java.text.MessageFormat;
 
 class AbstractWebLogAspect {
     public AbstractWebLogAspect(LogHubFactory logHubFactory) {
-        loggerPool = LogHubPool.singletonInstance(logHubFactory);
+        loggerPool = LogHubPool.importLogHubFactory(logHubFactory);
     }
 
     protected static LogHubPool loggerPool;
-    protected static String REQUEST_SUMMARY = "请求日志";
-    protected static String RESPONSE_SUMMARY = "响应日志";
+    protected static String REQUEST_SUMMARY = "输入参数值";
+    protected static String RESPONSE_SUMMARY = "输出返回值";
     protected static String EXCEPTION_SUMMARY = "异常日志";
 
     protected final static String POINTCUT_CONTROLLER = "" +
@@ -41,7 +41,7 @@ class AbstractWebLogAspect {
     protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarker";
     protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarkerExcept";
 
-    protected final static String POINTCUT_SPECIAL__ = "" +
+    protected final static String POINTCUT_SPECIAL_MAPPING = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")"
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")"
             + " && (" + POINTCUT_MAPPING + "))"
@@ -58,14 +58,14 @@ class AbstractWebLogAspect {
         HttpServletRequest request = attributes.getRequest();
         RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
-        LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
+        LogHub logger = loggerPool.get(joinPoint.getSignature().getDeclaringTypeName());
         if (logger != null) {
             logger.info(REQUEST_SUMMARY, requestRecord);
         }
     }
 
     public void doAfterReturning(ProceedingJoinPoint joinPoint, Object result) {
-        LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
+        LogHub logger = loggerPool.get(joinPoint.getSignature().getDeclaringTypeName());
         if (logger != null) {
             logger.info(RESPONSE_SUMMARY, result);
         }
@@ -76,7 +76,7 @@ class AbstractWebLogAspect {
         HttpServletRequest request = attributes == null ? null : attributes.getRequest();
         RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
-        LogHub logger = loggerPool.putIfAbsent(joinPoint.getSignature().getDeclaringTypeName());
+        LogHub logger = loggerPool.get(joinPoint.getSignature().getDeclaringTypeName());
         String traceId = generateUniqueId();
         if (logger != null) {
             logger.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, traceId), requestRecord);

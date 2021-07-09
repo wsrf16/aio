@@ -5,8 +5,8 @@ import com.aio.portable.swiss.sugar.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.cipher.AlgorithmSugar;
 import com.aio.portable.swiss.suite.algorithm.cipher.RSASugar;
 import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
-import com.aio.portable.swiss.suite.algorithm.transcode.TranscoderBase64;
-import com.aio.portable.swiss.suite.algorithm.transcode.Transcoding;
+import com.aio.portable.swiss.suite.algorithm.transcode.classic.TranscoderBase64;
+import com.aio.portable.swiss.suite.algorithm.transcode.Transcodable;
 import com.aio.portable.swiss.suite.security.authentication.jwt.encryption.TokenAlgorithm;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -22,10 +22,10 @@ import java.util.Date;
 import java.util.Map;
 //import com.nimbusds.jwt.JWTParser;
 
-public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
+public class JWTSession implements JWTAction, Transcodable, TokenAlgorithm {
     private JWTProperties jwtProperties;
 
-    private Transcoder transcode = new TranscoderBase64();
+    private Transcoder transcoder = new TranscoderBase64();
 
     private Algorithm algorithm;
 
@@ -33,9 +33,13 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
         return jwtProperties;
     }
 
+    public void setTranscoder(Transcoder transcoder) {
+        this.transcoder = transcoder;
+    }
+
     @Override
-    public void setTranscode(Transcoder transcode) {
-        this.transcode = transcode;
+    public Transcoder transcoder() {
+        return transcoder;
     }
 
     public Algorithm getAlgorithm() {
@@ -160,7 +164,7 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
     @Override
     public String sign(JWTCreator.Builder builder) {
         String token = encode(builder, algorithm);
-        String encodedToken = transcode.encode(token);
+        String encodedToken = transcoder().encode(token);
         return encodedToken;
     }
 
@@ -205,13 +209,13 @@ public class JWTSession implements JWTAction, Transcoding, TokenAlgorithm {
 
     @Override
     public Boolean validate(String encodedToken) {
-        String decodedToken = transcode.decode(encodedToken);
+        String decodedToken = transcoder().decode(encodedToken);
         return verify(decodedToken, algorithm);
     }
 
     @Override
     public DecodedJWT parse(String encodedToken) {
-        String decodedToken = transcode.decode(encodedToken);
+        String decodedToken = transcoder().decode(encodedToken);
         DecodedJWT parse = parse(decodedToken, algorithm);
         return parse;
     }

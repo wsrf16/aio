@@ -16,10 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FilePO implements NodePersistence {
@@ -68,9 +65,9 @@ public class FilePO implements NodePersistence {
     }
 
 
-    private String formatKey(String key) {
-        return MessageFormat.format("{0}.{1}", key, CACHE_EXTENSION);
-    }
+//    private String formatKey(String key) {
+//        return MessageFormat.format("{0}.{1}", key, CACHE_EXTENSION);
+//    }
 
     private String formatTable(String table) {
         return MessageFormat.format(".{0}", table);
@@ -88,45 +85,46 @@ public class FilePO implements NodePersistence {
         return path.toString();
     }
 
-    @Override
-    public void set(String key, Object value, String... tables) {
-        String dirPath = spellPath(EMPTY, tables);
-        NIOSugar.Files.createDirectories(dirPath);
+//    @Override
+//    public void set(String key, Object value, String... tables) {
+//        String dirPath = spellPath(EMPTY, tables);
+//        NIOSugar.Files.createDirectories(dirPath);
+//
+//        String filename = formatKey(key);
+//        String path = spellPath(filename, tables);
+//        String content = JacksonSugar.obj2Json(value);
+//        NIOSugar.Files.write(path, content, charset, StandardOpenOption.TRUNCATE_EXISTING , StandardOpenOption.CREATE);
+//    }
 
-        String filename = formatKey(key);
-        String path = spellPath(filename, tables);
-        String content = JacksonSugar.obj2Json(value);
-        NIOSugar.Files.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-    }
-
     @Override
-    public void setTable(String table, Object value, String... tables) {
+    public void set(String table, Object value, String... tables) {
         String dirPath = spellPath(table, tables);
         NIOSugar.Files.createDirectories(dirPath);
 
         String filename = formatTable(table);
         String content = JacksonSugar.obj2Json(value);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
-        NIOSugar.Files.write(path, content, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        NIOSugar.Files.write(path, content, charset, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
     }
 
-    @Override
-    public void remove(String key, String... tables) {
-        String filename = formatKey(key);
-        Path path = Paths.get(spellPath(filename, tables));
-        NIOSugar.Files.deleteIfExists(path);
-    }
+//    @Override
+//    public void remove(String key, String... tables) {
+//        checkDatabase();
+//        String filename = formatKey(key);
+//        Path path = Paths.get(spellPath(filename, tables));
+//        NIOSugar.Files.deleteIfExists(path);
+//    }
 
     @Override
-    public void clearTable(String table, String... tables) {
+    public void clear(String table, String... tables) {
         checkTable(table, tables);
         FilePO filePO = FilePO.singletonInstance(database);
         List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
-        keys.stream().forEach(key -> filePO.remove(key, tables));
+        keys.stream().forEach(key -> filePO.remove(key, CollectionSugar.concat(tables, table)));
     }
 
     @Override
-    public void removeTable(String table, String... tables) {
+    public void remove(String table, String... tables) {
         checkDatabase();
         String filename = formatTable(table);
         String dirTable = spellPath(table, tables);
@@ -141,7 +139,7 @@ public class FilePO implements NodePersistence {
         checkDatabase();
         FilePO filePO = FilePO.singletonInstance(database);
         List<String> tables = tables();
-        tables.stream().forEach(table -> filePO.removeTable(table));
+        tables.stream().forEach(table -> filePO.remove(table));
     }
 
     @Override
@@ -150,28 +148,28 @@ public class FilePO implements NodePersistence {
         NIOSugar.Files.deleteIfExists(path);
     }
 
+//    @Override
+//    public <T> T get(String key, Class<T> clazz, String... tables) {
+//        checkKey(key, tables);
+//        String filename = formatTable(key);
+//        String path = spellPath(filename, tables);
+//        String content = NIOSugar.Files.read(path, charset);
+//        T t = JacksonSugar.json2T(content, clazz);
+//        return t;
+//    }
+//
+//    @Override
+//    public <T> T get(String key, TypeReference<T> valueTypeRef, String... tables) {
+//        checkKey(key, tables);
+//        String filename = formatTable(key);
+//        String path = spellPath(filename, tables);
+//        String content = NIOSugar.Files.read(path, charset);
+//        T t = JacksonSugar.json2T(content, valueTypeRef);
+//        return t;
+//    }
+//
     @Override
-    public <T> T get(String key, Class<T> clazz, String... tables) {
-        checkKey(key, tables);
-        String filename = formatKey(key);
-        String path = spellPath(filename, tables);
-        String content = NIOSugar.Files.read(path, charset);
-        T t = JacksonSugar.json2T(content, clazz);
-        return t;
-    }
-
-    @Override
-    public <T> T get(String key, TypeReference<T> valueTypeRef, String... tables) {
-        checkKey(key, tables);
-        String filename = formatKey(key);
-        String path = spellPath(filename, tables);
-        String content = NIOSugar.Files.read(path, charset);
-        T t = JacksonSugar.json2T(content, valueTypeRef);
-        return t;
-    }
-
-    @Override
-    public <T> T getTable(String table, Class<T> clazz, String... tables) {
+    public <T> T get(String table, Class<T> clazz, String... tables) {
         checkTable(table, tables);
         String filename = formatTable(table);
         String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
@@ -181,11 +179,11 @@ public class FilePO implements NodePersistence {
     }
 
     @Override
-    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+    public <T> T get(String table, TypeReference<T> valueTypeRef, String... tables) {
         checkTable(table, tables);
         String filename = formatTable(table);
 //        String dirTable = spellPath(table, tables);
-        String path = spellPath(filename, tables);
+        String path = spellPath(filename, CollectionSugar.concat(String[]::new, tables, table));
         String content = NIOSugar.Files.read(path, charset);
         T t = JacksonSugar.json2T(content, valueTypeRef);
         return t;
@@ -198,7 +196,7 @@ public class FilePO implements NodePersistence {
         List<Path> files = new ArrayList<>();
 
         try {
-            Files.walkFileTree(Paths.get(path), null, 1, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(Paths.get(path), Collections.emptySet(), 1, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (attrs.isDirectory() || attrs.isRegularFile()) {
@@ -211,7 +209,8 @@ public class FilePO implements NodePersistence {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        List<String> keys = files.stream().filter(c -> !c.startsWith(".")).map(c -> StringSugar.removeEnd(c.getFileName().toString(), "." + CACHE_EXTENSION)).collect(Collectors.toList());
+//        List<String> keys = files.stream().filter(c -> !c.startsWith(".")).map(c -> StringSugar.removeEnd(c.getFileName().toString(), "." + CACHE_EXTENSION)).collect(Collectors.toList());
+        List<String> keys = files.stream().filter(c -> !c.endsWith("." + table)).map(c -> c.getFileName().toString()).collect(Collectors.toList());
         return keys;
     }
 
@@ -219,44 +218,44 @@ public class FilePO implements NodePersistence {
     public <T> Map<String, T> getAll(String table, Class<T> clazz, String... tables) {
         checkTable(table, tables);
         List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
-        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.get(key, clazz, tables)));
+        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.get(key, clazz, CollectionSugar.concat(tables, table))));
     }
 
     @Override
     public <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef, String... tables) {
         checkTable(table, tables);
         List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
-        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.get(key, valueTypeRef, tables)));
+        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.get(key, valueTypeRef, CollectionSugar.concat(tables, table))));
     }
 
-    @Override
-    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
-        checkTable(table, tables);
-        List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
-        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.getTable(key, clazz, tables)));
-    }
-
-    @Override
-    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
-        checkTable(table, tables);
-        List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
-        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.getTable(key, valueTypeRef, tables)));
-    }
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
+//        checkTable(table, tables);
+//        List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
+//        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.getTable(key, clazz, tables)));
+//    }
+//
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        checkTable(table, tables);
+//        List<String> keys = keys(table, tables).stream().filter(c -> !bePropertyFile(c)).collect(Collectors.toList());
+//        return keys.stream().collect(Collectors.toMap(key -> key, key -> this.getTable(key, valueTypeRef, tables)));
+//    }
 
     @Override
     public boolean exists(String key, String... tables) {
-        String filename = formatKey(key);
-        String path = spellPath(filename, tables);
+        String filename = formatTable(key);
+        String path = spellPath(filename, CollectionSugar.concat(tables, key));
         boolean exists = Files.exists(Paths.get(path));
         return exists;
     }
 
-    @Override
-    public boolean existsTable(String table, String... tables) {
-        String path = spellPath(table, tables);
-        boolean exists = Files.exists(Paths.get(path));
-        return exists;
-    }
+//    @Override
+//    public boolean existsTable(String table, String... tables) {
+//        String path = spellPath(table, tables);
+//        boolean exists = Files.exists(Paths.get(path));
+//        return exists;
+//    }
 
     @Override
     public boolean existsDatabase() {
@@ -325,7 +324,7 @@ public class FilePO implements NodePersistence {
 
     public final static void setTable(String database, String table, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        filePO.setTable(table, tables);
+        filePO.set(table, tables);
     }
 
     public final static void remove(String database, String table, String key, String... tables) {
@@ -335,12 +334,12 @@ public class FilePO implements NodePersistence {
 
     public final static void clearTable(String database, String table, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        filePO.clearTable(table, tables);
+        filePO.clear(table, tables);
     }
 
     public final static void removeTable(String database, String table, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        filePO.removeTable(table, tables);
+        filePO.remove(table, tables);
     }
 
     public final static void clearDatabase(String database) {
@@ -373,24 +372,24 @@ public class FilePO implements NodePersistence {
         return filePO.getAll(table, valueTypeRef, tables);
     }
 
-    public final static <T> Map<String, T> getAllTable(String database, String table, Class<T> clazz, String... tables) {
-        FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.getAllTable(table, clazz, tables);
-    }
+//    public final static <T> Map<String, T> getAllTable(String database, String table, Class<T> clazz, String... tables) {
+//        FilePO filePO = FilePO.singletonInstance(database);
+//        return filePO.getAllTable(table, clazz, tables);
+//    }
+//
+//    public final static <T> Map<String, T> getAllTable(String database, String table, TypeReference<T> valueTypeRef, String... tables) {
+//        FilePO filePO = FilePO.singletonInstance(database);
+//        return filePO.getAllTable(table, valueTypeRef, tables);
+//    }
 
-    public final static <T> Map<String, T> getAllTable(String database, String table, TypeReference<T> valueTypeRef, String... tables) {
-        FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.getAllTable(table, valueTypeRef, tables);
-    }
+//    public final static boolean exists(String database, String key, String... tables) {
+//        FilePO filePO = FilePO.singletonInstance(database);
+//        return filePO.exists(key, tables);
+//    }
 
-    public final static boolean exists(String database, String key, String... tables) {
+    private final static boolean exists(String database, String table, String... tables) {
         FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.exists(key, tables);
-    }
-
-    public final static boolean existsTable(String database, String table, String... tables) {
-        FilePO filePO = FilePO.singletonInstance(database);
-        return filePO.existsTable(table, tables);
+        return filePO.exists(table, tables);
     }
 
     public final static boolean existsDatabase(String database) {
@@ -418,7 +417,7 @@ public class FilePO implements NodePersistence {
 
     private void checkTable(String table, String... tables) {
         checkDatabase();
-        if (!existsTable(table, tables)) {
+        if (!exists(table, tables)) {
             throw new JsonCacheException.NotExistTableException(spellPath(table, tables));
         }
     }

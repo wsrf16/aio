@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public abstract class RegexSugar {
-//    private final static String REGEX_PHONE = "^(1)\\d{10}$";
+    //    private final static String REGEX_PHONE = "^(1)\\d{10}$";
     private final static String REGEX_PHONE_BLUR = "(^1\\d{2})\\d{4}(\\d{4})";
     private final static String REGEX_PHONE_BLUR_REPLACE = "$1****$2";
     private final static String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
@@ -49,10 +49,9 @@ public abstract class RegexSugar {
     }
 
 
-
-
     /**
      * 正则匹配
+     *
      * @param regex
      * @param input
      * @return
@@ -64,6 +63,7 @@ public abstract class RegexSugar {
 
     /**
      * 正则匹配
+     *
      * @param regex
      * @param input
      * @return
@@ -72,36 +72,40 @@ public abstract class RegexSugar {
         return Pattern.compile(regex).matcher(input);
     }
 
+
+    @Deprecated
+    public final static List<List<String>> findMore(String regex, String input) {
+        return findGroup(regex, input);
+    }
+
     /**
-     * 正则匹配
+     * find
+     *
      * @param regex
      * @param input
      * @return
      */
-    public final static List<List<String>> findMore(String regex, String input) {
+    public final static List<List<String>> findGroup(String regex, String input) {
         Matcher matcher = Pattern.compile(regex).matcher(input);
         List<List<String>> matches = new ArrayList<>();
+        // 针对一个regex，匹配到多次
         while (matcher.find()) {
             List<String> matchesInOneLine = new ArrayList<>();
-            for (int ii = 1; ii <= matcher.groupCount(); ii++) {
-                matchesInOneLine.add(matcher.group(ii));
-            }
+            // 一次匹配到的多个部分
+            if (matcher.groupCount() > 0) {
+                for (int i = 1; i <= matcher.groupCount(); i++) {
+                    matchesInOneLine.add(matcher.group(i));
+                }
+            } else
+                matchesInOneLine.add(matcher.group(0));
             matches.add(matchesInOneLine);
         }
         return matches;
     }
 
+
     public final static List<String> find(String regex, String input) {
-        Matcher matcher = Pattern.compile(regex).matcher(input);
-        List<List<String>> matches = new ArrayList<>();
-        while (matcher.find()) {
-            List<String> matchesInOneLine = new ArrayList<>();
-            for (int ii = 1; ii <= matcher.groupCount(); ii++) {
-                matchesInOneLine.add(matcher.group(ii));
-            }
-            matches.add(matchesInOneLine);
-        }
-        List<String> eachFirst = matches.stream().map(c -> c.get(0)).collect(Collectors.toList());
+        List<String> eachFirst = findMore(regex, input).stream().map(c -> c.get(0)).collect(Collectors.toList());
         return eachFirst;
     }
 
@@ -124,6 +128,7 @@ public abstract class RegexSugar {
 
     /**
      * replaceAll
+     *
      * @param input
      * @param regex
      * @param replacement
@@ -140,6 +145,7 @@ public abstract class RegexSugar {
 
     /**
      * replaceAll
+     *
      * @param input
      * @param regexList
      * @param replacement
@@ -156,6 +162,7 @@ public abstract class RegexSugar {
 
     /**
      * replace
+     *
      * @param input
      * @param regex
      * @param replacements

@@ -2,12 +2,13 @@ package com.aio.portable.swiss.suite.storage.persistence.redis;
 
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
-import com.aio.portable.swiss.suite.io.PathSugar;
+import com.aio.portable.swiss.sugar.PathSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.NotSupportedException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,24 +77,23 @@ public class RedisPO implements NodePersistence {
     }
 
     @Override
-    public void clearTable(String table, String... tables) {
+    public void clear(String table, String... tables) {
         String path = spellPath(table, tables);
-        Set<String> keys = stringRedisTemplate.opsForValue().getOperations().keys(path);
+        Set<String> keys = stringRedisTemplate.opsForValue().getOperations().keys(path + ":*");
         keys.stream().forEach(c -> {
-            String subPath = spellPath(c, path);
-            stringRedisTemplate.delete(subPath);
+            stringRedisTemplate.delete(c);
         });
     }
 
-    @Override
-    public void removeTable(String table, String... tables) {
-        String path = spellPath(table, tables);
-        stringRedisTemplate.delete(path);
-    }
+//    @Override
+//    public void removeTable(String table, String... tables) {
+//        String path = spellPath(table, tables);
+//        stringRedisTemplate.delete(path);
+//    }
 
     @Override
     public void clearDatabase() {
-
+        clear(EMPTY);
     }
 
     @Override
@@ -149,11 +149,11 @@ public class RedisPO implements NodePersistence {
         return stringRedisTemplate.opsForValue().getOperations().hasKey(path);
     }
 
-    @Override
-    public boolean existsTable(String table, String... tables) {
-        String path = spellPath(table, tables);
-        return stringRedisTemplate.opsForValue().getOperations().hasKey(path);
-    }
+//    @Override
+//    public boolean existsTable(String table, String... tables) {
+//        String path = spellPath(table, tables);
+//        return stringRedisTemplate.opsForValue().getOperations().hasKey(path);
+//    }
 
     @Override
     public boolean existsDatabase() {
@@ -173,28 +173,28 @@ public class RedisPO implements NodePersistence {
         return keys(EMPTY);
     }
 
-    @Override
-    public void setTable(String table, Object value, String... tables) {
-        set(table, value, tables);
-    }
-
-    @Override
-    public <T> T getTable(String table, Class<T> clazz, String... tables) {
-        return get(table, clazz, tables);
-    }
-
-    @Override
-    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
-        return get(table, valueTypeRef, tables);
-    }
-
-    @Override
-    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
-        return getAll(table, clazz, tables);
-    }
-
-    @Override
-    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
-        return getAll(table, valueTypeRef, tables);
-    }
+//    @Override
+//    public void setTable(String table, Object value, String... tables) {
+//        set(table, value, tables);
+//    }
+//
+//    @Override
+//    public <T> T getTable(String table, Class<T> clazz, String... tables) {
+//        return get(table, clazz, tables);
+//    }
+//
+//    @Override
+//    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        return get(table, valueTypeRef, tables);
+//    }
+//
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
+//        return getAll(table, clazz, tables);
+//    }
+//
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        return getAll(table, valueTypeRef, tables);
+//    }
 }

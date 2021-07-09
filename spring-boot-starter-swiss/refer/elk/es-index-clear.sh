@@ -1,18 +1,53 @@
-#/bin/bash
+#!/bin/bash
 
-#指定日期(7天前)
-DATE=`date -d "-7 days" +%Y.%m.%d`
-DATE=`date -d "-1 months" +%Y.%m.%d`
-DATE=`date -d "1 months ago" +%Y.%m.%d`
-
-#当前日期
-time=`date`
-
-#删除7天前的日志
-curl -XDELETE http://127.0.0.1:9200/*-${DATE}
-
-if [ $? -eq 0 ];then
-echo $time"-->delete $DATE log success.." >> /tmp/es-index-clear.log
-else
-echo $time"-->delete $DATE log fail.." >> /tmp/es-index-clear.log
+#######################################################
+# $Name:        es-index-clear.sh
+# $Version:     v1.0
+# $Function:    delete es index
+# $Create Date: 2021-07-04
+# $Description: shell
+######################################################
+if [ -z "$2" ] ;then
+    echo "eg."
+    echo "  es-index-clear.sh -30 -7"
+    exit
 fi
+
+#start_date=`date -d "-7 days" +%Y.%m.%d`
+#start_date=`date -d "-1 months" +%Y.%m.%d`
+#start_date=`date -d "1 months ago" +%Y.%m.%d`
+
+
+if [[ $2 -gt 0 ]]; then
+  count=$2
+else
+  count=$((0-$2))
+fi
+
+
+
+
+for((i=0;i<=$count;i++));
+do
+  if [[ $2 -gt 0 ]]; then
+    current=`date -d "$(($1+$i)) days" +%Y.%m.%d`
+  else
+    current=`date -d "$(($1-$i)) days" +%Y.%m.%d`
+  fi
+
+  curl -XDELETE http://127.0.0.1:9200/*-${current} -u elastic:Tianti@2019
+  if [ $? -eq 0 ];then
+    now=`date '+%Y-%m-%d %H:%M:%S'`
+    echo $now"-->delete $current log success.." >> /tmp/es-index-clear.log
+  else
+    now=`date '+%Y-%m-%d %H:%M:%S'`
+    echo $now"-->delete $current log fail.." >> /tmp/es-index-clear.log
+  fi
+done
+
+
+
+
+
+
+

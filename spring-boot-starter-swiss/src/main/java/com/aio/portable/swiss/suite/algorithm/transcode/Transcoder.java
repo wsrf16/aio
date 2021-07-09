@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 public interface Transcoder {
     String encode(String plain, Charset charset);
 
-    String decode(String base64, Charset charset);
+    String decode(String cipher, Charset charset);
 
     default String encode(String plain) {
         return encode(plain, StandardCharsets.UTF_8);

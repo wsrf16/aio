@@ -8,20 +8,43 @@ import java.text.MessageFormat;
 public class StringSugar {
     public final static String EMPTY = "";
 
-    public final static String removeEnd(String str, String remove) {
-        if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(remove)) {
-            return str.endsWith(remove) ? str.substring(0, str.length() - remove.length()) : str;
+    public final static String trim(String str, String removed) {
+        str = removeStart(str, removed);
+        str = removeEnd(str, removed);
+        return str;
+    }
+
+    public final static String removeStart(String str, String removedStart) {
+        if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedStart)) {
+            return str.startsWith(removedStart) ? str.substring(removedStart.length()) : str;
         } else {
             return str;
         }
     }
 
-    public final static String removeStart(String str, String remove) {
-        if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(remove)) {
-            return str.startsWith(remove) ? str.substring(remove.length()) : str;
+    public final static String removeEnd(String str, String removedEnd) {
+        if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedEnd)) {
+            return str.endsWith(removedEnd) ? str.substring(0, str.length() - removedEnd.length()) : str;
         } else {
             return str;
         }
+    }
+
+    public final static String removeAllStart(String text, String removedStart) {
+        String result = text;
+        while (result.startsWith(removedStart)) {
+            result = StringSugar.removeStart(result, removedStart);
+        }
+        return result;
+    }
+
+
+    public final static String removeAllEnd(String text, String removedEnd) {
+        String result = text;
+        while (result.endsWith(removedEnd)) {
+            result = StringSugar.removeEnd(result, removedEnd);
+        }
+        return result;
     }
 
     public final static String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
@@ -155,16 +178,13 @@ public class StringSugar {
     }
 
 
-
-
-
     public final static String repeat(char ch, int repeat) {
         if (repeat <= 0) {
             return "";
         } else {
             char[] buf = new char[repeat];
 
-            for(int i = repeat - 1; i >= 0; --i) {
+            for (int i = repeat - 1; i >= 0; --i) {
                 buf[i] = ch;
             }
 
@@ -179,8 +199,8 @@ public class StringSugar {
          * formatLength 字符总长度为 formatLength
          * d 代表为正数。
          */
-        String newString = String.format("%0"+length+"d", no);
-        return  newString;
+        String newString = String.format("%0" + length + "d", no);
+        return newString;
     }
 
     public final static String rightPad(String str, int length, char padChar) {
@@ -195,7 +215,7 @@ public class StringSugar {
             }
         }
     }
-    
+
     public final static String unwrap(String input, String boundary) {
         String s = removeStart(input, boundary);
         s = removeEnd(s, boundary);
@@ -207,7 +227,7 @@ public class StringSugar {
         return s;
     }
 
-        private final static String rightPad(String str, int size, String padStr) {
+    private final static String rightPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {
@@ -230,7 +250,7 @@ public class StringSugar {
                 char[] padding = new char[pads];
                 char[] padChars = padStr.toCharArray();
 
-                for(int i = 0; i < pads; ++i) {
+                for (int i = 0; i < pads; ++i) {
                     padding[i] = padChars[i % padLen];
                 }
 
@@ -275,7 +295,7 @@ public class StringSugar {
                 char[] padding = new char[pads];
                 char[] padChars = padStr.toCharArray();
 
-                for(int i = 0; i < pads; ++i) {
+                for (int i = 0; i < pads; ++i) {
                     padding[i] = padChars[i % padLen];
                 }
 
@@ -289,8 +309,10 @@ public class StringSugar {
     }
 
     private final static String PLACE_HOLDER = "\\{\\}";
+
     /**
      * format
+     *
      * @param input
      * @param replacement
      * @return

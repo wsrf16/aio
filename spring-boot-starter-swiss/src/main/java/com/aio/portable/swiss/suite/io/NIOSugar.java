@@ -108,10 +108,40 @@ public abstract class NIOSugar {
 
         public final static void deleteIfExists(Path path) {
             try {
-                java.nio.file.Files.deleteIfExists(path);
+                if (new File(path.toString()).isFile())
+                    java.nio.file.Files.deleteIfExists(path);
+                else {
+                    deleteDirectories(path);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
+            }
+        }
+
+        private final static void deleteDirectories(String path){
+            deleteDirectories(Paths.get(path));
+        }
+
+        private final static void deleteDirectories(Path path) {
+            try {
+                if (new File(path.toString()).exists()) {
+                    java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            java.nio.file.Files.deleteIfExists(file);
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                            java.nio.file.Files.deleteIfExists(dir);
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 

@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class LogSingle implements LogAction {
-    private static final String IP_UNKNOWN = "UNKNOWN";
     private static final Log log = LogFactory.getLog(LogSingle.class);
 
     private String name;
@@ -45,6 +44,8 @@ public abstract class LogSingle implements LogAction {
     }
 
     protected SerializerConverter serializer = new SerializerConverters.JacksonConverter();
+
+    protected SerializerConverter looseSerializer = new SerializerConverters.LongJacksonConverter();
 
     protected boolean async = true;
 
@@ -85,18 +86,20 @@ public abstract class LogSingle implements LogAction {
             else
                 printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             log.warn("logSingle output failed.", e);
         }
     }
 
     protected void output(Printer printer, LogNote logNote) {
-        String text = serializer.serialize(logNote);
+        String text = logNote.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
+                serializer.serialize(logNote) : looseSerializer.serialize(logNote);
         output(printer, text, logNote.getLevel());
     }
 
     protected void output(Printer printer, Map logNote, LevelEnum level) {
-        String text = serializer.serialize(logNote);
+        String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
+                serializer.serialize(logNote) : looseSerializer.serialize(logNote);
         output(printer, text, level);
     }
 
@@ -1091,7 +1094,13 @@ public abstract class LogSingle implements LogAction {
     }
 
     protected static String getLocalIp() {
-        String ip = HostInfo.getLocalHostLANAddress().getHostAddress();
+        String ip;
+        try {
+            ip = HostInfo.getLocalHostLANAddress().getHostAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ip = HostInfo.IP_UNKNOWN;
+        }
         return ip;
     }
 

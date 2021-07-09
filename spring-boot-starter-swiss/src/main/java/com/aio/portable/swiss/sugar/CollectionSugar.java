@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +29,20 @@ public abstract class CollectionSugar {
     public final static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
 //        return org.springframework.util.CollectionUtils.isEmpty(collection);
+    }
+
+    public final static <T> T[] removeEnd(T[] tables) {
+        T[] remain = Arrays.copyOf(tables, tables.length - 1);
+        return remain;
+    }
+
+    public final static <T> T getEnd(T[] tables) {
+        T end = tables[tables.length - 1];
+        return end;
+    }
+
+    public final static <T> List<T> asList(T... a) {
+        return new ArrayList<>(Arrays.asList(a));
     }
 
     public final static boolean isEmpty(Object[] array) {
@@ -145,6 +160,43 @@ public abstract class CollectionSugar {
         return _list;
     }
 
+//    public final static <T> T[] concat(T... arrays) {
+//        List<T> _list = new ArrayList<>();
+//        ArrayUtils.addAll()
+//        for (Collection<T> collection : arrays) {
+//            if (collection != null)
+//                _list.addAll(collection.stream().collect(Collectors.toList()));
+//        }
+//        return _list;
+//    }
+
+    public static <T> T[] concat(T[] array1, T... array2) {
+        if (array1 == null) {
+            return clone(array2);
+        } else if (array2 == null) {
+            return clone(array1);
+        } else {
+            Class<?> type1 = array1.getClass().getComponentType();
+            T[] joinedArray = (T[])(Array.newInstance(type1, array1.length + array2.length));
+            System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+
+            try {
+                System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+                return joinedArray;
+            } catch (ArrayStoreException var6) {
+                Class<?> type2 = array2.getClass().getComponentType();
+                if (!type1.isAssignableFrom(type2)) {
+                    throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of " + type1.getName(), var6);
+                } else {
+                    throw var6;
+                }
+            }
+        }
+    }
+
+    public static <T> T[] clone(T[] array) {
+        return array == null ? null : array.clone();
+    }
 
     /**
      * union 并集，去重
@@ -254,7 +306,7 @@ public abstract class CollectionSugar {
     }
 
     /**
-     * add
+     * concat
      * @param src
      * @param <T>
      * @return

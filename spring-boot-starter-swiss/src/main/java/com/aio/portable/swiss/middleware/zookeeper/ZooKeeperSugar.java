@@ -344,9 +344,9 @@ public class ZooKeeperSugar {
         }
     }
 
-    public final static void multi(ZooKeeper zookeeper, List<Op> ops, AsyncCallback.MultiCallback cb, Object ctx) {
-        zookeeper.multi(ops, cb, ctx);
-    }
+//    public final static void multi(ZooKeeper zookeeper, List<Op> ops, AsyncCallback.MultiCallback cb, Object ctx) {
+//        zookeeper.multi(ops, cb, ctx);
+//    }
 
 
 

@@ -33,5 +33,13 @@ public interface LogNote {
     String getOutputType();
 
     void setOutputType(String outputType);
+
+    String getThreadName();
+
+    void setThreadName(String threadName);
+
+    Long getThreadId();
+
+    void setThreadId(Long threadId);
 }
 

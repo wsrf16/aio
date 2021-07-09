@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.hamlet.bean;
 
 import com.aio.portable.swiss.global.Constant;
+import com.aio.portable.swiss.sugar.ThrowableSugar;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -73,17 +74,20 @@ public class RequestRecord {
 
     public static RequestRecord newInstance(HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
-        if (request != null) {
-            requestRecord.setRemoteAddress(request.getRemoteAddr());
-            String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY : "?" + request.getQueryString());
-            requestRecord.setRequestURL(url);
-            requestRecord.setHttpMethod(request.getMethod());
-            requestRecord.setHeaders(parseHeader(request));
-        }
-        requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
 
-        Object[] args = filterArguments(joinPoint.getArgs());
-        requestRecord.setArguments(args);
+        ThrowableSugar.catchThenPrintStackTrace(() -> {
+            if (request != null) {
+                requestRecord.setRemoteAddress(request.getRemoteAddr());
+                String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY : "?" + request.getQueryString());
+                requestRecord.setRequestURL(url);
+                requestRecord.setHttpMethod(request.getMethod());
+                requestRecord.setHeaders(parseHeader(request));
+            }
+            requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+
+            Object[] args = filterArguments(joinPoint.getArgs());
+            requestRecord.setArguments(args);
+        });
         return requestRecord;
     }
 

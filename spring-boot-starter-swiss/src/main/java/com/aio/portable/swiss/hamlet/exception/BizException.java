@@ -9,20 +9,32 @@ public class BizException extends RuntimeException {
         this.code = code;
     }
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
+//    @Override
+//    public String getMessage() {
+//        return message;
+//    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+//    public void setMessage(String message) {
+//        this.message = message;
+//    }
 
     private int code;
-    private String message;
+//    private String message;
 
     public BizException(int code, String message){
+        super(message);
         this.code = code;
-        this.message = message;
     }
+
+    public BizException(int code, Throwable cause){
+        super(cause);
+        this.code = code;
+    }
+
+    public BizException(int code, String message, Throwable cause){
+        super(message, cause);
+        this.code = code;
+    }
+
+
 }

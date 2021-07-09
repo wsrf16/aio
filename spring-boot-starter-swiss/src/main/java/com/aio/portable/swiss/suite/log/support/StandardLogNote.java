@@ -20,6 +20,10 @@ public class StandardLogNote implements LogNote {
     public LogThrowable exception;
     @JsonProperty("outputType")
     public String outputType;
+    @JsonProperty("threadName")
+    public String threadName = Thread.currentThread().getName();
+    @JsonProperty("threadId")
+    public Long threadId = Thread.currentThread().getId();
 
 
     public LevelEnum getLevel() {
@@ -76,6 +80,22 @@ public class StandardLogNote implements LogNote {
 
     public void setOutputType(String outputType) {
         this.outputType = outputType;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
+    public Long getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(Long threadId) {
+        this.threadId = threadId;
     }
 }
 

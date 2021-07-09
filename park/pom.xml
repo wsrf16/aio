@@ -49,6 +49,7 @@
         <mysql.version>8.0.11</mysql.version>
         <mybatis.version>2.1.0</mybatis.version>
         <java-jwt.version>3.15.0</java-jwt.version>
+        <canal.version>1.1.5</canal.version>
 
         <!--        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>-->
         <!-- swagger2markup -->
@@ -73,6 +74,10 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -118,7 +123,7 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>spring-boot-starter-swiss</artifactId>
-            <version>1.1.16-SNAPSHOT</version>
+            <version>1.1.17-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
@@ -371,7 +376,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
+<!--            <version>4.5.13</version>-->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
@@ -397,6 +402,39 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>${canal.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.protocol</artifactId>
+            <version>${canal.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

@@ -37,7 +37,6 @@ public class JacksonSugar {
 
     /**
      * obj2ShortJson
-     *
      * @param obj
      * @return
      */
@@ -56,7 +55,7 @@ public class JacksonSugar {
 
 
     /**
-     * obj2LongJson
+     * obj2ShortJson
      * @param obj
      * @param throwException
      * @return
@@ -77,7 +76,6 @@ public class JacksonSugar {
 
     /**
      * obj2LongJson
-     *
      * @param obj
      * @return
      */
@@ -117,7 +115,6 @@ public class JacksonSugar {
 
     /**
      * obj2Json
-     *
      * @param obj
      * @return
      */
@@ -137,7 +134,6 @@ public class JacksonSugar {
 
     /**
      * obj2Json
-     *
      * @param obj
      * @return
      */
@@ -196,7 +192,6 @@ public class JacksonSugar {
 
     /**
      * getObjectMapper
-     *
      * @param indent
      * @param includeNullAndEmpty
      * @param strategy
@@ -204,7 +199,7 @@ public class JacksonSugar {
      * @return
      */
     public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
-        ObjectMapper mapper = new Jackson2ObjectMapperBuilder().build()
+        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 //                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -238,8 +233,7 @@ public class JacksonSugar {
     }
 
     /**
-     * json2Obj
-     *
+     * json2T
      * @param jsonStr
      * @param clazz   {"key" : "value"}
      * @param <T>
@@ -257,7 +251,6 @@ public class JacksonSugar {
 
     /**
      * json2JsonNode
-     *
      * @param jsonStr
      * @return
      */
@@ -272,8 +265,7 @@ public class JacksonSugar {
     }
 
     /**
-     * json2Complex
-     *
+     * json2T
      * @param jsonStr
      * @param <T>
      * @return
@@ -292,8 +284,7 @@ public class JacksonSugar {
     }
 
     /**
-     * json2Complex
-     *
+     * json2T
      * @param jsonStr
      * @param valueTypeRef
      * @param <T>
@@ -312,7 +303,6 @@ public class JacksonSugar {
 
     /**
      * can2T
-     *
      * @param jsonStr
      * @param clazz
      * @param <T>
@@ -324,7 +314,7 @@ public class JacksonSugar {
     }
 
     /**
-     * can2Complex
+     * can2T
      * @param jsonStr
      * @param valueTypeRef
      * @param <T>
@@ -348,7 +338,6 @@ public class JacksonSugar {
 
     /**
      * json2JArray
-     *
      * @param jsonStr [{"key1" : "value1"}, {"key2" : "value2"}]
      * @return
      */
@@ -392,7 +381,7 @@ public class JacksonSugar {
     }
 
     /**
-     * instance
+     * newInstance
      * @param valueTypeRef
      * @param <T>
      * @return
@@ -408,7 +397,7 @@ public class JacksonSugar {
     }
 
     /**
-     * instance
+     * newInstance
      * @param <T>
      * @return
      */

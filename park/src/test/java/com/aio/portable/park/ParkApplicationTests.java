@@ -2,8 +2,10 @@ package com.aio.portable.park;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -21,8 +23,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@SpringBootTest(classes = {ParkApplication.class})
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ComponentScan("com.aio.portable")
+//@ComponentScan("com.aio.portable")
 public class ParkApplicationTests {
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
     @Test
     public void contextLoads() throws Exception {
     }

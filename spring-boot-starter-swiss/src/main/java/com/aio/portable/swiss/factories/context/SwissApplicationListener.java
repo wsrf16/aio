@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.factories.context;
 
-import com.aio.portable.swiss.sugar.SpringContextHolder;
+import com.aio.portable.swiss.suite.spring.SpringContextHolder;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;

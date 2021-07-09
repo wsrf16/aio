@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +46,10 @@ public abstract class HamletExceptionAdvice {
             log.e(GLOBAL_BUSINESS_EXCEPTION, e);
             responseWrapper = ResponseWrapper.build(bizException.getCode(), bizException.getMessage());
         }
+//        else if (Arrays.asList(e.getClass().getAnnotations()).contains(BusinessException.class)){
+//            log.e(GLOBAL_BUSINESS_EXCEPTION, e);
+//            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.getCode(), bizException.getMessage());
+//        }
         else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else if (e instanceof NoHandlerFoundException)

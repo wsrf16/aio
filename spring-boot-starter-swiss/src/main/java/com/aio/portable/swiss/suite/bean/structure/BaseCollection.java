@@ -3,7 +3,7 @@ package com.aio.portable.swiss.suite.bean.structure;
 import java.util.Map;
 
 public interface BaseCollection<T> {
-    void add(T t);
+    void set(T t);
 
     void remove(String name);
 

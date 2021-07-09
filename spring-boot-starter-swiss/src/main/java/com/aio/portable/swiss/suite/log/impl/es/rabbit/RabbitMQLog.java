@@ -9,6 +9,7 @@ import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogNote;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -71,6 +72,8 @@ public class RabbitMQLog extends LogSingle {
     public ESLogNote convert(LogNote logNote) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
+        if (!StringUtils.hasText(esIndex))
+            log.warn(new IllegalArgumentException("es-index is empty."));
         return new ESLogNote(logNote, esIndex, ip);
     }
 }

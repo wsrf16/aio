@@ -1,21 +1,46 @@
 package com.aio.portable.swiss.sugar;
 
-import java.util.function.Supplier;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-public abstract class Looper {
-    public boolean running = true;
+public class Looper {
+    public boolean running = false;
 
-    public void runLoop(Supplier<Void> supplier, int intervalMillisecondAtLeast) {
-        long prevTime;
-        long nextTime;
+    public boolean prevent = false;
 
-        while (!running) {
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
+
+    Runnable runnable;
+    long atLeastInterval;
+    TimeUnit timeUnit;
+
+    public void tryToStop() {
+        prevent = true;
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Looper(Runnable runnable, long atLeastInterval, TimeUnit timeUnit) {
+        this.runnable = runnable;
+        this.atLeastInterval = atLeastInterval;
+        this.timeUnit = timeUnit;
+    }
+
+
+    public synchronized void start() {
+        long prevTime, nextTime;
+
+        running = true;
+        while (!prevent) {
             prevTime = System.currentTimeMillis();
-            supplier.get();
+            runnable.run();
             nextTime = System.currentTimeMillis();
-            if (nextTime - prevTime < intervalMillisecondAtLeast) {
+            if (nextTime - prevTime < timeUnit.toMillis(atLeastInterval)) {
                 try {
-                    // prevent running on empty
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -23,9 +48,14 @@ public abstract class Looper {
                 }
             }
         }
+        countDownLatch.countDown();
+        countDownLatch = new CountDownLatch(1);
+
+        prevent = false;
+        running = false;
     }
 
-    public void runLoop(Supplier<Void> supplier) {
-        runLoop(supplier, 2);
+    public boolean isRunning() {
+        return running;
     }
 }

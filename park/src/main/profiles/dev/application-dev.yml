@@ -130,3 +130,6 @@ spring:
 #      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
 #    register-with-eureka: true
 
+  redis:
+    host: mecs.com
+    port: 6379

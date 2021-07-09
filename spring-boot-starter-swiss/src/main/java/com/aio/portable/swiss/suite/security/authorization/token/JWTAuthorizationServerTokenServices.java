@@ -1,9 +1,8 @@
 package com.aio.portable.swiss.suite.security.authorization.token;
 
 import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
-import com.aio.portable.swiss.suite.algorithm.transcode.TranscoderBase64;
-import com.aio.portable.swiss.suite.algorithm.transcode.Transcoding;
-import com.aio.portable.swiss.suite.security.authentication.jwt.JWTAction;
+import com.aio.portable.swiss.suite.algorithm.transcode.classic.TranscoderBase64;
+import com.aio.portable.swiss.suite.algorithm.transcode.Transcodable;
 import com.aio.portable.swiss.suite.security.authentication.jwt.JWTSession;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.security.core.AuthenticationException;
@@ -23,7 +22,7 @@ import java.util.Date;
  * JWTAuthorizationServerTokenServices (DefaultTokenServices)
  * Method "configure(AuthorizationServerEndpointsConfigurer endpoints)" In AuthorizationServerConfigurerAdapter.class
  */
-public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices, Transcoding {
+public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices, Transcodable {
     private JWTSession jwtSession;
 
     /**
@@ -37,14 +36,16 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
      */
     private TokenStore tokenStore;
 
-    private Transcoder transcode = new TranscoderBase64();
+    private Transcoder transcoder = new TranscoderBase64();
 
-    @Override
-    public void setTranscode(Transcoder transcode) {
-        this.transcode = transcode;
+    public void setTranscoder(Transcoder transcoder) {
+        this.transcoder = transcoder;
     }
 
-
+    @Override
+    public Transcoder transcoder() {
+        return transcoder;
+    }
 
     public JWTAuthorizationServerTokenServices(JWTSession jwtSession, TokenStore tokenStore) {
         this.jwtSession = jwtSession;

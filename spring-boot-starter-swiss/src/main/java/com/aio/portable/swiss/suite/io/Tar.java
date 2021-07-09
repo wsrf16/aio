@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.io;
 
+import com.aio.portable.swiss.sugar.PathSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;

@@ -4,7 +4,7 @@ import com.aio.portable.swiss.middleware.zookeeper.ZooKeeperSugar;
 import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.sugar.StringSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.io.PathSugar;
+import com.aio.portable.swiss.sugar.PathSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.zookeeper.CreateMode;
@@ -71,16 +71,16 @@ public class ZooKeeperPO implements NodePersistence {
             ZooKeeperSugar.create(zooKeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     }
 
-    @Override
-    public void setTable(String table, Object value, String... tables) {
-        String path = spellPath(table, tables);
-        boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
-        byte[] bytes = JacksonSugar.obj2Json(value).getBytes();
-        if (exists)
-            ZooKeeperSugar.setData(zooKeeper, path, bytes);
-        else
-            ZooKeeperSugar.create(zooKeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-    }
+//    @Override
+//    public void setTable(String table, Object value, String... tables) {
+//        String path = spellPath(table, tables);
+//        boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
+//        byte[] bytes = JacksonSugar.obj2Json(value).getBytes();
+//        if (exists)
+//            ZooKeeperSugar.setData(zooKeeper, path, bytes);
+//        else
+//            ZooKeeperSugar.create(zooKeeper, path, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+//    }
 
     @Override
     public void remove(String key, String... tables) {
@@ -89,7 +89,7 @@ public class ZooKeeperPO implements NodePersistence {
     }
 
     @Override
-    public void clearTable(String table, String... tables) {
+    public void clear(String table, String... tables) {
         String path = spellPath(table, tables);
 
 //        List<String> childrenFullPath = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
@@ -97,11 +97,11 @@ public class ZooKeeperPO implements NodePersistence {
         ZooKeeperSugar.clearIfExists(zooKeeper, path);
     }
 
-    @Override
-    public void removeTable(String table, String... tables) {
-        String path = spellPath(table, tables);
-        ZooKeeperSugar.deleteIfExists(zooKeeper, path);
-    }
+//    @Override
+//    public void removeTable(String table, String... tables) {
+//        String path = spellPath(table, tables);
+//        ZooKeeperSugar.deleteIfExists(zooKeeper, path);
+//    }
 
     @Override
     public void clearDatabase() {
@@ -135,32 +135,31 @@ public class ZooKeeperPO implements NodePersistence {
         return t;
     }
 
-    @Override
-    public <T> T getTable(String key, Class<T> clazz, String... tables) {
-        String path = spellPath(key, tables);
-        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
-        String json = new String(bytes);
-        T t = JacksonSugar.json2T(json, clazz);
-        return t;
-    }
+//    @Override
+//    public <T> T getTable(String key, Class<T> clazz, String... tables) {
+//        String path = spellPath(key, tables);
+//        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
+//        T t = JacksonSugar.json2T(new String(bytes), clazz);
+//        return t;
+//    }
 
-    @Override
-    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
-        String path = spellPath(table, tables);
-        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
-        T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
-        return t;
-    }
+//    @Override
+//    public <T> T getTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        String path = spellPath(table, tables);
+//        byte[] bytes = ZooKeeperSugar.getData(zooKeeper, path, false);
+//        T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);
+//        return t;
+//    }
 
-    @Override
-    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
-        return this.getAll(table, clazz, tables);
-    }
-
-    @Override
-    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
-        return this.getAll(table, valueTypeRef, tables);
-    }
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, Class<T> clazz, String... tables) {
+//        return this.getAll(table, clazz, tables);
+//    }
+//
+//    @Override
+//    public <T> Map<String, T> getAllTable(String table, TypeReference<T> valueTypeRef, String... tables) {
+//        return this.getAll(table, valueTypeRef, tables);
+//    }
 
     @Override
     public List<String> getChildren(String table, String... tables) {
@@ -206,12 +205,12 @@ public class ZooKeeperPO implements NodePersistence {
         return exists;
     }
 
-    @Override
-    public boolean existsTable(String table, String... tables) {
-        String path = spellPath(table, tables);
-        boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
-        return exists;
-    }
+//    @Override
+//    public boolean existsTable(String table, String... tables) {
+//        String path = spellPath(table, tables);
+//        boolean exists = ZooKeeperSugar.exists(zooKeeper, path, false);
+//        return exists;
+//    }
 
     @Override
     public boolean existsDatabase() {

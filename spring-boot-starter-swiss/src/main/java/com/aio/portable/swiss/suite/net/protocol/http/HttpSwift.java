@@ -26,7 +26,7 @@ import java.util.List;
 
 public class HttpSwift {
     public CookieStore cookieStore = new BasicCookieStore();
-    public CloseableHttpClient httpCilent = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+    public CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
     // 配置超时时间
     RequestConfig requestConfig = RequestConfig
             .custom()

@@ -116,17 +116,12 @@ public abstract class StreamSugar {
 
             @Override
             public boolean equals(final Object o) {
-                if (o == null)
+                if (o == null || !(o instanceof Collection))
                     return false;
-                if (!(o instanceof Collection))
-                    return false;
-                final Collection<T> c = (Collection) o;
                 final Iterator<T> it1 = iterator();
-                final Iterator<T> it2 = c.iterator();
+                final Iterator<T> it2 = ((Collection) o).iterator();
                 while (it1.hasNext()) {
-                    if (!it2.hasNext())
-                        return false;
-                    if (!Objects.equals(it1.next(), it2.next()))
+                    if (!it2.hasNext() || !Objects.equals(it1.next(), it2.next()))
                         return false;
                 }
                 if (it2.hasNext())
@@ -228,7 +223,6 @@ public abstract class StreamSugar {
 
     /**
      * split
-     *
      * @param list
      * @param size
      * @param <T>

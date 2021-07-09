@@ -16,7 +16,6 @@ import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 
 import java.util.ArrayList;
 
-//@FunctionalInterface
 public abstract class LogHubFactory {
     class Type {
         public final static String CONSOLE_HUB_FACTORY = "consoleHubFactory";

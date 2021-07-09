@@ -12,9 +12,9 @@ public interface KeyValuePersistence {
 
     void remove(String key, String... tables);
 
-    void clearTable(String table, String... tables);
+    void clear(String table, String... tables);
 
-    void removeTable(String table, String... tables);
+//    void removeTable(String table, String... tables);
 
     void clearDatabase();
 
@@ -32,7 +32,7 @@ public interface KeyValuePersistence {
 
     boolean exists(String key, String... tables);
 
-    boolean existsTable(String table, String... tables);
+//    boolean existsTable(String table, String... tables);
 
     boolean existsDatabase();
 

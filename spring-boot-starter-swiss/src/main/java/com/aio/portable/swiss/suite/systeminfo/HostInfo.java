@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
  * Created by York on 2017/11/22.
  */
 public class HostInfo {
+    public static final String IP_UNKNOWN = "UNKNOWN";
+
     /**
      * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,
      * 参考文章： http://developer.51cto.com/art/201111/305181.htm

@@ -1,27 +1,12 @@
 package com.aio.portable.swiss.factories.context;
 
-import com.aio.portable.swiss.sugar.SpringContextHolder;
-import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
-import com.aio.portable.swiss.suite.log.support.LogHubUtils;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.*;
-import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.boot.env.EnvironmentPostProcessor;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.GenericApplicationListener;
-import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.ConfigurableEnvironment;
 

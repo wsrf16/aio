@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.impl.slf4j;
 
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 public class Slf4JLogProperties implements InitializingBean {
     public final static String PREFIX = "spring.log.slf4j";
 
-    private final static Logger logger = LoggerFactory.getLogger(Slf4JLogProperties.class);
+    private final static Log log = LogFactory.getLog(Slf4JLogProperties.class);
 
     private Boolean enabled = true;
 
@@ -43,7 +43,7 @@ public class Slf4JLogProperties implements InitializingBean {
 
     public final static void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
-        logger.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
+        log.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
     }
 
     public final static void initialSingletonInstance(Binder binder) {

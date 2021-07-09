@@ -36,7 +36,9 @@ public class RestTemplateAutoConfiguration {
         boolean enabled = agent.isEnabled();
         String agentHost = agent.getHost();
         int agentPort = agent.getPort();
-        RestTemplate restTemplate = enabled ? RestTemplater.Build.buildProxyRestTemplate(restTemplateBuilder.build(), agentHost, agentPort) : restTemplateBuilder.build();
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        if (enabled)
+            RestTemplater.setProxyRequestFactory(restTemplate, agentHost, agentPort);
         return restTemplate;
     }
 
@@ -50,7 +52,6 @@ public class RestTemplateAutoConfiguration {
     }
 
 
-
     @Bean("skipSSLRestTemplate")
     @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class})
     public RestTemplate proxySkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
@@ -58,19 +59,19 @@ public class RestTemplateAutoConfiguration {
         boolean enabled = agent.isEnabled();
         String agentHost = agent.getHost();
         int agentPort = agent.getPort();
-        RestTemplate restTemplate = enabled ? RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder.build(), agentHost, agentPort) : restTemplateBuilder.build();
-
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        if (enabled)
+            RestTemplater.setSkipSSLRequestFactory(restTemplate, agentHost, agentPort);
         return restTemplate;
     }
 
     @Bean("skipSSLRestTemplate")
     @ConditionalOnBean({RestTemplateBuilder.class})
     public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        RestTemplate restTemplate = RestTemplater.Build.buildSkipSSLRestTemplate(restTemplateBuilder.build());
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        RestTemplater.setSkipSSLRequestFactory(restTemplate);
         return restTemplate;
     }
-
-
 
 
 }

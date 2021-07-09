@@ -37,6 +37,7 @@ public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinition
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // 此处已autowired加载完
         try {
             LogHubUtils.initLogHubFactory(beanFactory);
         } catch (Exception e) {

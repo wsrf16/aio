@@ -48,7 +48,7 @@ public class YamlSugar {
         try {
             inputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         T t = YAML.loadAs(inputStream, clazz);

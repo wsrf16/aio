@@ -170,29 +170,6 @@ public abstract class CollectionSugar {
 //        return _list;
 //    }
 
-    public static <T> T[] concat(T[] array1, T... array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        } else {
-            Class<?> type1 = array1.getClass().getComponentType();
-            T[] joinedArray = (T[])(Array.newInstance(type1, array1.length + array2.length));
-            System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-
-            try {
-                System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-                return joinedArray;
-            } catch (ArrayStoreException var6) {
-                Class<?> type2 = array2.getClass().getComponentType();
-                if (!type1.isAssignableFrom(type2)) {
-                    throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of " + type1.getName(), var6);
-                } else {
-                    throw var6;
-                }
-            }
-        }
-    }
 
     public static <T> T[] clone(T[] array) {
         return array == null ? null : array.clone();
@@ -305,27 +282,59 @@ public abstract class CollectionSugar {
         return dest;
     }
 
+//    /**
+//     * concat
+//     * @param generator: String[]::new
+//     * @param src
+//     * @param <T>
+//     * @return
+//     */
+//    public final static <T> T[] concat(IntFunction<T[]> generator, T[] src, T... dest) {
+////        int length1 = src.length;
+////        int length2 = dest.length;
+////
+////        int length = length1 + length2;
+////        T[] result = (T[]) new Object[length];
+////        for (int i = 0; i < length1; i++) {
+////            result[i] = src[i];
+////        }
+////        for (int i = length1; i < length; i++) {
+////            result[i] = dest[length - length1 - 1];
+////        }
+//        List<T> list1 = Arrays.stream(src).collect(Collectors.toList());
+//        List<T> list2 = Arrays.stream(dest).collect(Collectors.toList());
+//        return concat(list1, list2).stream().toArray(generator);
+//    }
+
     /**
      * concat
-     * @param src
+     * @param array1
+     * @param array2
      * @param <T>
      * @return
      */
-    public final static <T> T[] concat(IntFunction<T[]> generator, T[] src, T... dest) {
-//        int length1 = src.length;
-//        int length2 = dest.length;
-//
-//        int length = length1 + length2;
-//        T[] result = (T[]) new Object[length];
-//        for (int i = 0; i < length1; i++) {
-//            result[i] = src[i];
-//        }
-//        for (int i = length1; i < length; i++) {
-//            result[i] = dest[length - length1 - 1];
-//        }
-        List<T> list1 = Arrays.stream(src).collect(Collectors.toList());
-        List<T> list2 = Arrays.stream(dest).collect(Collectors.toList());
-        return concat(list1, list2).stream().toArray(generator);
+    public final static <T> T[] concat(T[] array1, T... array2) {
+        if (array1 == null) {
+            return clone(array2);
+        } else if (array2 == null) {
+            return clone(array1);
+        } else {
+            Class<?> type1 = array1.getClass().getComponentType();
+            T[] joinedArray = (T[])(Array.newInstance(type1, array1.length + array2.length));
+            System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+
+            try {
+                System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+                return joinedArray;
+            } catch (ArrayStoreException var6) {
+                Class<?> type2 = array2.getClass().getComponentType();
+                if (!type1.isAssignableFrom(type2)) {
+                    throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of " + type1.getName(), var6);
+                } else {
+                    throw var6;
+                }
+            }
+        }
     }
 
     /**
@@ -343,7 +352,7 @@ public abstract class CollectionSugar {
             try {
                 t = (T) targetItem.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             BeanUtils.copyProperties(s, t);

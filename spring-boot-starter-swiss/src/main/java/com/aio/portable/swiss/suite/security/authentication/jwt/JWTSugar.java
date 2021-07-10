@@ -127,7 +127,7 @@ public abstract class JWTSugar {
             Object invoke = method.invoke(builder, new Object[]{name, value});
             return builder;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

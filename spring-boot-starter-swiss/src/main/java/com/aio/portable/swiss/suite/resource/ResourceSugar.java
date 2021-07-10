@@ -89,7 +89,7 @@ public abstract class ResourceSugar {
                 String pathOfURL = MessageFormat.format("{0}:{1}!{2}", ProtocolType.jar, jarURL.toExternalForm(), resourceInJar);
                 return new URL(pathOfURL);
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
@@ -216,7 +216,7 @@ public abstract class ResourceSugar {
                 boolean exist = urlList != null && urlList.size() > 0;
                 return exist;
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

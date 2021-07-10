@@ -56,7 +56,8 @@ public abstract class IOSugar {
                     read.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             return sb.toString();
         }
@@ -86,7 +87,8 @@ public abstract class IOSugar {
                 writer.write(content);
                 writer.close();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new RuntimeException(e);
             } finally {
 
             }
@@ -102,7 +104,8 @@ public abstract class IOSugar {
                 fos.write(bytes);
                 fos.close();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -235,7 +238,7 @@ public abstract class IOSugar {
                 }
                 return outputStream.toString(charset.displayName());
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

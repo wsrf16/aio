@@ -47,7 +47,7 @@ public class JacksonSugar {
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return json;
@@ -86,7 +86,7 @@ public class JacksonSugar {
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return json;

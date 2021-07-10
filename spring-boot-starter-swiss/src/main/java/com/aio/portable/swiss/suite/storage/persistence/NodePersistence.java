@@ -1,9 +1,5 @@
 package com.aio.portable.swiss.suite.storage.persistence;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import java.util.Map;
-
 public interface NodePersistence extends KeyValuePersistence {
 //    void setTable(String table, String... tables);
 

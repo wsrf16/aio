@@ -18,7 +18,7 @@ public class ZooKeeperSugar {
         try {
             return new ZooKeeper(connectString, sessionTimeout, watcher);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw  new RuntimeException(e);
         }
     }
@@ -69,7 +69,7 @@ public class ZooKeeperSugar {
             List<String> children = zooKeeper.getChildren(path, watch);
             return children;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -79,7 +79,7 @@ public class ZooKeeperSugar {
             List<String> children = zooKeeper.getChildren(path, watcher);
             return children;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -125,7 +125,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.exists(path, watch) != null;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -134,7 +134,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.exists(path, watcher) != null;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -153,7 +153,7 @@ public class ZooKeeperSugar {
             return zookeeper.create(path, bytes, acl, createMode);
 
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -186,7 +186,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.create(path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -207,7 +207,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.getData(path, watch, null);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -218,7 +218,7 @@ public class ZooKeeperSugar {
             String result = new String(bytes, charset);
             return result;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -229,7 +229,7 @@ public class ZooKeeperSugar {
             String result = new String(bytes, charsetName);
             return result;
         } catch (KeeperException | InterruptedException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -240,7 +240,7 @@ public class ZooKeeperSugar {
             String result = new String(bytes);
             return result;
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -249,7 +249,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.setData(path, bytes, -1);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -264,7 +264,7 @@ public class ZooKeeperSugar {
             byte[] bytes = data.getBytes(charset);
             return zookeeper.setData(path, bytes, -1);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -274,7 +274,7 @@ public class ZooKeeperSugar {
             byte[] bytes = data.getBytes();
             return zookeeper.setData(path, bytes, -1);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -284,7 +284,7 @@ public class ZooKeeperSugar {
             Stat stat = zookeeper.setData(path, new byte[0], -1);
             return stat.getVersion();
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -307,7 +307,7 @@ public class ZooKeeperSugar {
             }
 //            zookeeper.delete(znodePath, -1);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -330,7 +330,7 @@ public class ZooKeeperSugar {
             }
             zookeeper.delete(znodePath, -1);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -339,7 +339,7 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.multi(ops);
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

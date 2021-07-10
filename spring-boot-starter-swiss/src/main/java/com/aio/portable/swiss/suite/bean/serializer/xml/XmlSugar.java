@@ -44,8 +44,8 @@ public abstract class XmlSugar {
         try {
             return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+//            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -54,7 +54,7 @@ public abstract class XmlSugar {
         try {
             return mapper.readValue(xml, clazz);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

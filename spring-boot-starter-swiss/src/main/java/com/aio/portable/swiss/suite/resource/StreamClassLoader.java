@@ -46,7 +46,7 @@ public class StreamClassLoader extends ClassLoader {
             try {
                 jarFile = new JarFile(file);
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             List<JarEntry> jarEntryList = Collections.list(jarFile.entries());
@@ -83,7 +83,7 @@ public class StreamClassLoader extends ClassLoader {
                 if (in != null)
                     in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

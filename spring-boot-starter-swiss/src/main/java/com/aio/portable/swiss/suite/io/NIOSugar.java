@@ -25,7 +25,7 @@ public abstract class NIOSugar {
             try (BufferedWriter writer = java.nio.file.Files.newBufferedWriter(path, charset, options)) {
                 writer.write(content);
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -39,7 +39,7 @@ public abstract class NIOSugar {
                 String content = new String(java.nio.file.Files.readAllBytes(path), charset);
                 return content;
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -63,7 +63,7 @@ public abstract class NIOSugar {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.getFileName()).collect(Collectors.toList());
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -76,7 +76,7 @@ public abstract class NIOSugar {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.toAbsolutePath()).collect(Collectors.toList());
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -89,7 +89,7 @@ public abstract class NIOSugar {
             try {
                 return java.nio.file.Files.createDirectories(path, attrs);
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -114,7 +114,7 @@ public abstract class NIOSugar {
                     deleteDirectories(path);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -141,7 +141,8 @@ public abstract class NIOSugar {
                     });
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -163,7 +164,7 @@ public abstract class NIOSugar {
                     }
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             return paths;
@@ -188,7 +189,7 @@ public abstract class NIOSugar {
                     }
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             return paths;

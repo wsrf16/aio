@@ -62,7 +62,7 @@ public class HostInfo {
         try {
             return InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -85,7 +85,7 @@ public class HostInfo {
         try {
             networkInterfaces = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         while (networkInterfaces.hasMoreElements()) {

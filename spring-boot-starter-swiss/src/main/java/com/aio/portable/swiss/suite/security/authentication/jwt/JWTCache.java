@@ -12,7 +12,7 @@ public class JWTCache {
         try {
             clazz = (Class<T>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return clazz;

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 
+import java.lang.reflect.InvocationTargetException;
+
 @Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
@@ -50,15 +52,14 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
             String name = names[i];
 
             BeanDefinition definition = beanFactory.getBeanDefinition(name);
-            if (definition.getBeanClassName() == null)
-                System.out.println();
+            if (definition.getBeanClassName() == null){}
             else if (definition.getBeanClassName().contains("Hub")) {
                 if ((definition instanceof ScannedGenericBeanDefinition && ((ScannedGenericBeanDefinition) definition).getMetadata().getSuperClassName().equals(LogHubFactory.class.getTypeName())))
                 {
                     try {
                         final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(Thread.currentThread().getContextClassLoader());
-                        clazz.newInstance();
-                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                        clazz.getConstructor().newInstance();
+                    } catch (InstantiationException|InvocationTargetException|NoSuchMethodException|IllegalAccessException|ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
@@ -72,7 +73,6 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
 //        Stream.of(names).filter(c -> c.equals("rabbitMQLogProperties")).findFirst().get()
 //        Object rabbitMQLogProperties = beanFactory.getBean("rabbitMQLogProperties");
 //        beanFactory.destroyBean(rabbitMQLogProperties);
-        System.out.println();
     }
 }
 

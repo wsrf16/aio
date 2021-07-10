@@ -41,14 +41,14 @@ public abstract class ClassSugar {
                             location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
                                     .concat("!/").concat(clazzFile));
                         } catch (MalformedURLException e) {
-                            e.printStackTrace();
+//                            e.printStackTrace();
                             throw new RuntimeException(e);
                         }
                     else if (new File(location.getFile()).isDirectory())
                         try {
                             location = new URL(location, clazzFile);
                         } catch (MalformedURLException e) {
-                            e.printStackTrace();
+//                            e.printStackTrace();
                             throw new RuntimeException(e);
                         }
                 }
@@ -162,7 +162,7 @@ public abstract class ClassSugar {
         try {
             return clazz.getConstructor(parameterTypes).newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -180,7 +180,7 @@ public abstract class ClassSugar {
             ReflectionUtils.makeAccessible(declaredConstructor);
             return declaredConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -216,7 +216,7 @@ public abstract class ClassSugar {
             extendClazz = Class.forName(extendClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -232,7 +232,7 @@ public abstract class ClassSugar {
             Class<?> superClazz = Class.forName(superClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -249,7 +249,7 @@ public abstract class ClassSugar {
             Class<?> extendClazz = Class.forName(extendClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

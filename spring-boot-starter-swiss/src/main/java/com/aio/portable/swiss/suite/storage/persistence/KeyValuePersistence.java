@@ -6,37 +6,41 @@ import java.util.List;
 import java.util.Map;
 
 public interface KeyValuePersistence {
-    String spellPath(String node, String... prefixNodes);
+    String EMPTY = "";
 
-    void set(String key, Object value, String... tables);
+    String spellPath(String key, String... parent);
 
-    void remove(String key, String... tables);
+    void set(String key, Object value, String... parent);
 
-    void clear(String table, String... tables);
+    void remove(String key, String... parent);
 
-//    void removeTable(String table, String... tables);
+    default void remove() {
+        remove(EMPTY);
+    }
 
-    void clearDatabase();
+    void clear(String key, String... parent);
 
-    void removeDatabase();
+    default void clear() {
+        clear(EMPTY);
+    }
 
-    <T> T get(String key, Class<T> clazz, String... tables);
+    boolean exists(String key, String... parent);
 
-    <T> T get(String key, TypeReference<T> valueTypeRef, String... tables);
+    default boolean exists() {
+        return exists(EMPTY);
+    }
 
-    List<String> getChildren(String table, String... tables);
+    List<String> keys(String key, String... parent);
 
-    <T> Map<String, T> getAll(String table, Class<T> clazz, String... tables);
+    default List<String> keys(){
+        return keys(EMPTY);
+    }
 
-    <T> Map<String, T> getAll(String table, TypeReference<T> valueTypeRef, String... tables);
+    <T> T get(String key, Class<T> clazz, String... parent);
 
-    boolean exists(String key, String... tables);
+    <T> T get(String key, TypeReference<T> valueTypeRef, String... parent);
 
-//    boolean existsTable(String table, String... tables);
+    <T> Map<String, T> getChildren(String key, Class<T> clazz, String... parent);
 
-    boolean existsDatabase();
-
-    List<String> keys(String table, String... tables);
-
-    List<String> tables();
+    <T> Map<String, T> getChildren(String key, TypeReference<T> valueTypeRef, String... parent);
 }

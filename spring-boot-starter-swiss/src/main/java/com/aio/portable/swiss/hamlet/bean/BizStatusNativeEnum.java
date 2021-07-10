@@ -74,10 +74,10 @@ public abstract class BizStatusNativeEnum {
                 BizStatus bizStatus = (BizStatus)c.invoke(instance);
                 return bizStatus;
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });

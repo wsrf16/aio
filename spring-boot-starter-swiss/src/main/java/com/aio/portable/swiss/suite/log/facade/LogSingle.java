@@ -86,7 +86,6 @@ public abstract class LogSingle implements LogAction {
             else
                 printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level);
         } catch (Exception e) {
-//            e.printStackTrace();
             log.warn("logSingle output failed.", e);
         }
     }

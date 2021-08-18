@@ -29,22 +29,22 @@ public class ResourceTest {
             String jar = "./spring-boot-starter-swiss/target/spring-boot-starter-swiss-1.1.10-SNAPSHOT.jar";
             String resource = "com/aio/portable/swiss/sandbox/Wood.class";
 
-            List<URL> resources0 = ResourceSugar.ByClassLoader.getResources(resource);
-            List<URL> resources1 = ResourceSugar.ByClassLoader.getResourcesByClass(Wood.class.getTypeName());
-            List<URL> resources2 = ResourceSugar.ByClassLoader.getResourcesByClass(Wood.class);
+            List<URL> resources0 = ResourceSugar.ByClassLoader.getResourceURLs(resource);
+            List<URL> resources1 = ResourceSugar.ByClassLoader.getClassURLs(Wood.class.getTypeName());
+            List<URL> resources2 = ResourceSugar.ByClassLoader.getClassURLs(Wood.class);
 
-            List<URL> urls = ResourceSugar.listResourcesInJar(jar);
-            URL resourceInJar = ResourceSugar.getResourceInJar(jar, resource);
+            List<URL> urls = ResourceSugar.getAllJarResourceURLs(jar);
+            URL resourceInJar = ResourceSugar.getJarResourceURL(jar, resource);
 
             URL url = urls.get(156);
-            Class<?> clazz1 = ClassLoaderSugar.loadedClass(url);
-            String className = ResourceSugar.toCompleteClassName(url.toString());
-            Class<?> clazz2 = ClassLoaderSugar.loadedClass(urls, className);
+            Class<?> clazz1 = ClassLoaderSugar.loadClass(url);
+            String className = ResourceSugar.convertURLToClassName(url.toString());
+            Class<?> clazz2 = ClassLoaderSugar.loadClass(urls, className);
 
-            List<String> completeClassNameList = PackageSugar.getCompleteClassNameByPath("./park/target");
+            List<String> completeClassNameList = PackageSugar.getClassNameByPath("./park/target");
 //            List<String> completeClassNameByJar = PackageSugar.getCompleteClassNameByJar(jar);
 
-            List<String> completeClassName = PackageSugar.getCompleteClassName("com.aio.portable.swiss.global");
+            List<String> completeClassName = PackageSugar.getClassNameList("com.aio.portable.swiss.global");
             Thread.sleep(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,18 +133,18 @@ public class ResourceTest {
 
     @Test
     public void foobar() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        ResourceSugar.ByClassLoader.getResources("com/aio/portable/swiss/sandbox/a中文/AA.class");
-        ResourceSugar.ByClassLoader.getResourcesByClass("Wood");
-        ResourceSugar.ByClassLoader.getResourcesByClass(Book.class);
+        ResourceSugar.ByClassLoader.getResourceURLs("com/aio/portable/swiss/sandbox/a中文/AA.class");
+        ResourceSugar.ByClassLoader.getClassURLs("Wood");
+        ResourceSugar.ByClassLoader.getClassURLs(Book.class);
 
 
         String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
         String resourceInJar = "/sandbox/console/Book.class";
-        URL url = ResourceSugar.getResourceInJar(jarPath, resourceInJar);
-        List<URL> urlList = ResourceSugar.listResourcesInJar(jarPath);
+        URL url = ResourceSugar.getJarResourceURL(jarPath, resourceInJar);
+        List<URL> urlList = ResourceSugar.getAllJarResourceURLs(jarPath);
 
         {
-            String className = ResourceSugar.path2CompleteClassName(resourceInJar);
+            String className = ResourceSugar.convertResourceLocationToClassName(resourceInJar);
             Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
             className = "Wood";
             Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
@@ -180,7 +180,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = ResourceSugar.ByClassLoader.getResources(resourceLocation);
+            List<URL> r1 = ResourceSugar.ByClassLoader.getResourceURLs(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,14 +188,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClass(classname);
+            List<URL> r2 = ResourceSugar.ByClassLoader.getClassURLs(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = ResourceSugar.ByClassLoader.getResourcesByClass(clazz);
+            List<URL> r3 = ResourceSugar.ByClassLoader.getClassURLs(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -204,8 +204,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = ResourceSugar.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = ResourceSugar.listResourcesInJar(jarPath);
+            URL url = ResourceSugar.getJarResourceURL(jarPath, resourceLocation);
+            List<URL> r4 = ResourceSugar.getAllJarResourceURLs(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

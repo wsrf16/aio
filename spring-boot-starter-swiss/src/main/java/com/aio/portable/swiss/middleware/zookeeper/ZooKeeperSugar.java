@@ -18,7 +18,6 @@ public class ZooKeeperSugar {
         try {
             return new ZooKeeper(connectString, sessionTimeout, watcher);
         } catch (IOException e) {
-//            e.printStackTrace();
             throw  new RuntimeException(e);
         }
     }
@@ -69,7 +68,6 @@ public class ZooKeeperSugar {
             List<String> children = zooKeeper.getChildren(path, watch);
             return children;
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -79,7 +77,6 @@ public class ZooKeeperSugar {
             List<String> children = zooKeeper.getChildren(path, watcher);
             return children;
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -125,7 +122,6 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.exists(path, watch) != null;
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -134,7 +130,6 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.exists(path, watcher) != null;
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -153,7 +148,6 @@ public class ZooKeeperSugar {
             return zookeeper.create(path, bytes, acl, createMode);
 
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -186,7 +180,6 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.create(path, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -207,7 +200,6 @@ public class ZooKeeperSugar {
         try {
             return zookeeper.getData(path, watch, null);
         } catch (KeeperException | InterruptedException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

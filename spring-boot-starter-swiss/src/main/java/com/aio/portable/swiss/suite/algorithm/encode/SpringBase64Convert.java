@@ -36,10 +36,4 @@ public abstract class SpringBase64Convert {
     public final static String decodeToString(String text) {
         return Base64Utils.encodeToString(text.getBytes());
     }
-
-
-    @Deprecated
-    public final static byte[] decodeFromString(String cipher) {
-        return Base64Utils.decodeFromString(cipher);
-    }
 }

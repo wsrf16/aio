@@ -6,7 +6,6 @@ import com.aio.portable.swiss.sugar.StringSugar;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -32,103 +31,98 @@ public abstract class ResourceSugar {
      */
 
     /**
-     * spellResourceInJar 从Jar中根据资源路径拼出URL
-     *
+     * spellJarResourceURL 从Jar中根据资源路径拼出URL
      * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @param resourceLocation  eg. "/com/art/Book.class"
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      * @throws MalformedURLException
      */
-    public final static URL spellResourceInJar(final String jarPath, final String resourceLocation) throws MalformedURLException {
-        File jarFile = new File(jarPath);
-        URL jarURL = jarFile.toURI().toURL();
-        String resourceInJarChanged = resourceLocation.startsWith("/") ? resourceLocation : "/" + resourceLocation;
-        String pathOfURL = MessageFormat.format("{0}:{1}!{2}", ProtocolType.jar, jarURL.toExternalForm(), resourceInJarChanged);
-        URL url = new URL(pathOfURL);
-        return url;
+    public final static URL spellJarResourceURL(final String jarPath, final String resourceLocation) {
+        try {
+            URL jarURL = new File(jarPath).toURI().toURL();
+            String resourceInJarChanged = resourceLocation.startsWith("/") ? resourceLocation : "/" + resourceLocation;
+            String pathOfURL = MessageFormat.format("{0}:{1}!{2}", ProtocolType.jar, jarURL.toExternalForm(), resourceInJarChanged);
+            URL url = new URL(pathOfURL);
+            return url;
+        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * getURLInJar 从Jar中获得资源
-     *
      * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @param resourceLocation  eg. "/com/art/Book.class"
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
-     * @throws MalformedURLException
      */
-    public final static URL getResourceInJar(final String jarPath, final String resourceLocation) throws IOException {
-        URL url = listResourcesInJar(jarPath).stream().filter(c -> c.getPath().endsWith(resourceLocation)).findFirst().get();
+    public final static URL getJarResourceURL(final String jarPath, final String resourceLocation) {
+        URL url = getAllJarResourceURLs(jarPath).stream().filter(c -> c.getPath().endsWith(resourceLocation)).findFirst().get();
         return url;
     }
 
-    /**
-     * getResourceInJarAsStream 从Jar中获得资源流
-     *
-     * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
-     * @param resourceLocation  eg. "/com/art/Book.class"
-     * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
-     * @throws MalformedURLException
-     */
-    public final static InputStream getResourceInJarAsStream(final String jarPath, final String resourceLocation) throws IOException {
-        return spellResourceInJar(jarPath, resourceLocation).openStream();
-    }
+//    /**
+//     * getResourceInJarAsStream 从Jar中获得资源流
+//     * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
+//     * @param resourceLocation  eg. "/com/art/Book.class"
+//     * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
+//     */
+//    public final static InputStream getResourceInJarAsStream(final String jarPath, final String resourceLocation) throws IOException {
+//        return spellJarResourceURL(jarPath, resourceLocation).openStream();
+//    }
 
     /**
-     * getResourcesInJar 从Jar中获得所有资源集合
-     *
+     * getAllJarResourceURLs 从Jar中获得所有资源集合
      * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return
-     * @throws IOException
      */
-    public final static List<URL> listResourcesInJar(final String jarPath) throws IOException {
-        URL jarURL = new File(jarPath).toURI().toURL();
-        List<JarEntry> jarEntryList = new JarFile(jarPath).stream().collect(Collectors.toList());
-        List<URL> urlList = jarEntryList.stream().map(c -> {
-            String resourceInJar = "/" + c.getName();
-            try {
-                String pathOfURL = MessageFormat.format("{0}:{1}!{2}", ProtocolType.jar, jarURL.toExternalForm(), resourceInJar);
-                return new URL(pathOfURL);
-            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-        return urlList;
+    public final static List<URL> getAllJarResourceURLs(final String jarPath) {
+        try {
+            URL jarURL = new File(jarPath).toURI().toURL();
+            List<JarEntry> jarEntryList = new JarFile(jarPath).stream().collect(Collectors.toList());
+            List<URL> urlList = jarEntryList.stream().map(c -> {
+                String resourceInJar = "/" + c.getName();
+                try {
+                    String pathOfURL = MessageFormat.format("{0}:{1}!{2}", ProtocolType.jar, jarURL.toExternalForm(), resourceInJar);
+                    return new URL(pathOfURL);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toList());
+            return urlList;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     * path2FullName
-     *
-     * @param path className/packageName eg. com/company/biz | com/company/biz/Book
+     * convertLocationToClassName
+     * @param location className/packageName eg. com/company/biz | com/company/biz/Book.class
      * @return com.company.biz | com.company.biz.Book
      */
-    public final static String path2CompleteClassName(String path) {
-        path = StringSugar.removeEnd(path, ".class");
-        String fullName = path.replace("/", ".");
-        fullName = StringSugar.removeStart(fullName, ".");
-        return fullName;
+    public final static String convertResourceLocationToClassName(String location) {
+        String temp = StringSugar.trim(location, "/", ".class");
+        temp = temp.replace("/", ".");
+        return temp;
     }
 
-    final static String[] delimiters = new String[]{"//", "/"};
-    final static String delimiter = "/";
+
+
+    private final static String[] delimiters = new String[]{"//", "/"};
+    private final static String delimiter = "/";
 
     /**
      * concat 连接多个资源路径
-     *
-     * @param parts
+     * @param locations
      * @return
      */
-    public final static String concat(String... parts) {
-        Stream<String> fixPartStream = Arrays.stream(parts).map(c -> StringSugar.replaceEach(c, delimiters, new String[]{delimiter, delimiter}));
+    public final static String concat(String... locations) {
+        Stream<String> fixPartStream = Arrays.stream(locations).map(c -> StringSugar.replaceEach(c, delimiters, new String[]{delimiter, delimiter}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
-        String[] fixParts = fixPartList.stream().map(c -> {
-            String _a = StringSugar.removeStart(c, delimiter);
-            String _b = StringSugar.removeEnd(_a, delimiter);
-            return _b;
-        }).toArray(String[]::new);
+        String[] fixParts = fixPartList.stream().map(c -> StringSugar.trim(c, delimiter)).toArray(String[]::new);
         String combined = String.join(delimiter, fixParts);
         String start = fixPartList.get(0).startsWith(delimiter) ? delimiter : Constant.EMPTY;
-        String end = fixPartList.get(parts.length - 1).endsWith(delimiter) ? delimiter : Constant.EMPTY;
+        String end = fixPartList.get(locations.length - 1).endsWith(delimiter) ? delimiter : Constant.EMPTY;
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
@@ -138,28 +132,25 @@ public abstract class ResourceSugar {
 //    }
 
     /**
-     * toCompleteClassName
-     * @param resource jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
+     * convertURLToClassName
+     * @param url jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
      * @return
      */
-    public final static String toCompleteClassName(String resource) {
+    public final static String convertURLToClassName(String url) {
         // jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
         // ->
         // /BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
-        String resourceRelative = resource.split("!")[1];
+        String resourceRelative = url.split("!")[1];
         // -> com/aio/portable/park/config/BeanConfig.class
         String classFilePath = resourceRelative.contains("classes/") ? resourceRelative.split("classes/")[1] : resourceRelative;
         // -> com.aio.portable.park.config.BeanConfig
-        String completeClassName = StringSugar.removeEnd(classFilePath, ".class").replace("/", ".");
-        completeClassName = StringSugar.removeStart(completeClassName, ".");
-        return completeClassName;
+        String className = convertResourceLocationToClassName(classFilePath);
+        return className;
     }
 
-    /**
-     * getResource
-     */
+
     public final static class ByClass {
-        public final static URL getResource(Class clazz, String resourceRelationPath) {
+        public final static URL getResourceURL(Class clazz, String resourceRelationPath) {
             return clazz.getResource(resourceRelationPath);
         }
 
@@ -184,12 +175,15 @@ public abstract class ResourceSugar {
          * @param classLoader          eg. Thread.currentThread().getContextClassLoader()
          * @param resourceLocation     eg. "com/art/Book.class"
          * @return eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/sandbox/console/Book.class"
-         * @throws IOException
          */
-        public final static List<URL> getResources(ClassLoader classLoader, String resourceLocation) throws IOException {
-            Enumeration<URL> urlEnumeration = classLoader.getResources(resourceLocation);
-            List<URL> urlList = Collections.list(urlEnumeration);
-            return urlList;
+        public final static List<URL> getResourceURLs(ClassLoader classLoader, String resourceLocation) {
+            try {
+                Enumeration<URL> urlEnumeration = classLoader.getResources(resourceLocation);
+                List<URL> urlList = Collections.list(urlEnumeration);
+                return urlList;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         /**
@@ -197,28 +191,21 @@ public abstract class ResourceSugar {
          *
          * @param resourceLocation eg. "com/art/Book.class"
          * @return                 eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/com/aio/portable/swiss/sandbox/Wood.class"
-         * @throws IOException
          */
-        public final static List<URL> getResources(String resourceLocation) throws IOException {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            return getResources(classLoader, resourceLocation);
+        public final static List<URL> getResourceURLs(String resourceLocation) {
+            ClassLoader classLoader = ClassLoaderSugar.getDefaultClassLoader();
+            return getResourceURLs(classLoader, resourceLocation);
         }
 
         /**
          * existResource
          * @param resourceLocation eg. "com/art/Book.class"
          * @return
-         * @throws IOException
          */
         public final static boolean existResource(String resourceLocation) {
-            try {
-                List<URL> urlList = ByClassLoader.getResources(resourceLocation);
-                boolean exist = urlList != null && urlList.size() > 0;
-                return exist;
-            } catch (IOException e) {
-//                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            List<URL> urlList = ByClassLoader.getResourceURLs(resourceLocation);
+            boolean exist = urlList != null && urlList.size() > 0;
+            return exist;
         }
 
         /**
@@ -226,10 +213,9 @@ public abstract class ResourceSugar {
          *
          * @param clazz eg. Book
          * @return
-         * @throws IOException
          */
-        public final static List<URL> getResourcesByClass(final Class clazz) throws IOException {
-            return getResourcesByClass(clazz.getTypeName());
+        public final static List<URL> getClassURLs(final Class<?> clazz) {
+            return getClassURLs(clazz.getTypeName());
         }
 
         /**
@@ -237,11 +223,10 @@ public abstract class ResourceSugar {
          *
          * @param className eg. com.art.Book
          * @return
-         * @throws IOException
          */
-        public final static List<URL> getResourcesByClass(final String className) throws IOException {
-            final String resourceRelationPath = ClassSugar.convertCompleteName2ResourcePath(className);
-            return getResources(resourceRelationPath);
+        public final static List<URL> getClassURLs(final String className) {
+            final String resourceRelationPath = ClassSugar.convertClassNameToResourceLocation(className);
+            return getResourceURLs(resourceRelationPath);
         }
     }
 

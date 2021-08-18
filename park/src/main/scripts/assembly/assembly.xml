@@ -92,7 +92,7 @@
     <dependencySets>
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>${project.deploy.directoryName.dependency}</outputDirectory>
+            <outputDirectory>${project.deploy.directoryName.lib}</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>

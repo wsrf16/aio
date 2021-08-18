@@ -42,19 +42,23 @@ public class SqlLog {
     }
 
     public List<EntryEntity> toComplicatedEntryEntityList() {
-        List<EntryEntity> entryEntityList = entryList.stream()
-                .map(entry -> {
-                    final String tableName = entry.getHeader().getTableName();
-                    final Class clazz = tableModelMapping.get(tableName);
-                    if (!StringUtils.isEmpty(tableName) && clazz == null){
-                        new ClassNotFoundException("Not found class of table(" + tableName + ")").printStackTrace();
-                    }
-                    final EntryEntity entryEntity = EntryEntity.toEntryEntity(entry, clazz);
-                    return entryEntity;
-                })
-                .collect(Collectors.toList());
-        return entryEntityList;
+        return null;
     }
+
+//    public List<EntryEntity> toComplicatedEntryEntityList() {
+//        List<EntryEntity> entryEntityList = entryList.stream()
+//                .map(entry -> {
+//                    String tableName = entry.getHeader().getTableName();
+//                    Class clazz = tableModelMapping.get(tableName);
+//                    if (!StringUtils.isEmpty(tableName) && clazz == null){
+//                        new ClassNotFoundException("Not found class of table(" + tableName + ")").printStackTrace();
+//                    }
+//                    EntryEntity entryEntity = EntryEntity.toEntryEntity(entry, clazz);
+//                    return entryEntity;
+//                })
+//                .collect(Collectors.toList());
+//        return entryEntityList;
+//    }
 
 //    public <T> List<List<RowModel<T>>> parseRowModel(Class<T> clazz) {
 //        List<List<RowModel<T>>> collect = entryList.stream()

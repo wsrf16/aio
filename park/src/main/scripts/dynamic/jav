@@ -303,15 +303,15 @@ function get_param_app() {
 }
 
 function get_param_dep() {
-  dirname_dependency=@project.deploy.directoryName.dependency@
-  if [[ "${dirname_dependency}" =~ ^@.*@$ ]]; then
-    dirname_dependency=lib/
+  dirname_lib=@project.deploy.directoryName.lib@
+  if [[ "${dirname_lib}" =~ ^@.*@$ ]]; then
+    dirname_lib=lib/
   fi
-  dirname_config=@project.deploy.directoryName.profile@
+  dirname_config=@project.deploy.directoryName.config@
   if [[ "${dirname_config}" =~ ^@.*@$ ]]; then
     dirname_config=config/
   fi
-  param_dep="-Dloader.path=$jar_dir/$dirname_dependency,$jar_dir/$dirname_config"
+  param_dep="-Dloader.path=$jar_dir/$dirname_lib,$jar_dir/$dirname_config"
   echo $param_dep
 }
 
@@ -382,7 +382,7 @@ log_file_gc_total=$log_dir/gc_total.log
 
 
 param_jvm=$(get_param_jvm)
-#param_dep="-Dloader.path=$jar_dir/$dirname_dependency,$jar_dir/$dirname_config"
+#param_dep="-Dloader.path=$jar_dir/$dirname_lib,$jar_dir/$dirname_config"
 param_dep=$(get_param_dep)
 if [[ -z ${operate} || $operate == "help" ]]; then
   help

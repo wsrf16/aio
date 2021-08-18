@@ -87,7 +87,6 @@ public abstract class LDAPSugar {
                         propertyDescriptor.getWriteMethod().invoke(t, val);
                     }
                 } catch (NamingException | IllegalAccessException | InvocationTargetException e) {
-//                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             });

@@ -36,4 +36,13 @@ public class UserInfoEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+
+    public String echo(String name) {
+        return name;
+    }
+
+    public String echo(String name, int i) {
+        return name + i;
+    }
 }

@@ -24,7 +24,7 @@ public class RegexTest {
         // .group(0): ${name}-baba
         // .group(1): name
         // .group(2): baba
-        List<List<String>> matches = RegexSugar.findMore(regex, input);
+        List<List<String>> matches = RegexSugar.findGroup(regex, input);
 
         String replacement[] = {"1", "2", "3", "4", "5"};
         RegexSugar.replace(input, regex, "1", "2", "3", "4", "5");

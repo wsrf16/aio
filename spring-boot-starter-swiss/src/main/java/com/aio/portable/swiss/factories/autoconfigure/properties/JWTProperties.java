@@ -1,29 +1,26 @@
 package com.aio.portable.swiss.factories.autoconfigure.properties;
 
-import com.aio.portable.swiss.suite.algorithm.identity.IDS;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTConfig;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
-import java.util.List;
 
 public class JWTProperties {
-    private final static int EXPIRED_MINUTES = 10;
+    private final static int DEFAULT_EXPIRED_MINUTES = 10;
     private final static String SECRET = "secret";
 
     protected Boolean require = true;
     protected String signAlgorithm = "HMAC256";
-    protected String JWTId;
+//    protected String JWTId;
     protected String secret = SECRET;
     protected String privateKey;
     protected String publicKey;
-    protected List<String> scanBasePackages;
+//    protected List<String> scanBasePackages;
     protected String keyId;
     protected String issuer = "issuer";
     protected String subject;
     protected String[] audience;
-//    protected Date issuedAt;
-//    protected Date expiresAt;
-    protected Integer expiredMinutes = EXPIRED_MINUTES;
+    protected Integer expiredMinutes = DEFAULT_EXPIRED_MINUTES;
     protected Date notBefore;
 
     public Boolean getRequire() {
@@ -42,13 +39,13 @@ public class JWTProperties {
         this.signAlgorithm = signAlgorithm;
     }
 
-    public String getJWTId() {
-        return JWTId;
-    }
+//    public String getJWTId() {
+//        return JWTId;
+//    }
 
-    public void setJWTId(String JWTId) {
-        this.JWTId = JWTId;
-    }
+//    public void setJWTId(String JWTId) {
+//        this.JWTId = JWTId;
+//    }
 
     public String getSecret() {
         return secret;
@@ -74,13 +71,13 @@ public class JWTProperties {
         this.publicKey = publicKey;
     }
 
-    public List<String> getScanBasePackages() {
-        return scanBasePackages;
-    }
+//    public List<String> getScanBasePackages() {
+//        return scanBasePackages;
+//    }
 
-    public void setScanBasePackages(List<String> scanBasePackages) {
-        this.scanBasePackages = scanBasePackages;
-    }
+//    public void setScanBasePackages(List<String> scanBasePackages) {
+//        this.scanBasePackages = scanBasePackages;
+//    }
 
     public String getKeyId() {
         return keyId;
@@ -130,11 +127,19 @@ public class JWTProperties {
         this.notBefore = notBefore;
     }
 
-    public JWTProperties clone() {
-        JWTProperties properties = new JWTProperties();
-        BeanUtils.copyProperties(this, properties);
-        properties.setJWTId(IDS.uuid());
-        return properties;
+
+
+//    public JWTProperties clone() {
+//        JWTProperties properties = new JWTProperties();
+//        BeanUtils.copyProperties(this, properties);
+//        properties.setJWTId(IDS.uuid());
+//        return properties;
+//    }
+
+    public JWTConfig toConfig() {
+        JWTConfig jwtConfig = new JWTConfig();
+        BeanUtils.copyProperties(this, jwtConfig);
+        return jwtConfig;
     }
 }
 

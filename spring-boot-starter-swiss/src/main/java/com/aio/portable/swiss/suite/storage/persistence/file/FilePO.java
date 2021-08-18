@@ -140,7 +140,6 @@ public class FilePO implements NodePersistence {
                 }
             });
         } catch (IOException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         List<String> keys = files.stream().filter(c -> !c.endsWith("." + key)).map(c -> c.getFileName().toString()).collect(Collectors.toList());

@@ -16,7 +16,7 @@ public abstract class UrlSugar {
         String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
 
         while (StringUtils.endsWithIgnoreCase(uri, "/")) {
-            uri = StringSugar.removeEnd(uri, "/");
+            uri = StringSugar.trimEnd(uri, "/");
         }
         return MessageFormat.format("{0}?{1}", uri, queryParams);
     }
@@ -24,10 +24,10 @@ public abstract class UrlSugar {
 
     public final static String concat(String first, String... urls) {
         String reduce = Arrays.stream(urls).reduce(first, (sum, element) -> {
-            String left = StringSugar.removeAllEnd(sum, "/");
-            String right = StringSugar.removeAllStart(element, "/");
+            String left = StringSugar.trimAllEnd(sum, "/");
+            String right = StringSugar.trimAllStart(element, "/");
             if (left.endsWith("&") && right.startsWith("&"))
-                return StringSugar.removeAllEnd(left, "&") + "&" + StringSugar.removeAllStart(right, "&");
+                return StringSugar.trimAllEnd(left, "&") + "&" + StringSugar.trimAllStart(right, "&");
             else if (left.endsWith("&") || right.startsWith("&"))
                 return left + right;
             else if (left.endsWith("?") || right.startsWith("?"))

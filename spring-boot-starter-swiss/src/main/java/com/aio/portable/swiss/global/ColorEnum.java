@@ -46,7 +46,7 @@ public enum ColorEnum {
 
     public final static String begin(ColorEnum... colors) {
         List<String> collect = Arrays.stream(colors).map(c -> c.getCode()).collect(Collectors.toList());
-        return MessageFormat.format("{0}{1}{2}", ColorEnum.ESC_START.getCode(), CollectionSugar.join(collect, ";"), ColorEnum.ESC_END.getCode());
+        return MessageFormat.format("{0}{1}{2}", ESC_START.getCode(), CollectionSugar.join(collect, ";"), ESC_END.getCode());
     }
 
     public final static String end() {

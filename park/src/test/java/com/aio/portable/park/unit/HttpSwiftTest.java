@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
-import com.aio.portable.swiss.suite.net.protocol.http.HttpSwift;
+import com.aio.portable.swiss.suite.net.tcp.http.HttpSwift;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;

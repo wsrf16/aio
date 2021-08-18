@@ -1,12 +1,14 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
+import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.factory.Slf4JLogHubFactory;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -18,16 +20,16 @@ public abstract class HamletExceptionAdvice {
     private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
     protected final LogHub log;
 
+    @Autowired(required = false)
+    BaseBizStatusEnum baseBizStatusEnum;
+
+    public BaseBizStatusEnum getBizStatusEnum() {
+        return baseBizStatusEnum == null ? BaseBizStatusEnum.singletonInstance() : baseBizStatusEnum;
+    }
+
     public HamletExceptionAdvice() {
-        if (LogHubFactory.isInitial())
-            log = LogHubFactory.staticBuild(getClass());
-        else
-            log = new LogHubFactory(){
-                @Override
-                public LogHub build(String className) {
-                    return LogHub.build(new Slf4JLog(className));
-                }
-            }.build(getClass());
+        log = LogHubFactory.isInitial() ?
+                LogHubFactory.staticBuild(getClass()) : Slf4JLogHubFactory.staticBuild(getClass());
     }
 
     public HamletExceptionAdvice(LogHubFactory logHubFactory) {
@@ -51,12 +53,12 @@ public abstract class HamletExceptionAdvice {
 //            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.getCode(), bizException.getMessage());
 //        }
         else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else if (e instanceof NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticException().getCode(), e.getMessage());
+            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), e.getMessage());
         else {
             log.e(GLOBAL_SYSTEM_EXCEPTION, e);
-            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.staticException().getCode(), BizStatusNativeEnum.staticException().getMessage());
+            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
         }
 
         if (input instanceof HandOverException) {

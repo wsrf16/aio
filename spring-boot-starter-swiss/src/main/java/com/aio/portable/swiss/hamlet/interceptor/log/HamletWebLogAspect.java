@@ -12,18 +12,20 @@ public abstract class HamletWebLogAspect extends AbstractWebLogAspect {
         super(logHubFactory);
     }
 
+    private final static String POINTCUT = "execution(public * com.aio.portable.park.controller..*.*(..)) && (@annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping) || @annotation(org.springframework.web.bind.annotation.RequestMapping))";
+
     @Pointcut(POINTCUT_SPECIAL)
     public abstract void webLog();
 
 //    @Before("webLog()")
-    public void doBefore(ProceedingJoinPoint joinPoint) {
-        super.doBefore(joinPoint);
-    }
+//    public void doBefore(ProceedingJoinPoint joinPoint) {
+//        super.doBefore(joinPoint);
+//    }
 
 //    @AfterReturning(returning = "result", pointcut = "webLog()")
-    public void doAfterReturning(ProceedingJoinPoint joinPoint, Object result) {
-        super.doAfterReturning(joinPoint, result);
-    }
+//    public void doAfterReturning(ProceedingJoinPoint joinPoint, Object result) {
+//        super.doAfterReturning(joinPoint, result);
+//    }
 
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {

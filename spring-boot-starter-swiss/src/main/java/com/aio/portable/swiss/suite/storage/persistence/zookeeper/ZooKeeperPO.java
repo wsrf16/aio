@@ -130,7 +130,7 @@ public class ZooKeeperPO implements NodePersistence {
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(c -> StringSugar.removeStart(c, path + DELIMITER),
+                .collect(Collectors.toMap(c -> StringSugar.trimStart(c, path + DELIMITER),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), clazz);
@@ -145,7 +145,7 @@ public class ZooKeeperPO implements NodePersistence {
         List<String> absoluteChildren = ZooKeeperSugar.getAbsoluteChildren(zooKeeper, path, false, false);
         Map<String, T> collect = absoluteChildren
                 .stream()
-                .collect(Collectors.toMap(c -> StringSugar.removeStart(c, path + DELIMITER),
+                .collect(Collectors.toMap(c -> StringSugar.trimStart(c, path + DELIMITER),
                         c -> {
                             byte[] bytes = ZooKeeperSugar.getData(zooKeeper, c, false);
                             T t = JacksonSugar.json2T(new String(bytes), valueTypeRef);

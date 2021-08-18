@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -185,6 +186,19 @@ public abstract class CollectionSugar {
         List<T> _list = concat(collections).stream().distinct().collect(Collectors.toList());
         return _list;
     }
+
+    /**
+     * replaceKey
+     * @param map
+     * @param oldKey
+     * @param newKey
+     * @param <K>
+     * @param <V>
+     */
+    public final static <K, V> void replaceKey(Map<K, V> map, K oldKey, K newKey) {
+        map.put(newKey, map.remove(oldKey));
+    }
+
 
     /**
      * concatIfAbsent 并集去重
@@ -414,15 +428,15 @@ public abstract class CollectionSugar {
 //        return list.stream().toArray();
 //    }
 
-    public final static <T> T[] toArray(List<T> list, IntFunction<T[]> generator) {
+    public final static <T> T[] toArray(@NotNull List<T> list, IntFunction<T[]> generator) {
         return list.stream().toArray(generator);
     }
 
-    public final static <T> T[] toArrayNullable(List<T> list) {
+    public final static <T> T[] toArrayNullable(@NotNull List<T> list) {
         return list.size() < 1 ? null : toArray(list, (Class<T>)list.get(0).getClass());
     }
 
-    public final static <T> T[] toArray(List<T> list, Class<T> componentType) {
+    public final static <T> T[] toArray(@NotNull List<T> list, @NotNull Class<T> componentType) {
         T[] array = (T[])Array.newInstance(componentType, list.size());
         int size = list.size();
         for (int i = 0; i < size; i++) {

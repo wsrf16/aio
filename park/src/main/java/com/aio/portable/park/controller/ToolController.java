@@ -73,7 +73,6 @@ public class ToolController {
                 String uploadLocation = realIP + ":" + targetFile.toAbsolutePath();
                 uploadLocationList.add(uploadLocation);
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });

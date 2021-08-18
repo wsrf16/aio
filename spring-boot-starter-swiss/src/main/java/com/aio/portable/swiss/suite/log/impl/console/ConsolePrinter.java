@@ -101,31 +101,31 @@ public class ConsolePrinter implements Printer {
             String _level;
             switch (level) {
                 case VERBOSE: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
                 }
                 break;
                 case TRACE: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
                 }
                 break;
                 case DEBUG: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
                 }
                 break;
                 case INFORMATION: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
                 }
                 break;
                 case WARNING: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED);
                 }
                 break;
                 case ERROR: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
                 }
                 break;
                 case FATAL: {
-                    _level = StringSugar.wrap(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
+                    _level = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
                 }
                 break;
                 default: {

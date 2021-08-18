@@ -11,7 +11,7 @@ import java.util.List;
 public class PackageTest {
     @Test
     public void foobar() throws IOException, ClassNotFoundException {
-        List<String> list = PackageSugar.getCompleteClassName(this.getClass().getPackage().getName());
+        List<String> list = PackageSugar.getClassNameList(this.getClass().getPackage().getName());
         for (String name : list) {
 //            Class<?> clazz = Class.forName(name);
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(name);

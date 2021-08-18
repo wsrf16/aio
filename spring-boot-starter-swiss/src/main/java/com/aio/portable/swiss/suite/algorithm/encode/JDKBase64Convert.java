@@ -36,10 +36,4 @@ public abstract class JDKBase64Convert {
     public final static String decodeToString(String cipher) {
         return new String(Base64.getDecoder().decode(cipher));
     }
-
-
-    @Deprecated
-    public final static byte[] decodeFromString(String cipher) {
-        return Base64.getDecoder().decode(cipher);
-    }
 }

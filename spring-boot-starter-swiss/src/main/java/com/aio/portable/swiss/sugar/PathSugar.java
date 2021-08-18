@@ -1,9 +1,7 @@
 package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.sugar.CollectionSugar;
 import com.aio.portable.swiss.suite.systeminfo.OSInfo;
-import com.aio.portable.swiss.sugar.StringSugar;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
@@ -55,7 +53,7 @@ public abstract class PathSugar {
     public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
-            urlPath = StringSugar.removeStart(urlPath, DELIMITER_CHAR);
+            urlPath = StringSugar.trimStart(urlPath, DELIMITER_CHAR);
         }
         return urlPath;
     }

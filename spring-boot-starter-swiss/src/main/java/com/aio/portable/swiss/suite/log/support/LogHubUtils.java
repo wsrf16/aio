@@ -1,23 +1,20 @@
 package com.aio.portable.swiss.suite.log.support;
 
-import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.classreading.MethodMetadataReadingVisitor;
-
-import java.util.Objects;
 
 public class LogHubUtils {
     public static class Kafka {
         public final static String DEPENDENCY = "org.springframework.kafka.core.KafkaTemplate";
         public static boolean existDependency() {
-            return ClassSugar.exist(DEPENDENCY);
+            return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
@@ -25,7 +22,7 @@ public class LogHubUtils {
         public final static String DEPENDENCY = "org.springframework.amqp.rabbit.core.RabbitTemplate";
 
         public static boolean existDependency() {
-            return ClassSugar.exist(DEPENDENCY);
+            return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
@@ -38,10 +35,9 @@ public class LogHubUtils {
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
                 if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
-                        Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(Thread.currentThread().getContextClassLoader());
+                        Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
                         clazz.getConstructor().newInstance();
                     } catch (Exception e) {
-                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
                 }
@@ -58,10 +54,9 @@ public class LogHubUtils {
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
                 if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
-                        final Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(Thread.currentThread().getContextClassLoader());
+                        final Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
                         clazz.getConstructor().newInstance();
                     } catch (Exception e) {
-                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
                 }

@@ -72,12 +72,6 @@ public abstract class RegexSugar {
         return Pattern.compile(regex).matcher(input);
     }
 
-
-    @Deprecated
-    public final static List<List<String>> findMore(String regex, String input) {
-        return findGroup(regex, input);
-    }
-
     /**
      * find
      *
@@ -105,7 +99,7 @@ public abstract class RegexSugar {
 
 
     public final static List<String> find(String regex, String input) {
-        List<String> eachFirst = findMore(regex, input).stream().map(c -> c.get(0)).collect(Collectors.toList());
+        List<String> eachFirst = findGroup(regex, input).stream().map(c -> c.get(0)).collect(Collectors.toList());
         return eachFirst;
     }
 
@@ -177,6 +171,7 @@ public abstract class RegexSugar {
             String replacement = Matcher.quoteReplacement(replacements[i++].toString());
             matcher.appendReplacement(sb, replacement);
         }
+        matcher.appendTail(sb);
         return sb.toString();
     }
 

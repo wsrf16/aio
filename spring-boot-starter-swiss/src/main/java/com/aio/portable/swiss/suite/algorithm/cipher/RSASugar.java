@@ -142,7 +142,7 @@ public class RSASugar {
     }
 
     public final static String encrypt(String text, String publicKey) {
-        byte[] publicKeyBytes = JDKBase64Convert.decodeFromString(publicKey);
+        byte[] publicKeyBytes = JDKBase64Convert.decode(publicKey);
         byte[] bytes = text.getBytes();
         final byte[] encrypt = encrypt(bytes, publicKeyBytes);
         return JDKBase64Convert.encodeToString(encrypt);
@@ -161,8 +161,8 @@ public class RSASugar {
     }
 
     public final static String decrypt(String text, String privateKey) {
-        byte[] privateKeyBytes = JDKBase64Convert.decodeFromString(privateKey);
-        byte[] bytes = JDKBase64Convert.decodeFromString(text);
+        byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
+        byte[] bytes = JDKBase64Convert.decode(text);
         final byte[] encrypt = decrypt(bytes, privateKeyBytes);
         return new String(encrypt);
     }
@@ -182,16 +182,16 @@ public class RSASugar {
     }
 
     public final static String sign(String text, String privateKey) {
-        byte[] privateKeyBytes = JDKBase64Convert.decodeFromString(privateKey);
+        byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] bytes = text.getBytes();
         final byte[] sign = sign(bytes, privateKeyBytes);
         return JDKBase64Convert.encodeToString(sign);
     }
 
     public static boolean verifySignByPublicKey(String text, String sign, String publicKey) {
-        byte[] publicKeyBytes = JDKBase64Convert.decodeFromString(publicKey);
+        byte[] publicKeyBytes = JDKBase64Convert.decode(publicKey);
         byte[] bytes = text.getBytes();
-        final byte[] signBytes = JDKBase64Convert.decodeFromString(sign);
+        final byte[] signBytes = JDKBase64Convert.decode(sign);
         return verifySignByPublicKey(bytes, signBytes, publicKeyBytes);
     }
 

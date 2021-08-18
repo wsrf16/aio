@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.log.facade;
 
-import com.aio.portable.swiss.factories.context.SwissApplicationListener;
-import com.aio.portable.swiss.sugar.ProxySugar;
+import com.aio.portable.swiss.factories.listener.SwissApplicationListener;
+import com.aio.portable.swiss.sugar.DynamicProxySugar;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -145,7 +145,7 @@ public class LogHub extends LogBundle implements LogHubProxy {
         }
 
         protected static LogHub toCGLIBProxy(LogHub logHub) {
-            LogHub proxy = ProxySugar.cglibProxy(LogHub.class, new MethodInterceptor() {
+            LogHub proxy = DynamicProxySugar.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                     final LogHub hub = logHub;
@@ -209,7 +209,7 @@ public class LogHub extends LogBundle implements LogHubProxy {
         }
 
         protected static LogHubProxy toJDKProxy(LogHub logHub) {
-            LogHubProxy proxy = ProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
+            LogHubProxy proxy = DynamicProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
                         @Override
                         public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                             LogHub hub = logHub;

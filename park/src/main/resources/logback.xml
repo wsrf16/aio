@@ -3,6 +3,7 @@
     <contextName>ladder-log</contextName>
     <property name="LOG_HOME" value="log"/>
     <property name="LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}/log.%d{yyyy-MM-dd}.log"/>
+    <property name="ROLE_FILE_LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}-%i.log"/>
     <property name="LOG_FILENAME" value="${LOG_HOME}/service.log"/>
     <property name="COLOUR_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%contextName[%thread]) %highlight(%-5level) %green(%logger{100}) %L - %msg %n"/>
@@ -26,29 +27,24 @@
             <pattern>${NORMAL_PATTERN}</pattern>
         </encoder>
     </appender>
-<!--    <appender name="ROLE_FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--        <Prudent>true</Prudent>-->
-<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-<!--            <FileNamePattern>${LOG_FILENAME_PATTERN}</FileNamePattern>-->
-<!--            <MaxHistory>90</MaxHistory>-->
-<!--        </rollingPolicy>-->
-<!--        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
-<!--            <MaxFileSize>30MB</MaxFileSize>-->
-<!--        </triggeringPolicy>-->
-<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
-<!--            <pattern>${NORMAL_PATTERN}</pattern>-->
-<!--            <charset>UTF-8</charset>-->
-<!--        </encoder>-->
-<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-<!--            <level>DEBUG</level>-->
-<!--        </filter>-->
-<!--    </appender>-->
+
+    <appender name="ROLE_FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${ROLE_FILE_LOG_FILENAME_PATTERN}</fileNamePattern>
+            <MaxFileSize>200MB</MaxFileSize>
+            <MaxHistory>30</MaxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${NORMAL_PATTERN}</pattern>
+        </encoder>
+    </appender>
 
     <!-- 日志级别：OFF < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < ALL -->
     <root level="INFO">
         <appender-ref ref="STD_OUT"/>
         <!--<appender-ref ref="FILE_LOG"/>-->
-        <!--<appender-ref ref="ROLE_FILE_LOG"/>-->
+        <appender-ref ref="ROLE_FILE_LOG"/>
     </root>
 
     <logger name="com.aio.portable.parkdb.dao" level="debug"/>

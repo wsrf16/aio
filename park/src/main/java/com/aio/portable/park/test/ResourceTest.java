@@ -126,7 +126,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = ResourceSugar.ByClassLoader.getResources(resourceLocation);
+            List<URL> r1 = ResourceSugar.ByClassLoader.getResourceURLs(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,14 +134,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = ResourceSugar.ByClassLoader.getResourcesByClass(classname);
+            List<URL> r2 = ResourceSugar.ByClassLoader.getClassURLs(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = ResourceSugar.ByClassLoader.getResourcesByClass(clazz);
+            List<URL> r3 = ResourceSugar.ByClassLoader.getClassURLs(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,8 +150,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = ResourceSugar.getResourceInJar(jarPath, resourceLocation);
-            List<URL> r4 = ResourceSugar.listResourcesInJar(jarPath);
+            URL url = ResourceSugar.getJarResourceURL(jarPath, resourceLocation);
+            List<URL> r4 = ResourceSugar.getAllJarResourceURLs(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

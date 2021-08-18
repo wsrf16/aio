@@ -12,21 +12,27 @@ public class ClassLoaderTest {
         String name;
         boolean b;
         name = "java.lang.System";
-        b = ClassLoaderSugar.hasLoadedInCurrentThread(name);
+        b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
 
         name = "java.sql.Date";
-        b = ClassLoaderSugar.hasLoadedInCurrentThread(name);
+        b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
         java.sql.Date date = new java.sql.Date(0);
-        b = ClassLoaderSugar.hasLoadedInCurrentThread(name);
+        b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
 
         name = "Wood";
-        b = ClassLoaderSugar.hasLoadedInCurrentThread(name);
+        b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
-        b = ClassLoaderSugar.hasLoadedInCurrentThread(name);
+        b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
+
+        name = "org.yaml.snakeyaml.Yaml";
+        boolean isPresent1 = ClassLoaderSugar.isPresent(name);
+        boolean hasLoaded = ClassLoaderSugar.hasLoaded(name);
+        Object yaml1 = ClassLoaderSugar.load(name, false);
+        org.yaml.snakeyaml.Yaml yaml2 = new org.yaml.snakeyaml.Yaml();
 
     }
 

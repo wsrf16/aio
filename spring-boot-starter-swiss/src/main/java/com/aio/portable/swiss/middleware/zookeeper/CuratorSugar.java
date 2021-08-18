@@ -74,7 +74,6 @@ public abstract class CuratorSugar {
                 interProcessMutex.release();
                 return t;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             } finally {
                 try {
@@ -122,7 +121,6 @@ public abstract class CuratorSugar {
                 curatorCache.listenable().addListener(curatorCacheListener);
                 return curatorCache;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -131,7 +129,6 @@ public abstract class CuratorSugar {
             try {
                 curatorCache.listenable().addListener(curatorCacheListener);
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -154,7 +151,6 @@ public abstract class CuratorSugar {
                 TransactionOp transactionOp = curatorFramework.transactionOp();
                 return transactionOp;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -165,7 +161,6 @@ public abstract class CuratorSugar {
                 List<CuratorTransactionResult> curatorTransactionResults = transaction.forOperations(curatorOps);
                 return curatorTransactionResults;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -176,7 +171,6 @@ public abstract class CuratorSugar {
                 List<CuratorTransactionResult> curatorTransactionResults = transaction.forOperations(curatorOpList);
                 return curatorTransactionResults;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -190,7 +184,6 @@ public abstract class CuratorSugar {
             String forPath = curatorFramework.create().creatingParentsIfNeeded().withMode(createMode).forPath(path);
             return forPath;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -200,7 +193,6 @@ public abstract class CuratorSugar {
             String forPath = curatorFramework.create().creatingParentsIfNeeded().withMode(createMode).forPath(path, bytes);
             return forPath;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -228,7 +220,6 @@ public abstract class CuratorSugar {
             List<String> forPath = curatorFramework.getChildren().forPath(path);
             return forPath;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -247,7 +238,6 @@ public abstract class CuratorSugar {
         try {
             curatorFramework.delete().deletingChildrenIfNeeded().forPath(path);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -256,7 +246,6 @@ public abstract class CuratorSugar {
         try {
             curatorFramework.delete().deletingChildrenIfNeeded().withVersion(version).forPath(path);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -265,7 +254,6 @@ public abstract class CuratorSugar {
         try {
             return curatorFramework.checkExists().forPath(path);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -274,7 +262,6 @@ public abstract class CuratorSugar {
         try {
             return curatorFramework.getData().forPath(path);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -284,7 +271,6 @@ public abstract class CuratorSugar {
             Stat forPath = curatorFramework.setData().forPath(path, bytes);
             return forPath;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -294,7 +280,6 @@ public abstract class CuratorSugar {
             Stat forPath = curatorFramework.setData().withVersion(version).forPath(path, bytes);
             return forPath;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

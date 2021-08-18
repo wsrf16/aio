@@ -20,7 +20,7 @@ public abstract class PackageSugar {
      * @param clazz
      * @return
      */
-    public final static String getImplementationVersion(Class clazz){
+    public final static String getImplementationVersion(Class<?> clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
     }
@@ -32,14 +32,14 @@ public abstract class PackageSugar {
 
 
     /**
-     * getClassName
+     * getClassNameList
      * @param packageName  eg. com.aio.portable.swiss.sandbox
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public final static List<String> getCompleteClassName(String packageName) throws IOException {
+    public final static List<String> getClassNameList(String packageName) throws IOException {
         String packagePath = packageName.replace(".", "/");
-        List<URL> urlList = ResourceSugar.ByClassLoader.getResources(packagePath);
+        List<URL> urlList = ResourceSugar.ByClassLoader.getResourceURLs(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
             List<String> _classList = new ArrayList<>();
             try {
@@ -47,14 +47,13 @@ public abstract class PackageSugar {
                 if (ResourceUtils.isFileURL(url)) {
 //                if (url.getProtocol().equals(ProtocolType.file)) {
                     // "file:/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/com.aio.solomid"
-                    _classList = getCompleteClassNameByPath(path);
+                    _classList = getClassNameByPath(path);
                 } else if (ResourceUtils.isJarURL(url)) {
 //                } else if (url.getProtocol().equals(ProtocolType.jar)) {
                     // "jar:file:/E:/Users/PPC/IdeaProjects/swiss/target/main.java.com.aio.solomid-0.0.1-SNAPSHOT.jar!/com/aio/com.aio.solomid"
-                    _classList = getCompleteClassNameByJar(path);
+                    _classList = getClassNameByJar(path);
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             return _classList.stream();
@@ -75,7 +74,7 @@ public abstract class PackageSugar {
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    public final static List<String> getCompleteClassNameByPath(String packagePath) {
+    public final static List<String> getClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -83,7 +82,7 @@ public abstract class PackageSugar {
             return classList;
         for (File childFile : childFiles) {
             if (childFile.isDirectory()) {
-                classList.addAll(getCompleteClassNameByPath(childFile.getPath()));
+                classList.addAll(getClassNameByPath(childFile.getPath()));
             } else {
                 String childFilePath = childFile.getPath();
 //                String extension = StringUtils.getFilenameExtension(childFilePath);
@@ -93,17 +92,13 @@ public abstract class PackageSugar {
                     childFilePath = childFilePath.replace(Constant.FILE_SEPARATOR, ".");
                     classList.add(childFilePath);
                 } else if (childFilePath.endsWith(EXT_DOT_JAR)) {
-                    try {
-                        List<URL> resourcesInJar = ResourceSugar.listResourcesInJar(childFilePath);
-                        List<String> classNameList = resourcesInJar.stream()
-                                .filter(c -> c.toString().endsWith(EXT_DOT_CLASS))
-                                .map(c -> ResourceSugar.toCompleteClassName(c.toString()))
-                                .collect(Collectors.toList());
+                    List<URL> resourcesInJar = ResourceSugar.getAllJarResourceURLs(childFilePath);
+                    List<String> classNameList = resourcesInJar.stream()
+                            .filter(c -> c.toString().endsWith(EXT_DOT_CLASS))
+                            .map(c -> ResourceSugar.convertURLToClassName(c.toString()))
+                            .collect(Collectors.toList());
 
-                        classList.addAll(classNameList);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    classList.addAll(classNameList);
                 }
             }
         }
@@ -116,7 +111,7 @@ public abstract class PackageSugar {
      * @return
      * @throws IOException
      */
-    public final static List<String> getCompleteClassNameByJar(String packageURLInJar) throws IOException {
+    public final static List<String> getClassNameByJar(String packageURLInJar) throws IOException {
         String[] jarInfo = packageURLInJar.split("!");
         String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);
@@ -144,7 +139,7 @@ public abstract class PackageSugar {
      * @return
      */
     public final static List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
-        return ClassScaner.scan(basePackages, annotations);
+        return ClassScanner.scan(basePackages, annotations);
     }
 
     /**
@@ -154,7 +149,7 @@ public abstract class PackageSugar {
      * @return
      */
     public final static List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
-        return ClassScaner.scan(basePackages, annotations);
+        return ClassScanner.scan(basePackages, annotations);
     }
 
 

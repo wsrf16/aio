@@ -1,56 +1,106 @@
 package com.aio.portable.swiss.suite.resource;
 
 import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.StringSugar;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class ClassSugar {
+    private final static Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap(8);
+
+    static {
+        primitiveWrapperTypeMap.put(Byte.class, Byte.TYPE);
+        primitiveWrapperTypeMap.put(Character.class, Character.TYPE);
+        primitiveWrapperTypeMap.put(Double.class, Double.TYPE);
+        primitiveWrapperTypeMap.put(Float.class, Float.TYPE);
+        primitiveWrapperTypeMap.put(Integer.class, Integer.TYPE);
+        primitiveWrapperTypeMap.put(Long.class, Long.TYPE);
+        primitiveWrapperTypeMap.put(Short.class, Short.TYPE);
+        primitiveWrapperTypeMap.put(Void.class, Void.TYPE);
+
+        primitiveWrapperTypeMap.put(Byte[].class, byte[].class);
+        primitiveWrapperTypeMap.put(Character[].class, char[].class);
+        primitiveWrapperTypeMap.put(Double[].class, double[].class);
+        primitiveWrapperTypeMap.put(Float[].class, float[].class);
+        primitiveWrapperTypeMap.put(Integer[].class, int[].class);
+        primitiveWrapperTypeMap.put(Long[].class, long[].class);
+        primitiveWrapperTypeMap.put(Short[].class, short[].class);
+    }
+
+    public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        return clazz.isPrimitive() || isPrimitiveWrapper(clazz);
+    }
+
+    public static boolean isPrimitiveWrapper(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        return primitiveWrapperTypeMap.containsKey(clazz);
+    }
+
+    public static boolean similarPrimitive(Class<?> clazz1, Class<?> clazz2) {
+        boolean isPrimitiveOrWrapper = isPrimitiveOrWrapper(clazz1) && isPrimitiveOrWrapper(clazz2);
+        if (!isPrimitiveOrWrapper)
+            return false;
+        Class<?> targetClazz1 = primitiveWrapperTypeMap.getOrDefault(clazz1, clazz1);
+        Class<?> targetClazz2 = primitiveWrapperTypeMap.getOrDefault(clazz2, clazz2);
+        return targetClazz1.equals(targetClazz2);
+
+    }
+
     /**
      * 获取类所有的路径
-     *
      * @param clazz
      * @return
      */
     public final static String getPath(final Class<?> clazz) {
-        final String clazzFile = convertCompleteName2ResourcePath(clazz.getTypeName());
+        final String clazzFile = convertClassNameToResourceLocation(clazz.getTypeName());
         URL location = null;
         final ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
             final CodeSource cs = domain.getCodeSource();
-            if (cs != null) location = cs.getLocation();
+            if (cs != null)
+                location = cs.getLocation();
             if (location != null) {
                 if (org.springframework.util.ResourceUtils.URL_PROTOCOL_FILE.equals(location.getProtocol())) {
-                    if (location.toExternalForm().endsWith(".jar") ||
-                            location.toExternalForm().endsWith(".zip"))
-                        try {
-                            location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
-                                    .concat("!/").concat(clazzFile));
-                        } catch (MalformedURLException e) {
-//                            e.printStackTrace();
-                            throw new RuntimeException(e);
-                        }
-                    else if (new File(location.getFile()).isDirectory())
-                        try {
+//                    if (location.toExternalForm().endsWith(".jar") ||
+//                            location.toExternalForm().endsWith(".zip"))
+//                        try {
+//                            location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm())
+//                                    .concat("!/").concat(clazzFile));
+//                        } catch (MalformedURLException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    else if (new File(location.getFile()).isDirectory())
+//                        try {
+//                            location = new URL(location, clazzFile);
+//                        } catch (MalformedURLException e) {
+//                            throw new RuntimeException(e);
+//                        }
+
+                    try {
+                        if (location.toExternalForm().endsWith(".jar") ||
+                                location.toExternalForm().endsWith(".zip")) {
+                            location = new URL((org.springframework.util.ResourceUtils.URL_PROTOCOL_JAR + ":").concat(location.toExternalForm()).concat("!/").concat(clazzFile));
+                        } else if (new File(location.getFile()).isDirectory()) {
                             location = new URL(location, clazzFile);
-                        } catch (MalformedURLException e) {
-//                            e.printStackTrace();
-                            throw new RuntimeException(e);
                         }
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
         }
@@ -67,27 +117,13 @@ public abstract class ClassSugar {
 
 
 
-
-    /**
-     * hasClassByCurrentThreadClassLoader 判断是否存在某一个类
-     *
-     * @param completeClassName eg. com.art.Book
-     * @return
-     * @throws IOException
-     */
-    public static boolean exist(String completeClassName) {
-        String resource = convertCompleteName2ResourcePath(completeClassName);
-        return ResourceSugar.ByClassLoader.existResource(resource);
-    }
-
-
     /**
      * getShortName -> org.springframework.util.ClassUtils
-     * @param completeClassName
+     * @param className
      * @return
      */
-    public static String getShortName(String completeClassName) {
-        String shortClassName = org.springframework.util.ClassUtils.getShortName(completeClassName);
+    public final static String getShortName(String className) {
+        String shortClassName = org.springframework.util.ClassUtils.getShortName(className);
         return shortClassName;
     }
 
@@ -96,7 +132,7 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public static String getClassFileName(Class<?> clazz) {
+    public final static String getClassFileName(Class<?> clazz) {
         String classFileName = org.springframework.util.ClassUtils.getClassFileName(clazz);
         return classFileName;
     }
@@ -106,7 +142,7 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public static String getPackageName(Class<?> clazz) {
+    public final static String getPackageName(Class<?> clazz) {
         String classFileName = org.springframework.util.ClassUtils.getPackageName(clazz);
         return classFileName;
     }
@@ -117,38 +153,42 @@ public abstract class ClassSugar {
      * @param shortClassName
      * @return
      */
-    public static String getBeanName(String shortClassName) {
+    public final static String getBeanName(String shortClassName) {
         return Introspector.decapitalize(shortClassName);
     }
 
 
-    /**
-     * convertCompleteName2ResourcePath
-     *
-     * @param completeName className/packageName eg. com.company.biz | com.company.biz.Book
-     * @return com/company/biz | com/company/biz/Book
-     */
-    public static String convertCompleteName2ResourcePath(String completeName) {
-        String path;
-//        path = completeName.replace('.', '/').concat(".class");
-        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(completeName);
-        path = path.concat(".class");
-        return path;
-    }
-
-
 //    /**
-//     * convertCompleteName2ResourceFilePath
+//     * convertClassName2ResourceLocation
 //     *
-//     * @param completeName className/packageName eg. com.company.biz | com.company.biz.Book
-//     * @return com/company/biz | com/company/biz/Book
+//     * @param className className/packageName eg. com.company.biz | com.company.biz.Book
+//     * @return com/company/biz | com/company/biz/Book.class
 //     */
-//    private static String convertCompleteName2ResourceFilePath(String completeName) {
-//        String path;
-////        path = fullName.replace('.', '/').concat(".class");
-//        path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(completeName).concat(".class");
+//    public final static String convertClassNameToResourceLocation(String className) {
+//        String path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(className).concat(".class");
 //        return path;
 //    }
+
+    /**
+     * convertClassNameToLocation
+     * @param className com.company.biz | com.company.biz.Book
+     * @return className/packageName eg. com/company/biz | com/company/biz/Book.class
+     */
+    public final static String convertClassNameToResourceLocation(String className) {
+        String temp = className.replace(".", "/");
+        String lastWord = StringSugar.getLastWord(temp, "/");
+        temp = StringSugar.isCapitalize(lastWord) ? temp + ".class" : temp;
+        return temp;
+    }
+
+    /**
+     * convertLocationToClassName
+     * @param location className/packageName eg. com/company/biz | com/company/biz/Book.class
+     * @return com.company.biz | com.company.biz.Book
+     */
+    public final static String convertResourceLocationToClassName(String location) {
+        return ResourceSugar.convertResourceLocationToClassName(location);
+    }
 
 
     /**
@@ -162,7 +202,6 @@ public abstract class ClassSugar {
         try {
             return clazz.getConstructor(parameterTypes).newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -180,7 +219,6 @@ public abstract class ClassSugar {
             ReflectionUtils.makeAccessible(declaredConstructor);
             return declaredConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -190,7 +228,7 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public static boolean isSimpleValueType(Class<?> clazz) {
+    public final static boolean isSimpleValueType(Class<?> clazz) {
         return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
     }
 
@@ -200,7 +238,7 @@ public abstract class ClassSugar {
      * @param extendClazz
      * @return
      */
-    public static boolean isSuper(Class<?> superClazz, Class<?> extendClazz) {
+    public final static boolean isSuper(Class<?> superClazz, Class<?> extendClazz) {
         return superClazz.isAssignableFrom(extendClazz);
     }
 
@@ -210,13 +248,11 @@ public abstract class ClassSugar {
      * @param extendClassName
      * @return
      */
-    public static boolean isSuper(Class<?> superClazz, String extendClassName) {
-        Class<?> extendClazz = null;
+    public final static boolean isSuper(Class<?> superClazz, String extendClassName) {
         try {
-            extendClazz = Class.forName(extendClassName);
+            Class<?> extendClazz = Class.forName(extendClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -227,12 +263,11 @@ public abstract class ClassSugar {
      * @param extendClazz
      * @return
      */
-    public static boolean isSuper(String superClassName, Class<?> extendClazz) {
+    public final static boolean isSuper(String superClassName, Class<?> extendClazz) {
         try {
             Class<?> superClazz = Class.forName(superClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -243,13 +278,12 @@ public abstract class ClassSugar {
      * @param extendClassName
      * @return
      */
-    public static boolean isSuper(String superClassName, String extendClassName) {
+    public final static boolean isSuper(String superClassName, String extendClassName) {
         try {
             Class<?> superClazz = Class.forName(superClassName);
             Class<?> extendClazz = Class.forName(extendClassName);
             return superClazz.isAssignableFrom(extendClazz);
         } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -261,7 +295,7 @@ public abstract class ClassSugar {
      * @param includeClass
      * @return
      */
-    private static List<Class<?>> collectSuperObject(Class<?> clazz, boolean includeClass) {
+    private final static List<Class<?>> collectSuperObject(Class<?> clazz, boolean includeClass) {
         List<Class<?>> clazzList = new ArrayList<>(CollectionSugar.toList(clazz));
         return collectSuperObject(clazzList, includeClass);
     }
@@ -272,7 +306,7 @@ public abstract class ClassSugar {
      * @param includeClass
      * @return
      */
-    private static List<Class<?>> collectSuperObject(List<Class<?>> clazzList, boolean includeClass) {
+    private final static List<Class<?>> collectSuperObject(List<Class<?>> clazzList, boolean includeClass) {
         List<Class<?>> collect = clazzList
                 .stream()
                 .filter(c -> c.getInterfaces().length > 0 || c.getSuperclass() != null)
@@ -307,7 +341,7 @@ public abstract class ClassSugar {
      * @param clazz
      * @return
      */
-    public static Class<?>[] collectSuperInterfaces(Class<?> clazz) {
+    public final static Class<?>[] collectSuperInterfaces(Class<?> clazz) {
         final List<Class<?>> classList = collectSuperObject(clazz, false);
         return classList.toArray(new Class<?>[0]);
     }
@@ -316,4 +350,59 @@ public abstract class ClassSugar {
 //        final List<Class<?>> classList = collectSuperObject(clazz, false);
 //        return CollectionSugar.toArray(classList, returnClazz);
 //    }
+
+
+
+
+    private final static boolean matchTypes(Object[] parameters, Class<?>[] parameterTypes) {
+        boolean match = true;
+        if (parameters == null || parameters.length != parameterTypes.length)
+            match = false;
+        else {
+            for (int i = 0; i < parameters.length; i++) {
+                if (parameterTypes[i].isPrimitive()) {
+                    if (similarPrimitive(parameterTypes[i], parameters[i].getClass()))
+                        match = true;
+                    else
+                        match = false;
+                } else {
+                    if(parameterTypes[i].equals(parameters[i].getClass()))
+                        match = true;
+                    else
+                        match = false;
+                }
+            }
+        }
+        return match;
+    }
+
+    public final static <R> R invoke(Object obj, String methodName, Object[] parameters) {
+        try {
+            Class<?>[] parameterTypes = new Class<?>[parameters.length];
+            for (int i = 0; i < parameters.length; i++) {
+                parameterTypes[i] = parameters[i].getClass();
+            }
+            Method[] methods = obj.getClass().getDeclaredMethods();
+            Method method = Arrays.stream(methods)
+                    .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
+                    .findFirst().get();
+
+            ReflectionUtils.makeAccessible(method);
+            R ret = (R) method.invoke(obj, parameters);
+            return ret;
+        } catch (IllegalAccessException|InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public final static <R> R invoke(Object obj, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+        try {
+            Method method = obj.getClass().getDeclaredMethod(methodName, parameterTypes);
+            ReflectionUtils.makeAccessible(method);
+            R ret = (R) method.invoke(obj, parameters);
+            return ret;
+        } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

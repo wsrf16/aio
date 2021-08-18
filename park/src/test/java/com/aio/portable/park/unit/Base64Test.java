@@ -13,11 +13,11 @@ public class Base64Test {
     public void foobar() {
         {
             String base64 = JDKBase64Convert.encodeToString("1111".getBytes());
-            byte[] binary = JDKBase64Convert.decodeFromString(base64);
+            byte[] binary = JDKBase64Convert.decode(base64);
         }
         {
             String base64 = SpringBase64Convert.encodeToString("1111".getBytes());
-            byte[] binary = SpringBase64Convert.decodeFromString(base64);
+            byte[] binary = SpringBase64Convert.decode(base64);
         }
         PasswordEncoder md5PasswordEncoder = PasswordEncoderFactories.createDelegatingMD5PasswordEncoder();
         String md5 = md5PasswordEncoder.encode("1");

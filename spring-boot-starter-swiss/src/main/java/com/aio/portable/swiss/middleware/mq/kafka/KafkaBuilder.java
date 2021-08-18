@@ -10,15 +10,14 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 
 public class KafkaBuilder {
-    public final static <K, V> DefaultKafkaProducerFactory<K, V> producerFactory(KafkaProperties properties) {
+    public final static <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
-        DefaultKafkaProducerFactory<K, V> factory = new DefaultKafkaProducerFactory<>(producerProperties);
-        return factory;
+        return new DefaultKafkaProducerFactory<>(producerProperties);
     }
 
-    public final static <K, V> DefaultKafkaProducerFactory<K, V> producerFactory(KafkaProperties properties, Map<String, Object> extraProperties, String transactionIdPrefix) {
+    public final static <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties, Map<String, Object> additionalProperties, String transactionIdPrefix) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
-        producerProperties.putAll(extraProperties);
+        producerProperties.putAll(additionalProperties);
 
         DefaultKafkaProducerFactory<K, V> factory = new DefaultKafkaProducerFactory<>(producerProperties);
         if (transactionIdPrefix != null) {
@@ -27,37 +26,21 @@ public class KafkaBuilder {
         return factory;
     }
 
-    public final static <K, V> DefaultKafkaConsumerFactory<K, V> consumerFactory(KafkaProperties properties) {
-        return new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties());
-    }
-
-    public final static <K, V> DefaultKafkaConsumerFactory<K, V> consumerFactory(KafkaProperties properties, Map<String, Object> extraProperties) {
+    public final static <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
-        consumerProperties.putAll(extraProperties);
-
-        return new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties());
+        return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 
-    private static <K, V> LoggingProducerListener<K, V> producerListener() {
-        return new LoggingProducerListener<>();
+    public final static <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties, Map<String, Object> additionalProperties) {
+        Map<String, Object> consumerProperties = properties.buildConsumerProperties();
+        consumerProperties.putAll(additionalProperties);
+
+        return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 
     public final static <K, V> KafkaTemplate<K, V> buildTemplate(KafkaProperties properties) {
-        return KafkaBuilder.buildTemplate(properties, null);
-    }
-
-    public final static <K, V> KafkaTemplate<K, V> buildTemplate(KafkaProperties properties, RecordMessageConverter messageConverter) {
-        ProducerFactory<K, V> kafkaProducerFactory = KafkaBuilder.producerFactory(properties);
+        ProducerFactory<K, V> kafkaProducerFactory = KafkaBuilder.buildProducerFactory(properties);
         KafkaTemplate<K, V> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
-
-        if (messageConverter != null) {
-            kafkaTemplate.setMessageConverter(messageConverter);
-        }
-
-        ProducerListener<K, V> kafkaProducerListener = KafkaBuilder.producerListener();
-        if (kafkaProducerListener != null) {
-            kafkaTemplate.setProducerListener(kafkaProducerListener);
-        }
 
         if (properties != null && properties.getTemplate() != null && StringUtils.hasText(properties.getTemplate().getDefaultTopic())) {
             String defaultTopic = properties.getTemplate().getDefaultTopic();

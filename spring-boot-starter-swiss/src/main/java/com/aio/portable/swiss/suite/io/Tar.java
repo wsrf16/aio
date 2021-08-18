@@ -146,8 +146,8 @@ public abstract class Tar {
     }
 
     public static String targz(String path, String targetTarFile) {
-        targetTarFile = StringSugar.removeEnd(targetTarFile, GZ_EXTENTION);
-        targetTarFile = StringSugar.removeEnd(targetTarFile, TAR_EXTENTION);
+        targetTarFile = StringSugar.trimEnd(targetTarFile, GZ_EXTENTION);
+        targetTarFile = StringSugar.trimEnd(targetTarFile, TAR_EXTENTION);
 
         String tar = tar(path, targetTarFile);
         String targz = gz(tar);

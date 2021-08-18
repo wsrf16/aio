@@ -17,7 +17,6 @@ public class StreamClassLoader extends ClassLoader {
 
     /**
      * buildByResource
-     *
      * @param name : com/art/Book.class
      * @return
      */
@@ -28,7 +27,6 @@ public class StreamClassLoader extends ClassLoader {
 
     /**
      * buildByFile
-     *
      * @param file : target/classes/com/art/Book.class  |  art-1.0-SNAPSHOT.jar
      * @return
      */
@@ -46,7 +44,6 @@ public class StreamClassLoader extends ClassLoader {
             try {
                 jarFile = new JarFile(file);
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             List<JarEntry> jarEntryList = Collections.list(jarFile.entries());
@@ -83,7 +80,6 @@ public class StreamClassLoader extends ClassLoader {
                 if (in != null)
                     in.close();
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -110,7 +106,5 @@ public class StreamClassLoader extends ClassLoader {
         return out.toByteArray();
     }
 
-//    public String getFile() {
-//        return file;
-//    }
+
 }

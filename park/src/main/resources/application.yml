@@ -1,5 +1,7 @@
 server:
   port: 8880
+#  tomcat:
+#    max-connections: 888
 
 spring:
   application:
@@ -29,9 +31,9 @@ spring:
       port: 8888
 
   jwt:
-    require: true
+    enabled: true
     secret: 123456
-    expiredHours: 12
+    expiredMinutes: 12
     issuer: ladder
     basePackages:
       - com.chinaunicom.software.passport.api.controller
@@ -118,3 +120,17 @@ xxl:
 #      - name: 测试分组3
 #        uri: localhost:8084
 #        location: /v2/api-docs
+
+proxy:
+  http:
+    automatically: true
+    host: 1.1.1.1
+    port: 11
+  https:
+    automatically: true
+    host: 1.1.1.1
+    port: 11
+  socks:
+    automatically: true
+    host: 1.1.1.1
+    port: 11

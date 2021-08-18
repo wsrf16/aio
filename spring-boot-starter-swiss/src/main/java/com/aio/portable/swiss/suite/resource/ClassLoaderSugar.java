@@ -1,85 +1,77 @@
 package com.aio.portable.swiss.suite.resource;
 
 
-import com.aio.portable.swiss.sugar.StringSugar;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.text.MessageFormat;
 import java.util.List;
 
 public abstract class ClassLoaderSugar {
-
     /**
-     * 判断某一个类是否已加载（被实例化过，仅声明不会被加载）
+     * exist 判断是否存在某一个类
      *
-     * @param classLoader
-     * @param className
+     * @param className eg. com.art.Book
      * @return
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     * @throws NoSuchMethodException
+     * @throws IOException
      */
-    public final static Class<?> findLoadedClass(ClassLoader classLoader, String className) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = classLoader.getClass().getDeclaredMethod("findLoadedClass", new Class[]{String.class});
-        ReflectionUtils.makeAccessible(method);
-
-        Class<?> clazz = (Class<?>) method.invoke(classLoader, className);
-        return clazz;
+    public final static boolean isPresent(String className) {
+        String resource = ClassSugar.convertClassNameToResourceLocation(className);
+        return ResourceSugar.ByClassLoader.existResource(resource);
     }
 
     /**
-     * 判断某一个类是否已加载（被实例化过，仅声明不会被加载）
-     *
-     * @param classLoader
+     * findLoadedClass 解析出一个类
      * @param className
+     * @param classLoader
      * @return
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     * @throws NoSuchMethodException
      */
-    public final static boolean hasLoaded(ClassLoader classLoader, String className) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
-        boolean hasLoaded = findLoadedClass(classLoader, className) != null ? true : false;
+    public final static Class<?> findLoadedClass(String className, ClassLoader classLoader) {
+        try {
+            Method method = ClassLoader.class.getDeclaredMethod("findLoadedClass", new Class[]{String.class});
+            ReflectionUtils.makeAccessible(method);
+            Class<?> clazz = (Class<?>) method.invoke(classLoader, className);
+            return clazz;
+        } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public final static Class<?> findLoadedClass(String className) {
+        try {
+            Method method = ClassLoader.class.getDeclaredMethod("findLoadedClass", new Class[]{String.class});
+            ReflectionUtils.makeAccessible(method);
+            Class<?> clazz = (Class<?>) method.invoke(ClassLoaderSugar.getDefaultClassLoader(), className);
+            return clazz;
+        } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * hasLoaded 判断某一个类是否已加载（指被实例化过，仅声明不会被加载）
+     * @param className
+     * @param classLoader
+     * @return
+     */
+    public final static boolean hasLoaded(String className, ClassLoader classLoader) {
+        boolean hasLoaded = findLoadedClass(className, classLoader) != null ? true : false;
         return hasLoaded;
     }
 
     /**
-     * 判断在某一线程中，某一个类是否已加载（被实例化过，仅声明不会被加载）
-     *
-     * @return
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
-     * @throws NoSuchMethodException
-     */
-    public final static boolean hasLoadedInCurrentThread(String className) throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
-        return hasLoaded(Thread.currentThread().getContextClassLoader(), className);
-    }
-
-    /**
-     * load 加载一个类
-     *
+     * hasLoaded 判断在某一线程中，某一个类是否已加载（指被实例化过，仅声明不会被加载）
      * @param className
      * @return
      */
-    public final static boolean load(String className) {
-        boolean b = false;
-        try {
-            Class.forName(className);
-            b = true;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            b = false;
-        }
-        return b;
+    public final static boolean hasLoaded(String className) {
+        boolean hasLoaded = findLoadedClass(className) != null ? true : false;
+        return hasLoaded;
     }
-
 
     /**
      * loadClass
@@ -88,11 +80,11 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public final static Class<?> loadedClass(URL[] urls, String className) throws ClassNotFoundException {
+    public final static Class<?> loadClass(URL[] urls, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(urls);
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
-        Class<?> aClass = classLoader.loadClass(className);
-        return aClass;
+        Class<?> clazz = classLoader.loadClass(className);
+        return clazz;
     }
 
     /**
@@ -102,11 +94,11 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public final static Class<?> loadedClass(List<URL> urls, String className) throws ClassNotFoundException {
+    public final static Class<?> loadClass(List<URL> urls, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
-        Class<?> aClass = classLoader.loadClass(className);
-        return aClass;
+        Class<?> clazz = classLoader.loadClass(className);
+        return clazz;
     }
 
     /**
@@ -116,10 +108,10 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    private final static Class<?> loadedClass(URL url, String className) throws ClassNotFoundException {
+    private final static Class<?> loadClass(URL url, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        Class<?> aClass = classLoader.loadClass(className);
-        return aClass;
+        Class<?> clazz = classLoader.loadClass(className);
+        return clazz;
     }
 
     /**
@@ -128,11 +120,53 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public final static Class<?> loadedClass(URL url) throws ClassNotFoundException {
+    public final static Class<?> loadClass(URL url) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        String className = ResourceSugar.toCompleteClassName(url.toString());
-//        className = StringSugar.removeStart(className, ".");
-        Class<?> aClass = classLoader.loadClass(className);
-        return aClass;
+        String className = ResourceSugar.convertURLToClassName(url.toString());
+        Class<?> clazz = classLoader.loadClass(className);
+        return clazz;
     }
+
+    public final static Class<?> load(String className, boolean initialize, ClassLoader classLoader) {
+        try {
+            return Class.forName(className, initialize, classLoader);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public final static Class<?> load(String className, boolean initialize) {
+        return load(className, initialize, ClassLoaderSugar.getDefaultClassLoader());
+    }
+
+    /**
+     * load 加载一个类
+     * @param className
+     * @return
+     */
+    public final static Class<?> load(String className) {
+        return load(className, true, ClassLoaderSugar.getDefaultClassLoader());
+    }
+
+    @Nullable
+    public static ClassLoader getDefaultClassLoader() {
+        ClassLoader classLoader = null;
+
+        try {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        } catch (Exception e) {
+        }
+        if (classLoader == null) {
+            classLoader = ClassLoaderSugar.class.getClassLoader();
+            if (classLoader == null) {
+                try {
+                    classLoader = ClassLoader.getSystemClassLoader();
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        return classLoader;
+    }
+
 }

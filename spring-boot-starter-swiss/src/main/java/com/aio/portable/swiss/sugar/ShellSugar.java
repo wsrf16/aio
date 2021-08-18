@@ -35,13 +35,8 @@ public abstract class ShellSugar {
         return result;
     }
 
-    @Deprecated
-    public static List<String> run(String... cmd) {
-        return exec(cmd);
-    }
-
-    public static List<String> exec(String... cmd) {
-        List<String> feedbackList = Arrays.stream(cmd).map(c -> {
+    public static List<String> exec(String... scripts) {
+        List<String> feedbackList = Arrays.stream(scripts).map(c -> {
             try {
                 Process process = Runtime.getRuntime().exec(c);
                 process.waitFor();

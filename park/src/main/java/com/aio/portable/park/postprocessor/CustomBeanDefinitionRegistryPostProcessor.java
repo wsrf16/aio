@@ -1,6 +1,7 @@
 package com.aio.portable.park.postprocessor;
 
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -57,7 +58,7 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
                 if ((definition instanceof ScannedGenericBeanDefinition && ((ScannedGenericBeanDefinition) definition).getMetadata().getSuperClassName().equals(LogHubFactory.class.getTypeName())))
                 {
                     try {
-                        final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(Thread.currentThread().getContextClassLoader());
+                        final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
                         clazz.getConstructor().newInstance();
                     } catch (InstantiationException|InvocationTargetException|NoSuchMethodException|IllegalAccessException|ClassNotFoundException e) {
                         e.printStackTrace();

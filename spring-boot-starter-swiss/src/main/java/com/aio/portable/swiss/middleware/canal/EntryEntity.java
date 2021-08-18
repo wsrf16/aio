@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.middleware.canal;
 
-import com.aio.portable.swiss.middleware.canal.entry.ColumnEntity;
 import com.aio.portable.swiss.middleware.canal.entry.HeaderEntity;
 import com.aio.portable.swiss.middleware.canal.entry.RowDataEntity;
 import com.alibaba.otter.canal.protocol.CanalEntry;

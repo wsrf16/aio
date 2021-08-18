@@ -4,6 +4,7 @@ import com.aio.portable.swiss.middleware.canal.CanalWatcher;
 import com.aio.portable.swiss.middleware.canal.EntryEntity;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
+import com.alibaba.otter.canal.protocol.CanalEntry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.net.InetSocketAddress;
 import java.util.List;
 
-@TestComponent
+//@TestComponent
 public class SqlLogTest implements InitializingBean {
 
     @Override
@@ -26,8 +27,7 @@ public class SqlLogTest implements InitializingBean {
                         c.getRowDataEntityList().forEach(d -> {
                             final TableModel beforeRowModel = (TableModel) d.getBeforeRowModel();
                             final TableModel afterRowModel = (TableModel) d.getAfterRowModel();
-                            c.getHeader().getEventType();
-
+                            CanalEntry.EventType eventType = c.getHeader().getEventType();
                             System.out.println();
                         });
                     });

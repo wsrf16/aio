@@ -1,12 +1,14 @@
 package com.aio.portable.swiss.suite.bean;
 
-import com.aio.portable.swiss.suite.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.DynamicProxySugar;
+import com.aio.portable.swiss.suite.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
@@ -57,7 +59,7 @@ public abstract class BeanSugar {
         return equal;
     }
 
-    private static <SUB> boolean matchNameValueMap(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
+    private final static <SUB> boolean matchNameValueMap(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
         Set<String> nameList = nameValueMatch.keySet();
         return nameList.stream().allMatch(key -> {
             Boolean b;
@@ -190,6 +192,10 @@ public abstract class BeanSugar {
             return propertyDescriptorList;
         }
 
+        private final static boolean isBuiltIn(PropertyDescriptor propertyDescriptor, Object bean) {
+            return propertyDescriptor.getName().equals("class")
+                    || (propertyDescriptor.getName().equals("beanFactory") && DynamicProxySugar.isCglibProxy(bean));
+        }
 
         public final static Map<String, Class> toNameClassMap(Class clazz) {
             Map<String, Class> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
@@ -201,16 +207,14 @@ public abstract class BeanSugar {
 
         public final static Map<String, Object> toNameValueMap(Object bean) {
             Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(c -> !c.getName().equals("class"))
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
             return map;
         }
 
         public final static Map<String, Object> toNameValueMapExceptNull(Object bean) {
             Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(pro -> !pro.getName().equals("class") && getValue(bean, pro) != null)
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean) && getValue(bean, c) != null)
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
             return map;
         }
@@ -218,16 +222,14 @@ public abstract class BeanSugar {
 
         public final static Map<String, PropertyDescriptor> toNamePropertyMap(Object bean) {
             Map<String, PropertyDescriptor> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(c -> !c.getName().equals("class"))
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
             return map;
         }
 
         public final static Map<String, PropertyDescriptor> toNamePropertyMapExceptNull(Object bean) {
             Map<String, PropertyDescriptor> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(pro -> !pro.getName().equals("class") && getValue(bean, pro) != null)
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean) && getValue(bean, c) != null)
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
             return map;
         }
@@ -235,16 +237,14 @@ public abstract class BeanSugar {
 
         public final static Map<String, String> toNameStringMap(Object bean) {
             Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(c -> !c.getName().equals("class"))
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
             return map;
         }
 
         public final static Map<String, String> toNameStringMapExceptNull(Object bean) {
             Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
-                    .filter(c -> !c.getName().equals("class"))
-                    //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
+                    .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
             return map;
         }

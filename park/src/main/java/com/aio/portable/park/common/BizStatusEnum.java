@@ -1,11 +1,11 @@
 package com.aio.portable.park.common;
 
+import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.BizStatus;
-import com.aio.portable.swiss.hamlet.bean.BizStatusNativeEnum;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizStatusEnum extends BizStatusNativeEnum {
+public class BizStatusEnum extends BaseBizStatusEnum {
     private final static BizStatusEnum _ = new BizStatusEnum();
 
 //    protected static BizStatusEnum instance;

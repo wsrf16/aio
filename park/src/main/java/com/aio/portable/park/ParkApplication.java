@@ -3,9 +3,8 @@ package com.aio.portable.park;
 
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.net.tcp.proxy.annotation.EnableNetworkProxy;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,17 +23,16 @@ import org.springframework.core.env.Environment;
         RabbitAutoConfiguration.class,
 })
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
+@EnableNetworkProxy
 public class ParkApplication {
-    static Log apachelog = LogFactory.getLog(ParkApplication.class);
+    static LogHub log;
 
 
     public static void main(String[] args) {
-        apachelog.info("apacheeeeeeeeeeeeeeeee");
 //        AnnotationConfigEmbeddedWebApplicationContext
-//        LogHub log_ = AppLogHubFactory.staticBuild();
         ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-        LogHub log = AppLogHubFactory.staticBuild();
+        log = AppLogHubFactory.staticBuild();
         log.i("it is up to u. ");
         String[] beanNames = beanFactory.getBeanDefinitionNames();
 
@@ -46,3 +44,4 @@ public class ParkApplication {
 
 
 }
+

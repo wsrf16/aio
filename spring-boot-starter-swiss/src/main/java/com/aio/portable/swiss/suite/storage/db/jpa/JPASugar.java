@@ -294,7 +294,7 @@ public class JPASugar {
                     Like annotation = field.getDeclaredAnnotation(Like.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("Like")) {
-                    fixName = StringSugar.removeEnd(name, "Like");
+                    fixName = StringSugar.trimEnd(name, "Like");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -306,7 +306,7 @@ public class JPASugar {
                     NotLike annotation = field.getDeclaredAnnotation(NotLike.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("NotLike")) {
-                    fixName = StringSugar.removeEnd(name, "NotLike");
+                    fixName = StringSugar.trimEnd(name, "NotLike");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -337,7 +337,7 @@ public class JPASugar {
                     Equal annotation = field.getDeclaredAnnotation(Equal.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("Equal")) {
-                    fixName = StringSugar.removeEnd(name, "Equal");
+                    fixName = StringSugar.trimEnd(name, "Equal");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -349,7 +349,7 @@ public class JPASugar {
                     NotEqual annotation = field.getDeclaredAnnotation(NotEqual.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("NotEqual")) {
-                    fixName = StringSugar.removeEnd(name, "NotEqual");
+                    fixName = StringSugar.trimEnd(name, "NotEqual");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -383,7 +383,7 @@ public class JPASugar {
                     In annotation = field.getDeclaredAnnotation(In.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("In")) {
-                    fixName = StringSugar.removeEnd(name, "In");
+                    fixName = StringSugar.trimEnd(name, "In");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -415,7 +415,7 @@ public class JPASugar {
                     GreaterThan annotation = field.getDeclaredAnnotation(GreaterThan.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("GreaterThan")) {
-                    fixName = StringSugar.removeEnd(name, "GreaterThan");
+                    fixName = StringSugar.trimEnd(name, "GreaterThan");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -427,7 +427,7 @@ public class JPASugar {
                     GreaterThanEqual annotation = field.getDeclaredAnnotation(GreaterThanEqual.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("GreaterThanEqual")) {
-                    fixName = StringSugar.removeEnd(name, "GreaterThanEqual");
+                    fixName = StringSugar.trimEnd(name, "GreaterThanEqual");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -439,7 +439,7 @@ public class JPASugar {
                     LessThan annotation = field.getDeclaredAnnotation(LessThan.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("LessThan")) {
-                    fixName = StringSugar.removeEnd(name, "LessThan");
+                    fixName = StringSugar.trimEnd(name, "LessThan");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
@@ -451,7 +451,7 @@ public class JPASugar {
                     LessThanEqual annotation = field.getDeclaredAnnotation(LessThanEqual.class);
                     fixName = annotation.targetProperty();
                 } else if (name.endsWith("LessThanEqual")) {
-                    fixName = StringSugar.removeEnd(name, "LessThanEqual");
+                    fixName = StringSugar.trimEnd(name, "LessThanEqual");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }

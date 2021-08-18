@@ -9,12 +9,18 @@ public class StringSugar {
     public final static String EMPTY = "";
 
     public final static String trim(String str, String removed) {
-        str = removeStart(str, removed);
-        str = removeEnd(str, removed);
+        str = trimStart(str, removed);
+        str = trimEnd(str, removed);
         return str;
     }
 
-    public final static String removeStart(String str, String removedStart) {
+    public final static String trim(String str, String start, String end) {
+        String result = trimStart(str, start);
+        result = trimEnd(result, end);
+        return result;
+    }
+
+    public final static String trimStart(String str, String removedStart) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedStart)) {
             return str.startsWith(removedStart) ? str.substring(removedStart.length()) : str;
         } else {
@@ -22,7 +28,7 @@ public class StringSugar {
         }
     }
 
-    public final static String removeEnd(String str, String removedEnd) {
+    public final static String trimEnd(String str, String removedEnd) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedEnd)) {
             return str.endsWith(removedEnd) ? str.substring(0, str.length() - removedEnd.length()) : str;
         } else {
@@ -30,19 +36,19 @@ public class StringSugar {
         }
     }
 
-    public final static String removeAllStart(String text, String removedStart) {
+    public final static String trimAllStart(String text, String removedStart) {
         String result = text;
         while (result.startsWith(removedStart)) {
-            result = StringSugar.removeStart(result, removedStart);
+            result = StringSugar.trimStart(result, removedStart);
         }
         return result;
     }
 
 
-    public final static String removeAllEnd(String text, String removedEnd) {
+    public final static String trimAllEnd(String text, String removedEnd) {
         String result = text;
         while (result.endsWith(removedEnd)) {
-            result = StringSugar.removeEnd(result, removedEnd);
+            result = StringSugar.trimEnd(result, removedEnd);
         }
         return result;
     }
@@ -217,8 +223,14 @@ public class StringSugar {
     }
 
     public final static String unwrap(String input, String boundary) {
-        String s = removeStart(input, boundary);
-        s = removeEnd(s, boundary);
+        String s = trimStart(input, boundary);
+        s = trimEnd(s, boundary);
+        return s;
+    }
+
+    public final static String unwrapAll(String input, String boundary) {
+        String s = trimAllStart(input, boundary);
+        s = trimAllEnd(s, boundary);
         return s;
     }
 
@@ -321,9 +333,27 @@ public class StringSugar {
         return RegexSugar.replace(input, PLACE_HOLDER, replacement);
     }
 
-    public final static String wrap(String content, ColorEnum... colors) {
+    public final static String paint(String content, ColorEnum... colors) {
 //        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
         return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
+    }
+
+    public final static boolean isCapitalize(String word) {
+        char first = word.charAt(0);
+        boolean isUpperCase = Character.isUpperCase(first);
+        return isUpperCase;
+    }
+
+    public final static String getLastWord(String text, String interval) {
+        int local = text.lastIndexOf(interval) + 1;
+        String part = text.substring(local);
+        return part;
+    }
+
+    public final static String getFirstWord(String text, String interval) {
+        int local = text.indexOf(interval);
+        String part = text.substring(0, local);
+        return part;
     }
 
     public final static String hasTextFirst(String otherwise, String... str) {
@@ -334,7 +364,7 @@ public class StringSugar {
         return otherwise;
     }
 
-    public final static String hasLengthFirst(String otherwise, String... str) {
+    public final static String getFirstHasLength(String otherwise, String... str) {
         for (String s : str) {
             if (StringUtils.hasLength(s))
                 return s;

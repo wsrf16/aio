@@ -2,10 +2,10 @@ package com.aio.portable.park.test;
 
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.resource.ResourceSugar;
-import com.aio.portable.swiss.suite.resource.StreamClassLoader;
+import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
 import com.aio.portable.swiss.sandbox.Wood;
 import org.springframework.core.io.ClassPathResource;
 
@@ -19,9 +19,6 @@ public class ResourceTest {
     LogHub log = AppLogHubFactory.staticBuild();
 
     {
-        {
-
-        }
         {
             // 只能用于从非jar包中获取资源
             // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties

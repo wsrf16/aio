@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.net.tcp.proxy;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 
 import java.util.List;
 

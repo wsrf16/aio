@@ -2,8 +2,8 @@ package com.aio.portable.swiss.suite.log.support;
 
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -8,15 +8,19 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 public interface TokenAlgorithm {
     Algorithm getAlgorithm();
 
-    default String encode(JWTCreator.Builder builder, Algorithm algorithm) {
-        return JWTSugar.sign(builder, algorithm);
+    default String sign(JWTCreator.Builder builder) {
+        return JWTSugar.sign(builder, getAlgorithm());
     }
 
-    default boolean verify(String token, Algorithm algorithm) {
-        return JWTSugar.validate(token, algorithm);
+    default boolean validate(String token) {
+        return JWTSugar.validate(token, getAlgorithm());
     }
 
-    default DecodedJWT parse(String token, Algorithm algorithm) {
-        return JWTSugar.parse(token, algorithm);
+    default boolean isExpired(String token) {
+        return JWTSugar.isExpired(token, getAlgorithm());
+    }
+
+    default DecodedJWT parse(String token) {
+        return JWTSugar.parse(token, getAlgorithm());
     }
 }

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.bean.node;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.node.linked.layered.LayeredLinkedNode;
 import com.aio.portable.swiss.suite.bean.node.linked.tiled.TiledLinkedNode;
 import com.aio.portable.swiss.suite.bean.node.relation.RelationEquals;

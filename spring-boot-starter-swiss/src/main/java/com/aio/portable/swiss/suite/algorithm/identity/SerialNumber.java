@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.algorithm.identity;
 
-import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

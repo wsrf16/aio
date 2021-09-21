@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 
 /**
  * Functionality is unavailable, invariants are broken or data is lost.

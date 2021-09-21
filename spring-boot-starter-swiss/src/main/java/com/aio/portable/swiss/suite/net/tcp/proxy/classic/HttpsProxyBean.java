@@ -13,7 +13,7 @@ public class HttpsProxyBean implements ProxyBean {
 
     private List<String> nonProxyHosts;
 
-    private boolean automatically = false;
+    private boolean automatically = true;
 
     public String getHost() {
         return host;

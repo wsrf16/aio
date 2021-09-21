@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.middleware.ldap;
 
 import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;

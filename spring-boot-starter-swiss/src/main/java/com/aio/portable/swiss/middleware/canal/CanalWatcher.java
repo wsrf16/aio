@@ -61,7 +61,7 @@ public class CanalWatcher {
                         Thread.sleep(sleepMillis);
                     } catch (InterruptedException e) {
 //                        e.printStackTrace();
-                        log.error(e);
+                        log.error("listen error", e);
                     }
                 } else {
                     final SqlLog sqlLog = new SqlLog(message.getEntries());
@@ -80,7 +80,7 @@ public class CanalWatcher {
             }
         } catch (CanalClientException e) {
 //            e.printStackTrace();
-            log.error(e);
+            log.error("listen error", e);
         } finally {
             connector.disconnect();
         }

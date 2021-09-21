@@ -2,6 +2,7 @@ package com.aio.portable.swiss.hamlet.interceptor.log;
 
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -32,4 +33,8 @@ public abstract class HamletWebLogAspect extends AbstractWebLogAspect {
         return super.doAround(joinPoint);
     }
 
+//    @AfterThrowing
+//    public void doAfterThrowing(ProceedingJoinPoint joinPoint, Object result) {
+//        super.doAfterThrowing(joinPoint, result);
+//    }
 }

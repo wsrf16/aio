@@ -2,10 +2,15 @@ package com.aio.portable.park.config;
 
 import com.aio.portable.swiss.hamlet.bean.HamletBeanConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.util.EventListener;
 
 @Configuration
 public class BeanConfig extends HamletBeanConfig {
@@ -19,8 +24,20 @@ public class BeanConfig extends HamletBeanConfig {
         return super.objectMapper();
     }
 
-//    @Bean
-//    public RestTemplate restTemplate() {
-//        return new RestTemplate();
-//    }
+    @Bean
+    public ServletListenerRegistrationBean servletListenerRegistrationBean(){
+        ServletListenerRegistrationBean servletListenerRegistrationBean = new ServletListenerRegistrationBean();
+        servletListenerRegistrationBean.setListener(new HttpSessionListener() {
+            @Override
+            public void sessionCreated(HttpSessionEvent se) {
+                HttpSessionListener.super.sessionCreated(se);
+            }
+
+            @Override
+            public void sessionDestroyed(HttpSessionEvent se) {
+                HttpSessionListener.super.sessionDestroyed(se);
+            }
+        });
+        return servletListenerRegistrationBean;
+    }
 }

@@ -1,11 +1,5 @@
 package com.aio.portable.swiss.suite.bean.serializer;
 
-import com.aio.portable.swiss.suite.resource.ClassSugar;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by York on 2017/11/22.
  */

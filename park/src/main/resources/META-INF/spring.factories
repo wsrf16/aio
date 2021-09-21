@@ -1,5 +1,5 @@
-org.springframework.context.ApplicationListener=\
-  com.aio.portable.park.postprocessor.CustomPropertySourceApplicationListener
+#org.springframework.context.ApplicationListener=\
+#  com.aio.portable.park.postprocessor.CustomPropertySourceApplicationListener
 
 
 

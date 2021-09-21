@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.resource.classloader.WatchClassLoader;
+import com.aio.portable.swiss.sugar.resource.classloader.WatchClassLoader;
 import org.junit.Test;
 
 import java.net.MalformedURLException;

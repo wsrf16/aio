@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.sugar.StreamSugar;
+import com.aio.portable.swiss.sugar.type.StreamSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 

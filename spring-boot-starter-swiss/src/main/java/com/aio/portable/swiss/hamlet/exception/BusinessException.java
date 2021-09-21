@@ -5,9 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@interface BusinessException {
-    int code();
-    String message();
+//@Retention(RetentionPolicy.RUNTIME)
+//@Target(ElementType.TYPE)
+public interface BusinessException {
+    int getCode();
+    String getMessage();
 }

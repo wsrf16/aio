@@ -1,5 +1,6 @@
 package com.aio.portable.park.controller;
 
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,9 @@ public class RootController {
     @ApiOperation(value = "首页")
     @GetMapping("/")
     public String index() throws IOException {
+//        int i = 1;
+//        if (i == 1)
+//            throw new BizException(111, "aaaaaaaaaaa");
         return "doc.html";
     }
 

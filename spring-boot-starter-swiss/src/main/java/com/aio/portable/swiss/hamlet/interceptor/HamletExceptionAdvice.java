@@ -3,6 +3,7 @@ package com.aio.portable.swiss.hamlet.interceptor;
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.BizException;
+import com.aio.portable.swiss.hamlet.exception.BusinessException;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
@@ -38,24 +39,22 @@ public abstract class HamletExceptionAdvice {
 
 //    protected static LogHubPool loggerPool;
 
+    protected Class<? extends Throwable> getBusinessException() {
+        return BizException.class;
+    }
+
     @ExceptionHandler(value = {Exception.class})
     public ResponseWrapper handleBizException(Exception input) {
         Exception e = input instanceof HandOverException ? ((HandOverException)input).getException() : input;
 
         ResponseWrapper responseWrapper;
-        if (e instanceof BizException) {
-            BizException bizException = (BizException)e;
-            log.e(GLOBAL_BUSINESS_EXCEPTION, e);
-            responseWrapper = ResponseWrapper.build(bizException.getCode(), bizException.getMessage());
+        if (getBusinessException().isInstance(e)) {
+            BusinessException businessException = (BusinessException)e;
+            log.e(GLOBAL_BUSINESS_EXCEPTION, e.getMessage(), e);
+            responseWrapper = ResponseWrapper.build(businessException.getCode(), businessException.getMessage());
         }
-//        else if (Arrays.asList(e.getClass().getAnnotations()).contains(BusinessException.class)){
-//            log.e(GLOBAL_BUSINESS_EXCEPTION, e);
-//            responseWrapper = ResponseWrapper.build(BizStatusNativeEnum.getCode(), bizException.getMessage());
-//        }
         else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
-        else if (e instanceof NoHandlerFoundException)
-            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), e.getMessage());
         else {
             log.e(GLOBAL_SYSTEM_EXCEPTION, e);
             responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());

@@ -23,7 +23,7 @@ public class NettySugar {
         EventLoopGroup acceptGroup = new NioEventLoopGroup();
         EventLoopGroup transferGroup = new NioEventLoopGroup();
 
-        final ServerBootstrap server = new ServerBootstrap()
+        ServerBootstrap server = new ServerBootstrap()
                 .group(acceptGroup, transferGroup)
                 .channel(channelClass)
                 // 服务端处理客户端连接请求是按顺序处理的，所以同一时间只能处理一个客户端连接，多个客户端来的时候，服务端将不能处理的客户端连接请求放在队列中等待处理，backlog参数指定了队列的大小。

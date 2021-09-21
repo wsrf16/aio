@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt;
 
-import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.suite.algorithm.cipher.AlgorithmSugar;
-import com.aio.portable.swiss.suite.algorithm.cipher.RSASugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.suite.algorithm.crypto.AlgorithmSugar;
+import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSASugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.encryption.Base64TokenAlgorithm;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -104,10 +104,10 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
         return token;
     }
 
-    public String sign() {
-        JWTCreator.Builder builder = createBuilder();
-        return sign(builder);
-    }
+//    public String sign() {
+//        JWTCreator.Builder builder = createBuilder();
+//        return sign(builder);
+//    }
 
     public String sign(String issuer) {
         JWTCreator.Builder builder = createBuilder();
@@ -118,6 +118,16 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
     public String sign(String issuer, Map<String, Object> addition) {
         JWTCreator.Builder builder = createBuilder();
         builder.withIssuer(issuer);
+        addition.entrySet().forEach(c -> {
+            String key = c.getKey();
+            Object value = c.getValue();
+            JWTSugar.withClaim(builder, key, value);
+        });
+        return sign(builder);
+    }
+
+    public String sign(Map<String, Object> addition) {
+        JWTCreator.Builder builder = createBuilder();
         addition.entrySet().forEach(c -> {
             String key = c.getKey();
             Object value = c.getValue();

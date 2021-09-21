@@ -43,8 +43,9 @@ public class ResponseWrapper<T> {
 
     protected ResponseWrapper() {
         this.traceId = IDS.uuid();
-        this.accessTime = new Date();
-        this.timestamp = System.currentTimeMillis();
+        Date date = new Date();
+        this.accessTime = date;
+        this.timestamp = date.getTime();//System.currentTimeMillis();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
@@ -55,57 +56,6 @@ public class ResponseWrapper<T> {
         this.accessTime = new Date();
         this.timestamp = System.currentTimeMillis();
     }
-
-    /**
-     * 默认返回实体
-     * @return
-     */
-    public static <T> ResponseWrapper<T> build() {
-        return new ResponseWrapper();
-    }
-
-    /**
-     * 创建返回实体（返回文字消息）
-     * @param statusCode
-     * @param message
-     * @return
-     */
-    public static <T> ResponseWrapper<T> build(int statusCode, String message) {
-        return new ResponseWrapper<>(statusCode, message, null);
-    }
-
-    /**
-     * 创建返回实体（返回数据）
-     * @param statusCode
-     * @param data
-     * @param <T>
-     * @return
-     */
-    public static <T> ResponseWrapper<T> build(int statusCode, T data) {
-        return new ResponseWrapper<>(statusCode, null, data);
-    }
-
-    /**
-     * 创建返回实体（返回文字消息和数据）
-     * @param statusCode
-     * @param message
-     * @param data
-     * @param <T>
-     * @return
-     */
-    public static <T> ResponseWrapper<T> build(int statusCode, String message, T data) {
-        return new ResponseWrapper<>(statusCode, message, data);
-    }
-
-//    /**
-//     * 创建“成功”返回实体
-//     * @param data
-//     * @param <T>
-//     * @return
-//     */
-//    public static <T> ResponseWrapper<T> success(T data) {
-//        return new ResponseWrapper<>(0, "success", data);
-//    }
 
     /**
      * 设置“状态码”和“文字消息”
@@ -197,4 +147,44 @@ public class ResponseWrapper<T> {
         return this;
     }
 
+    /**
+     * 默认返回实体
+     * @return
+     */
+    public static <T> ResponseWrapper<T> build() {
+        return new ResponseWrapper();
+    }
+
+    /**
+     * 创建返回实体（返回文字消息）
+     * @param statusCode
+     * @param message
+     * @return
+     */
+    public static <T> ResponseWrapper<T> build(int statusCode, String message) {
+        return new ResponseWrapper<>(statusCode, message, null);
+    }
+
+    /**
+     * 创建返回实体（返回数据）
+     * @param statusCode
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> ResponseWrapper<T> build(int statusCode, T data) {
+        return new ResponseWrapper<>(statusCode, null, data);
+    }
+
+    /**
+     * 创建返回实体（返回文字消息和数据）
+     * @param statusCode
+     * @param message
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> ResponseWrapper<T> build(int statusCode, String message, T data) {
+        return new ResponseWrapper<>(statusCode, message, data);
+    }
 }

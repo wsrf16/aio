@@ -1,6 +1,6 @@
 package com.aio.portable.park.test;
 
-import com.aio.portable.park.postprocessor.UserInfoEntity;
+import com.aio.portable.park.common.UserInfoEntity;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

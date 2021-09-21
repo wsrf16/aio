@@ -36,4 +36,14 @@ public abstract class SpringBase64Convert {
     public final static String decodeToString(String text) {
         return Base64Utils.encodeToString(text.getBytes());
     }
+
+    public final static String convertHexToBase64(String text) {
+        String base64 = SpringBase64Convert.encodeToString(HexConvert.decode(text));
+        return base64;
+    }
+
+    public final static String convertBase64ToHex(String text) {
+        String hex = HexConvert.encode(SpringBase64Convert.decode(text));
+        return hex;
+    }
 }

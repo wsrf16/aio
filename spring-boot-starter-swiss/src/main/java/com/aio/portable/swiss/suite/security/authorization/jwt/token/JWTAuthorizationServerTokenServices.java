@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt.token;
 
-import com.aio.portable.swiss.suite.algorithm.transcode.Transcoder;
-import com.aio.portable.swiss.suite.algorithm.transcode.classic.TranscoderBase64;
-import com.aio.portable.swiss.suite.algorithm.transcode.Transcodable;
+import com.aio.portable.swiss.suite.algorithm.adapter.Transcoder;
+import com.aio.portable.swiss.suite.algorithm.adapter.classic.TranscoderBase64;
+import com.aio.portable.swiss.suite.algorithm.adapter.Transcodable;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTExpiredDate;
 import com.auth0.jwt.JWTCreator;

@@ -36,4 +36,14 @@ public abstract class JDKBase64Convert {
     public final static String decodeToString(String cipher) {
         return new String(Base64.getDecoder().decode(cipher));
     }
+
+    public final static String convertHexToBase64(String text) {
+        String base64 = JDKBase64Convert.encodeToString(HexConvert.decode(text));
+        return base64;
+    }
+
+    public final static String convertBase64ToHex(String text) {
+        String hex = HexConvert.encode(JDKBase64Convert.decode(text));
+        return hex;
+    }
 }

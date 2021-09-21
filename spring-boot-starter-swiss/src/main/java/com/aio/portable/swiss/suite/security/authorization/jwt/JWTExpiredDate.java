@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt;
 
-import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 
 import java.util.Calendar;
 import java.util.Date;

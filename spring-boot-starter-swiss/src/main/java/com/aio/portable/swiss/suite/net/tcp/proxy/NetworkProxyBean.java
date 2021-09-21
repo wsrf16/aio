@@ -27,17 +27,14 @@ public class NetworkProxyBean implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if (httpProxyBean != null || httpsProxyBean != null || socksProxyBean != null) {
             if (httpProxyBean != null && httpProxyBean.getAutomatically()) {
-                log.info(info(httpProxyBean));
                 httpProxyBean.on();
             }
 
             if (httpsProxyBean != null && httpsProxyBean.getAutomatically()) {
-                log.info(info(httpsProxyBean));
                 httpsProxyBean.on();
             }
 
             if (socksProxyBean != null && socksProxyBean.getAutomatically()) {
-                log.info(info(socksProxyBean));
                 socksProxyBean.on();
             }
         }
@@ -46,13 +43,13 @@ public class NetworkProxyBean implements InitializingBean {
     public final static boolean test(String host, Integer port) {
         boolean telnet = TcpSugar.telnet(host, port, 5000);
         if (telnet)
-            log.info(MessageFormat.format("Test connection: {0}:{1} - Connection succeeded.", host, port));
+            log.info(MessageFormat.format("Test connection: {0}:{1} - Connection succeeded.", host, String.valueOf(port)));
         else
-            log.warn(MessageFormat.format("Test connection: {0}:{1} - Connection failed.", host, port));
+            log.warn(MessageFormat.format("Test connection: {0}:{1} - Connection failed.", host, String.valueOf(port)));
         return telnet;
     }
 
-    public final static String info(ProxyBean proxyObject) {
-        return MessageFormat.format("set proxy: host-{0} port-{1}", proxyObject.getHost(), proxyObject.getPort());
-    }
+//    public final static String info(ProxyBean proxyObject) {
+//        return MessageFormat.format("set proxy: host-{0} port-{1}", proxyObject.getHost(), String.valueOf(proxyObject.getPort()));
+//    }
 }

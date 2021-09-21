@@ -2,10 +2,17 @@ package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -14,8 +21,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
-    @Autowired
-    private ObjectMapper objectMapper;
+//    @Autowired
+//    private ObjectMapper objectMapper;
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -81,9 +88,10 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 //                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE" };
+//    static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS" };
 
     @Override
+    @LoadBalanced
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
@@ -93,4 +101,20 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
+
+//    @Bean
+    public FilterRegistrationBean corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+//        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        //这里设置优先级最高
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
 }

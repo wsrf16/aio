@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.exception;
 
-public class BizException extends RuntimeException {
+public class BizException extends RuntimeException implements BusinessException {
     public int getCode() {
         return code;
     }

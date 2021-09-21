@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.bean.node.linked.tiled;
 
 import com.aio.portable.swiss.suite.bean.node.linked.LinkedNode;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 
 public abstract class TiledLinkedNode implements LinkedNode<TiledLinkedNode> {

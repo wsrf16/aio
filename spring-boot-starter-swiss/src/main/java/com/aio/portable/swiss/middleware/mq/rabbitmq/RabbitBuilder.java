@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.middleware.mq.rabbitmq;
 
-import com.aio.portable.swiss.factories.autoconfigure.properties.RabbitMQProperties;
+import com.aio.portable.swiss.spring.factories.autoconfigure.properties.RabbitMQProperties;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
 import com.rabbitmq.client.Channel;
 import org.apache.commons.logging.Log;
@@ -37,12 +37,12 @@ public abstract class RabbitBuilder {
         String type = rabbitMQBindingProperty.getType().toLowerCase();
 
         Binding binding;
-        rabbitAdmin.declareQueue(queue);
+        declareQueue(rabbitAdmin, queue);
 
         switch (type) {
             case Exchange.DIRECT: {
                 DirectExchange exchange = new DirectExchange(exchangeText, true, false, null);
-                rabbitAdmin.declareExchange(exchange);
+                declareExchange(rabbitAdmin, exchange);
                 binding = BindingBuilder.bind(queue).to(exchange).with(routingKeyText);
             }
             break;
@@ -54,23 +54,47 @@ public abstract class RabbitBuilder {
                                     routingKeyText)
                     );
                 TopicExchange exchange = new TopicExchange(exchangeText, true, false, null);
-                rabbitAdmin.declareExchange(exchange);
+                declareExchange(rabbitAdmin, exchange);
                 binding = BindingBuilder.bind(queue).to(exchange).with(routingKeyText);
             }
             break;
             case Exchange.FANOUT: {
                 FanoutExchange exchange = new FanoutExchange(exchangeText, true, false, null);
-                rabbitAdmin.declareExchange(exchange);
+                declareExchange(rabbitAdmin, exchange);
                 binding = BindingBuilder.bind(queue).to(exchange);
             }
             break;
             default:
                 throw new IllegalArgumentException(type);
         }
-        rabbitAdmin.declareBinding(binding);
+        declareBinding(rabbitAdmin, binding);
         return binding;
 
 
+    }
+
+    private static void declareBinding(RabbitAdmin rabbitAdmin, Binding binding) {
+        try {
+            rabbitAdmin.declareBinding(binding);
+        } catch (Exception e) {
+            log.error("declareBinding error", e);
+        }
+    }
+
+    private static void declareExchange(RabbitAdmin rabbitAdmin, AbstractExchange exchange) {
+        try {
+            rabbitAdmin.declareExchange(exchange);
+        } catch (Exception e) {
+            log.error("declareExchange error", e);
+        }
+    }
+
+    private static void declareQueue(RabbitAdmin rabbitAdmin, Queue queue) {
+        try {
+            rabbitAdmin.declareQueue(queue);
+        } catch (Exception e) {
+            log.error("declareQueue error", e);
+        }
     }
 
     private final static List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {

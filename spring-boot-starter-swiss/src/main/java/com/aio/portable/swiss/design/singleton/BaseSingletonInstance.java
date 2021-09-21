@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.design.singleton;
 
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 
 import java.util.HashMap;
 import java.util.Map;

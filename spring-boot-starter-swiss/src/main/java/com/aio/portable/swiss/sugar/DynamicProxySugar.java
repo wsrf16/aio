@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.aopalliance.aop.Advice;
-import org.springframework.aop.SpringProxy;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.ProxyFactory;

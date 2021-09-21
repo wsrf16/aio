@@ -1,10 +1,12 @@
 package com.aio.portable.park.postprocessor;
 
-import com.aio.portable.swiss.suite.log.impl.es.rabbit.RabbitMQLogProperties;
+import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 public class CustomBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof UserInfoEntity) {

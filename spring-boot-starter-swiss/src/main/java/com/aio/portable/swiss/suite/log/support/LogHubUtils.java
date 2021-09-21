@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.support;
 
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -11,6 +11,13 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.classreading.MethodMetadataReadingVisitor;
 
 public class LogHubUtils {
+    public static class SLF4J {
+        public final static String DEPENDENCY = "org.slf4j.Logger";
+        public static boolean existDependency() {
+            return ClassLoaderSugar.isPresent(DEPENDENCY);
+        }
+    }
+
     public static class Kafka {
         public final static String DEPENDENCY = "org.springframework.kafka.core.KafkaTemplate";
         public static boolean existDependency() {

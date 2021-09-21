@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.RegexSugar;
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 
 /**
  * Anything and everything you might want to know about a running block of code.

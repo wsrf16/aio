@@ -45,6 +45,7 @@
         <netty-all.version>4.1.44.Final</netty-all.version>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
         <canal.version>1.1.5</canal.version>
+        <guava.version>[24.1.1,)</guava.version>
 
 <!--        <zookeeper.version>3.6.2</zookeeper.version>-->
 <!--        <commons-lang3.version>3.8.1</commons-lang3.version>-->
@@ -578,6 +579,13 @@
             <groupId>com.alibaba.otter</groupId>
             <artifactId>canal.protocol</artifactId>
             <version>${canal.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -1,14 +1,13 @@
 package com.aio.portable.swiss.suite.bean;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;

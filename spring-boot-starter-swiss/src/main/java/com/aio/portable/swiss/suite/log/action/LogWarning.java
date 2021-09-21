@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 
 /**
  * Service is degraded or endangered.

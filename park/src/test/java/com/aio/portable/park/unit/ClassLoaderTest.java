@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import org.springframework.boot.test.context.TestComponent;
 
 import java.lang.reflect.InvocationTargetException;

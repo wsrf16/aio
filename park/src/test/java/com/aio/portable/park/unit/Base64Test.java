@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.algorithm.cipher.passwordencoder.PasswordEncoderFactories;
+import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEncoderFactories;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import com.aio.portable.swiss.suite.algorithm.encode.SpringBase64Convert;
 import org.junit.Test;
@@ -19,8 +19,8 @@ public class Base64Test {
             String base64 = SpringBase64Convert.encodeToString("1111".getBytes());
             byte[] binary = SpringBase64Convert.decode(base64);
         }
-        PasswordEncoder md5PasswordEncoder = PasswordEncoderFactories.createDelegatingMD5PasswordEncoder();
-        String md5 = md5PasswordEncoder.encode("1");
-        boolean md51 = md5PasswordEncoder.matches("1", md5);
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoderMD5Base64();
+        String md5 = passwordEncoder.encode("1");
+        boolean md51 = passwordEncoder.matches("1", md5);
     }
 }

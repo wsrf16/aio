@@ -3,8 +3,8 @@ package com.aio.portable.swiss.suite.log.impl.console;
 import com.aio.portable.swiss.global.ColorEnum;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.Global;
-import com.aio.portable.swiss.sugar.DateTimeSugar;
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 

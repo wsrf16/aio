@@ -1,6 +1,7 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.algorithm.cipher.RSASugar;
+import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSAKeyPair;
+import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSASugar;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -15,9 +16,9 @@ public class RSATest {
 
     @Test
     public void foobar() {
-        final RSASugar.RSAKey rsaKey = RSASugar.generatePPKey();
-        final PrivateKey privateKey = rsaKey.getPrivateKey();
-        final PublicKey publicKey = rsaKey.getPublicKey();
+        final RSAKeyPair rsaKeyPair = RSASugar.generateRSAKeyPair();
+        final PrivateKey privateKey = rsaKeyPair.getPrivateKey();
+        final PublicKey publicKey = rsaKeyPair.getPublicKey();
         String pri;
         String pub;
 
@@ -31,7 +32,7 @@ public class RSATest {
         final String bbbbb = RSASugar.decrypt(aaaaa, pri);
 
         final String aaaaaa = RSASugar.sign("somesomething", pri);
-        final boolean bbbbbb = RSASugar.verifySignByPublicKey("aaaaaa", aaaaaa, pub);
+        final boolean bbbbbb = RSASugar.verify("aaaaaa", aaaaaa, pub);
 
 
     }

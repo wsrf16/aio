@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.storage.persistence.file;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;

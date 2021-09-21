@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authorization.shiro.credential;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.util.ByteSource;

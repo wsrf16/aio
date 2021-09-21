@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 
 /**
  * Internal system events that aren't necessarily observable from the outside.

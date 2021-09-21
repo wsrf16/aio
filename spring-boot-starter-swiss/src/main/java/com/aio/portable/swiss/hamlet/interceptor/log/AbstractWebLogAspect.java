@@ -26,9 +26,9 @@ class AbstractWebLogAspect {
     }
 
     protected static LogHubPool logPool;
-    protected static String REQUEST_SUMMARY = "输入参数值";
-    protected static String RESPONSE_SUMMARY = "输出返回值";
-    protected static String EXCEPTION_SUMMARY = "异常日志";
+    protected static String REQUEST_SUMMARY = "输入";
+    protected static String RESPONSE_SUMMARY = "输出";
+    protected static String EXCEPTION_SUMMARY = "异常";
 
     protected final static String POINTCUT_CONTROLLER = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
@@ -88,25 +88,29 @@ class AbstractWebLogAspect {
             log.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, traceId), requestRecord);
         }
 
-        Object responseRecord = null;
         try {
-            responseRecord = joinPoint.proceed();
-            if (responseRecord instanceof ResponseWrapper) {
-                ((ResponseWrapper) responseRecord).setTraceId(traceId);
-            }
+            Object responseRecord = joinPoint.proceed();
+            setTraceIdIfResponseWrapper(responseRecord, traceId);
 
             if (log != null) {
                 log.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, traceId), responseRecord);
             }
+
+            return responseRecord;
         } catch (Exception e) {
             log.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, traceId), requestRecord, e);
             HandOverException handOverException = new HandOverException(e, requestRecord, traceId);
             throw handOverException;
         }
-        return responseRecord;
     }
 
-    private static String generateUniqueId() {
+    private final static void setTraceIdIfResponseWrapper(Object responseRecord, String traceId) {
+        if (responseRecord instanceof ResponseWrapper) {
+            ((ResponseWrapper) responseRecord).setTraceId(traceId);
+        }
+    }
+
+    private final static String generateUniqueId() {
         return IDS.uuid();
     }
 }

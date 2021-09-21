@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.storage.persistence.redis;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
-import com.aio.portable.swiss.sugar.PathSugar;
+import com.aio.portable.swiss.sugar.location.PathSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -2,14 +2,14 @@ package com.aio.portable.park.controller;
 
 import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.postprocessor.UserInfoEntity;
+import com.aio.portable.park.common.UserInfoEntity;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapperUtils;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
-import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 //import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 //import org.apache.http.conn.ssl.TrustStrategy;
 //import org.apache.http.impl.client.CloseableHttpClient;
@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -78,8 +80,14 @@ public class DemoController {
 
     @GetMapping("ok")
     @LogMarker
-    public ResponseWrapper<String> ok() {
-        return ResponseWrapperUtils.build(0, "oookkk");
+    public ResponseWrapper<Object> ok() {
+        List<String> list = new ArrayList<>();
+//        for (int i = 0; i < 100000; i++) {
+//            list.add("aaa");
+//        }
+        return ResponseWrapperUtils.succeed(list);
+
+//        return ResponseWrapperUtils.build(0, list);
     }
 
     @GetMapping("lock")

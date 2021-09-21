@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.net.tcp.http;
 
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
-import com.aio.portable.swiss.suite.bean.type.KeyValuePair;
+import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;

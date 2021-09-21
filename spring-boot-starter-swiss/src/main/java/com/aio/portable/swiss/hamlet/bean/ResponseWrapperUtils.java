@@ -1,59 +1,61 @@
 package com.aio.portable.swiss.hamlet.bean;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class ResponseWrapperUtils extends ResponseWrapper {
 
     private final static ResponseWrapperUtils singleton = new ResponseWrapperUtils();
 
-    @Autowired(required = false)
-    BaseBizStatusEnum baseBizStatusEnum;
+    private BaseBizStatusEnum baseBizStatusEnum;
 
-    public BaseBizStatusEnum getBizStatusEnum() {
-        return baseBizStatusEnum == null ? BaseBizStatusEnum.singletonInstance() : baseBizStatusEnum;
+    public static BaseBizStatusEnum getBizStatusEnum() {
+        return singleton.baseBizStatusEnum == null ? BaseBizStatusEnum.singletonInstance() : singleton.baseBizStatusEnum;
     }
 
     public static <T> ResponseWrapper<T> succeed() {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticSucceed().getCode(), singleton.getBizStatusEnum().staticSucceed().getMessage());
+        return ResponseWrapper.build(getBizStatusEnum().succeed().getCode(), getBizStatusEnum().succeed().getMessage());
     }
 
     public static <T> ResponseWrapper<T> succeed(T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticSucceed().getCode(), singleton.getBizStatusEnum().staticSucceed().getMessage(), data);
+        return ResponseWrapper.build(getBizStatusEnum().succeed().getCode(), getBizStatusEnum().succeed().getMessage(), data);
     }
 
+
+
+
+
     public static <T> ResponseWrapper<T> failed() {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticFailed().getCode(), singleton.getBizStatusEnum().staticFailed().getMessage());
+        return ResponseWrapper.build(getBizStatusEnum().failed().getCode(), getBizStatusEnum().failed().getMessage());
     }
 
     public static <T> ResponseWrapper<T> failed(String message) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticFailed().getCode(), message);
+        return ResponseWrapper.build(getBizStatusEnum().failed().getCode(), message);
     }
 
     public static <T> ResponseWrapper<T> failed(T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticFailed().getCode(), singleton.getBizStatusEnum().staticFailed().getMessage(), data);
+        return ResponseWrapper.build(getBizStatusEnum().failed().getCode(), getBizStatusEnum().failed().getMessage(), data);
     }
 
     public static <T> ResponseWrapper<T> failed(String message, T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticFailed().getCode(), message, data);
+        return ResponseWrapper.build(getBizStatusEnum().failed().getCode(), message, data);
     }
+
 
 
 
 
     public static <T> ResponseWrapper<T> exception() {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticException().getCode(), singleton.getBizStatusEnum().staticException().getMessage());
+        return ResponseWrapper.build(getBizStatusEnum().exception().getCode(), getBizStatusEnum().exception().getMessage());
     }
 
     public static <T> ResponseWrapper<T> exception(String message) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticException().getCode(), message);
+        return ResponseWrapper.build(getBizStatusEnum().exception().getCode(), message);
     }
 
     public static <T> ResponseWrapper<T> exception(T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticException().getCode(), singleton.getBizStatusEnum().staticException().getMessage(), data);
+        return ResponseWrapper.build(getBizStatusEnum().exception().getCode(), getBizStatusEnum().exception().getMessage(), data);
     }
 
     public static <T> ResponseWrapper<T> exception(String message, T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticException().getCode(), message, data);
+        return ResponseWrapper.build(getBizStatusEnum().exception().getCode(), message, data);
     }
 
 
@@ -61,19 +63,19 @@ public class ResponseWrapperUtils extends ResponseWrapper {
 
 
     public static <T> ResponseWrapper<T> invalid() {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticInvalid().getCode(), singleton.getBizStatusEnum().staticInvalid().getMessage());
+        return ResponseWrapper.build(getBizStatusEnum().invalid().getCode(), getBizStatusEnum().invalid().getMessage());
     }
 
     public static <T> ResponseWrapper<T> invalid(String message) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticInvalid().getCode(), message);
+        return ResponseWrapper.build(getBizStatusEnum().invalid().getCode(), message);
     }
 
     public static <T> ResponseWrapper<T> invalid(T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticInvalid().getCode(), singleton.getBizStatusEnum().staticInvalid().getMessage(), data);
+        return ResponseWrapper.build(getBizStatusEnum().invalid().getCode(), getBizStatusEnum().invalid().getMessage(), data);
     }
 
     public static <T> ResponseWrapper<T> invalid(String message, T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticInvalid().getCode(), message, data);
+        return ResponseWrapper.build(getBizStatusEnum().invalid().getCode(), message, data);
     }
 
 
@@ -81,18 +83,18 @@ public class ResponseWrapperUtils extends ResponseWrapper {
 
 
     public static <T> ResponseWrapper<T> unauthorized() {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticUnauthorized().getCode(), singleton.getBizStatusEnum().staticUnauthorized().getMessage());
+        return ResponseWrapper.build(getBizStatusEnum().unauthorized().getCode(), getBizStatusEnum().unauthorized().getMessage());
     }
 
     public static <T> ResponseWrapper<T> unauthorized(String message) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticUnauthorized().getCode(), message);
+        return ResponseWrapper.build(getBizStatusEnum().unauthorized().getCode(), message);
     }
 
     public static <T> ResponseWrapper<T> unauthorized(T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticUnauthorized().getCode(), singleton.getBizStatusEnum().staticUnauthorized().getMessage(), data);
+        return ResponseWrapper.build(getBizStatusEnum().unauthorized().getCode(), getBizStatusEnum().unauthorized().getMessage(), data);
     }
 
     public static <T> ResponseWrapper<T> unauthorized(String message, T data) {
-        return ResponseWrapper.build(singleton.getBizStatusEnum().staticUnauthorized().getCode(), message, data);
+        return ResponseWrapper.build(getBizStatusEnum().unauthorized().getCode(), message, data);
     }
 }

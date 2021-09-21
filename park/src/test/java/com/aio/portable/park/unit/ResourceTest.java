@@ -2,12 +2,12 @@ package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.sandbox.Wood;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.log.impl.es.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
-import com.aio.portable.swiss.suite.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.suite.resource.PackageSugar;
-import com.aio.portable.swiss.suite.resource.ResourceSugar;
-import com.aio.portable.swiss.suite.resource.StreamClassLoader;
+import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.resource.PackageSugar;
+import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;

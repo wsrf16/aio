@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.bean.node.relation.tiled;
 
 import com.aio.portable.swiss.suite.bean.node.relation.RelationNode;
 import com.aio.portable.swiss.suite.bean.node.relation.layered.LayeredRelationNode;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.BeanUtils;
 
 public abstract class TiledRelationNode<ID> implements RelationNode<ID> {

@@ -1,0 +1,141 @@
+spring:
+  datasource:
+    master:
+#      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 1111
+      connection-timeout: 2000
+      mybatis:
+        mapper-locations: classpath:config/mapper/*.xml
+
+    slave:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 1111
+      connection-timeout: 2000
+      mybatis:
+        mapper-locations: classpath:config/mapper/*.xml
+
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+#    username: root
+#    password: 1111
+
+    third:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 1111
+      connection-timeout: 2000
+      jpa:
+        database: mysql
+        #启动时需要初始化的建表语句
+        schema: classpath:schema-mysql.sql
+        #初始化的数据
+        data: classpath:data-mysql.sql
+        show-sql: true
+        open-in-view: false
+        generate-ddl: true
+        # hibernate entry to
+#        hibernate:
+#          ddl-auto: update
+#          naming:
+#    #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
+#            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#    #        implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        # spring entry one
+        properties:
+          hibernate:
+            hbm2ddl:
+              auto: update
+            dialect: org.hibernate.dialect.MySQL5Dialect
+            #dialect: org.hibernate.dialect.MySQL57Dialect
+            physical-naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  #            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+
+#  rabbitmq:
+#    main:
+#      host: mecs.com
+#      port: 5672
+#      username: admin
+#      password: admin
+#      virtual-host: /
+#      binding-list:
+#        - type: direct
+#          routing-key: application-log-queue
+#          queue: application-log-queue
+#          exchange: application-log-exchange
+#
+#  redis:
+#    host: 192.168.155.150
+#    port: 6379
+#    password: Yixin4redis
+
+  log:
+    rabbitmq:
+      enabled: false
+      host: 192.168.133.133
+      port: 5672
+      username: admin
+      password: admin
+      virtual-host: /
+      es-index: @project.deploy.finalName@-@profiles.active@-log
+      publisher-confirms: true
+      publisher-returns: true
+      auto-declare: true
+      binding-list:
+      - type: direct
+        routing-key: application-log-queue
+        queue: application-log-queue
+        exchange: application-log-exchange
+
+    kafka:
+      enabled: false
+      esIndex: @project.deploy.finalName@-@profiles.active@-log
+      bootstrap-servers: 192.168.133.133:9092
+#      template:
+#        defaultTopic: application-log
+#      producer:
+#        bootstrap-servers: mecs.com:9092
+#        bootstrap-servers: 192.168.133.133:9092
+      binding-list:
+      - topic: application-log
+      properties:
+        linger-ms: 100
+        max-block-ms: 3000
+        request-timeout-ms: 1000
+        transaction-timeout-ms: 1000
+        compression-type: gzip
+        acks: 1
+    console:
+      enabled: false
+    slf4j:
+      enabled: true
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#    hostname: ${spring.cloud.client.ipAddress}:${server.port}
+#    lease-expiration-duration-in-seconds: 60        # default value
+#    lease-renewal-interval-in-seconds: 30           # default value
+#  client:
+#    service-url:
+#      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
+#    register-with-eureka: true
+
+  redis:
+    host: mecs.com
+    port: 6379
+
+
+
+server:
+  tomcat:
+    max-connections: 999

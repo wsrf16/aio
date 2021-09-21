@@ -47,8 +47,8 @@ public class ConsoleLogProperties implements InitializingBean {
     }
 
     public final static void initialSingletonInstance(Binder binder) {
-        final BindResult<ConsoleLogProperties> bindResult = binder.bind(ConsoleLogProperties.PREFIX, ConsoleLogProperties.class);
-        if (bindResult.isBound()) {
+        BindResult<ConsoleLogProperties> bindResult = binder.bind(ConsoleLogProperties.PREFIX, ConsoleLogProperties.class);
+        if (bindResult != null && bindResult.isBound()) {
             ConsoleLogProperties.initialSingletonInstance(bindResult.get());
         } else {
             if (instance != null)

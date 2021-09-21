@@ -1,7 +1,29 @@
+
+
 server:
   port: 8880
+  # 700,656 -> 1,232
+
+  compression:
+    min-response-size: 2048
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+
+
 #  tomcat:
 #    max-connections: 888
+
+
+
+
+
+
+
+
+
+
+
 
 spring:
   application:
@@ -121,16 +143,16 @@ xxl:
 #        uri: localhost:8084
 #        location: /v2/api-docs
 
-proxy:
-  http:
-    automatically: true
-    host: 1.1.1.1
-    port: 11
-  https:
-    automatically: true
-    host: 1.1.1.1
-    port: 11
-  socks:
-    automatically: true
-    host: 1.1.1.1
-    port: 11
+#proxy:
+#  http:
+#    automatically: true
+#    host: 1.1.1.1
+#    port: 58818
+#  https:
+#    automatically: true
+#    host: 1.1.1.1
+#    port: 58818
+#  socks:
+#    automatically: true
+#    host: 1.1.1.1
+#    port: 58818

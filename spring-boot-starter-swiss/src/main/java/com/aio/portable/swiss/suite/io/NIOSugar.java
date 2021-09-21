@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.io;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 
 import java.io.BufferedWriter;
 import java.io.File;

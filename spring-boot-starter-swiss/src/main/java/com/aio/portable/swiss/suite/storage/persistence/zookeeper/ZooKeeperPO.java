@@ -1,10 +1,10 @@
 package com.aio.portable.swiss.suite.storage.persistence.zookeeper;
 
 import com.aio.portable.swiss.middleware.zookeeper.ZooKeeperSugar;
-import com.aio.portable.swiss.sugar.CollectionSugar;
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.sugar.PathSugar;
+import com.aio.portable.swiss.sugar.location.PathSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.zookeeper.CreateMode;

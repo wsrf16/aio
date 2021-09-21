@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 public class Slf4JLogProperties implements InitializingBean {
     public final static String PREFIX = "spring.log.slf4j";
@@ -48,11 +49,15 @@ public class Slf4JLogProperties implements InitializingBean {
 
     public final static void initialSingletonInstance(Binder binder) {
         final BindResult<Slf4JLogProperties> bindResult = binder.bind(Slf4JLogProperties.PREFIX, Slf4JLogProperties.class);
-        if (bindResult.isBound()) {
+        if (bindResult != null && bindResult.isBound()) {
             Slf4JLogProperties.initialSingletonInstance(bindResult.get());
         } else {
             if (instance != null)
                 instance.setEnabled(true);
         }
     }
+
+//    public static void ff(ConfigurableEnvironment environment) {
+//        Binder.get(environment)
+//    }
 }

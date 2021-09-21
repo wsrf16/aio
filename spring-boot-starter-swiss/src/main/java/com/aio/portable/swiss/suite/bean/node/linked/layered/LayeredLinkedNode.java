@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.bean.node.linked.layered;
 
 import com.aio.portable.swiss.suite.bean.node.linked.LinkedNode;
-import com.aio.portable.swiss.suite.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 
 public class LayeredLinkedNode<T> implements LinkedNode<LayeredLinkedNode<T>> {
     T item;

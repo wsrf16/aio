@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.security.authorization.jwt.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.sugar.StringSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTSugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import com.aio.portable.swiss.suite.security.authorization.jwt.annotation.Granted;

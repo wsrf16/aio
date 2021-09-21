@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.global;
 
-import com.aio.portable.swiss.sugar.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 
 import java.text.MessageFormat;
 import java.util.Arrays;

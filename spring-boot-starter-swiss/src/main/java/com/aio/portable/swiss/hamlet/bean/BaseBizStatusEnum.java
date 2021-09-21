@@ -67,9 +67,9 @@ public abstract class BaseBizStatusEnum {
     public static List<BizStatus> values() {
         Class<BaseBizStatusEnum> clazz = BaseBizStatusEnum.class;
         Method[] declaredMethods = clazz.getDeclaredMethods();
-        List<Method> methodList = Arrays.stream(declaredMethods).filter(c -> !Modifier.isStatic(c.getModifiers()) && c.getReturnType() == BizStatus.class).collect(Collectors.toList());
+        Stream<Method> methodStream = Arrays.stream(declaredMethods).filter(c -> !Modifier.isStatic(c.getModifiers()) && c.getReturnType() == BizStatus.class);
 
-        Stream<BizStatus> bizStatusStream = methodList.stream().map(c -> {
+        List<BizStatus> bizStatusList = methodStream.map(c -> {
             try {
                 BizStatus bizStatus = (BizStatus)c.invoke(instance);
                 return bizStatus;
@@ -78,8 +78,7 @@ public abstract class BaseBizStatusEnum {
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-        });
-        List<BizStatus> bizStatusList = bizStatusStream.collect(Collectors.toList());
+        }).collect(Collectors.toList());
         return bizStatusList;
     }
 }

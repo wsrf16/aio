@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.facade;
 
-import com.aio.portable.swiss.factories.listener.SwissApplicationListener;
+import com.aio.portable.swiss.spring.factories.listener.SwissApplicationListener;
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt;
 
-import com.aio.portable.swiss.sugar.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;

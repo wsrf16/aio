@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.bean.node.linked;
 
-public interface PrevNode<T> {
+interface PrevNode<T> {
     default T prev() {
         return getPrev();
     }

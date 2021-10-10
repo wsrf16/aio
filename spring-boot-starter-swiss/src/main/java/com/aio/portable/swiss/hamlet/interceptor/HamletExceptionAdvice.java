@@ -8,11 +8,9 @@ import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.Slf4JLogHubFactory;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 //@RestControllerAdvice
 public abstract class HamletExceptionAdvice {
@@ -37,7 +35,6 @@ public abstract class HamletExceptionAdvice {
         log = logHubFactory.build(getClass());
     }
 
-//    protected static LogHubPool loggerPool;
 
     protected Class<? extends Throwable> getBusinessException() {
         return BizException.class;
@@ -45,11 +42,28 @@ public abstract class HamletExceptionAdvice {
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseWrapper handleBizException(Exception input) {
-        Exception e = input instanceof HandOverException ? ((HandOverException)input).getException() : input;
 
+        Exception e;
+        ResponseWrapper responseWrapper;
+
+        if (input instanceof HandOverException) {
+            HandOverException instance = (HandOverException) input;
+            e = instance.getException();
+            String spanId = instance.getSpanId();
+            responseWrapper = buildResponseWrapper(e);
+            responseWrapper.setSpanId(spanId);
+        } else {
+            e = input;
+            responseWrapper = buildResponseWrapper(e);
+        }
+
+        return responseWrapper;
+    }
+
+    private ResponseWrapper buildResponseWrapper(Exception e) {
         ResponseWrapper responseWrapper;
         if (getBusinessException().isInstance(e)) {
-            BusinessException businessException = (BusinessException)e;
+            BusinessException businessException = (BusinessException) e;
             log.e(GLOBAL_BUSINESS_EXCEPTION, e.getMessage(), e);
             responseWrapper = ResponseWrapper.build(businessException.getCode(), businessException.getMessage());
         }
@@ -58,11 +72,6 @@ public abstract class HamletExceptionAdvice {
         else {
             log.e(GLOBAL_SYSTEM_EXCEPTION, e);
             responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
-        }
-
-        if (input instanceof HandOverException) {
-            String traceId = ((HandOverException) input).getTraceId();
-            responseWrapper.setTraceId(traceId);
         }
         return responseWrapper;
     }

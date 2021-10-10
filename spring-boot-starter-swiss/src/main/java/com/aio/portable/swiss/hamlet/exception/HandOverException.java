@@ -3,23 +3,6 @@ package com.aio.portable.swiss.hamlet.exception;
 import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 
 public class HandOverException extends RuntimeException {
-//    public int getCode() {
-//        return code;
-//    }
-//
-//    public void setCode(int code) {
-//        this.code = code;
-//    }
-//
-//    @Override
-//    public String getMessage() {
-//        return message;
-//    }
-//
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
-
     public Exception getException() {
         return exception;
     }
@@ -36,28 +19,24 @@ public class HandOverException extends RuntimeException {
         this.requestRecord = requestRecord;
     }
 
-    public String getTraceId() {
-        return traceId;
+    public String getSpanId() {
+        return spanId;
     }
 
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
+    public void setSpanId(String spanId) {
+        this.spanId = spanId;
     }
 
-    //    private int code;
-//    private String message;
+
     private Exception exception;
     private RequestRecord requestRecord;
-    private String traceId;
+    private String spanId;
 
-    public HandOverException(Exception exception, RequestRecord requestRecord, String traceId) {
+    public HandOverException(Exception exception, RequestRecord requestRecord, String spanId) {
         this.exception = exception;
         this.requestRecord = requestRecord;
-        this.traceId = traceId;
+        this.spanId = spanId;
     }
 
-//    public HandOverException(int code, String message){
-//        this.code = code;
-//        this.message = message;
-//    }
+
 }

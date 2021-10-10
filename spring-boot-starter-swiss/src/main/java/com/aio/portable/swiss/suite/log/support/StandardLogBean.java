@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by York on 2017/11/22.
  */
-public class StandardLogNote implements LogNote {
+public class StandardLogBean implements LogBean {
     @JsonProperty("level")
     public LevelEnum level;
     @JsonProperty("name")

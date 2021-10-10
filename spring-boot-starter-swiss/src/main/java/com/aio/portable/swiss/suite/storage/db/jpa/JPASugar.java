@@ -189,9 +189,9 @@ public class JPASugar {
                 ) {
                     CriteriaUtil.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
                 } else if (field.isAnnotationPresent(GreaterThan.class) || name.endsWith("GreaterThan")
-                        || field.isAnnotationPresent(GreaterThanEqual.class) || name.endsWith("GreaterThanEqual")
+                        || field.isAnnotationPresent(GreaterThanOrEqualTo.class) || name.endsWith("GreaterThanOrEqualTo")
                         || field.isAnnotationPresent(LessThan.class) || name.endsWith("LessThan")
-                        || field.isAnnotationPresent(LessThanEqual.class) || name.endsWith("LessThanEqual")
+                        || field.isAnnotationPresent(LessThanOrEqualTo.class) || name.endsWith("LessThanOrEqualTo")
                 ) {
                     CriteriaUtil.fillPredicateWithComparableCriteria(criteriaBuilder, root, property, predicateList);
                 } else if (field.isAnnotationPresent(Equal.class) || name.endsWith("Equal")
@@ -291,8 +291,7 @@ public class JPASugar {
                     || name.endsWith("Like")
             ) {
                 if (field.isAnnotationPresent(Like.class)) {
-                    Like annotation = field.getDeclaredAnnotation(Like.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(Like.class).targetProperty();
                 } else if (name.endsWith("Like")) {
                     fixName = StringSugar.trimEnd(name, "Like");
                 } else {
@@ -303,8 +302,7 @@ public class JPASugar {
                     || name.endsWith("NotLike")
             ) {
                 if (field.isAnnotationPresent(NotLike.class)) {
-                    NotLike annotation = field.getDeclaredAnnotation(NotLike.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(NotLike.class).targetProperty();
                 } else if (name.endsWith("NotLike")) {
                     fixName = StringSugar.trimEnd(name, "NotLike");
                 } else {
@@ -331,11 +329,9 @@ public class JPASugar {
             if (field.isAnnotationPresent(IgnoreSQL.class)) {
                 return;
             } else if (field.isAnnotationPresent(Equal.class)
-                    || name.endsWith("Equal")
-            ) {
+                    || name.endsWith("Equal")) {
                 if (field.isAnnotationPresent(Equal.class)) {
-                    Equal annotation = field.getDeclaredAnnotation(Equal.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(Equal.class).targetProperty();
                 } else if (name.endsWith("Equal")) {
                     fixName = StringSugar.trimEnd(name, "Equal");
                 } else {
@@ -343,11 +339,9 @@ public class JPASugar {
                 }
                 predicateList.add(criteriaBuilder.equal(root.get(fixName), value));
             } else if (field.isAnnotationPresent(NotEqual.class)
-                    || name.endsWith("NotEqual")
-            ) {
+                    || name.endsWith("NotEqual")) {
                 if (field.isAnnotationPresent(NotEqual.class)) {
-                    NotEqual annotation = field.getDeclaredAnnotation(NotEqual.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(NotEqual.class).targetProperty();
                 } else if (name.endsWith("NotEqual")) {
                     fixName = StringSugar.trimEnd(name, "NotEqual");
                 } else {
@@ -380,8 +374,7 @@ public class JPASugar {
                     || name.endsWith("In")
             ) {
                 if (field.isAnnotationPresent(In.class)) {
-                    In annotation = field.getDeclaredAnnotation(In.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(In.class).targetProperty();
                 } else if (name.endsWith("In")) {
                     fixName = StringSugar.trimEnd(name, "In");
                 } else {
@@ -409,49 +402,41 @@ public class JPASugar {
             if (field.isAnnotationPresent(IgnoreSQL.class)) {
                 return;
             } else if (field.isAnnotationPresent(GreaterThan.class)
-                    || name.endsWith("GreaterThan")
-            ) {
+                    || name.endsWith("GreaterThan")) {
                 if (field.isAnnotationPresent(GreaterThan.class)) {
-                    GreaterThan annotation = field.getDeclaredAnnotation(GreaterThan.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(GreaterThan.class).targetProperty();
                 } else if (name.endsWith("GreaterThan")) {
                     fixName = StringSugar.trimEnd(name, "GreaterThan");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
                 predicateList.add(criteriaBuilder.greaterThan(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(GreaterThanEqual.class)
-                    || name.endsWith("GreaterThanEqual")
-            ) {
-                if (field.isAnnotationPresent(GreaterThanEqual.class)) {
-                    GreaterThanEqual annotation = field.getDeclaredAnnotation(GreaterThanEqual.class);
-                    fixName = annotation.targetProperty();
-                } else if (name.endsWith("GreaterThanEqual")) {
-                    fixName = StringSugar.trimEnd(name, "GreaterThanEqual");
+            } else if (field.isAnnotationPresent(GreaterThanOrEqualTo.class)
+                    || name.endsWith("GreaterThanOrEqualTo")) {
+                if (field.isAnnotationPresent(GreaterThanOrEqualTo.class)) {
+                    fixName = field.getDeclaredAnnotation(GreaterThanOrEqualTo.class).targetProperty();
+                } else if (name.endsWith("GreaterThanOrEqualTo")) {
+                    fixName = StringSugar.trimEnd(name, "GreaterThanOrEqualTo");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
                 predicateList.add(criteriaBuilder.greaterThanOrEqualTo(root.get(fixName), value));
             } else if (field.isAnnotationPresent(LessThan.class)
-                    || name.endsWith("LessThan")
-            ) {
+                    || name.endsWith("LessThan")) {
                 if (field.isAnnotationPresent(LessThan.class)) {
-                    LessThan annotation = field.getDeclaredAnnotation(LessThan.class);
-                    fixName = annotation.targetProperty();
+                    fixName = field.getDeclaredAnnotation(LessThan.class).targetProperty();
                 } else if (name.endsWith("LessThan")) {
                     fixName = StringSugar.trimEnd(name, "LessThan");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }
                 predicateList.add(criteriaBuilder.lessThan(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(LessThanEqual.class)
-                    || name.endsWith("LessThanEqual")
-            ) {
-                if (field.isAnnotationPresent(LessThanEqual.class)) {
-                    LessThanEqual annotation = field.getDeclaredAnnotation(LessThanEqual.class);
-                    fixName = annotation.targetProperty();
-                } else if (name.endsWith("LessThanEqual")) {
-                    fixName = StringSugar.trimEnd(name, "LessThanEqual");
+            } else if (field.isAnnotationPresent(LessThanOrEqualTo.class)
+                    || name.endsWith("LessThanOrEqualTo")) {
+                if (field.isAnnotationPresent(LessThanOrEqualTo.class)) {
+                    fixName = field.getDeclaredAnnotation(LessThanOrEqualTo.class).targetProperty();
+                } else if (name.endsWith("LessThanOrEqualTo")) {
+                    fixName = StringSugar.trimEnd(name, "LessThanOrEqualTo");
                 } else {
                     throw new RuntimeException(name + " is illegal.");
                 }

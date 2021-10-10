@@ -5,6 +5,7 @@ import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 //@RestControllerAdvice
-public class HamletResponseBodyAdvice implements ResponseBodyAdvice<Object>, InitializingBean {
+public abstract class HamletResponseBodyAdvice implements ResponseBodyAdvice<Object>, InitializingBean {
 
     private final WebMvcConfigurationSupport webMvcConfigurationSupport;
 
@@ -40,6 +41,13 @@ public class HamletResponseBodyAdvice implements ResponseBodyAdvice<Object>, Ini
 //            mediaType = MediaType.APPLICATION_JSON;
 //            convertClass = MappingJackson2HttpMessageConverter.class;
             ResponseWrapper responseWrapper = ResponseWrapper.build(BaseBizStatusEnum.staticSucceed().getCode(), BaseBizStatusEnum.staticSucceed().getMessage(), body);
+
+            HttpHeaders headers = serverHttpResponse.getHeaders();
+            boolean containsKey = headers.containsKey(ResponseWrapper.SPAN_ID_HEADER);
+            if (containsKey) {
+                String spanId = headers.get(ResponseWrapper.SPAN_ID_HEADER).get(0);
+                responseWrapper.setSpanId(spanId);
+            }
             return responseWrapper;
         } else {
             return body;
@@ -52,9 +60,9 @@ public class HamletResponseBodyAdvice implements ResponseBodyAdvice<Object>, Ini
 //        Jackson2ObjectMapperBuilder json = Jackson2ObjectMapperBuilder.json();
 //        json.applicationContext(SpringContextHolder.getApplicationContext());
 
-        List<HttpMessageConverter<?>> converterList = getJacksonHttpMessageConverters(converters);
-        converters.removeAll(converterList);
-        converters.addAll(0, converterList);
+        List<HttpMessageConverter<?>> jacksonHttpMessageConverters = getJacksonHttpMessageConverters(converters);
+        converters.removeAll(jacksonHttpMessageConverters);
+        converters.addAll(0, jacksonHttpMessageConverters);
     }
 
     private List<HttpMessageConverter<?>> getHttpMessageConverters() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {

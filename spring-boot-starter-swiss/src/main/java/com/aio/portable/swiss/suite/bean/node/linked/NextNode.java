@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.bean.node.linked;
 
 import java.util.Iterator;
 
-public interface NextNode<T> extends Iterator<T> {
+interface NextNode<T> extends Iterator<T> {
     default T next() {
         return getNext();
     }

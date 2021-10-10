@@ -4,7 +4,7 @@ import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.common.UserInfoEntity;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapperUtils;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
@@ -85,9 +85,14 @@ public class DemoController {
 //        for (int i = 0; i < 100000; i++) {
 //            list.add("aaa");
 //        }
-        return ResponseWrapperUtils.succeed(list);
+        return ResponseWrappers.succeed(list);
 
 //        return ResponseWrapperUtils.build(0, list);
+    }
+
+    @GetMapping("input")
+    public String input(String in) {
+        return in;
     }
 
     @GetMapping("lock")

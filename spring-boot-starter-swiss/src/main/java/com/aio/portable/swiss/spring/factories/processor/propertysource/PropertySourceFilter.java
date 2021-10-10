@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.spring.factories.listener.propertysource;
+package com.aio.portable.swiss.spring.factories.processor.propertysource;
 
 import org.springframework.core.env.PropertySource;
 

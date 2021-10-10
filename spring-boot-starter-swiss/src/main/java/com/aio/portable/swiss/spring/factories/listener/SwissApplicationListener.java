@@ -2,6 +2,7 @@ package com.aio.portable.swiss.spring.factories.listener;
 
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.suite.log.impl.LogHubProperties;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
@@ -54,6 +55,12 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
 
     private static void initializeLogProperties(ConfigurableEnvironment environment) {
         final Binder binder = Binder.get(environment);
+        try {
+            LogHubProperties.initialSingletonInstance(binder);
+        } catch (Exception e) {
+            log.warn("Initial loghub log singleton instance failed.", e);
+        }
+
         if (LogHubUtils.RabbitMQ.existDependency()) {
             try {
                 RabbitMQLogProperties.initialSingletonInstance(binder);

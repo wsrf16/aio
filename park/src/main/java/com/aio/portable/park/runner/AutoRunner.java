@@ -4,15 +4,19 @@ import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.common.UserInfoEntity;
 import com.aio.portable.park.config.root.ApplicationConfig;
 import com.aio.portable.park.test.MyDatabaseTest;
+import com.aio.portable.swiss.spring.SpringContextHolder;
 import com.aio.portable.swiss.suite.log.annotation.LogMarker;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTCache;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.HashMap;
@@ -40,9 +44,20 @@ public class AutoRunner implements ApplicationRunner {
     @Autowired
     JWTTemplate jwtTemplate;
 
+
+    @Value("${config.abc}")
+    String config_abc;
+
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) {
+        String abc = rootConfig.getAbc();
+        String config_abc = this.config_abc;
+        System.out.println("abc     " + abc);
+        System.out.println("config_abc     " + config_abc);
+//        BeanFactory beanFactory = SpringContextHolder.getBeanFactory();
+        Environment environment = SpringContextHolder.getEnvironment();
+
         // UriComponentsBuilder.fromHttpUrl()
 //        throw new BizException(111, "aaaaaaaaaaa");
 //        RabbitMQLogProperties propertiesBean = SpringContextHolder.getPropertiesBean(RabbitMQLogProperties.class);
@@ -55,18 +70,16 @@ public class AutoRunner implements ApplicationRunner {
 //                return null;
 //            }
 //        });
-
+        if (1 == 1)
+            return;
         UserInfoEntity userInfoEntity = new UserInfoEntity();
         userInfoEntity.setId(111);
         userInfoEntity.setName("name");
         userInfoEntity.setNextId(222);
 
-        Map<String, Object> map = new HashMap<String, Object>() {{
-            put("a", userInfoEntity);
-        }};
-        JWTCache jwtCache = new JWTCache(jwtTemplate);
-        String token = jwtCache.set(map);
-        Map<String, Object> stringObjectMap = jwtCache.get(token);
+
+
+
         log.i("aaaaaaa");
 //
 //        ArrayList<Object> list = new ArrayList<>();

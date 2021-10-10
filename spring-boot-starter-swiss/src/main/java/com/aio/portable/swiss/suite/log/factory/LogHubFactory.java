@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.log.factory;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.impl.LogHubProperties;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
 import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLog;
@@ -100,15 +101,17 @@ public abstract class LogHubFactory {
 
     private static LogHub detectAndBuild(String className) {
         final ArrayList<LogSingle> list = new ArrayList<>(127);
-        if (ConsoleLogProperties.singletonInstance().getEnabled())
-            list.add(new ConsoleLog(className));
-        if (Slf4JLogProperties.singletonInstance().getEnabled())
-            list.add(new Slf4JLog(className));
-        if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
-            list.add(new RabbitMQLog(className));
-        }
-        if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
-            list.add(new KafkaLog(className));
+        if (LogHubProperties.singletonInstance().getEnabled()) {
+            if (ConsoleLogProperties.singletonInstance().getEnabled())
+                list.add(new ConsoleLog(className));
+            if (Slf4JLogProperties.singletonInstance().getEnabled())
+                list.add(new Slf4JLog(className));
+            if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
+                list.add(new RabbitMQLog(className));
+            }
+            if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
+                list.add(new KafkaLog(className));
+            }
         }
 
         LogHub logger = LogHub.build(list)

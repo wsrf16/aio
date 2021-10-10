@@ -2,7 +2,6 @@ package com.aio.portable.swiss.hamlet.swagger;
 
 import com.aio.portable.swiss.hamlet.bean.BizStatus;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger2Properties;
-import com.google.common.base.Predicate;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;

@@ -150,8 +150,8 @@ public class SpringContextHolder implements ApplicationContextAware {
      * getEnvironment
      * @return
      */
-    public final static Environment getEnvironment() {
-        return applicationContext.getEnvironment();
+    public final static ConfigurableEnvironment getEnvironment() {
+        return (ConfigurableEnvironment) applicationContext.getEnvironment();
     }
 
     /**

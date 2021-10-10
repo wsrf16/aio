@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
 
 class AbstractWebLogAspect {
@@ -83,30 +84,37 @@ class AbstractWebLogAspect {
         RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
 
         LogHub log = logPool.get(joinPoint.getSignature().getDeclaringTypeName());
-        String traceId = generateUniqueId();
+        String spanId = generateUniqueId();
+        setSpanIdIfResponse(attributes, spanId);
         if (log != null) {
-            log.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, traceId), requestRecord);
+            log.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, spanId), requestRecord);
         }
 
         try {
             Object responseRecord = joinPoint.proceed();
-            setTraceIdIfResponseWrapper(responseRecord, traceId);
+            setSpanIdIfResponseWrapper(responseRecord, spanId);
 
             if (log != null) {
-                log.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, traceId), responseRecord);
+                log.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, spanId), responseRecord);
             }
 
             return responseRecord;
         } catch (Exception e) {
-            log.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, traceId), requestRecord, e);
-            HandOverException handOverException = new HandOverException(e, requestRecord, traceId);
+            log.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, spanId), requestRecord, e);
+            HandOverException handOverException = new HandOverException(e, requestRecord, spanId);
             throw handOverException;
         }
     }
 
-    private final static void setTraceIdIfResponseWrapper(Object responseRecord, String traceId) {
+    private void setSpanIdIfResponse(ServletRequestAttributes attributes, String spanId) {
+        HttpServletResponse response = attributes == null ? null : attributes.getResponse();
+        if (response != null)
+            response.addHeader(ResponseWrapper.SPAN_ID_HEADER, spanId);
+    }
+
+    private final static void setSpanIdIfResponseWrapper(Object responseRecord, String traceId) {
         if (responseRecord instanceof ResponseWrapper) {
-            ((ResponseWrapper) responseRecord).setTraceId(traceId);
+            ((ResponseWrapper) responseRecord).setSpanId(traceId);
         }
     }
 

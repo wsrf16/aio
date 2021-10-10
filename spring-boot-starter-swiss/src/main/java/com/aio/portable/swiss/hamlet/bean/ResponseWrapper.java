@@ -7,11 +7,14 @@ import java.util.Date;
 
 //@ApiModel("返回实体")
 public class ResponseWrapper<T> {
+    public final static String SPAN_ID_HEADER = "span-id";
+//    protected static ResponseWrapper singleton = new ResponseWrapper();
+
     /**
      * 作为一次请求的唯一标识，用于问题定位（不需赋值）
      */
     @ApiModelProperty("唯一id")
-    private String traceId;
+    private String spanId;
 
     /**
      * 返回状态码
@@ -42,14 +45,14 @@ public class ResponseWrapper<T> {
 
 
     protected ResponseWrapper() {
-        this.traceId = IDS.uuid();
+        this.spanId = IDS.uuid();
         Date date = new Date();
         this.accessTime = date;
-        this.timestamp = date.getTime();//System.currentTimeMillis();
+        this.timestamp = date.getTime();
     }
 
     protected ResponseWrapper(int code, String message, T data) {
-        this.traceId = IDS.uuid();
+        this.spanId = IDS.uuid();
         this.code = code;
         this.message = message;
         this.data = data;
@@ -93,12 +96,12 @@ public class ResponseWrapper<T> {
     }
 
 
-    public String getTraceId() {
-        return traceId;
+    public String getSpanId() {
+        return spanId;
     }
 
-    public ResponseWrapper<T> setTraceId(String traceId) {
-        this.traceId = traceId;
+    public ResponseWrapper<T> setSpanId(String spanId) {
+        this.spanId = spanId;
         return this;
     }
 

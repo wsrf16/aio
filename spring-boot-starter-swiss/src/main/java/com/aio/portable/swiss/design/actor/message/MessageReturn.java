@@ -1,21 +1,21 @@
 package com.aio.portable.swiss.design.actor.message;
 
 public class MessageReturn<R> {
-    private String traceId;
+    private String spanId;
 
     private R data;
 
-    public MessageReturn(String traceId, R data) {
-        this.traceId = traceId;
+    public MessageReturn(String spanId, R data) {
+        this.spanId = spanId;
         this.data = data;
     }
 
-    public String getTraceId() {
-        return traceId;
+    public String getSpanId() {
+        return spanId;
     }
 
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
+    public void setSpanId(String spanId) {
+        this.spanId = spanId;
     }
 
     public R getData() {

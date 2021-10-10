@@ -11,5 +11,13 @@ import org.springframework.stereotype.Component;
 @Data
 public class ApplicationConfig {
     private String abc;
+
+    public String getAbc() {
+        return abc;
+    }
+
+    public void setAbc(String abc) {
+        this.abc = abc;
+    }
 }
 

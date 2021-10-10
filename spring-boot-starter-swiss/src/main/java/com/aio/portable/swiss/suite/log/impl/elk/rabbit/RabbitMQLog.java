@@ -4,9 +4,9 @@ import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.facade.Printer;
-import com.aio.portable.swiss.suite.log.impl.elk.ESLogNote;
+import com.aio.portable.swiss.suite.log.impl.elk.ESLogBean;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import com.aio.portable.swiss.suite.log.support.LogNote;
+import com.aio.portable.swiss.suite.log.support.LogBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
@@ -51,30 +51,30 @@ public class RabbitMQLog extends LogSingle {
     }
 
     @Override
-    protected void output(Printer printer, LogNote logNote) {
-        final ESLogNote converted = convert(logNote);
+    protected void output(Printer printer, LogBean logBean) {
+        final ESLogBean converted = convert(logBean);
         final LevelEnum level = converted.getLevel();
         final String esIndex = converted.getEsIndex();
         if (esIndex == null) {
             throw new NullPointerException("esIndex");
         } else if (esIndex.contains(":")) {
             String key = esIndex.split(":")[0];
-            String val = ESLogNote.formatIndex(esIndex.split(":")[1]);
+            String val = ESLogBean.formatIndex(esIndex.split(":")[1]);
             Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(converted);
             map.remove("esIndex");
             map.put(key, val);
             super.output(printer, map, level);
         } else {
-            converted.setEsIndex(ESLogNote.formatIndex(esIndex));
+            converted.setEsIndex(ESLogBean.formatIndex(esIndex));
             super.output(printer, converted);
         }
     }
 
-    public ESLogNote convert(LogNote logNote) {
+    public ESLogBean convert(LogBean logBean) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
         if (!StringUtils.hasText(esIndex))
             log.warn(new IllegalArgumentException("es-index is empty."));
-        return new ESLogNote(logNote, esIndex, ip);
+        return new ESLogBean(logBean, esIndex, ip);
     }
 }

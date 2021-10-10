@@ -9,7 +9,7 @@ import java.util.List;
 public class BookVO extends Book {
     @GreaterThan(targetProperty = "id")
     private Long idGreaterThanEqual;
-    @LessThanEqual(targetProperty = "id")
+    @LessThanOrEqualTo(targetProperty = "id")
     private Long idLessThanEqual;
     @Equal(targetProperty = "name")
     private String nameLike;

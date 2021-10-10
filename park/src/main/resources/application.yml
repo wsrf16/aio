@@ -143,16 +143,16 @@ xxl:
 #        uri: localhost:8084
 #        location: /v2/api-docs
 
-#proxy:
-#  http:
-#    automatically: true
-#    host: 1.1.1.1
-#    port: 58818
-#  https:
-#    automatically: true
-#    host: 1.1.1.1
-#    port: 58818
-#  socks:
-#    automatically: true
-#    host: 1.1.1.1
-#    port: 58818
+proxy:
+  http:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818
+  https:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818
+  socks:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818

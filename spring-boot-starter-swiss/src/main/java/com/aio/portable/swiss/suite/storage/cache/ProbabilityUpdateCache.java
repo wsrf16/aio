@@ -31,7 +31,18 @@ public class ProbabilityUpdateCache<T> {
         this.t = t;
     }
 
+    public synchronized void startToUpdate() {
+        isContinue = true;
+        intervalUpdate.start();
+    }
+
+    public void stopUpdating() {
+        isContinue = false;
+    }
+
     public T get() {
         return this.t;
     }
+
+
 }

@@ -29,11 +29,11 @@ public abstract class AlgorithmSugar {
     public final static Algorithm newHMAC(HMAC hmac, String secret) {
         Algorithm algorithm;
         switch (hmac) {
-            case HMAC384:
-                algorithm = Algorithm.HMAC384(secret);
-                break;
             case HMAC512:
                 algorithm = Algorithm.HMAC512(secret);
+                break;
+            case HMAC384:
+                algorithm = Algorithm.HMAC384(secret);
                 break;
             case HMAC256:
             default:
@@ -47,11 +47,11 @@ public abstract class AlgorithmSugar {
     public final static Algorithm newRSA(RSA rsa, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
         Algorithm algorithm;
         switch (rsa) {
-            case RSA384:
-                algorithm = Algorithm.RSA384(publicKey, privateKey);
-                break;
             case RSA512:
                 algorithm = Algorithm.RSA512(publicKey, privateKey);
+                break;
+            case RSA384:
+                algorithm = Algorithm.RSA384(publicKey, privateKey);
                 break;
             case RSA256:
             default:
@@ -65,11 +65,11 @@ public abstract class AlgorithmSugar {
     public final static Algorithm newECDSA(ECDSA ecdsa, ECPublicKey publicKey, ECPrivateKey privateKey) {
         Algorithm algorithm;
         switch (ecdsa) {
-            case ECDSA384:
-                algorithm = Algorithm.ECDSA384(publicKey, privateKey);
-                break;
             case ECDSA512:
                 algorithm = Algorithm.ECDSA512(publicKey, privateKey);
+                break;
+            case ECDSA384:
+                algorithm = Algorithm.ECDSA384(publicKey, privateKey);
                 break;
             case ECDSA256:
             default:

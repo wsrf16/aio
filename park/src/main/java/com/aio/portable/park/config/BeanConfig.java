@@ -6,11 +6,9 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.util.EventListener;
 
 @Configuration
 public class BeanConfig extends HamletBeanConfig {
@@ -25,7 +23,7 @@ public class BeanConfig extends HamletBeanConfig {
     }
 
     @Bean
-    public ServletListenerRegistrationBean servletListenerRegistrationBean(){
+    public ServletListenerRegistrationBean servletListenerRegistrationBean() {
         ServletListenerRegistrationBean servletListenerRegistrationBean = new ServletListenerRegistrationBean();
         servletListenerRegistrationBean.setListener(new HttpSessionListener() {
             @Override
@@ -40,4 +38,21 @@ public class BeanConfig extends HamletBeanConfig {
         });
         return servletListenerRegistrationBean;
     }
+
+//    @Bean
+//    @Lazy
+//    public PropertySourceBeanDefinitionRegistryPostProcessor propertySourceBeanDefinitionRegistryPostProcessor(ConfigurableEnvironment environment) {
+//        return new PropertySourceBeanDefinitionRegistryPostProcessor(environment) {
+//            @Override
+//            public Object intercept(String key, Object value) {
+//                if (Objects.equals(value, "abc"))
+//                    return ("v" + "222222");
+//                if (Objects.equals(key, "swagger.api-info.title"))
+//                    return (value + "222222");
+//                if (Objects.equals(value, "对外接口在线文档"))
+//                    return (value + "222222");
+//                return value;
+//            }
+//        };
+//    }
 }

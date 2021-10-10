@@ -1,24 +1,24 @@
 package com.aio.portable.swiss.suite.bean.node.relation;
 
-public interface RelationNode<ID> {
-//    T getItem();
+interface RelationNode<T, ID> {
+    T getValue();
 
-//    void setItem(T item);
+    void setValue(T value);
 
-    ID getNodeId();
+    ID getId();
 
-    void setNodeId(ID nodeId);
+    void setId(ID id);
 
-    ID getNextNodeId();
+    ID getNextId();
 
-    void setNextNodeId(ID nextNodeId);
+    void setNextId(ID nextId);
 
-    default boolean beTail() {
-        return getNextNodeId() == null;
+    default boolean tail() {
+        return getNextId() == null;
     }
 
     default boolean hasNext() {
-        return getNextNodeId() != null;
+        return getNextId() != null;
     }
 
 }

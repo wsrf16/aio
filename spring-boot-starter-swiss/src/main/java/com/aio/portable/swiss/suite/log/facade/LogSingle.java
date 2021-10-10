@@ -4,9 +4,9 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import com.aio.portable.swiss.suite.log.support.LogNote;
+import com.aio.portable.swiss.suite.log.support.LogBean;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
-import com.aio.portable.swiss.suite.log.support.StandardLogNote;
+import com.aio.portable.swiss.suite.log.support.StandardLogBean;
 import com.aio.portable.swiss.suite.systeminfo.HostInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,19 +90,19 @@ public abstract class LogSingle implements LogAction {
         }
     }
 
-    protected void output(Printer printer, LogNote logNote) {
-        String text = logNote.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
-                serializer.serialize(logNote) : looseSerializer.serialize(logNote);
-        output(printer, text, logNote.getLevel());
+    protected void output(Printer printer, LogBean logBean) {
+        String text = logBean.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
+                serializer.serialize(logBean) : looseSerializer.serialize(logBean);
+        output(printer, text, logBean.getLevel());
     }
 
-    protected void output(Printer printer, Map logNote, LevelEnum level) {
+    protected void output(Printer printer, Map<String, Object> logBean, LevelEnum level) {
         String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
-                serializer.serialize(logNote) : looseSerializer.serialize(logNote);
+                serializer.serialize(logBean) : looseSerializer.serialize(logBean);
         output(printer, text, level);
     }
 
-    public void attachTo(LogNote note) {
+    public void attachTo(LogBean note) {
         note.setOutputType(this.getClass().getSimpleName());
     }
 
@@ -112,7 +112,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void verbose(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -140,7 +140,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void verbose(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -170,7 +170,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void verbose(T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -188,7 +188,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void verbose(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -208,7 +208,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void verbose(String summary, String message, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -226,7 +226,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void trace(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -254,7 +254,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void trace(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -284,7 +284,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -302,7 +302,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -322,7 +322,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(String summary, String message, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -340,7 +340,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void info(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -368,7 +368,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void info(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -398,7 +398,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -416,7 +416,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -436,7 +436,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(String summary, String message, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -454,7 +454,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void debug(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -482,7 +482,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void debug(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -512,7 +512,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -530,7 +530,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -550,7 +550,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(String summary, String message, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -568,7 +568,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -595,7 +595,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -612,7 +612,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -642,7 +642,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -661,7 +661,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, String message, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -681,7 +681,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -701,7 +701,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -723,7 +723,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, String message, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -742,7 +742,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -769,7 +769,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -786,7 +786,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -816,7 +816,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -835,7 +835,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, String message, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -855,7 +855,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -875,7 +875,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -897,7 +897,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, String message, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -916,7 +916,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -943,7 +943,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -960,7 +960,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -978,7 +978,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, String message) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -1009,7 +1009,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, String message, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -1029,7 +1029,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, T t) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -1050,7 +1050,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, String message, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);
@@ -1072,7 +1072,7 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, T t, Throwable e) {
-        LogNote note = new StandardLogNote();
+        LogBean note = new StandardLogBean();
         attachTo(note);
         {
             note.setName(name);

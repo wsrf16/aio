@@ -2,9 +2,7 @@ package com.aio.portable.park;
 
 
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.postprocessor.CustomPropertySourceApplicationListener;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.net.tcp.proxy.annotation.EnableNetworkProxy;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -12,11 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ResourceLoader;
 
 
 @SpringBootApplication(exclude = {
@@ -34,7 +29,7 @@ public class ParkApplication {
     public static void main(String[] args) {
 //        AnnotationConfigEmbeddedWebApplicationContext
         SpringApplication springApplication = new SpringApplication(ParkApplication.class);
-        springApplication.addListeners(new CustomPropertySourceApplicationListener());
+//        springApplication.addListeners(new CustomPropertySourceApplicationListener());
         ConfigurableApplicationContext context = springApplication.run(args);
 
 
@@ -49,6 +44,7 @@ public class ParkApplication {
         String[] defaultProfiles = environment.getDefaultProfiles();
 
     }
+
 
 
 }

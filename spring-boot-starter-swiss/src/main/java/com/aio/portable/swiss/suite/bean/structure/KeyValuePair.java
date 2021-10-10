@@ -11,7 +11,8 @@ public class KeyValuePair<K,V> implements Map.Entry<K,V> {
 
     public KeyValuePair(K k, V v) {
         key = Objects.requireNonNull(k);
-        value = Objects.requireNonNull(v);
+//        value = Objects.requireNonNull(v);
+        value = v;
     }
 
     /**

@@ -1,63 +1,29 @@
 package com.aio.portable.swiss.suite.log.support;
 
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.context.annotation.Configuration;
 
-
+@Configuration
+@ConfigurationProperties(prefix = "spring.log")
 public class LogHubProperties implements InitializingBean {
     public final static String PREFIX = "spring.log";
 
-    private final static Log logger = LogFactory.getLog(LogHubProperties.class);
-
-    private KafkaLogProperties kafka;
-
-    private RabbitMQLogProperties rabbitmq;
-
-    private ConsoleLogProperties console;
-
-    private Slf4JLogProperties slf4j;
+    private final static Log log = LogFactory.getLog(LogHubProperties.class);
 
     private Boolean enabled = true;
 
-    public KafkaLogProperties getKafka() {
-        return kafka;
-    }
+    private LevelEnum level = LevelEnum.INFORMATION;
 
-    public void setKafka(KafkaLogProperties kafka) {
-        this.kafka = kafka;
-    }
+    private Boolean async;
 
-    public RabbitMQLogProperties getRabbitmq() {
-        return rabbitmq;
-    }
-
-    public void setRabbitmq(RabbitMQLogProperties rabbitmq) {
-        this.rabbitmq = rabbitmq;
-    }
-
-    public ConsoleLogProperties getConsole() {
-        return console;
-    }
-
-    public void setConsole(ConsoleLogProperties console) {
-        this.console = console;
-    }
-
-    public Slf4JLogProperties getSlf4j() {
-        return slf4j;
-    }
-
-    public void setSlf4j(Slf4JLogProperties slf4j) {
-        this.slf4j = slf4j;
-    }
+    private Float samplerRate;
 
     public Boolean getEnabled() {
         return enabled;
@@ -67,12 +33,29 @@ public class LogHubProperties implements InitializingBean {
         this.enabled = enabled;
     }
 
+    public LevelEnum getLevel() {
+        return level;
+    }
 
+    public void setLevel(LevelEnum level) {
+        this.level = level;
+    }
 
+    public Boolean getAsync() {
+        return async;
+    }
 
+    public void setAsync(Boolean async) {
+        this.async = async;
+    }
 
+    public Float getSamplerRate() {
+        return samplerRate;
+    }
 
-
+    public void setSamplerRate(Float samplerRate) {
+        this.samplerRate = samplerRate;
+    }
 
     private static LogHubProperties instance = new LogHubProperties();
 
@@ -80,43 +63,23 @@ public class LogHubProperties implements InitializingBean {
         return instance;
     }
 
-    public LogHubProperties() {
-        instance = this;
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        importSingletonInstance(this);
+        initialSingletonInstance(this);
     }
 
-    public final static void importSingletonInstance(LogHubProperties properties) {
+    public final static void initialSingletonInstance(LogHubProperties properties) {
         instance = properties;
-        logger.info("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(instance));
+        log.info("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void importSingletonInstance(Binder binder) {
-        final BindResult<LogHubProperties> bindResult = binder.bind(LogHubProperties.PREFIX, LogHubProperties.class);
-        if (bindResult.isBound()) {
-            LogHubProperties.importSingletonInstance(bindResult.get());
+    public final static void initialSingletonInstance(Binder binder) {
+        BindResult<LogHubProperties> bindResult = binder.bind(LogHubProperties.PREFIX, LogHubProperties.class);
+        if (bindResult != null && bindResult.isBound()) {
+            LogHubProperties.initialSingletonInstance(bindResult.get());
         } else {
-            if (instance != null)
-                instance.setEnabled(false);
+            if (instance == null)
+                instance.setEnabled(true);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -47,7 +47,7 @@ public abstract class JWTAuthenticationInterceptor implements HandlerInterceptor
             return true;
         }
 
-        if (getEnabled()) {
+        if (this.getEnabled()) {
             String bearToken = httpServletRequest.getHeader(AUTHORIZATION_HEAD);
             Class<?> declaringClass = method.getDeclaringClass();
 
@@ -69,10 +69,8 @@ public abstract class JWTAuthenticationInterceptor implements HandlerInterceptor
                     check(bearToken);
                 }
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     protected void check(String bearToken) {

@@ -20,10 +20,10 @@ public class StandardLogBean implements LogBean {
     public LogThrowable exception;
     @JsonProperty("outputType")
     public String outputType;
-    @JsonProperty("threadName")
-    public String threadName = Thread.currentThread().getName();
     @JsonProperty("threadId")
     public Long threadId = Thread.currentThread().getId();
+    @JsonProperty("threadName")
+    public String threadName = Thread.currentThread().getName();
 
 
     public LevelEnum getLevel() {
@@ -82,20 +82,20 @@ public class StandardLogBean implements LogBean {
         this.outputType = outputType;
     }
 
-    public String getThreadName() {
-        return threadName;
-    }
-
-    public void setThreadName(String threadName) {
-        this.threadName = threadName;
-    }
-
     public Long getThreadId() {
         return threadId;
     }
 
     public void setThreadId(Long threadId) {
         this.threadId = threadId;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
     }
 }
 

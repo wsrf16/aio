@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.spring.factories.autoconfigure;
 
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;

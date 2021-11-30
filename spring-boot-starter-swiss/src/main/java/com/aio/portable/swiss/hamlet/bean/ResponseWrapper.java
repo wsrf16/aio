@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.hamlet.bean;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -35,6 +36,7 @@ public class ResponseWrapper<T> {
     private T data;
 
     @ApiModelProperty("访问时间")
+    @JsonFormat(pattern="yyyy/MM/dd HH:mm:ss.SSSz", timezone="GMT+8")
     private Date accessTime;
 
     /**

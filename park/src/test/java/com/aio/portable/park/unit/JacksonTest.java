@@ -2,6 +2,8 @@ package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import lombok.Data;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -13,8 +15,19 @@ import java.util.Map;
 
 @TestComponent
 public class JacksonTest {
+    @Data
+    static class AA {
+        LevelEnum a;
+    }
+
     @Test
     private void foobar() throws IOException {
+        HashMap<Object, Object> map1 = new HashMap<>();
+        map1.put("a", LevelEnum.DEBUG);
+        String s = JacksonSugar.obj2Json(map1);
+        AA aa = JacksonSugar.json2T(s, AA.class);
+
+
         JsonModel a = new JsonModel() {{
             setNo(88);
         }};

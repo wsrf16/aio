@@ -7,7 +7,7 @@ import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogBean;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
 import com.aio.portable.swiss.suite.log.support.StandardLogBean;
-import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import com.aio.portable.swiss.suite.system.HostInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,15 +33,15 @@ public abstract class LogSingle implements LogAction {
     protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
 
 
-    protected Supplier<String> prefixSupplier;
-
-    public void setPrefix(Supplier<String> prefix) {
-        this.prefixSupplier = prefix;
-    }
-
-    private final void clearPrefix() {
-        this.prefixSupplier = EMPTY_PREFIX;
-    }
+//    protected Supplier<String> prefixSupplier;
+//
+//    public void setPrefix(Supplier<String> prefix) {
+//        this.prefixSupplier = prefix;
+//    }
+//
+//    private final void clearPrefix() {
+//        this.prefixSupplier = EMPTY_PREFIX;
+//    }
 
     protected SerializerConverter serializer = new SerializerConverters.JacksonConverter();
 
@@ -64,14 +64,17 @@ public abstract class LogSingle implements LogAction {
         LogSingleThreadExecutor.MAX_POOL_SIZE,
         KEEP_ALIVE_TIME,
         TimeUnit.MILLISECONDS,
-        new LinkedBlockingQueue<Runnable>(LogSingleThreadExecutor.QUEUE_CAPACITY),
-        new LogSingleThreadFactory());
+        new ArrayBlockingQueue<Runnable>(LogSingleThreadExecutor.QUEUE_CAPACITY),
+        new LogSingleThreadFactory(),
+//        new ThreadPoolExecutor.AbortPolicy()
+        new ThreadPoolExecutor.DiscardOldestPolicy()
+    );
 
     protected Printer printer;
 
     public LogSingle(String name) {
         setName(name);
-        clearPrefix();
+//        clearPrefix();
         initialPrinter();
     }
 
@@ -79,12 +82,14 @@ public abstract class LogSingle implements LogAction {
 
     protected void output(Printer printer, String text, LevelEnum level) {
         try {
-            if (async)
+            if (async) {
                 executor.execute(() ->
-                        printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level)
+                        printer.println(text, level)
                 );
-            else
-                printer.println(prefixSupplier.get() + DELIMITER_CHAR + text, level);
+            }
+            else {
+                printer.println(text, level);
+            }
         } catch (Exception e) {
             log.warn("logSingle output failed.", e);
         }
@@ -1110,7 +1115,7 @@ public abstract class LogSingle implements LogAction {
     static class LogSingleThreadExecutor {
         private final static int QUEUE_CAPACITY = 1024 * 128;
         private final static int CORE_POOL_SIZE = 4;
-        private final static int MAX_POOL_SIZE = 1024 * 128;
+        private final static int MAX_POOL_SIZE = 1024 * 1;
     }
 
     static class LogSingleThreadFactory implements ThreadFactory {

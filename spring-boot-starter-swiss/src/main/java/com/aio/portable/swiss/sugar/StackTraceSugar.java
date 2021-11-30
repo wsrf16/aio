@@ -12,7 +12,7 @@ public abstract class StackTraceSugar {
     }
 
     public static StackTraceElement[] getStackTraceByException() {
-        return new Exception().getStackTrace();
+        return new RuntimeException().getStackTrace();
     }
 
     public static String getFileName(StackTraceElement stackTraceElement) {

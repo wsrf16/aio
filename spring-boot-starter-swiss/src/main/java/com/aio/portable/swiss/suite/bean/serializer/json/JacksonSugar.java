@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.suite.bean.serializer.json;
 
+import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
@@ -7,6 +9,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -17,13 +21,21 @@ public class JacksonSugar {
         Default,
         CamelCase,
     }
-    private final static ObjectMapper shortObjectMapper = getObjectMapper(false, false, null);
-    private final static ObjectMapper longObjectMapper = getObjectMapper(true, true, null);
-    private final static ObjectMapper normalObjectMapper = getObjectMapper(false, true, null);
-    private final static ObjectMapper dumpObjectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-            .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static class JacksonConfig {
+        private final static JacksonConfig singleton = new JacksonConfig();
+        private final static JacksonConfig getInstance() {
+            return singleton;
+        }
+
+        private final ObjectMapper shortObjectMapper = getObjectMapper(false, false, null);
+        private final ObjectMapper longObjectMapper = getObjectMapper(true, true, null);
+        private final ObjectMapper normalObjectMapper = getObjectMapper(false, true, null);
+        private final ObjectMapper dumpObjectMapper = new ObjectMapper()
+                .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
 //    private final static ObjectMapper objectMapper = new ObjectMapper();
 //
@@ -42,13 +54,18 @@ public class JacksonSugar {
      */
     public final static String obj2ShortJson(Object obj) {
 //        return obj2Json(obj, false, false);
-        ObjectMapper mapper = shortObjectMapper;
+        ObjectMapper mapper = JacksonConfig.getInstance().shortObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
 //            e.printStackTrace();
-            throw new RuntimeException(e);
+            if (e.getCause() instanceof StackOverflowError) {
+                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
+                json = obj2ShortJson(map);
+            }
+            else
+                throw new RuntimeException(e);
         }
         return json;
     }
@@ -81,13 +98,18 @@ public class JacksonSugar {
      */
     public final static String obj2LongJson(Object obj) {
 //        return obj2Json(obj, true, true);
-        ObjectMapper mapper = longObjectMapper;
+        ObjectMapper mapper = JacksonConfig.getInstance().longObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
 //            e.printStackTrace();
-            throw new RuntimeException(e);
+            if (e.getCause() instanceof StackOverflowError) {
+                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(obj);
+                json = obj2LongJson(map);
+            }
+            else
+                throw new RuntimeException(e);
         }
         return json;
     }
@@ -120,13 +142,18 @@ public class JacksonSugar {
      */
     public final static String obj2Json(Object obj) {
 //        return obj2Json(obj, false, true);
-        ObjectMapper mapper = normalObjectMapper;
+        ObjectMapper mapper = JacksonConfig.getInstance().normalObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+//            e.printStackTrace();
+            if (e.getCause() instanceof StackOverflowError) {
+                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(obj);
+                json = obj2Json(map);
+            }
+            else
+                throw new RuntimeException(e);
         }
         return json;
     }
@@ -150,6 +177,11 @@ public class JacksonSugar {
         }
     }
 
+    public final static LinkedHashMap obj2Map(Object obj) {
+        String json = JacksonSugar.obj2Json(obj);
+        return JacksonSugar.json2T(json, LinkedHashMap.class);
+    }
+
     /**
      * obj2Json
      * @param obj
@@ -164,7 +196,13 @@ public class JacksonSugar {
             json = obj == null ? null : mapper.writeValueAsString(obj);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            if (e.getCause() instanceof StackOverflowError) {
+                Map<String, Object> map = includeNullAndEmpty ? BeanSugar.PropertyDescriptors.toNameValueMap(obj) :
+                        BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
+                json = obj2LongJson(map);
+            }
+            else
+                throw new RuntimeException(e);
         }
         return json;
     }
@@ -190,6 +228,13 @@ public class JacksonSugar {
         return getObjectMapper(indent, includeNullAndEmpty, strategy, null);
     }
 
+    private final static ObjectMapper buildObjectMapper() {
+        boolean present = ClassLoaderSugar.isPresent("org.springframework.http.converter.json.Jackson2ObjectMapperBuilder");
+        if (present)
+            return Jackson2ObjectMapperBuilder.json().build();
+        else
+            return new ObjectMapper();
+    }
     /**
      * getObjectMapper
      * @param indent
@@ -199,7 +244,7 @@ public class JacksonSugar {
      * @return
      */
     public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
-        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().build()
+        ObjectMapper mapper = buildObjectMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 //                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -240,7 +285,7 @@ public class JacksonSugar {
      * @return
      */
     public final static <T> T json2T(String jsonStr, Class<T> clazz) {
-        ObjectMapper mapper = dumpObjectMapper;
+        ObjectMapper mapper = JacksonConfig.getInstance().dumpObjectMapper;
         try {
             return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
         } catch (IOException e) {
@@ -255,7 +300,7 @@ public class JacksonSugar {
      * @return
      */
     public final static JsonNode json2JsonNode(String jsonStr) {
-        ObjectMapper mapper = dumpObjectMapper;
+        ObjectMapper mapper = JacksonConfig.getInstance().dumpObjectMapper;
         try {
             return mapper.readTree(jsonStr);
         } catch (IOException e) {
@@ -273,7 +318,7 @@ public class JacksonSugar {
      */
     public final static <T> T json2T(String jsonStr) {
         try {
-            ObjectMapper mapper = dumpObjectMapper;
+            ObjectMapper mapper = JacksonConfig.getInstance().dumpObjectMapper;
             TypeReference<T> valueTypeRef = new TypeReference<T>() {
             };
             return mapper.readValue(jsonStr, valueTypeRef);
@@ -293,7 +338,7 @@ public class JacksonSugar {
      */
     public final static <T> T json2T(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
-            ObjectMapper mapper = dumpObjectMapper;
+            ObjectMapper mapper = JacksonConfig.getInstance().dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
         } catch (Exception e) {
             e.printStackTrace();

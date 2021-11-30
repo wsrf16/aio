@@ -7,7 +7,6 @@ import com.aio.portable.swiss.suite.log.factory.LogHubPool;
 import com.aio.portable.swiss.hamlet.bean.RequestRecord;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
-import com.aio.portable.swiss.suite.log.factory.Slf4JLogHubFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,8 +44,8 @@ class AbstractWebLogAspect {
             " || @annotation(org.springframework.web.bind.annotation.Mapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarker";
-    protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.suite.log.annotation.LogMarkerExcept";
+    protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker";
+    protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarkerExcept";
 
     protected final static String POINTCUT_SPECIAL_MAPPING = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")"

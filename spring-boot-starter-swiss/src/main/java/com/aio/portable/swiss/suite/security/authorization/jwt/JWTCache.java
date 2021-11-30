@@ -113,7 +113,7 @@ public class JWTCache {
         return get(token).get(key);
     }
 
-    public final String parseForIssuer(String token) {
+    public final String getIssuer(String token) {
         DecodedJWT decodedJWT = jwtTemplate.parse(token);
         return decodedJWT.getIssuer();
     }

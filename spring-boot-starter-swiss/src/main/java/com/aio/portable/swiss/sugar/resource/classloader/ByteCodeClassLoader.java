@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 class ByteCodeClassLoader extends ClassLoader {
-    private final static Log logger = LogFactory.getLog(ByteCodeClassLoader.class);
+    private final static Log log = LogFactory.getLog(ByteCodeClassLoader.class);
 
     private native Class<?> findBootstrapClass(String name);
 
@@ -132,7 +132,7 @@ class ByteCodeClassLoader extends ClassLoader {
             }
             Class<?> clazz = this.defineClass(name, bytes, 0, bytes.length);
 //            logger.info(filePath + " reload：" + Arrays.asList(ReflectionUtils.getDeclaredFields(clazz)));
-            logger.info(filePath + " reload：" + clazz.getTypeName() + " " + clazz.hashCode());
+            log.info(filePath + " reload：" + clazz.getTypeName() + " " + clazz.hashCode());
             return clazz;
         }
         return null;

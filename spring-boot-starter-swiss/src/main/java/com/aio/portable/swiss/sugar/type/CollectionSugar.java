@@ -323,6 +323,21 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
+    public static final <T> T[] concat(T[] array1, T[]... array2) {
+        T[] s = array1;
+        for(T[] t : array2) {
+           s = concat(s, t);
+        }
+        return s;
+    }
+
+    /**
+     * concat
+     * @param array1
+     * @param array2
+     * @param <T>
+     * @return
+     */
     public final static <T> T[] concat(T[] array1, T... array2) {
         if (array1 == null) {
             return clone(array2);

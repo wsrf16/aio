@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.bean;
 
-public class ResponseWrappers extends ResponseWrapper {
+public abstract class ResponseWrappers extends ResponseWrapper {
     //    private BaseBizStatusEnum baseBizStatusEnum;
 
     private static BaseBizStatusEnum singletonBizStatusEnum() {

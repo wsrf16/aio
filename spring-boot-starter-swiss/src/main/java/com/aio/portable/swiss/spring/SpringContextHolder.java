@@ -1,8 +1,9 @@
 package com.aio.portable.swiss.spring;
 
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -15,26 +16,24 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.beans.Introspector;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
+    private final static Log log = LogFactory.getLog(SpringContextHolder.class);
+
     private static ApplicationContext applicationContext = null;
 
-    private static String[] args;
 
-    public static String[] getArgs() {
-        return args;
-    }
-
-    public final static boolean hasLoad() {
+    public final static boolean hasLoaded() {
         return applicationContext != null;
     }
 
@@ -44,12 +43,15 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @param applicationContext
      */
     @Override
-    public synchronized void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         synchronized(SpringContextHolder.class) {
+//            SpringContextHolder.applicationContext = applicationContext;
             if (SpringContextHolder.applicationContext == null)
                 SpringContextHolder.applicationContext = applicationContext;
-            else
-                throw new UnsupportedOperationException();
+            else {
+                log.warn("applicationContext is not null");
+//                new UnsupportedOperationException().printStackTrace();
+            }
         }
     }
 
@@ -78,8 +80,26 @@ public class SpringContextHolder implements ApplicationContextAware {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
-//    public final static void mainApplicationClass() {
-//    }
+    public final static ConfigurableApplicationContext run(Class<?> primarySource, String[] args, Consumer<SpringApplication> otherAction) {
+        SpringApplication springApplication = new SpringApplication(primarySource);
+        otherAction.accept(springApplication);
+        return springApplication.run(args);
+    }
+
+    public final static Class<?> deduceMainApplicationClass() {
+        try {
+            StackTraceElement[] stackTrace = StackTraceSugar.getStackTraceByException();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                if ("main".equals(stackTraceElement.getMethodName())) {
+                    return Class.forName(stackTraceElement.getClassName());
+                }
+            }
+        }
+        catch (ClassNotFoundException ex) {
+            // Swallow and continue
+        }
+        return null;
+    }
 
     public static class BeanCenter {
         public static String getBeanName(@Nullable String simpleClassName) {
@@ -155,32 +175,33 @@ public class SpringContextHolder implements ApplicationContextAware {
     }
 
     /**
-     * getPropertiesBean
+     * getPropertyBean
      * @param environment
      * @param name
      * @param clazz
      * @param <T>
      * @return
      */
-    public final static <T> T getPropertiesBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
+    public final static <T> T getPropertyBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
         BindResult<T> bind = Binder.get(environment).bind(name, clazz);
         return bind.isBound() ? bind.get() : null;
     }
 
     /**
-     * getPropertiesBean
+     * getPropertyBean
      * @param name
      * @param clazz
      * @param <T>
      * @return
      */
-    public final static <T> T getPropertiesBean(String name, Class<T> clazz) {
+    public final static <T> T getPropertyBean(String name, Class<T> clazz) {
         BindResult<T> bind = Binder.get(getEnvironment()).bind(name, clazz);
         T t = bind != null && bind.isBound() ? bind.get() : null;
         return t;
     }
 
-    public final static <T> T getPropertiesBean(Class<T> clazz) {
+
+    public final static <T> T getPropertyBean(Class<T> clazz) {
         boolean present = clazz.isAnnotationPresent(ConfigurationProperties.class);
         if (!present)
             return null;

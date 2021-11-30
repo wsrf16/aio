@@ -24,8 +24,8 @@ public class Message<T> {
         this.data = data;
     }
 
-    public <R> MessageReturn<R> toReturn(R returnData) {
-        MessageReturn<R> messageReturn = new MessageReturn<>(this.traceId, returnData);
-        return messageReturn;
+    public <R> ReturnMessage<R> buildReturnMessage(R returnData) {
+        ReturnMessage<R> returnMessage = new ReturnMessage<>(this.traceId, returnData);
+        return returnMessage;
     }
 }

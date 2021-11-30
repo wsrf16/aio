@@ -1,169 +1,112 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.sandbox.Wood;
-import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.PackageSugar;
+import com.aio.portable.park.ParkApplication;
+import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
 import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
-import org.junit.Test;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 
-import java.awt.print.Book;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 
 public class ResourceTest {
-    LogHub log = LogHub.build(new Slf4JLog());
+    LogHub log = AppLogHubFactory.staticBuild();
 
     {
-        try {
-            String jar = "./spring-boot-starter-swiss/target/spring-boot-starter-swiss-1.1.10-SNAPSHOT.jar";
-            String resource = "com/aio/portable/swiss/sandbox/Wood.class";
-
-            List<URL> resources0 = ResourceSugar.ByClassLoader.getResourceURLs(resource);
-            List<URL> resources1 = ResourceSugar.ByClassLoader.getClassURLs(Wood.class.getTypeName());
-            List<URL> resources2 = ResourceSugar.ByClassLoader.getClassURLs(Wood.class);
-
-            List<URL> urls = ResourceSugar.getAllJarResourceURLs(jar);
-            URL resourceInJar = ResourceSugar.getJarResourceURL(jar, resource);
-
-            URL url = urls.get(156);
-            Class<?> clazz1 = ClassLoaderSugar.loadClass(url);
-            String className = ResourceSugar.convertURLToClassName(url.toString());
-            Class<?> clazz2 = ClassLoaderSugar.loadClass(urls, className);
-
-            List<String> completeClassNameList = PackageSugar.getClassNameByPath("./park/target");
-//            List<String> completeClassNameByJar = PackageSugar.getCompleteClassNameByJar(jar);
-
-            List<String> completeClassName = PackageSugar.getClassNameList("com.aio.portable.swiss.global");
-            Thread.sleep(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // 只能用于从非jar包中获取资源
-        // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
-        try {
-            System.out.println("--new ClassPathResource(\"1.properties\").getFile().toString()");
-            String classPathResourceText = new ClassPathResource("1.properties").getFile().toString();
-            System.out.println(classPathResourceText);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // 只能用于从非jar包中获取资源
-        // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
-        try {
-            System.out.println("--ResourceUtils.getFile(\"classpath:1.properties\")");
-            File file = ResourceUtils.getFile("classpath:1.properties");
-            System.out.println(file.toURI());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
-        try {
-            System.out.println("--ResourceUtils.getURL");
-            String path = ResourceUtils.getURL("classpath:1.properties").toString();
-            System.out.println(path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
-        try {
-            System.out.println("--ParkApplication.class.getResource(\"/1.properties\").getFile()");
-            String path = this.getClass().getResource("/1.properties").getFile();
-            System.out.println(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // java.lang.NullPointerException
-        try {
-            System.out.println("--ParkApplication.class.getResource(\"1.properties\").getFile()");
-            String path = this.getClass().getResource("1.properties").getFile();
-            System.out.println(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
-        try {
-            System.out.println("--KafkaLogProperties.class.getResource(\"/1.properties\").getFile()");
-            String path = KafkaLogProperties.class.getResource("/1.properties").getFile();
-            System.out.println(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    {
-        // java.lang.NullPointerException
-        try {
-            System.out.println("--KafkaLogProperties.class.getResource(\"1.properties\").getFile()");
-            String path = KafkaLogProperties.class.getResource("1.properties").getFile();
-            System.out.println(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-
-
-
-
-
-    @Test
-    public void foobar() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        ResourceSugar.ByClassLoader.getResourceURLs("com/aio/portable/swiss/sandbox/a中文/AA.class");
-        ResourceSugar.ByClassLoader.getClassURLs("Wood");
-        ResourceSugar.ByClassLoader.getClassURLs(Book.class);
-
-
-        String jarPath = new File("console-1.0-SNAPSHOT.jar").getAbsolutePath();
-        String resourceInJar = "/sandbox/console/Book.class";
-        URL url = ResourceSugar.getJarResourceURL(jarPath, resourceInJar);
-        List<URL> urlList = ResourceSugar.getAllJarResourceURLs(jarPath);
-
         {
-            String className = ResourceSugar.convertResourceLocationToClassName(resourceInJar);
-            Class clazz = StreamClassLoader.buildByFile("console-1.0-SNAPSHOT.jar").loadClassByBinary(className);
-            className = "Wood";
-            Class clazz1 = StreamClassLoader.buildByFile("target/classes/com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-            Class clazz2 = StreamClassLoader.buildByResource("com/aio/portable/swiss/sandbox/Wood.class").loadClassByBinary(className);
-            Object obj = clazz.getDeclaredConstructor().newInstance();
-            Object obj1 = clazz.getDeclaredConstructor().newInstance();
+            // 只能用于从非jar包中获取资源
+            // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
+            try {
+                System.out.println("--1.new ClassPathResource(\"1.properties\").getFile().toString()");
+                String classPathResourceText = new ClassPathResource("1.properties").getFile().toString();
+                System.out.println(classPathResourceText);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         {
-            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL("file:/" + jarPath)});
-            Class clazz = urlClassLoader.loadClass("sandbox.console.Book");
-            Object obj = clazz.getDeclaredConstructor().newInstance();
-            Object obj1 = clazz.getDeclaredConstructor().newInstance();
+            // 只能用于从非jar包中获取资源
+            // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
+            try {
+                System.out.println("--2.ResourceUtils.getFile(\"classpath:1.properties\")");
+                File file = org.springframework.util.ResourceUtils.getFile("classpath:1.properties");
+                System.out.println(file.toURI());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
+            try {
+                System.out.println("--√3.ResourceUtils.getURL");
+                String path = org.springframework.util.ResourceUtils.getURL("classpath:1.properties").toString();
+                System.out.println(path);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
+            try {
+                System.out.println("--√4.ParkApplication.class.getResource(\"/1.properties\").getFile()");
+                String path = ParkApplication.class.getResource("/1.properties").getFile();
+                System.out.println(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            // java.lang.NullPointerException
+            try {
+                System.out.println("--5.ParkApplication.class.getResource(\"1.properties\").getFile()");
+                String path = ParkApplication.class.getResource("1.properties").getFile();
+                System.out.println(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
+            try {
+                System.out.println("--√6.KafkaLogProperties.class.getResource(\"/1.properties\").getFile()");
+                String path = KafkaLogProperties.class.getResource("/1.properties").getFile();
+                System.out.println(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        {
+            // java.lang.NullPointerException
+            try {
+                System.out.println("--7.KafkaLogProperties.class.getResource(\"1.properties\").getFile()");
+                String path = KafkaLogProperties.class.getResource("1.properties").getFile();
+                System.out.println(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
+
+
+
+
+
+
+
+
+
+
     {
-        String resourceLocation = "/com/aio/portable/swiss/sandbox/Wood.class";
-        String classname = "Wood";
-        Class clazz = Wood.class;
+        String resourceLocation = "/com/aio/portable/swiss/global/Global.class";
+        String classname = "Global";
+        Class clazz = Global.class;
 
 
 
@@ -226,4 +169,6 @@ public class ResourceTest {
         }
 
     }
+
+
 }

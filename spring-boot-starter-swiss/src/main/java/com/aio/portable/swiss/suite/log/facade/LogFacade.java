@@ -11,9 +11,9 @@ public interface LogFacade {
 
     LogFacade setEnabled(boolean enabled);
 
-    LevelEnum getEnabledLevel();
+    LevelEnum getLevel();
 
-    LogFacade setEnabledLevel(LevelEnum enabledLevel);
+    LogFacade setLevel(LevelEnum level);
 
     LogFacade setAsync(boolean async);
 }

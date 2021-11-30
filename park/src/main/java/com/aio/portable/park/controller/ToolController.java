@@ -1,10 +1,8 @@
 package com.aio.portable.park.controller;
 
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.config.root.ApplicationConfig;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.systeminfo.HostInfo;
-import io.swagger.annotations.ApiOperation;
+import com.aio.portable.swiss.suite.system.HostInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

@@ -3,13 +3,13 @@ package com.aio.portable.swiss.design.responsibilitychain;
 public class LinkedChain {
     boolean isRunning = false;
 
-    public static LinkedChain newInstance(AbsHandler handler) {
+    public static LinkedChain newInstance(AbstractHandler handler) {
         return new LinkedChain(handler);
     }
 
-    private AbsHandler handler;
+    private AbstractHandler handler;
 
-    private LinkedChain(AbsHandler handler) {
+    private LinkedChain(AbstractHandler handler) {
         this.handler = handler;
     }
 

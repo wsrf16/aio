@@ -1,7 +1,7 @@
 package com.aio.portable.park.postprocessor;
 
 import com.aio.portable.park.common.UserInfoEntity;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;

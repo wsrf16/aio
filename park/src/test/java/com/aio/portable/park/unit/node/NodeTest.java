@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit.node;
 
-import com.aio.portable.swiss.suite.bean.node.tree.BinaryTreeNode;
+import com.aio.portable.swiss.suite.bean.node.tree.binary.TreeNode;
 import com.aio.portable.swiss.suite.bean.node.LinkedNodeSugar;
 import com.aio.portable.swiss.suite.bean.node.linked.ReferenceLinkedNode;
 import com.aio.portable.swiss.suite.bean.node.relation.RelationLinkedNode;
@@ -35,8 +35,8 @@ public class NodeTest {
 
     @Test
     public void treeNode() {
-        BinaryTreeNode binaryTreeNode1 = new BinaryTreeNode(new Integer[]{3, 5, 1, 6, 2, 0, 8, null, null, 7, 4});
-        BinaryTreeNode binaryTreeNode2 = BinaryTreeNode.toBinaryTreeNode(new Integer[]{3, 5, 1, 6, 2, 0, 8, null, null, 7, 4});
+        TreeNode treeNode1 = new TreeNode(new Integer[]{3, 5, 1, 6, 2, 0, 8, null, null, 7, 4});
+        TreeNode treeNode2 = TreeNode.toBinaryTreeNode(new Integer[]{3, 5, 1, 6, 2, 0, 8, null, null, 7, 4});
     }
 
 

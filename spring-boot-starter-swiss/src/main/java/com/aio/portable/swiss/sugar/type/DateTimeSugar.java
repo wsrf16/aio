@@ -17,6 +17,14 @@ import java.util.function.Supplier;
  */
 public abstract class DateTimeSugar {
     public static class CalendarUtils {
+        public static Calendar getFirstDayOfWeek(Calendar calendar) {
+            return getFirstDayOf(calendar, Calendar.DAY_OF_WEEK);
+        }
+
+        public static Calendar getLastDayOfWeek(Calendar calendar) {
+            return getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
+        }
+
         public static Calendar getFirstDayOfMonth(Calendar calendar) {
             return getFirstDayOf(calendar, Calendar.DAY_OF_MONTH);
         }
@@ -33,14 +41,15 @@ public abstract class DateTimeSugar {
             return getLastDayOf(calendar, Calendar.DAY_OF_YEAR);
         }
 
-        public static Calendar getFirstDayOfWeek(Calendar calendar) {
-            return getFirstDayOf(calendar, Calendar.DAY_OF_WEEK);
+        public static Calendar getFirstDayOf(Calendar calendar, int field) {
+            calendar.set(field, calendar.getActualMinimum(field));
+            return calendar;
         }
 
-        public static Calendar getLastDayOfWeek(Calendar calendar) {
-            return getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
+        public static Calendar getLastDayOf(Calendar calendar, int field) {
+            calendar.set(field, calendar.getActualMaximum(field));
+            return calendar;
         }
-
 
         /**
          * add
@@ -57,16 +66,6 @@ public abstract class DateTimeSugar {
 
         public static Calendar now() {
             Calendar calendar = Calendar.getInstance();
-            return calendar;
-        }
-
-        public static Calendar getFirstDayOf(Calendar calendar, int field) {
-            calendar.set(field, calendar.getActualMinimum(field));
-            return calendar;
-        }
-
-        public static Calendar getLastDayOf(Calendar calendar, int field) {
-            calendar.set(field, calendar.getActualMaximum(field));
             return calendar;
         }
 

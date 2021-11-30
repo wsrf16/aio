@@ -3,8 +3,6 @@ package com.aio.portable.swiss.suite.storage.db.jpa;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.IgnoreSQL;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.order.OrderBy;
-import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
@@ -12,82 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
 import javax.persistence.criteria.*;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class JPASugar {
-    private static class Util {
-        public final static Map<String, PropertyItem> getNamePropertyItem(Object bean) {
-            Class<?> clazz = bean.getClass();
-            Map<String, PropertyItem> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
-                    .filter(c -> !c.getName().equals("class"))
-//                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
-                    .collect(HashMap::new, (_map, _property) -> {
-                        String name = _property.getName();
-                        Object value = BeanSugar.PropertyDescriptors.getValue(bean, _property);
-                        Field field = null;
-                        try {
-                            field = BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz, name);
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace();
-                            throw new RuntimeException(e);
-                        }
-                        PropertyItem propertyItem = new PropertyItem();
-                        propertyItem.setName(name);
-                        propertyItem.setValue(value);
-                        propertyItem.setField(field);
-                        propertyItem.setPropertyDescriptor(_property);
-                        _map.put(name, propertyItem);
-                    }, HashMap::putAll);
-            return map;
-        }
-
-    }
-
-    private static class PropertyItem {
-        private String name;
-        private Object value;
-        private PropertyDescriptor propertyDescriptor;
-        private Field field;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public void setValue(Object value) {
-            this.value = value;
-        }
-
-        public PropertyDescriptor getPropertyDescriptor() {
-            return propertyDescriptor;
-        }
-
-        public void setPropertyDescriptor(PropertyDescriptor propertyDescriptor) {
-            this.propertyDescriptor = propertyDescriptor;
-        }
-
-        public Field getField() {
-            return field;
-        }
-
-        public void setField(Field field) {
-            this.field = field;
-        }
-    }
-
-
     /**
      * buildSpecification
      *
@@ -113,8 +41,8 @@ public class JPASugar {
     }
 
     public final static <T, ID> T convertToSavedOne(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
-        final Specification<T> specification = JPASugar.<T>buildSpecification(t);
-        final Optional<T> optional = specificationRepository.findOne(specification);
+        Specification<T> specification = JPASugar.<T>buildSpecification(t);
+        Optional<T> optional = specificationRepository.findOne(specification);
         T target;
         if (optional.isPresent()) {
             target = optional.get();
@@ -128,7 +56,7 @@ public class JPASugar {
     }
 
     public final static <T, ID> T saveIgnoreNullProperties(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
-        final T target = convertToSavedOne(specificationRepository, t);
+        T target = convertToSavedOne(specificationRepository, t);
         specificationRepository.save(target);
         return target;
     }
@@ -141,10 +69,9 @@ public class JPASugar {
      * @param criteriaBuilder
      * @return
      */
-    public final static <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
-        Map<String, PropertyItem> properties = Util.getNamePropertyItem(bean);
-        List<Predicate> predicateList = ((Supplier<ArrayList>) ArrayList::new).get();
-        fillPredicateWithAllCriteria(properties, criteriaBuilder, root, predicateList);
+    private final static <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
+        Map<String, PropertyItem> properties = PropertyItem.getNamePropertyItemMap(bean);
+        List<Predicate> predicateList = buildPredicateList(properties, root, criteriaBuilder);
         return predicateList;
     }
 
@@ -164,6 +91,12 @@ public class JPASugar {
     }
 
 
+    private final static List<Predicate> buildPredicateList(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicateList = ((Supplier<ArrayList>) ArrayList::new).get();
+        fillPredicateWithAllCriteria(properties, root, criteriaBuilder, predicateList);
+        return predicateList;
+    }
+
     /**
      * fillPredicateWithAllCriteria
      *
@@ -172,7 +105,7 @@ public class JPASugar {
      * @param root
      * @param predicateList
      */
-    private final static void fillPredicateWithAllCriteria(Map<String, PropertyItem> properties, CriteriaBuilder criteriaBuilder, Root<?> root, List<Predicate> predicateList) {
+    private final static void fillPredicateWithAllCriteria(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicateList) {
         properties.entrySet().stream().forEach(c -> {
             PropertyItem property = c.getValue();
             Field field = property.getField();
@@ -188,6 +121,9 @@ public class JPASugar {
                 } else if (field.isAnnotationPresent(In.class) || name.endsWith("In")
                 ) {
                     CriteriaUtil.fillPredicateWithInsCriteria(criteriaBuilder, root, property, predicateList);
+                } else if (field.isAnnotationPresent(Between.class) || name.endsWith("Between")
+                ) {
+                    CriteriaUtil.fillPredicateWithBetweenCriteria(criteriaBuilder, root, property, predicateList);
                 } else if (field.isAnnotationPresent(GreaterThan.class) || name.endsWith("GreaterThan")
                         || field.isAnnotationPresent(GreaterThanOrEqualTo.class) || name.endsWith("GreaterThanOrEqualTo")
                         || field.isAnnotationPresent(LessThan.class) || name.endsWith("LessThan")
@@ -249,200 +185,6 @@ public class JPASugar {
 //            }
 
         });
-    }
-
-
-    private abstract static class CriteriaUtil {
-        public final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
-            if (property.getValue() instanceof Collection<?>) {
-                Collection<T> value = (Collection<T>) property.getValue();
-                if (!CollectionSugar.isEmpty(value)) {
-                    CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
-                    value.stream().forEach(c -> predicate.value(c));
-                    predicateList.add(predicate);
-                }
-            } else if (property.getValue() instanceof Object[]) {
-                T[] value = (T[]) property.getValue();
-                if (!CollectionSugar.isEmpty(value)) {
-                    CriteriaBuilder.In<T> predicate = biFunction.apply(root.get(name));
-                    Arrays.asList(value).stream().forEach(c -> predicate.value(c));
-                    predicateList.add(predicate);
-                }
-            }
-        }
-
-        /**
-         * fillPredicateWithLikesCriteria
-         *
-         * @param criteriaBuilder
-         * @param root
-         * @param property
-         * @param predicateList
-         * @param <T>
-         */
-        public final static <T> void fillPredicateWithLikesCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
-            Field field = property.getField();
-            String name = property.getName();
-            String value = (String) property.getValue();
-            String fixName;
-            if (field.isAnnotationPresent(IgnoreSQL.class)) {
-                return;
-            } else if (field.isAnnotationPresent(Like.class)
-                    || name.endsWith("Like")
-            ) {
-                if (field.isAnnotationPresent(Like.class)) {
-                    fixName = field.getDeclaredAnnotation(Like.class).targetProperty();
-                } else if (name.endsWith("Like")) {
-                    fixName = StringSugar.trimEnd(name, "Like");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.like(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(NotLike.class)
-                    || name.endsWith("NotLike")
-            ) {
-                if (field.isAnnotationPresent(NotLike.class)) {
-                    fixName = field.getDeclaredAnnotation(NotLike.class).targetProperty();
-                } else if (name.endsWith("NotLike")) {
-                    fixName = StringSugar.trimEnd(name, "NotLike");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.notLike(root.get(fixName), value));
-            }
-        }
-
-        /**
-         * fillPredicateWithEqualsCriteria
-         *
-         * @param criteriaBuilder
-         * @param root
-         * @param property
-         * @param predicateList
-         * @param <T>
-         */
-        public final static <T extends Comparable<? super T>> void fillPredicateWithEqualsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
-            Field field = property.getField();
-            String name = property.getName();
-            T value = (T) property.getValue();
-            String fixName;
-            if (field.isAnnotationPresent(IgnoreSQL.class)) {
-                return;
-            } else if (field.isAnnotationPresent(Equal.class)
-                    || name.endsWith("Equal")) {
-                if (field.isAnnotationPresent(Equal.class)) {
-                    fixName = field.getDeclaredAnnotation(Equal.class).targetProperty();
-                } else if (name.endsWith("Equal")) {
-                    fixName = StringSugar.trimEnd(name, "Equal");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.equal(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(NotEqual.class)
-                    || name.endsWith("NotEqual")) {
-                if (field.isAnnotationPresent(NotEqual.class)) {
-                    fixName = field.getDeclaredAnnotation(NotEqual.class).targetProperty();
-                } else if (name.endsWith("NotEqual")) {
-                    fixName = StringSugar.trimEnd(name, "NotEqual");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.notEqual(root.get(fixName), value));
-            } else {
-                fixName = name;
-                predicateList.add(criteriaBuilder.equal(root.get(fixName), value));
-            }
-        }
-
-
-        /**
-         * fillPredicateWithInsCriteria
-         *
-         * @param criteriaBuilder
-         * @param root
-         * @param property
-         * @param predicateList
-         * @param <T>
-         */
-        public final static <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
-            Field field = property.getField();
-            String name = property.getName();
-            String fixName;
-            if (field.isAnnotationPresent(IgnoreSQL.class)) {
-                return;
-            } else if (field.isAnnotationPresent(In.class)
-                    || name.endsWith("In")
-            ) {
-                if (field.isAnnotationPresent(In.class)) {
-                    fixName = field.getDeclaredAnnotation(In.class).targetProperty();
-                } else if (name.endsWith("In")) {
-                    fixName = StringSugar.trimEnd(name, "In");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                CriteriaUtil.fillPredicate(criteriaBuilder::in, root, fixName, property, predicateList);
-            }
-        }
-
-
-        /**
-         * fillPredicateWithComparableCriteria
-         *
-         * @param criteriaBuilder
-         * @param root
-         * @param property
-         * @param predicateList
-         * @param <T>
-         */
-        public final static <T extends Comparable<? super T>> void fillPredicateWithComparableCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
-            Field field = property.getField();
-            String name = property.getName();
-            T value = (T) property.getValue();
-            String fixName;
-            if (field.isAnnotationPresent(IgnoreSQL.class)) {
-                return;
-            } else if (field.isAnnotationPresent(GreaterThan.class)
-                    || name.endsWith("GreaterThan")) {
-                if (field.isAnnotationPresent(GreaterThan.class)) {
-                    fixName = field.getDeclaredAnnotation(GreaterThan.class).targetProperty();
-                } else if (name.endsWith("GreaterThan")) {
-                    fixName = StringSugar.trimEnd(name, "GreaterThan");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.greaterThan(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(GreaterThanOrEqualTo.class)
-                    || name.endsWith("GreaterThanOrEqualTo")) {
-                if (field.isAnnotationPresent(GreaterThanOrEqualTo.class)) {
-                    fixName = field.getDeclaredAnnotation(GreaterThanOrEqualTo.class).targetProperty();
-                } else if (name.endsWith("GreaterThanOrEqualTo")) {
-                    fixName = StringSugar.trimEnd(name, "GreaterThanOrEqualTo");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.greaterThanOrEqualTo(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(LessThan.class)
-                    || name.endsWith("LessThan")) {
-                if (field.isAnnotationPresent(LessThan.class)) {
-                    fixName = field.getDeclaredAnnotation(LessThan.class).targetProperty();
-                } else if (name.endsWith("LessThan")) {
-                    fixName = StringSugar.trimEnd(name, "LessThan");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.lessThan(root.get(fixName), value));
-            } else if (field.isAnnotationPresent(LessThanOrEqualTo.class)
-                    || name.endsWith("LessThanOrEqualTo")) {
-                if (field.isAnnotationPresent(LessThanOrEqualTo.class)) {
-                    fixName = field.getDeclaredAnnotation(LessThanOrEqualTo.class).targetProperty();
-                } else if (name.endsWith("LessThanOrEqualTo")) {
-                    fixName = StringSugar.trimEnd(name, "LessThanOrEqualTo");
-                } else {
-                    throw new RuntimeException(name + " is illegal.");
-                }
-                predicateList.add(criteriaBuilder.lessThanOrEqualTo(root.get(fixName), value));
-            }
-        }
     }
 
 

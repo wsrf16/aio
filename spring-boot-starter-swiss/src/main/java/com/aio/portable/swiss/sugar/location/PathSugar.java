@@ -3,7 +3,7 @@ package com.aio.portable.swiss.sugar.location;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.systeminfo.OSInfo;
+import com.aio.portable.swiss.suite.system.OSInfo;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;

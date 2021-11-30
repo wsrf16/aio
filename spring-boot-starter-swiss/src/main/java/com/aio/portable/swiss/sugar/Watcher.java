@@ -22,7 +22,6 @@ public abstract class Watcher {
         return bean.isCurrentThreadCpuTimeSupported() ? bean.getCurrentThreadCpuTime() : 0L;
     }
 
-
     /**
      * Get user time in nanoseconds.
      */

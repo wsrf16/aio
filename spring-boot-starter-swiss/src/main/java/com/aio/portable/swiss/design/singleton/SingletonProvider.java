@@ -26,14 +26,36 @@ public abstract class SingletonProvider {
 //        return v.getClass().newInstance();
 //    }
 
-    public static <T> T instance(Class<T> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static <T> T instance(T instance) {
+        Class<T> clazz = (Class<T>)instance.getClass();
+        T result = get(clazz);
+        if (result == null)
+            synchronized (instances) {
+                try {
+                    if (result == null) {
+                        result = instance;
+                        instances.add(result);
+                        return result;
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        return result;
+    }
+
+    public static <T> T instance(Class<T> clazz) {
         T instance = get(clazz);
         if (instance == null)
             synchronized (instances) {
-                if (instance == null) {
-                    instance = clazz.getDeclaredConstructor().newInstance();
-                    instances.add(instance);
-                    return instance;
+                try {
+                    if (instance == null) {
+                        instance = clazz.getDeclaredConstructor().newInstance();
+                        instances.add(instance);
+                        return instance;
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         return instance;

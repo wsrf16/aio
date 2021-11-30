@@ -2,9 +2,9 @@ package com.aio.portable.swiss.suite.io;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class NIOSugar {
@@ -217,6 +218,18 @@ public abstract class NIOSugar {
 
         public final static List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
             return listChildrenFilePath(Paths.get(path), anyEndsWithList);
+        }
+    }
+
+    public final static void map(String file, Consumer<MappedByteBuffer> consumer) {
+        try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
+            try(FileChannel channel = randomAccessFile.getChannel()) {
+                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, 0, 5);
+                consumer.accept(map);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

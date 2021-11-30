@@ -7,12 +7,12 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import java.text.MessageFormat;
 
 public class RoutingDataSource extends AbstractRoutingDataSource {
-    private final static Log logger = LogFactory.getLog(RoutingDataSource.class);
+    private final static Log log = LogFactory.getLog(RoutingDataSource.class);
 
     @Override
     protected Object determineCurrentLookupKey() {
         String datasource = DataSourceHolder.getDataSource();
-        logger.debug(MessageFormat.format("current datasource key is {0}", datasource));
+        log.debug(MessageFormat.format("current datasource key is {0}", datasource));
         return datasource;
     }
 }

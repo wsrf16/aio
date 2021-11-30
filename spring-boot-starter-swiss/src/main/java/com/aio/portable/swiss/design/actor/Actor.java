@@ -2,7 +2,7 @@ package com.aio.portable.swiss.design.actor;
 
 import com.aio.portable.swiss.design.actor.behavior.ActorBehavior;
 import com.aio.portable.swiss.design.actor.message.Message;
-import com.aio.portable.swiss.design.actor.message.MessageReturn;
+import com.aio.portable.swiss.design.actor.message.ReturnMessage;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 
 import java.util.*;
@@ -20,11 +20,11 @@ public class Actor<T, R> implements ActorAction {
 
     private String name = "actor-" + IDS.uuid();
 
-    Function<Message<T>, MessageReturn<R>> actorBehaviorFunction;
+    Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction;
 
     private Queue<Message<T>> mailBox = new LinkedList<>();
 
-    private Queue<MessageReturn<R>> mailBoxFeedBack = new LinkedList<>();
+    private Queue<ReturnMessage<R>> feedBackMailBox = new LinkedList<>();
 
     private ActorStatus actorStatus = ActorStatus.INIT;
 
@@ -47,8 +47,8 @@ public class Actor<T, R> implements ActorAction {
         return mailBox;
     }
 
-    public Queue<MessageReturn<R>> getMailBoxFeedBack() {
-        return mailBoxFeedBack;
+    public Queue<ReturnMessage<R>> getFeedBackMailBox() {
+        return feedBackMailBox;
     }
 
     public ActorStatus getActorStatus() {
@@ -95,15 +95,15 @@ public class Actor<T, R> implements ActorAction {
         return actorStatus;
     }
 
-    private Actor(Function<Message<T>, MessageReturn<R>> actorBehaviorFunction) {
+    private Actor(Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction) {
         this.actorBehaviorFunction = actorBehaviorFunction;
     }
 
-    public final static <T, R> Actor<T, R> build(Function<T, R> handle) {
-        Function<Message<T>, MessageReturn<R>> actorBehaviorFunction = (Message<T> message) -> {
-            R r = handle.apply(message.getData());
-            MessageReturn<R> messageReturn = message.toReturn(r);
-            return messageReturn;
+    public final static <T, R> Actor<T, R> build(Function<T, R> handler) {
+        Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction = message -> {
+            R r = handler.apply(message.getData());
+            ReturnMessage<R> returnMessage = message.buildReturnMessage(r);
+            return returnMessage;
         };
         Actor<T, R> actor = new Actor<>(actorBehaviorFunction);
         return actor;
@@ -134,8 +134,8 @@ public class Actor<T, R> implements ActorAction {
     }
 
     private Actor<T, R> pushToNextActor() {
-        if (!mailBoxFeedBack.isEmpty()) {
-            MessageReturn<R> poll = mailBoxFeedBack.poll();
+        if (!feedBackMailBox.isEmpty()) {
+            ReturnMessage<R> poll = feedBackMailBox.poll();
             Message<R> message = new Message<>(poll.getData());
             nextActor.getMailBox().add(message);
         }
@@ -179,14 +179,14 @@ public class Actor<T, R> implements ActorAction {
                         Message message = mailBox.poll();
                         ActorBehavior actorBehavior = new ActorBehavior(threadPool) {
                             @Override
-                            public MessageReturn<R> call() {
-                                MessageReturn<R> messageReturn = actorBehaviorFunction.apply(message);
-                                return messageReturn;
+                            public ReturnMessage<R> call() {
+                                ReturnMessage<R> returnMessage = actorBehaviorFunction.apply(message);
+                                return returnMessage;
                             }
                         };
 
-                        MessageReturn<R> messageReturn = actorBehavior.submit();
-                        mailBoxFeedBack.add(messageReturn);
+                        ReturnMessage<R> returnMessage = actorBehavior.submit();
+                        feedBackMailBox.add(returnMessage);
 
                         if (nextActor != null) {
                             pushToNextActor();

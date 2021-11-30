@@ -3,15 +3,15 @@ package com.aio.portable.swiss.suite.log.factory;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
-import com.aio.portable.swiss.suite.log.impl.LogHubProperties;
-import com.aio.portable.swiss.suite.log.impl.console.ConsoleLog;
-import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLog;
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLog;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLog;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
+import com.aio.portable.swiss.suite.log.support.LogHubProperties;
+import com.aio.portable.swiss.suite.log.solution.console.ConsoleLog;
+import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLog;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLog;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 
@@ -29,19 +29,19 @@ public abstract class LogHubFactory {
 
     protected static LogHubFactory singleton;
     protected static boolean isInitial = false;
-    boolean enable = true;
-    LevelEnum level = LevelEnum.ALL;
+    boolean enabled = true;
+    protected LevelEnum level = LevelEnum.ALL;
 
     public static boolean isInitial() {
         return isInitial;
     }
 
-    public boolean isEnable() {
-        return enable;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public LevelEnum getLevel() {
@@ -100,23 +100,33 @@ public abstract class LogHubFactory {
     }
 
     private static LogHub detectAndBuild(String className) {
-        final ArrayList<LogSingle> list = new ArrayList<>(127);
-        if (LogHubProperties.singletonInstance().getEnabled()) {
-            if (ConsoleLogProperties.singletonInstance().getEnabled())
-                list.add(new ConsoleLog(className));
-            if (Slf4JLogProperties.singletonInstance().getEnabled())
-                list.add(new Slf4JLog(className));
-            if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
-                list.add(new RabbitMQLog(className));
-            }
-            if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
-                list.add(new KafkaLog(className));
-            }
+        LogHubProperties properties = LogHubProperties.singletonInstance();
+
+        ArrayList<LogSingle> list = new ArrayList<>(127);
+
+        if (ConsoleLogProperties.singletonInstance().getEnabled()) {
+            list.add(new ConsoleLog(className));
+        }
+        if (Slf4JLogProperties.singletonInstance().getEnabled()) {
+            list.add(new Slf4JLog(className));
+        }
+        if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
+            list.add(new RabbitMQLog(className));
+        }
+        if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
+            list.add(new KafkaLog(className));
         }
 
-        LogHub logger = LogHub.build(list)
-                .setEnabledLevel(LevelEnum.INFORMATION);
-        return logger;
+        LogHub log = LogHub.build(list);
+        if (properties.getEnabled() != null)
+            log.setEnabled(properties.getEnabled());
+        if (properties.getLevel() != null)
+            log.setLevel(properties.getLevel());
+        if (properties.getSamplerRate() != null)
+            log.setSamplerRate(properties.getSamplerRate());
+        if (properties.getAsync() != null)
+            log.setAsync(properties.getAsync());
+        return log;
     }
 
 

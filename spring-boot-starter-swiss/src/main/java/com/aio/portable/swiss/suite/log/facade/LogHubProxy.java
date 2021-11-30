@@ -11,9 +11,9 @@ public interface LogHubProxy extends LogAction, LogFacade {
 
     LogHub setEnabled(boolean enabled);
 
-    LevelEnum getEnabledLevel();
+    LevelEnum getLevel();
 
-    LogHub setEnabledLevel(LevelEnum enabledLevel);
+    LogHub setLevel(LevelEnum level);
 
     LogHub setAsync(boolean async);
 }

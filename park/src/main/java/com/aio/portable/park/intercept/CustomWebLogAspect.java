@@ -11,6 +11,7 @@ public class CustomWebLogAspect extends HamletWebLogAspect {
     public CustomWebLogAspect(LogHubFactory logHubFactory) {
         super(logHubFactory);
     }
+
     @Pointcut(POINTCUT_SPECIAL)
     public void webLog() {
     }

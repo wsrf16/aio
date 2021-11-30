@@ -2,7 +2,7 @@ package com.aio.portable.swiss.spring;
 
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.sugar.location.UrlSugar;
-import com.aio.portable.swiss.suite.systeminfo.HostInfo;
+import com.aio.portable.swiss.suite.system.HostInfo;
 
 public abstract class SpringService {
     public final static String localhost() {

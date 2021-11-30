@@ -13,11 +13,6 @@
                 <Pattern>${logMgrPattern}</Pattern>
             </PatternLayout>
         </Console>
-        <Console name="LOGMGR_APPENDER" target="SYSTEM_OUT">
-            <PatternLayout>
-                <Pattern>LOGMGR_APPENDER</Pattern>
-            </PatternLayout>
-        </Console>
         <File name="FILE_APPENDER" fileName="${logRootPath}/once.log" append="false">
             <!--<PatternLayout pattern="${logPattern}" />-->
             <!-- 或 -->

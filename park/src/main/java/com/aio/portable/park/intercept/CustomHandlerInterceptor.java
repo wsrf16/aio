@@ -1,14 +1,16 @@
 package com.aio.portable.park.intercept;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+//@Configuration
 public class CustomHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        boolean b = true;
+        boolean b = false;
         String idNumber = request.getParameter("ID_NUMBER");
         return b;
     }

@@ -8,7 +8,7 @@ import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
-import com.aio.portable.swiss.suite.log.annotation.LogMarker;
+import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 //import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 //import org.apache.http.conn.ssl.TrustStrategy;

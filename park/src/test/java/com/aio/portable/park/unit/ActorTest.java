@@ -3,7 +3,7 @@ package com.aio.portable.park.unit;
 import com.aio.portable.swiss.design.actor.Actor;
 import com.aio.portable.swiss.design.actor.ActorManager;
 import com.aio.portable.swiss.design.actor.message.Message;
-import com.aio.portable.swiss.design.actor.message.MessageReturn;
+import com.aio.portable.swiss.design.actor.message.ReturnMessage;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -91,6 +91,12 @@ public class ActorTest {
 
     @Test
     public void foobar2() {
+        Actor<Integer, Void> actor2 = Actor.build((Integer integer) -> {
+            System.out.println(integer);
+            return null;
+        });
+        actor2.setName("actor2");
+
         Actor<Integer, Integer> actor1 = Actor
                 .build((Integer integer) -> integer * 2)
                 .push(new Message<>(121),
@@ -102,18 +108,12 @@ public class ActorTest {
                         new Message<>(133),
                         new Message<>(134));
         actor1.setName("actor1");
+        actor1.setNextActor(actor2);
 
-        Actor<Integer, Void> actor2 = Actor.build((Integer integer) -> {
-            System.out.println(integer);
-            return null;
-        });
-        actor2.setName("actor2");
-
+        Queue<ReturnMessage<Integer>> mailBoxFeedBack = actor1.getFeedBackMailBox();
         ActorManager absActorManager = new ActorManager();
         absActorManager.add(actor1);
         absActorManager.add(actor2);
         absActorManager.start();
-        Queue<MessageReturn<Integer>> mailBoxFeedBack = actor1.getMailBoxFeedBack();
-        actor1.setNextActor(actor2);
     }
 }

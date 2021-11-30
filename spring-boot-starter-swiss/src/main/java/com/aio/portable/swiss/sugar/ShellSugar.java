@@ -61,4 +61,15 @@ public abstract class ShellSugar {
             exec("cmd /c start " + url);
         }
     }
+
+
+
+
+    public void print(String s) {
+        System.out.println(s);
+    }
+
+    public void clean() {
+        System.out.println("\r");
+    }
 }

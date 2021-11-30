@@ -2,11 +2,11 @@ package com.aio.portable.swiss.spring.factories.listener;
 
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
-import com.aio.portable.swiss.suite.log.impl.LogHubProperties;
-import com.aio.portable.swiss.suite.log.impl.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.impl.elk.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.impl.slf4j.Slf4JLogProperties;
+import com.aio.portable.swiss.suite.log.support.LogHubProperties;
+import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,7 +94,9 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     protected void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
         final ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         try {
-            if (ClassLoaderSugar.isPresent("org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext") && applicationContext.getClass().equals(AnnotationConfigServletWebServerApplicationContext.class) && !SpringContextHolder.hasLoad())
+            if (ClassLoaderSugar.isPresent("org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext")
+                    && applicationContext.getClass().equals(AnnotationConfigServletWebServerApplicationContext.class)
+                    && !SpringContextHolder.hasLoaded())
                 SpringContextHolder.initialApplicationContext(applicationContext);
         } catch (Exception e) {
             log.warn("LogHub onApplicationPreparedEvent", e);

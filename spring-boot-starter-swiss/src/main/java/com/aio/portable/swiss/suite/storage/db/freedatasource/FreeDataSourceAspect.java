@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 public abstract class FreeDataSourceAspect {
-    private final static Log logger = LogFactory.getLog(FreeDataSourceAspect.class);
+    private final static Log log = LogFactory.getLog(FreeDataSourceAspect.class);
     public final static String POINTCUT = "pointcut()";
 
     @Pointcut("@annotation(com.aio.portable.swiss.suite.storage.db.freedatasource.TargetDataSource)" +
@@ -37,12 +37,12 @@ public abstract class FreeDataSourceAspect {
             if (method.isAnnotationPresent(TargetDataSource.class)) {
                 targetDataSource = method.getAnnotation(TargetDataSource.class);
                 DataSourceHolder.putDataSource(targetDataSource.value());
-                logger.debug(MessageFormat.format("FreeDataSourceAspect：signature-{0}, targetDataSource-{1}", signature.toString(), targetDataSource.value()));
+                log.debug(MessageFormat.format("FreeDataSourceAspect：signature-{0}, targetDataSource-{1}", signature.toString(), targetDataSource.value()));
             } else if (clazz.isAnnotationPresent(TargetDataSource.class)
                     && !method.isAnnotationPresent(TargetDataSource.class)) {
                 targetDataSource = clazz.getAnnotation(TargetDataSource.class);
                 DataSourceHolder.putDataSource(targetDataSource.value());
-                logger.debug(MessageFormat.format("FreeDataSourceAspect：signature-{0}, targetDataSource-{1}", signature.toString(), targetDataSource.value()));
+                log.debug(MessageFormat.format("FreeDataSourceAspect：signature-{0}, targetDataSource-{1}", signature.toString(), targetDataSource.value()));
             }
         }
     }

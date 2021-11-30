@@ -71,7 +71,7 @@ public class YamlSugar {
 
 
     public final static void yml2Properties(String path) {
-        final String DOT = ".";
+        String DOT = ".";
         List<String> lines = new LinkedList<>();
         try {
             YAMLFactory yamlFactory = new YAMLFactory();

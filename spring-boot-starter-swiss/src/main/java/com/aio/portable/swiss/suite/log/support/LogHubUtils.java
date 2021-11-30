@@ -61,7 +61,7 @@ public class LogHubUtils {
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
                 if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
-                        final Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
+                        Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
                         clazz.getConstructor().newInstance();
                     } catch (Exception e) {
                         throw new RuntimeException(e);

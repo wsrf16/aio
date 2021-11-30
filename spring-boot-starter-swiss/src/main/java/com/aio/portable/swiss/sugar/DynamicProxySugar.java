@@ -51,7 +51,7 @@ public class DynamicProxySugar {
 
     public static <T> T proxyFactory(Object target, Advice... advices) {
         ProxyFactory proxyFactory = new ProxyFactory(target);
-        final Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(target.getClass());
+        Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(target.getClass());
 //        proxyFactory.setInterfaces(interfaces);
         proxyFactory.setOptimize(true);
 //        proxyFactory.setTarget(target);

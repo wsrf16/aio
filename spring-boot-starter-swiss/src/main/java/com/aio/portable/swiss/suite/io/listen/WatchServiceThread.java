@@ -107,7 +107,7 @@ public class WatchServiceThread {
                 try {
                     WatchKey watchKey = watchService.take();
                     for (WatchEvent<?> event : watchKey.pollEvents()) {
-                        final Path changedRelativePath = (Path) event.context();
+                        Path changedRelativePath = (Path) event.context();
                         Path changedAbsolutePath = path.resolve(changedRelativePath);
                         File file = changedAbsolutePath.toFile();
                         // 利用文件时间戳，防止触发两次

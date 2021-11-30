@@ -54,7 +54,7 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     }
 
     private static void initializeLogProperties(ConfigurableEnvironment environment) {
-        final Binder binder = Binder.get(environment);
+        Binder binder = Binder.get(environment);
         try {
             LogHubProperties.initialSingletonInstance(binder);
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     // step 4: An ApplicationPreparedEvent is sent just before the refresh is started, but after bean definitions have been loaded.
     @Override
     protected void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
-        final ConfigurableApplicationContext applicationContext = event.getApplicationContext();
+        ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         try {
             if (ClassLoaderSugar.isPresent("org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext")
                     && applicationContext.getClass().equals(AnnotationConfigServletWebServerApplicationContext.class)

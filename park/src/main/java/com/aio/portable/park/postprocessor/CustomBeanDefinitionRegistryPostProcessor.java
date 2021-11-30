@@ -59,7 +59,7 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
                 if ((definition instanceof ScannedGenericBeanDefinition && ((ScannedGenericBeanDefinition) definition).getMetadata().getSuperClassName().equals(LogHubFactory.class.getTypeName())))
                 {
                     try {
-                        final Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
+                        Class<?> clazz = ((ScannedGenericBeanDefinition) (definition)).resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
                         clazz.getConstructor().newInstance();
                     } catch (InstantiationException|InvocationTargetException|NoSuchMethodException|IllegalAccessException|ClassNotFoundException e) {
                         e.printStackTrace();

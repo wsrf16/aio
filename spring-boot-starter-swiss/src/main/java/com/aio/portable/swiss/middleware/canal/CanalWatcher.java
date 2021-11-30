@@ -64,7 +64,7 @@ public class CanalWatcher {
                         log.error("listen error", e);
                     }
                 } else {
-                    final SqlLog sqlLog = new SqlLog(message.getEntries());
+                    SqlLog sqlLog = new SqlLog(message.getEntries());
                     handler.accept(sqlLog);
 
 //                    sqlLog.getTableModelMapping().put("tb_commodity_info", TableModel.class);

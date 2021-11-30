@@ -17,9 +17,9 @@ public class SpecificationTest {
         melons.add(new Melon("Firemelon", 1, "china"));
 
 
-        final Predicate<Melon> melonPredicate1 = (Melon m) -> "Watermelon".equals(m.getType());
-        final Predicate<Melon> melonPredicate2 = (Melon m) -> m.getWeight() == 3;
-        final Predicate<Melon> melonPredicate3 = (Melon m) -> m.getWeight() > 4;
+        Predicate<Melon> melonPredicate1 = (Melon m) -> "Watermelon".equals(m.getType());
+        Predicate<Melon> melonPredicate2 = (Melon m) -> m.getWeight() == 3;
+        Predicate<Melon> melonPredicate3 = (Melon m) -> m.getWeight() > 4;
         List<Predicate<Melon>> predicateList = new ArrayList<>();
         predicateList.add(melonPredicate1);
         predicateList.add(melonPredicate2);

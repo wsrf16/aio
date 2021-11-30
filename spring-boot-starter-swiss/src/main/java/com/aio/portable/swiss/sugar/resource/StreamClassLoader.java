@@ -40,7 +40,7 @@ public class StreamClassLoader extends ClassLoader {
             return defineClass(className, b, 0, b.length);
         } else if (file.toLowerCase().trim().endsWith(".jar")) {
             JarFile jarFile;
-            final String _name = className.replace(".", "/") + ".class";
+            String _name = className.replace(".", "/") + ".class";
             try {
                 jarFile = new JarFile(file);
             } catch (IOException e) {

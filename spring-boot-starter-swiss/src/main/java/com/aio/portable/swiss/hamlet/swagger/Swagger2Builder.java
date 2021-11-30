@@ -72,7 +72,7 @@ public class Swagger2Builder {
         List<ResponseMessage> responseMessageList = swagger2Properties.getResponseMessageList();
         String packageName = swagger2Properties.getPackageName();
 
-        final List<Parameter> parameters = createParameters();
+        List<Parameter> parameters = createParameters();
 
         ApiSelectorBuilder builder = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)

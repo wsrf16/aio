@@ -29,16 +29,16 @@ public class JdbcLongAuthorizationCodeServices extends JdbcAuthorizationCodeServ
     }
 
     public void setLength(int length) {
-        final RandomValueStringGenerator generator = this.getGenerator();
+        RandomValueStringGenerator generator = this.getGenerator();
         generator.setLength(length);
         this.length = length;
     }
 
     private RandomValueStringGenerator getGenerator() {
-        final Field field = ReflectionUtils.findField(RandomValueAuthorizationCodeServices.class,
+        Field field = ReflectionUtils.findField(RandomValueAuthorizationCodeServices.class,
                 "generator");
         ReflectionUtils.makeAccessible(field);
-        final RandomValueStringGenerator generator = (RandomValueStringGenerator) ReflectionUtils.getField(field, this);
+        RandomValueStringGenerator generator = (RandomValueStringGenerator) ReflectionUtils.getField(field, this);
         return generator;
     }
 

@@ -66,11 +66,11 @@ public abstract class ClassSugar {
      * @return
      */
     public final static String getPath(final Class<?> clazz) {
-        final String clazzFile = convertClassNameToResourceLocation(clazz.getTypeName());
+        String clazzFile = convertClassNameToResourceLocation(clazz.getTypeName());
         URL location = null;
-        final ProtectionDomain domain = clazz.getProtectionDomain();
+        ProtectionDomain domain = clazz.getProtectionDomain();
         if (domain != null) {
-            final CodeSource cs = domain.getCodeSource();
+            CodeSource cs = domain.getCodeSource();
             if (cs != null)
                 location = cs.getLocation();
             if (location != null) {
@@ -105,7 +105,7 @@ public abstract class ClassSugar {
             }
         }
         if (location == null) {
-            final ClassLoader clsLoader = clazz.getClassLoader();
+            ClassLoader clsLoader = clazz.getClassLoader();
             location = clsLoader != null ?
                     clsLoader.getResource(clazzFile) :
                     ClassLoader.getSystemResource(clazzFile);
@@ -342,7 +342,7 @@ public abstract class ClassSugar {
      * @return
      */
     public final static Class<?>[] collectSuperInterfaces(Class<?> clazz) {
-        final List<Class<?>> classList = collectSuperObject(clazz, false);
+        List<Class<?>> classList = collectSuperObject(clazz, false);
         return classList.toArray(new Class<?>[0]);
     }
 //

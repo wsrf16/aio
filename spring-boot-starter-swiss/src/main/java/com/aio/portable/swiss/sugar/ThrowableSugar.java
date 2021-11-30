@@ -19,7 +19,7 @@ public abstract class ThrowableSugar {
             return r;
         } catch (Throwable e) {
             e.printStackTrace();
-            final R r = failHandler.apply(e);
+            R r = failHandler.apply(e);
             return r;
         }
     }

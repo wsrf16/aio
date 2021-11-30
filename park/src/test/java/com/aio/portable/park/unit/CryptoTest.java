@@ -17,9 +17,9 @@ public class CryptoTest {
 
     @Test
     public void rsa() {
-        final RSAKeyPair rsaKeyPair = RSASugar.generateRSAKeyPair();
-        final PrivateKey privateKey = rsaKeyPair.getPrivateKey();
-        final PublicKey publicKey = rsaKeyPair.getPublicKey();
+        RSAKeyPair rsaKeyPair = RSASugar.generateRSAKeyPair();
+        PrivateKey privateKey = rsaKeyPair.getPrivateKey();
+        PublicKey publicKey = rsaKeyPair.getPublicKey();
         String pri;
         String pub;
 
@@ -29,11 +29,11 @@ public class CryptoTest {
         pri = PRI;
         pub = PUB;
 
-        final String cipher = RSASugar.encrypt("somesomething", pub);
-        final String plain = RSASugar.decrypt(cipher, pri);
+        String cipher = RSASugar.encrypt("somesomething", pub);
+        String plain = RSASugar.decrypt(cipher, pri);
 
-        final String sign = RSASugar.sign("somesomething", pri);
-        final boolean verify = RSASugar.verify("aaaaaa", sign, pub);
+        String sign = RSASugar.sign("somesomething", pri);
+        boolean verify = RSASugar.verify("aaaaaa", sign, pub);
     }
 
     @Test

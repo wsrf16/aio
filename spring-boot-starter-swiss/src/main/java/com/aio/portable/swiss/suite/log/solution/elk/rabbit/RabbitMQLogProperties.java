@@ -44,7 +44,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
     }
 
     public final static void initialSingletonInstance(Binder binder) {
-        final BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
+        BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             RabbitMQLogProperties.initialSingletonInstance(bindResult.get());
         } else {

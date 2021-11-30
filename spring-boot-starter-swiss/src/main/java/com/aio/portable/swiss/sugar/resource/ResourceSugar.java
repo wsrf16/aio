@@ -225,7 +225,7 @@ public abstract class ResourceSugar {
          * @return
          */
         public final static List<URL> getClassURLs(final String className) {
-            final String resourceRelationPath = ClassSugar.convertClassNameToResourceLocation(className);
+            String resourceRelationPath = ClassSugar.convertClassNameToResourceLocation(className);
             return getResourceURLs(resourceRelationPath);
         }
     }

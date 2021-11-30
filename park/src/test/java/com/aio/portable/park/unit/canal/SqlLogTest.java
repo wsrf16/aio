@@ -25,8 +25,8 @@ public class SqlLogTest implements InitializingBean {
                     List<EntryEntity> entryEntityList = sqlLog.toEntryEntityList();
                     entryEntityList.forEach(c -> {
                         c.getRowDataEntityList().forEach(d -> {
-                            final TableModel beforeRowModel = (TableModel) d.getBeforeRowModel();
-                            final TableModel afterRowModel = (TableModel) d.getAfterRowModel();
+                            TableModel beforeRowModel = (TableModel) d.getBeforeRowModel();
+                            TableModel afterRowModel = (TableModel) d.getAfterRowModel();
                             CanalEntry.EventType eventType = c.getHeader().getEventType();
                             System.out.println();
                         });

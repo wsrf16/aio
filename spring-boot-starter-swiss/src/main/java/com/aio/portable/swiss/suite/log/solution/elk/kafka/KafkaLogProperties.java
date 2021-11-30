@@ -51,7 +51,7 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
     }
 
     public final static void initialSingletonInstance(Binder binder) {
-        final BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
+        BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             KafkaLogProperties.initialSingletonInstance(bindResult.get());
         } else {

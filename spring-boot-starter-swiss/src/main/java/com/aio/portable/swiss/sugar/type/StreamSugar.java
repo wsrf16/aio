@@ -118,8 +118,8 @@ public abstract class StreamSugar {
             public boolean equals(final Object o) {
                 if (o == null || !(o instanceof Collection))
                     return false;
-                final Iterator<T> it1 = iterator();
-                final Iterator<T> it2 = ((Collection) o).iterator();
+                Iterator<T> it1 = iterator();
+                Iterator<T> it2 = ((Collection) o).iterator();
                 while (it1.hasNext()) {
                     if (!it2.hasNext() || !Objects.equals(it1.next(), it2.next()))
                         return false;
@@ -131,8 +131,8 @@ public abstract class StreamSugar {
 
             @Override
             public int hashCode() {
-                final Iterator<T> it1 = iterator();
-                final List<T> arrayList = new ArrayList<>();
+                Iterator<T> it1 = iterator();
+                List<T> arrayList = new ArrayList<>();
                 while (it1.hasNext()) {
                     arrayList.add(it1.next());
                 }
@@ -163,7 +163,7 @@ public abstract class StreamSugar {
                         try {
 
                             if (current == data.size() - 1 && !complete) {
-                                final boolean result = iterator.hasNext();
+                                boolean result = iterator.hasNext();
                                 complete = !result;
 
 
@@ -212,7 +212,7 @@ public abstract class StreamSugar {
             public int size() {
                 if (complete)
                     return data.size();
-                final Iterator<T> it = iterator();
+                Iterator<T> it = iterator();
                 while (it.hasNext())
                     it.next();
 

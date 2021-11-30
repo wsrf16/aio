@@ -20,24 +20,24 @@ public class CuratorTest {
     @Test
     public void foobar() {
         try {
-            final ExponentialBackoffRetry exponentialBackoffRetry = CuratorSugar.RetryPolicyBuilder.newExponentialBackoffRetry(5000, 3, 5000);
-            final CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient("mecs.com:32181", exponentialBackoffRetry);
+            ExponentialBackoffRetry exponentialBackoffRetry = CuratorSugar.RetryPolicyBuilder.newExponentialBackoffRetry(5000, 3, 5000);
+            CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient("mecs.com:32181", exponentialBackoffRetry);
             curatorFramework.start();
 
-            final String result1 = CuratorSugar.createIfNotExist(curatorFramework, CreateMode.PERSISTENT, "/abc/def");
-            final Stat stat1 = CuratorSugar.setData(curatorFramework, "/abc/def", "something".getBytes());
+            String result1 = CuratorSugar.createIfNotExist(curatorFramework, CreateMode.PERSISTENT, "/abc/def");
+            Stat stat1 = CuratorSugar.setData(curatorFramework, "/abc/def", "something".getBytes());
 
-            final List<String> children1 = CuratorSugar.getChildren(curatorFramework, "/abc");
+            List<String> children1 = CuratorSugar.getChildren(curatorFramework, "/abc");
 
-            final CuratorCacheListener curatorCacheListener = CuratorSugar.ListenerUtil.newCuratorCacheListenerBuilder().forChanges((oldNode, node) -> System.out.println(String.format("Node changed. Old: [%s] New: [%s]", oldNode, node))).build();
+            CuratorCacheListener curatorCacheListener = CuratorSugar.ListenerUtil.newCuratorCacheListenerBuilder().forChanges((oldNode, node) -> System.out.println(String.format("Node changed. Old: [%s] New: [%s]", oldNode, node))).build();
             CuratorSugar.ListenerUtil.addListenerAndStart(curatorFramework, "/abc/def", curatorCacheListener);
 
 
-            final CuratorOp curatorOp1 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111");
-            final CuratorOp curatorOp2 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111/222");
-            final CuratorOp curatorOp3 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111/222");
+            CuratorOp curatorOp1 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111");
+            CuratorOp curatorOp2 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111/222");
+            CuratorOp curatorOp3 = CuratorSugar.TransactionUtil.buildCuratorOp(curatorFramework).create().forPath("/111/222");
             try {
-                final List<CuratorTransactionResult> commit = CuratorSugar.TransactionUtil.commit(curatorFramework, curatorOp1, curatorOp2, curatorOp3);
+                List<CuratorTransactionResult> commit = CuratorSugar.TransactionUtil.commit(curatorFramework, curatorOp1, curatorOp2, curatorOp3);
             } catch (Exception e) {
                 e.printStackTrace();
             }

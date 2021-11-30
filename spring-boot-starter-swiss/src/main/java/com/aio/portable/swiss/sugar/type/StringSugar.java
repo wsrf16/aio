@@ -74,8 +74,8 @@ public class StringSugar {
                     "output of one loop is the input of another");
         }
 
-        final int searchLength = searchList.length;
-        final int replacementLength = replacementList.length;
+        int searchLength = searchList.length;
+        int replacementLength = replacementList.length;
 
         // make sure lengths are ok, these need to be equal
         if (searchLength != replacementLength) {
@@ -86,7 +86,7 @@ public class StringSugar {
         }
 
         // keep track of which still have matches
-        final boolean[] noMoreMatchesForReplIndex = new boolean[searchLength];
+        boolean[] noMoreMatchesForReplIndex = new boolean[searchLength];
 
         // index on index that the match was found
         int textIndex = -1;
@@ -129,7 +129,7 @@ public class StringSugar {
             if (searchList[i] == null || replacementList[i] == null) {
                 continue;
             }
-            final int greater = replacementList[i].length() - searchList[i].length();
+            int greater = replacementList[i].length() - searchList[i].length();
             if (greater > 0) {
                 increase += 3 * greater; // assume 3 matches
             }
@@ -137,7 +137,7 @@ public class StringSugar {
         // have upper-bound at 20% increase, then let Java take over
         increase = Math.min(increase, text.length() / 5);
 
-        final StringBuilder buf = new StringBuilder(text.length() + increase);
+        StringBuilder buf = new StringBuilder(text.length() + increase);
 
         while (textIndex != -1) {
 
@@ -173,11 +173,11 @@ public class StringSugar {
             // NOTE: logic duplicated above END
 
         }
-        final int textLength = text.length();
+        int textLength = text.length();
         for (int i = start; i < textLength; i++) {
             buf.append(text.charAt(i));
         }
-        final String result = buf.toString();
+        String result = buf.toString();
         if (!repeat) {
             return result;
         }

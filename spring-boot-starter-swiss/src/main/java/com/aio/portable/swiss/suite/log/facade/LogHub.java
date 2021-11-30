@@ -146,7 +146,7 @@ public class LogHub extends LogBundle implements LogHubProxy {
             LogHub proxy = DynamicProxySugar.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    final LogHub hub = logHub;
+                    LogHub hub = logHub;
                     hub.validate();
                     Object invoke = null;
 

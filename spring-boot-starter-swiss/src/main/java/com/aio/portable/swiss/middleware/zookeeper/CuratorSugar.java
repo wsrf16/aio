@@ -63,14 +63,14 @@ public abstract class CuratorSugar {
         }
 
         public final static <T> T interProcessMutex(CuratorFramework client, String path, Supplier<T> supplier) {
-            final InterProcessMutex interProcessMutex = newInterProcessMutex(client, path);
+            InterProcessMutex interProcessMutex = newInterProcessMutex(client, path);
             return execute(interProcessMutex, supplier);
         }
 
         public final static <T> T execute(InterProcessMutex interProcessMutex, Supplier<T> supplier) {
             try {
                 interProcessMutex.acquire();
-                final T t = supplier.get();
+                T t = supplier.get();
                 interProcessMutex.release();
                 return t;
             } catch (Exception e) {
@@ -134,7 +134,7 @@ public abstract class CuratorSugar {
         }
 
         public final static CuratorCache addListenerAndStart(CuratorFramework curatorFramework, String path, CuratorCacheListener curatorCacheListener) {
-            final CuratorCache curatorCache = addListener(curatorFramework, path, curatorCacheListener);
+            CuratorCache curatorCache = addListener(curatorFramework, path, curatorCacheListener);
             curatorCache.start();
             return curatorCache;
         }
@@ -199,7 +199,7 @@ public abstract class CuratorSugar {
 
     public final static String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path) {
         String forPath = null;
-        final Stat stat = checkExists(curatorFramework, path);
+        Stat stat = checkExists(curatorFramework, path);
         if (stat == null) {
             forPath = create(curatorFramework, createMode, path);
         }
@@ -208,7 +208,7 @@ public abstract class CuratorSugar {
 
     public final static String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path, byte[] bytes) {
         String forPath = null;
-        final Stat stat = checkExists(curatorFramework, path);
+        Stat stat = checkExists(curatorFramework, path);
         if (stat == null) {
             forPath = create(curatorFramework, createMode, path, bytes);
         }

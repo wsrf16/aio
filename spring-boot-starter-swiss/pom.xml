@@ -40,7 +40,7 @@
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <java-jwt.version>3.15.0</java-jwt.version>
-        <xxl-job-core.version>2.0.2</xxl-job-core.version>
+        <xxl-job-core.version>2.3.0</xxl-job-core.version>
         <nginxparser.version>0.9.6</nginxparser.version>
         <netty-all.version>4.1.44.Final</netty-all.version>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>

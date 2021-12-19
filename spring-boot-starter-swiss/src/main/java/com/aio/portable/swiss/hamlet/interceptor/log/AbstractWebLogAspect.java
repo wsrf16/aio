@@ -84,34 +84,33 @@ class AbstractWebLogAspect {
 
         LogHub log = logPool.get(joinPoint.getSignature().getDeclaringTypeName());
         String spanId = generateUniqueId();
-        setSpanIdIfResponse(attributes, spanId);
+        addSpanIdIfResponse(attributes, spanId);
         if (log != null) {
-            log.info(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, spanId), requestRecord);
+            log.i(MessageFormat.format("{0}({1})", REQUEST_SUMMARY, spanId), requestRecord);
         }
 
         try {
             Object responseRecord = joinPoint.proceed();
-            setSpanIdIfResponseWrapper(responseRecord, spanId);
+            addSpanIdIfResponseWrapper(responseRecord, spanId);
 
             if (log != null) {
-                log.info(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, spanId), responseRecord);
+                log.i(MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, spanId), responseRecord);
             }
 
             return responseRecord;
         } catch (Exception e) {
             log.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, spanId), requestRecord, e);
-            HandOverException handOverException = new HandOverException(e, requestRecord, spanId);
-            throw handOverException;
+            throw new HandOverException(e, requestRecord, spanId);
         }
     }
 
-    private void setSpanIdIfResponse(ServletRequestAttributes attributes, String spanId) {
+    private void addSpanIdIfResponse(ServletRequestAttributes attributes, String spanId) {
         HttpServletResponse response = attributes == null ? null : attributes.getResponse();
         if (response != null)
             response.addHeader(ResponseWrapper.SPAN_ID_HEADER, spanId);
     }
 
-    private final static void setSpanIdIfResponseWrapper(Object responseRecord, String traceId) {
+    private final static void addSpanIdIfResponseWrapper(Object responseRecord, String traceId) {
         if (responseRecord instanceof ResponseWrapper) {
             ((ResponseWrapper) responseRecord).setSpanId(traceId);
         }

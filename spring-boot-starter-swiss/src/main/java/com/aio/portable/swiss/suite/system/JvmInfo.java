@@ -68,4 +68,11 @@ public abstract class JvmInfo {
         }
     }
 
+//    public static final ClassLayout parseClass(Class<?> clazz ) {
+//        return ClassLayout.parseClass(clazz);
+//    }
+//
+//    public static final ClassLayout parseInstance(Object clazz) {
+//        return ClassLayout.parseInstance(clazz);
+//    }
 }

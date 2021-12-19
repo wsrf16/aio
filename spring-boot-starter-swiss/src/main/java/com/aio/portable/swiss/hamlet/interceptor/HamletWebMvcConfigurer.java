@@ -94,27 +94,14 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
     @LoadBalanced
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
                 .allowCredentials(true)
+                .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
+//                .exposedHeaders("*")
                 .maxAge(3600);
     }
 
 
-//    @Bean
-    public FilterRegistrationBean corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-//        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        //这里设置优先级最高
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
-    }
+
 }

@@ -1,13 +1,12 @@
 package com.aio.portable.swiss.suite.io;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 import java.net.*;
 import java.nio.channels.Selector;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * Created by York on 2017/11/28.
@@ -218,11 +217,6 @@ public abstract class IOSugar {
     }
 
     public static class Streams {
-        //    public final static String toString(InputStream inputStream, Charset charset) throws IOException {
-//
-//        String result = CharStreams.toString(new InputStreamReader(inputStream, charset));
-//        return result;
-//    }
 
         public final static String toString(InputStream inputStream) {
             return toString(inputStream, StandardCharsets.UTF_8);
@@ -263,7 +257,7 @@ public abstract class IOSugar {
             return toByteArray(fileInputStream);
         }
 
-        public static byte[] toByteArray(InputStream input) throws IOException {
+        public static byte[] toByteArray(InputStream input) {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             copy(input, output);
             return output.toByteArray();
@@ -272,72 +266,95 @@ public abstract class IOSugar {
         public static byte[] toByteArray(InputStream input, int size) throws IOException {
             if (size < 0) {
                 throw new IllegalArgumentException("Size must be equal or greater than zero: " + size);
-            } else if (size == 0) {
+            }
+
+            if (size == 0) {
                 return new byte[0];
-            } else {
-                byte[] data = new byte[size];
-
-                int offset;
-                int readed;
-                for(offset = 0; offset < size && (readed = input.read(data, offset, size - offset)) != -1; offset += readed) {
-                }
-
-                if (offset != size) {
-                    throw new IOException("Unexpected readed size. current: " + offset + ", excepted: " + size);
-                } else {
-                    return data;
-                }
-            }
-        }
-
-        public static byte[] toByteArray(URI uri) throws IOException {
-            return toByteArray(uri.toURL());
-        }
-
-        public static byte[] toByteArray(URL url) throws IOException {
-            URLConnection conn = url.openConnection();
-
-            byte[] var2;
-            try {
-                var2 = toByteArray(conn);
-            } finally {
-                Closeables.close(conn);
             }
 
-            return var2;
+            byte[] data = new byte[size];
+            int offset = 0;
+            int readed;
+
+            while (offset < size && (readed = input.read(data, offset, size - offset)) != EOF) {
+                offset += readed;
+            }
+
+            if (offset != size) {
+                throw new IOException("Unexpected readed size. current: " + offset + ", excepted: " + size);
+            }
+
+            return data;
         }
 
         public static byte[] toByteArray(URLConnection urlConn) throws IOException {
             InputStream inputStream = urlConn.getInputStream();
-
-            byte[] var2;
             try {
-                var2 = toByteArray(inputStream);
+                return IOUtils.toByteArray(inputStream);
             } finally {
                 inputStream.close();
             }
-
-            return var2;
         }
 
-        public static int copy(InputStream input, OutputStream output) throws IOException {
+        public static int copy(InputStream input, OutputStream output) {
             long count = copyLarge(input, output);
-            return count > 2147483647L ? -1 : (int)count;
+            if (count > Integer.MAX_VALUE) {
+                return -1;
+            }
+            return (int) count;
         }
 
-        public static long copyLarge(InputStream input, OutputStream output) throws IOException {
-            return copyLarge(input, output, new byte[4096]);
+        private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+        public static long copyLarge(InputStream input, OutputStream output) {
+            return copyLarge(input, output, new byte[DEFAULT_BUFFER_SIZE]);
         }
 
-        public static long copyLarge(InputStream input, OutputStream output, byte[] buffer) throws IOException {
-            long count = 0L;
+        private static final int EOF = -1;
+        public static long copyLarge(InputStream input, OutputStream output, byte[] buffer) {
+            long count = 0;
+            int n = 0;
+            try {
+                while (EOF != (n = input.read(buffer))) {
+                    output.write(buffer, 0, n);
+                    count += n;
+                }
+            } catch (IOException e) {
+//                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            return count;
+        }
 
-            int n;
-            for(boolean var5 = false; -1 != (n = input.read(buffer)); count += (long)n) {
-                output.write(buffer, 0, n);
+        public static ClonedStream clone(InputStream inputStream) {
+            byte[] buffer = IOSugar.Streams.toByteArray(inputStream);
+            ByteArrayInputStream clonedInputStream = new ByteArrayInputStream(buffer);
+            return new ClonedStream(clonedInputStream, buffer);
+        }
+
+        public static class ClonedStream {
+            private InputStream inputStream;
+            private byte[] bytes;
+
+            public InputStream getInputStream() {
+                return inputStream;
             }
 
-            return count;
+            public void setInputStream(InputStream inputStream) {
+                this.inputStream = inputStream;
+            }
+
+            public byte[] getBytes() {
+                return bytes;
+            }
+
+            public void setBytes(byte[] bytes) {
+                this.bytes = bytes;
+            }
+
+            public ClonedStream(InputStream inputStream, byte[] bytes) {
+                this.inputStream = inputStream;
+                this.bytes = bytes;
+            }
         }
     }
 }

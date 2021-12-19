@@ -43,7 +43,6 @@ public abstract class HamletExceptionAdvice {
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseWrapper handleBizException(Exception input) {
-
         Exception e;
         ResponseWrapper responseWrapper;
 
@@ -67,8 +66,7 @@ public abstract class HamletExceptionAdvice {
             BusinessException businessException = (BusinessException) e;
             log.e(GLOBAL_BUSINESS_EXCEPTION, e.getMessage(), e);
             responseWrapper = ResponseWrapper.build(businessException.getCode(), businessException.getMessage());
-        }
-        else if (e instanceof MethodArgumentNotValidException)
+        } else if (e instanceof MethodArgumentNotValidException)
             responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else {
             log.e(GLOBAL_SYSTEM_EXCEPTION, e);

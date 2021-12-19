@@ -3,6 +3,8 @@ package com.aio.portable.park.controller;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.system.HostInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -55,6 +57,11 @@ public class ToolController {
 
 
     @PostMapping(value = "/uploads", headers = UPLOADS_CONTENT_TYPE)
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "file", dataType = "__File", value = "文件流对象,接收数组格式", required = true)
+            }
+    )
     public List<String> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);

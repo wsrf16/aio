@@ -121,6 +121,19 @@ public class DemoController {
         return MessageFormat.format("lock : {0}", identify);
     }
 
+    @PostMapping("post")
+    public String post(@RequestBody UserInfoEntity entity) {
+        String identify = "aaa";
+
+//        identify = redisLock.tryLock("robot", 60000, 5000);
+//        redisLock.releaseLock("robot");
+//
+//        identify = redisLock.tryLock("robot", 10000L, 10000L);
+//        redisLock.releaseLock("robot");
+
+        return MessageFormat.format("lock : {0}", identify);
+    }
+
 
 //    @Bean
 //    public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

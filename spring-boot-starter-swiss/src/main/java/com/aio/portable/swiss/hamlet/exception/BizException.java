@@ -1,5 +1,8 @@
 package com.aio.portable.swiss.hamlet.exception;
 
+import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.BizStatus;
+
 public class BizException extends RuntimeException implements BusinessException {
     public int getCode() {
         return code;
@@ -21,20 +24,23 @@ public class BizException extends RuntimeException implements BusinessException 
     private int code;
 //    private String message;
 
-    public BizException(int code, String message){
+    public BizException(int code, String message) {
         super(message);
         this.code = code;
     }
 
-    public BizException(int code, Throwable cause){
+    public BizException(int code, Throwable cause) {
         super(cause);
         this.code = code;
     }
 
-    public BizException(int code, String message, Throwable cause){
+    public BizException(int code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;
     }
 
+//    public BizException(BizStatus bizStatus) {
+//        this(bizStatus.getCode(), bizStatus.getMessage());
+//    }
 
 }

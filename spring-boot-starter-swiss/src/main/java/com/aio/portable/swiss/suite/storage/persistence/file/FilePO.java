@@ -2,8 +2,8 @@ package com.aio.portable.swiss.suite.storage.persistence.file;
 
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.io.NIOSugar;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
@@ -32,11 +32,10 @@ public class FilePO implements NodePersistence {
 
     private static Charset charset = StandardCharsets.UTF_8;
 
-//    protected ISerializerSelector serializer = new SerializerSelector(SerializerEnum.SERIALIZE_FORCE_JACKSON);
-    protected SerializerConverter serializerConverter = new SerializerConverters.JacksonConverter();
+    protected StringSerializerAdapter stringSerializerAdapter = SerializerAdapterBuilder.buildJackson();
 
 
-        public final static FilePO singletonInstance(String root, String database) {
+    public final static FilePO singletonInstance(String root, String database) {
         return instance = instance == null ? new FilePO(root, database) : instance;
     }
 

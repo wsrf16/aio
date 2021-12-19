@@ -2,10 +2,15 @@ package com.aio.portable.park.config;
 
 import com.aio.portable.swiss.hamlet.bean.HamletBeanConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -40,19 +45,48 @@ public class BeanConfig extends HamletBeanConfig {
     }
 
 //    @Bean
-//    @Lazy
-//    public PropertySourceBeanDefinitionRegistryPostProcessor propertySourceBeanDefinitionRegistryPostProcessor(ConfigurableEnvironment environment) {
-//        return new PropertySourceBeanDefinitionRegistryPostProcessor(environment) {
-//            @Override
-//            public Object intercept(String key, Object value) {
-//                if (Objects.equals(value, "abc"))
-//                    return ("v" + "222222");
-//                if (Objects.equals(key, "swagger.api-info.title"))
-//                    return (value + "222222");
-//                if (Objects.equals(value, "对外接口在线文档"))
-//                    return (value + "222222");
-//                return value;
-//            }
-//        };
+//    public FilterRegistrationBean filterRegistrationBean() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(new CustomFilter());
+//        registration.addUrlPatterns("/*");
+//        registration.setName("streamFilter");
+//        return registration;
 //    }
+
+
+//    @Bean
+    public FilterRegistrationBean corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+//        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("*");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        registration.setFilter(new CorsFilter(source));
+        registration.addUrlPatterns("/*");
+        registration.setName("streamFilter");
+        return registration;
+    }
+
+//    @Bean
+    public CorsFilter corsFilter1() {
+        //创建CorsConfiguration对象后添加配置
+        CorsConfiguration config = new CorsConfiguration();
+        //是否发送Cookie
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("*");
+        config.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource corsConfigurationSource =
+                new UrlBasedCorsConfigurationSource();
+        corsConfigurationSource.registerCorsConfiguration("/**", config);
+        return new CorsFilter(corsConfigurationSource);
+    }
 }

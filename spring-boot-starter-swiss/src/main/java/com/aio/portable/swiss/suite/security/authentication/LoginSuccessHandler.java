@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     //    private final static String ISSURE = "ladder";
-    private final static String AUTHORIZATION_HEAD = JWTSugar.AUTHORIZATION_HEAD;
+    private final static String AUTHORIZATION_HEAD = JWTSugar.HEAD_VALUE_AUTHORIZATION;
 
     @Autowired
     private JWTTemplate jwtTemplate;

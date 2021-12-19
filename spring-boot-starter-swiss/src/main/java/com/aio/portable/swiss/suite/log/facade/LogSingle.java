@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogBean;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
@@ -43,9 +43,13 @@ public abstract class LogSingle implements LogAction {
 //        this.prefixSupplier = EMPTY_PREFIX;
 //    }
 
-    protected SerializerConverter serializer = new SerializerConverters.JacksonConverter();
+    protected StringSerializerAdapter serializerAdapter() {
+         return SerializerAdapterBuilder.buildSilentJackson();
+    }
 
-    protected SerializerConverter looseSerializer = new SerializerConverters.LongJacksonConverter();
+    protected StringSerializerAdapter looseSerializerAdapter() {
+        return SerializerAdapterBuilder.buildSilentLongJackson();
+    }
 
     protected boolean async = true;
 
@@ -80,6 +84,8 @@ public abstract class LogSingle implements LogAction {
 
     protected abstract void initialPrinter();
 
+
+
     protected void output(Printer printer, String text, LevelEnum level) {
         try {
             if (async) {
@@ -96,15 +102,25 @@ public abstract class LogSingle implements LogAction {
     }
 
     protected void output(Printer printer, LogBean logBean) {
-        String text = logBean.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
-                serializer.serialize(logBean) : looseSerializer.serialize(logBean);
-        output(printer, text, logBean.getLevel());
+        try {
+            String text = logBean.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
+                    serializerAdapter().serialize(logBean) : looseSerializerAdapter().serialize(logBean);
+            output(printer, text, logBean.getLevel());
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.warn(e);
+        }
     }
 
     protected void output(Printer printer, Map<String, Object> logBean, LevelEnum level) {
-        String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
-                serializer.serialize(logBean) : looseSerializer.serialize(logBean);
-        output(printer, text, level);
+        try {
+            String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
+                    serializerAdapter().serialize(logBean) : looseSerializerAdapter().serialize(logBean);
+            output(printer, text, level);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.warn(e);
+        }
     }
 
     public void attachTo(LogBean note) {

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Objects;
 
-@Configuration
+//@Configuration
 public class PropertySourceConvert extends PropertySourceBeanDefinitionRegistryPostProcessor {
     public Object propertyValueConvert(String key, Object value) {
         if (Objects.equals(value, "abc"))

@@ -19,7 +19,7 @@ public class ByteSugar {
 //            objectOutputStream.close();
             byteArrayOutputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return bytes;
@@ -42,7 +42,7 @@ public class ByteSugar {
             e.printStackTrace();
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return obj;

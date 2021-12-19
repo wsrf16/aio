@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.storage.persistence.redis;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
 import com.aio.portable.swiss.sugar.location.PathSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.JacksonSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.storage.persistence.NodePersistence;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -17,7 +17,7 @@ public class RedisPO implements NodePersistence {
 
     private String database;
 
-    protected SerializerConverters.JacksonConverter serializerConverter = new SerializerConverters.JacksonConverter();
+    protected JacksonSerializerAdapterImpl serializerAdapter = new JacksonSerializerAdapterImpl();
 
     public void setDatabase(String database) {
         this.database = database;
@@ -61,7 +61,7 @@ public class RedisPO implements NodePersistence {
     @Override
     public void set(String key, Object value, String... parent) {
         String path = spellPath(key, parent);
-        stringRedisTemplate.opsForValue().set(path, serializerConverter.serialize(value));
+        stringRedisTemplate.opsForValue().set(path, serializerAdapter.serialize(value));
     }
 
     @Override
@@ -97,14 +97,14 @@ public class RedisPO implements NodePersistence {
     public <T> T get(String key, Class<T> clazz, String... parent) {
         String path = spellPath(key, parent);
         String json = stringRedisTemplate.opsForValue().get(path);
-        return serializerConverter.deserialize(json, clazz);
+        return serializerAdapter.deserialize(json, clazz);
     }
 
     @Override
     public <T> T get(String key, TypeReference<T> valueTypeRef, String... parent) {
         String path = spellPath(key, parent);
         String json = stringRedisTemplate.opsForValue().get(path);
-        return serializerConverter.deserialize(json, valueTypeRef);
+        return serializerAdapter.deserialize(json, valueTypeRef);
     }
 
 
@@ -117,14 +117,14 @@ public class RedisPO implements NodePersistence {
     @Override
     public <T> Map<String, T> getChildren(String key, Class<T> clazz, String... parent) {
         List<String> children = getSubKeyPaths(key, parent);
-        Map<String, T> collect = children.stream().collect(Collectors.toMap(c -> getKeyName(c), c -> serializerConverter.deserialize(stringRedisTemplate.opsForValue().get(c), clazz)));
+        Map<String, T> collect = children.stream().collect(Collectors.toMap(c -> getKeyName(c), c -> serializerAdapter.deserialize(stringRedisTemplate.opsForValue().get(c), clazz)));
         return collect;
     }
 
     @Override
     public <T> Map<String, T> getChildren(String key, TypeReference<T> valueTypeRef, String... parent) {
         List<String> children = getSubKeyPaths(key, parent);
-        Map<String, T> collect = children.stream().collect(Collectors.toMap(c -> getKeyName(c), c -> serializerConverter.deserialize(stringRedisTemplate.opsForValue().get(c), valueTypeRef)));
+        Map<String, T> collect = children.stream().collect(Collectors.toMap(c -> getKeyName(c), c -> serializerAdapter.deserialize(stringRedisTemplate.opsForValue().get(c), valueTypeRef)));
         return collect;
     }
 

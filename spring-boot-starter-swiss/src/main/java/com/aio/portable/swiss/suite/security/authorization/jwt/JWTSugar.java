@@ -16,8 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public abstract class JWTSugar {
-    public final static String AUTHORIZATION_HEAD = HttpHeaders.AUTHORIZATION;
-    public final static String BEAR_PREFIX = "Bearer";
+    public final static String HEAD_VALUE_AUTHORIZATION = HttpHeaders.AUTHORIZATION;
+    public final static String HEAD_VALUE_BEAR = "Bearer";
 
 
     /**

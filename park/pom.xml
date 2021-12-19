@@ -458,6 +458,14 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.16</version>
+<!--            <scope>provided</scope>-->
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <profiles>

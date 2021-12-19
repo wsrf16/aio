@@ -199,7 +199,6 @@ public class LogHub extends LogBundle implements LogHubProxy {
                         break;
                     }
                     return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
-//                    return _method.getReturnType().isAssignableFrom() ?  invoke;
                 }
 
             });

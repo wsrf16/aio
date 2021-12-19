@@ -26,4 +26,8 @@ public class RestTemplateTest {
         ResponseEntity<String> stringResponseEntity2 = RestTemplater.get(skipSSLRestTemplate, "https://10.124.154.8/a/login", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
     }
 
+
+    public void todo() {
+
+    }
 }

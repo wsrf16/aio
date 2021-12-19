@@ -17,6 +17,7 @@ import org.springframework.util.ClassUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.function.Consumer;
 
 //import org.springframework.cglib.proxy.InvocationHandler;
 //import org.springframework.cglib.proxy.Proxy;
@@ -30,11 +31,29 @@ public class DynamicProxySugar {
         return (T) enhancer.create();
     }
 
-    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor... methodInterceptors) {
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor, Consumer<Enhancer> enhancerProcess) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setInterceptDuringConstruction(false);
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallback(methodInterceptor);
+        enhancerProcess.accept(enhancer);
+        return (T) enhancer.create();
+    }
+
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
         enhancer.setSuperclass(clazz);
         enhancer.setCallbacks(methodInterceptors);
+        return (T) enhancer.create();
+    }
+
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors, Consumer<Enhancer> enhancerProcess) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setInterceptDuringConstruction(false);
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallbacks(methodInterceptors);
+        enhancerProcess.accept(enhancer);
         return (T) enhancer.create();
     }
 

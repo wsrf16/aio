@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.net.tcp.http;
 
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverter;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerConverters;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
@@ -63,19 +63,19 @@ public class HttpSwift {
 //    }
 
 
-    protected static SerializerConverter serializer;
+    protected static StringSerializerAdapter stringSerializerAdapter;
 
-    public final static SerializerConverter getSerializer() {
-        return serializer;
+    public final static StringSerializerAdapter getSerializerAdapter() {
+        return stringSerializerAdapter;
     }
 
-    public final static void setSerializer(SerializerConverter serializer) {
-        HttpSwift.serializer = serializer;
+    public final static void setSerializerAdapter(StringSerializerAdapter stringSerializerAdapter) {
+        HttpSwift.stringSerializerAdapter = stringSerializerAdapter;
     }
 
     static {
 //        serializer = new SerializerSelector()::serialize;
-        serializer = new SerializerConverters.JacksonConverter();
+        stringSerializerAdapter = SerializerAdapterBuilder.buildJackson();
     }
 
     public final static UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
@@ -90,7 +90,7 @@ public class HttpSwift {
     }
 
     public final static StringEntity buildJsonObjectEntity(Object body, Charset charset) {
-        StringEntity entity = new StringEntity(serializer.serialize(body), charset);
+        StringEntity entity = new StringEntity(stringSerializerAdapter.serialize(body), charset);
         entity.setContentType("application/json");
         return entity;
     }

@@ -1,23 +1,32 @@
 package com.aio.portable.swiss.suite.storage.cache;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 // Redisson
 public class RedisLock {
     private final static String KEY_NAME = "REDIS_LOCK";
     private RedisConnectionFactory redisConnectionFactory;
+    private StringRedisTemplate redisTemplate;
 
     public RedisLock(RedisConnectionFactory redisConnectionFactory) {
         this.redisConnectionFactory = redisConnectionFactory;
+    }
+
+    public RedisLock(StringRedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 
     private static String getKeyName(String key) {
@@ -38,30 +47,62 @@ public class RedisLock {
      * @param tryTimeout
      * @return
      */
-    public String tryLock(String key, long expireMillisecond, long tryTimeout) {
+//    public synchronized String tryLock(String key, long expireMillisecond, long tryTimeout) {
+//        if (!StringUtils.hasText(key))
+//            throw new IllegalArgumentException(key);
+//
+//        String identifier = IDS.uuid();
+//        String lockKey = getKeyName(key);
+//        long end = System.currentTimeMillis() + tryTimeout;
+//
+//        RedisConnection redisConnection = redisConnectionFactory.getConnection();
+//        while (true) {
+////            if (redisConnection.setNX(lockKeyBytes, identifier.getBytes())) {
+////                redisConnection.expire(lockKeyBytes, lockExpire);
+////            }
+//            Boolean b = redisConnection.set(lockKey.getBytes(), identifier.getBytes(), Expiration.milliseconds(expireMillisecond), RedisStringCommands.SetOption.SET_IF_PRESENT);
+//            if (b) {
+//                break;
+//            } else {
+//                if (System.currentTimeMillis() > end) {
+//                    identifier = IDS.uuid();
+//                    break;
+//                } else {
+//                    try {
+//                        Thread.sleep(10);
+//                    } catch (InterruptedException e) {
+//                        Thread.currentThread().interrupt();
+//                    }
+//                }
+//            }
+//        }
+//        RedisConnectionUtils.releaseConnection(redisConnection, redisConnectionFactory, false);
+//        return identifier;
+//    }
+
+    /**
+     * tryLock
+     *
+     * @param key
+     * @param expireMillisecond
+     * @param tryTimeout
+     * @return
+     */
+    public synchronized String tryLock(String key, long expireMillisecond, long tryTimeout) {
         if (!StringUtils.hasText(key))
             throw new IllegalArgumentException(key);
 
         String identifier = IDS.uuid();
         String lockKey = getKeyName(key);
-        byte[] lockKeyBytes = lockKey.getBytes();
         long lockExpire = expireMillisecond / 1000;
         long end = System.currentTimeMillis() + tryTimeout;
 
-        RedisConnection redisConnection = redisConnectionFactory.getConnection();
         while (true) {
-//            if (redisConnection.setNX(lockKeyBytes, identifier.getBytes())) {
-//                redisConnection.expire(lockKeyBytes, lockExpire);
-//            }
-            Boolean b = redisConnection.set(lockKeyBytes, identifier.getBytes(), Expiration.milliseconds(expireMillisecond), RedisStringCommands.SetOption.SET_IF_PRESENT);
-            if (b) {
+            Boolean b = redisTemplate.opsForValue().setIfAbsent(lockKey, identifier, expireMillisecond, TimeUnit.MILLISECONDS);
+            if (System.currentTimeMillis() > end) {
+                identifier = IDS.uuid();
                 break;
-                // 返回-1代表key没有设置超时时间，为key设置一个超时时间
-            } else if (redisConnection.ttl(lockKeyBytes) == -1) {
-                redisConnection.expire(lockKeyBytes, lockExpire);
             } else {
-                if (System.currentTimeMillis() > end)
-                    break;
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -69,7 +110,6 @@ public class RedisLock {
                 }
             }
         }
-        RedisConnectionUtils.releaseConnection(redisConnection, redisConnectionFactory, false);
         return identifier;
     }
 

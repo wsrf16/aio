@@ -46,6 +46,7 @@
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
         <canal.version>1.1.5</canal.version>
         <guava.version>[24.1.1,)</guava.version>
+        <redisson.version>3.16.6</redisson.version>
 
 <!--        <zookeeper.version>3.6.2</zookeeper.version>-->
 <!--        <commons-lang3.version>3.8.1</commons-lang3.version>-->
@@ -594,6 +595,25 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.openjdk.jol/jol-core -->
+<!--        <dependency>-->
+<!--            <groupId>org.openjdk.jol</groupId>-->
+<!--            <artifactId>jol-core</artifactId>-->
+<!--            <version>0.16</version>-->
+<!--&lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 

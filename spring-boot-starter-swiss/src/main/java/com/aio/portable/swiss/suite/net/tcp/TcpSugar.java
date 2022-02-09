@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class TcpSugar {
-    private final static Log log = LogFactory.getLog(TcpSugar.class);
+    private static final Log log = LogFactory.getLog(TcpSugar.class);
 
     /**
      * 测试telnet 机器端口的连通性

@@ -17,27 +17,23 @@ import java.util.Date;
 import java.util.Map;
 //import com.nimbusds.jwt.JWTParser;
 
-public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
+public class JWTTemplate implements JWTAction, Base64TokenAlgorithm, JWTExplicit {
     private JWTConfig jwtConfig;
 
     private Algorithm algorithm;
 
-
-
-    public JWTConfig getJwtConfig() {
-        return jwtConfig;
+    @Override
+    public synchronized Algorithm getAlgorithm() {
+        return algorithm = algorithm == null ? newAlgorithm(jwtConfig) : algorithm;
     }
 
     @Override
-    public Algorithm getAlgorithm() {
-        return algorithm;
+    public Boolean getExplicit() {
+        return this.jwtConfig.getExplicit();
     }
-
-
 
     public JWTTemplate(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
-        this.algorithm = newAlgorithm(jwtConfig);
     }
 
     private static Algorithm newAlgorithm(JWTConfig jwtConfig) {
@@ -94,7 +90,7 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
         return algorithm;
     }
 
-    public JWTCreator.Builder createBuilder() {
+    public final JWTCreator.Builder createBuilder() {
         return jwtConfig.createBuilder();
     }
 
@@ -115,10 +111,21 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
         return sign(builder);
     }
 
+    public String sign(String issuer, int expireMinutes) {
+        JWTCreator.Builder builder = createBuilder();
+        builder.withIssuer(issuer);
+
+        JWTExpiredDate expiredDate = JWTExpiredDate.getExpiredMinutes(expireMinutes);
+        builder.withIssuedAt(expiredDate.getIssuedAt());
+        builder.withExpiresAt(expiredDate.getExpiresAt());
+        return sign(builder);
+    }
+
     public String sign(String issuer, Map<String, Object> addition) {
         JWTCreator.Builder builder = createBuilder();
         builder.withIssuer(issuer);
-        addition.entrySet().forEach(c -> {
+        Map<String, Object> enhanced = explicit(addition);
+        enhanced.entrySet().forEach(c -> {
             String key = c.getKey();
             Object value = c.getValue();
             JWTSugar.withClaim(builder, key, value);
@@ -128,7 +135,8 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
 
     public String sign(Map<String, Object> addition) {
         JWTCreator.Builder builder = createBuilder();
-        addition.entrySet().forEach(c -> {
+        Map<String, Object> enhanced = explicit(addition);
+        enhanced.entrySet().forEach(c -> {
             String key = c.getKey();
             Object value = c.getValue();
             JWTSugar.withClaim(builder, key, value);
@@ -136,16 +144,30 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
         return sign(builder);
     }
 
-    public String sign(String issuer, int expireMinutes, Map<String, Object> addition) {
+    public String sign(Map<String, Object> addition, int expireMinutes) {
+        JWTCreator.Builder builder = createBuilder();
+        JWTExpiredDate expiredDate = JWTExpiredDate.getExpiredMinutes(expireMinutes);
+        builder.withIssuedAt(expiredDate.getIssuedAt());
+        builder.withExpiresAt(expiredDate.getExpiresAt());
+
+        Map<String, Object> enhanced = explicit(addition);
+        enhanced.entrySet().forEach(c -> {
+            String key = c.getKey();
+            Object value = c.getValue();
+            JWTSugar.withClaim(builder, key, value);
+        });
+        return sign(builder);
+    }
+
+    public String sign(String issuer, Map<String, Object> addition, int expireMinutes) {
         JWTCreator.Builder builder = createBuilder();
         builder.withIssuer(issuer);
-        Calendar now = DateTimeSugar.CalendarUtils.now();
-        Date issuedAt = now.getTime();
-        builder.withIssuedAt(issuedAt);
-        Date expiresAt = JWTSugar.getExpiredMinutes(now, expireMinutes);
-        builder.withExpiresAt(expiresAt);
+        JWTExpiredDate expiredDate = JWTExpiredDate.getExpiredMinutes(expireMinutes);
+        builder.withIssuedAt(expiredDate.getIssuedAt());
+        builder.withExpiresAt(expiredDate.getExpiresAt());
 
-        addition.entrySet().forEach(c -> {
+        Map<String, Object> explicit = explicit(addition);
+        explicit.entrySet().forEach(c -> {
             String key = c.getKey();
             Object value = c.getValue();
             JWTSugar.withClaim(builder, key, value);
@@ -165,5 +187,11 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm {
     @Override
     public DecodedJWT parse(String token) {
         return Base64TokenAlgorithm.super.parse(token);
+    }
+
+    public Map<String, Object> parseForMap(String token) {
+        DecodedJWT parsed = this.parse(token);
+        Map<String, Object> map = forMap(parsed);
+        return map;
     }
 }

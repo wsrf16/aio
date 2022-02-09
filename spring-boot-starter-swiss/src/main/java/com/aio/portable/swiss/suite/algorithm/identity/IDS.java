@@ -5,7 +5,7 @@ import com.aio.portable.swiss.global.Constant;
 import java.util.UUID;
 
 public abstract class IDS {
-    public final static String uuid() {
+    public static final String uuid() {
         String uuid = UUID.randomUUID().toString().replace("-", Constant.EMPTY);
         return uuid;
     }

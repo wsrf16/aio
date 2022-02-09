@@ -21,7 +21,7 @@ package com.aio.portable.swiss.suite.storage.cache;
 // */
 //public class CacheRoom {
 //    String key;
-//    final static String KEYISNULL = "the key can not be empty or null.";
+//    static final String KEYISNULL = "the key can not be empty or null.";
 //    static String ROOT_DIRECTORY = Constant.CURRENT_DIRECTORY;
 //    static String CACHE_DIRECTORY_NAME = "local-cache";
 //    static String EXTENSION = "cache";

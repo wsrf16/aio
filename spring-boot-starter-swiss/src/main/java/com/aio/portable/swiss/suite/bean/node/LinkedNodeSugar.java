@@ -17,7 +17,7 @@ public class LinkedNodeSugar {
      * @param <T>
      * @return
      */
-    public final static <T> ReferenceLinkedNode<T> buildOfList(List<T> list) {
+    public static final <T> ReferenceLinkedNode<T> buildOfList(List<T> list) {
         Class<ReferenceLinkedNode> returnClazz = ReferenceLinkedNode.class;
         ReferenceLinkedNode<T> first;
         if (list.size() > 0) {
@@ -52,7 +52,7 @@ public class LinkedNodeSugar {
      * @param <ID>
      * @return
      */
-    public final static <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list) {
+    public static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list) {
         return buildOfRelationLinkedNode(list, RelationEquals.OBJECTS_EQUALS);
     }
 
@@ -63,7 +63,7 @@ public class LinkedNodeSugar {
      * @param <ID>
      * @return
      */
-    private final static <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list, RelationEquals relationEquals) {
+    private static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list, RelationEquals relationEquals) {
         List<RelationLinkedNode<ITEM, ID>> tails = Utils.getTailList(list, relationEquals);
         List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
 
@@ -100,11 +100,11 @@ public class LinkedNodeSugar {
 
 
     private static class Utils {
-        private final static <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
             return getTailList(list, RelationEquals.OBJECTS_EQUALS);
         }
 
-        private final static <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
             List<T> nullNextList = list.stream().filter(c -> c.tail()).collect(Collectors.toList());
             List<T> aloneNextList = list.stream()
                     .filter(c -> !c.tail())
@@ -114,23 +114,23 @@ public class LinkedNodeSugar {
             return tailList;
         }
 
-        private final static <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
             return getPreviousList(list, RelationEquals.OBJECTS_EQUALS);
         }
 
-        private final static <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, RelationEquals relationEquals) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, RelationEquals relationEquals) {
             List<T> full = list.stream().collect(Collectors.toList());
             List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
             List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextId(), head.getId()))).collect(Collectors.toList());
             return headList;
         }
 
-        private final static <T extends RelationLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final RelationEquals relationEquals) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final RelationEquals relationEquals) {
             T t = list.stream().filter(c -> relationEquals.equals(c.getId(), id)).findFirst().orElse(null);
             return t;
         }
 
-        private final static <T extends RelationLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final RelationEquals relationEquals) {
+        private static final <T extends RelationLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final RelationEquals relationEquals) {
             T t = list.stream().filter(c -> relationEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
             return t;
         }

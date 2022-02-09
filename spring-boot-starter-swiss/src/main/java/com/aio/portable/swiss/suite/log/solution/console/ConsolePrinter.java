@@ -64,7 +64,7 @@ public class ConsolePrinter implements Printer {
     }
 
 
-    //    final static String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
+    //    static final String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
     protected String nowTime() {
         String dateTime = DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_NORMAL_LONGEST, new Date());
 //        String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());
@@ -141,7 +141,7 @@ public class ConsolePrinter implements Printer {
 
     }
 
-    private final static void println(String output) {
+    private static final void println(String output) {
         System.out.println(output);
     }
 

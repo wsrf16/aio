@@ -1,10 +1,7 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.algorithm.identity.SerialNumber;
 import com.aio.portable.swiss.suite.io.listen.WatchServiceThread;
 import org.junit.Test;
-
-import java.nio.file.Paths;
 
 public class WatchServiceThreadTest {
     @Test

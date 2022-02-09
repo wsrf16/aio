@@ -6,7 +6,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 public abstract class HamletAspectConfigurer {
-    private final static String[] METHODS = new String[] { "GET", "POST", "PUT", "DELETE" };
+    private static final String[] METHODS = new String[] { "GET", "POST", "PUT", "DELETE" };
 
 
     @Bean

@@ -44,11 +44,11 @@ public class TreeNode<T> {
 //    }
 
 
-    public final static  <T> TreeNode<T> toBinaryTreeNode(T[] array) {
+    public static final  <T> TreeNode<T> toBinaryTreeNode(T[] array) {
         return toBinaryTreeNode(Arrays.asList(array));
     }
 
-    public final static  <T> TreeNode<T> toBinaryTreeNode(List<T> list) {
+    public static final  <T> TreeNode<T> toBinaryTreeNode(List<T> list) {
         TreeNode<T> root = new TreeNode<>(list.get(0));
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);

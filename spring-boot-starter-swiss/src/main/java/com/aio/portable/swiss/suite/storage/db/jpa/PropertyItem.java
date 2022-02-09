@@ -55,7 +55,7 @@ class PropertyItem {
 
 
 
-    public final static Map<String, PropertyItem> getNamePropertyItemMap(Object bean) {
+    public static final Map<String, PropertyItem> getNamePropertyItemMap(Object bean) {
         Class<?> clazz = bean.getClass();
         Map<String, PropertyItem> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                 .filter(c -> !c.getName().equals("class"))

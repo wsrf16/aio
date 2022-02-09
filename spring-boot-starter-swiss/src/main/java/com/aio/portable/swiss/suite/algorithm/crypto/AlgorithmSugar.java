@@ -26,7 +26,7 @@ public abstract class AlgorithmSugar {
         ECDSA512
     }
 
-    public final static Algorithm newHMAC(HMAC hmac, String secret) {
+    public static final Algorithm newHMAC(HMAC hmac, String secret) {
         Algorithm algorithm;
         switch (hmac) {
             case HMAC512:
@@ -44,7 +44,7 @@ public abstract class AlgorithmSugar {
         return algorithm;
     }
 
-    public final static Algorithm newRSA(RSA rsa, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+    public static final Algorithm newRSA(RSA rsa, RSAPublicKey publicKey, RSAPrivateKey privateKey) {
         Algorithm algorithm;
         switch (rsa) {
             case RSA512:
@@ -62,7 +62,7 @@ public abstract class AlgorithmSugar {
         return algorithm;
     }
 
-    public final static Algorithm newECDSA(ECDSA ecdsa, ECPublicKey publicKey, ECPrivateKey privateKey) {
+    public static final Algorithm newECDSA(ECDSA ecdsa, ECPublicKey publicKey, ECPrivateKey privateKey) {
         Algorithm algorithm;
         switch (ecdsa) {
             case ECDSA512:

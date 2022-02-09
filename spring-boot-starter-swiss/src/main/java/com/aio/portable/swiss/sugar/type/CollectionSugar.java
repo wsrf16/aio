@@ -17,37 +17,34 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class CollectionSugar {
+    public static final <T> T[] removeEnd(T[] tables) {
+        T[] remain = Arrays.copyOf(tables, tables.length - 1);
+        return remain;
+    }
+
+    public static final <T> T getEnd(T[] tables) {
+        T end = tables[tables.length - 1];
+        return end;
+    }
+
+    public static final boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
+//        return ObjectUtils.isEmpty(array);
+    }
+
     /**
      * 判断集合为空
      *
      * @param collection
      * @return
      */
-    public final static boolean isEmpty(Collection<?> collection) {
+    public static final boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
 //        return org.springframework.util.CollectionUtils.isEmpty(collection);
     }
 
-    public final static <T> T[] removeEnd(T[] tables) {
-        T[] remain = Arrays.copyOf(tables, tables.length - 1);
-        return remain;
-    }
 
-    public final static <T> T getEnd(T[] tables) {
-        T end = tables[tables.length - 1];
-        return end;
-    }
-
-    public final static <T> List<T> asList(T... a) {
-        return new ArrayList<>(Arrays.asList(a));
-    }
-
-    public final static boolean isEmpty(Object[] array) {
-        return array == null || array.length == 0;
-//        return ObjectUtils.isEmpty(array);
-    }
-
-    public final static long longOf(Object[] array) {
+    public static final long longOf(Object[] array) {
         return array == null ? 0 : array.length;
     }
 
@@ -79,7 +76,7 @@ public abstract class CollectionSugar {
      * @param collection2
      * @return
      */
-    public final static <T> Stream<T> except(final Collection<T> collection1, final Collection<T> collection2) {
+    public static final <T> Stream<T> except(final Collection<T> collection1, final Collection<T> collection2) {
         Stream<T> stream = collection1.stream().filter(item -> !collection2.contains(item));
         return stream;
     }
@@ -124,6 +121,23 @@ public abstract class CollectionSugar {
         return stream;
     }
 
+    public static <T> boolean anyEquals(final Collection<T> source, final Collection<T> target) {
+        boolean anyMatch = source.stream().anyMatch(src -> target.contains(src));
+        return anyMatch;
+    }
+
+    /**
+     * containsAll
+     * @param source
+     * @param target
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean containsAll(final Collection<T> source, final Collection<T> target) {
+//        boolean exist = source.stream().anyMatch(src -> target.contains(src));
+//        return exist;
+        return (source == target) || (source != null && source.containsAll(target));
+    }
 
 
 //    /**
@@ -133,7 +147,7 @@ public abstract class CollectionSugar {
 //     * @param collection2
 //     * @return
 //     */
-//    public final static <T> List<T> concat(Collection<T> collection1, Collection<T> collection2) {
+//    public static final <T> List<T> concat(Collection<T> collection1, Collection<T> collection2) {
 //        List<T> _list1 = collection1.stream().collect(Collectors.toList());
 //        List<T> _list2 = collection2.stream().collect(Collectors.toList());
 //        _list1.addAll(_list2);
@@ -148,28 +162,12 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public final static <T> List<T> concat(Collection<T>... collections) {
-        List<T> _list = new ArrayList<>();
+    public static final <T> List<T> concat(Collection<T>... collections) {
+        List<T> list = new ArrayList<>();
         for (Collection<T> collection : collections) {
-            if (collection != null)
-                _list.addAll(collection.stream().collect(Collectors.toList()));
+            list.addAll(collection);
         }
-        return _list;
-    }
-
-//    public final static <T> T[] concat(T... arrays) {
-//        List<T> _list = new ArrayList<>();
-//        ArrayUtils.addAll()
-//        for (Collection<T> collection : arrays) {
-//            if (collection != null)
-//                _list.addAll(collection.stream().collect(Collectors.toList()));
-//        }
-//        return _list;
-//    }
-
-
-    public static <T> T[] clone(T[] array) {
-        return array == null ? null : array.clone();
+        return list;
     }
 
     /**
@@ -178,9 +176,13 @@ public abstract class CollectionSugar {
      * @param collections
      * @return
      */
-    public final static <T> List<T> union(Collection<T> collections) {
-        List<T> _list = concat(collections).stream().distinct().collect(Collectors.toList());
-        return _list;
+    public static final <T> Stream<T> union(Collection<T>... collections) {
+        return concat(collections).stream().distinct();
+    }
+
+
+    public static <T> T[] clone(T[] array) {
+        return array == null ? null : array.clone();
     }
 
     /**
@@ -191,7 +193,7 @@ public abstract class CollectionSugar {
      * @param <K>
      * @param <V>
      */
-    public final static <K, V> void replaceKey(Map<K, V> map, K oldKey, K newKey) {
+    public static final <K, V> void replaceKey(Map<K, V> map, K oldKey, K newKey) {
         map.put(newKey, map.remove(oldKey));
     }
 
@@ -203,14 +205,15 @@ public abstract class CollectionSugar {
      * @param <V>
      * @return
      */
-    public final static <K, V> Map<K, V> concatIfAbsent(Map<K, V>... maps) {
-        Map<K, V> _map = new HashMap<>();
-        for (Map<K, V> map : maps) {
-            map.entrySet().forEach(c -> {
-                _map.putIfAbsent(c.getKey(), c.getValue());
-            });
-        }
-        return _map;
+    public static final <K, V> Map<K, V> concatIfAbsent(Map<K, V>... maps) {
+//        Map<K, V> map = new HashMap<>();
+//        for (Map<K, V> item : maps) {
+//            item.entrySet().forEach(c -> {
+//                map.putIfAbsent(c.getKey(), c.getValue());
+//            });
+//        }
+//        return map;
+        return concatIfAbsent((item) -> true, maps);
     }
 
     /**
@@ -220,15 +223,15 @@ public abstract class CollectionSugar {
      * @param <V>
      * @return
      */
-    public final static <K, V> Map<K, V> concatIfAbsent(Predicate<Map.Entry<K, V>> predicate, Map<K, V>... maps) {
-        Map<K, V> _map = new HashMap<>();
-        for (Map<K, V> map : maps) {
-            map.entrySet().forEach(c -> {
+    public static final <K, V> Map<K, V> concatIfAbsent(Predicate<Map.Entry<K, V>> predicate, Map<K, V>... maps) {
+        Map<K, V> map = new HashMap<>();
+        for (Map<K, V> item : maps) {
+            item.entrySet().forEach(c -> {
                 if (predicate.test(c))
-                    _map.putIfAbsent(c.getKey(), c.getValue());
+                    map.putIfAbsent(c.getKey(), c.getValue());
             });
         }
-        return _map;
+        return map;
     }
 
     /**
@@ -256,17 +259,6 @@ public abstract class CollectionSugar {
     }
 
     /**
-     * containsAll
-     * @param range
-     * @param piece
-     * @param <T>
-     * @return
-     */
-    public static  <T> boolean containsAll(List<T> range, List<T> piece){
-        return (range == piece) || (range != null && range.containsAll(piece));
-    }
-
-    /**
      * falseIfRepeat
      *
      * @param getPropertyFunction User::getName
@@ -286,7 +278,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public final static <T> List<T> copy(List<? extends T> src) {
+    public static final <T> List<T> copy(List<? extends T> src) {
         List<T> dest = new ArrayList<>(Arrays.asList((T[]) new Object[src.size()]));
         java.util.Collections.copy(dest, src);
         return dest;
@@ -299,7 +291,7 @@ public abstract class CollectionSugar {
 //     * @param <T>
 //     * @return
 //     */
-//    public final static <T> T[] concat(IntFunction<T[]> generator, T[] src, T... dest) {
+//    public static final <T> T[] concat(IntFunction<T[]> generator, T[] src, T... dest) {
 ////        int length1 = src.length;
 ////        int length2 = dest.length;
 ////
@@ -338,7 +330,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T[] concat(T[] array1, T... array2) {
+    public static final <T> T[] concat(T[] array1, T... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -370,7 +362,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public final static <S, T> List<T> cloneByProperties(Collection<S> srcCollection, Class<T> targetItem) {
+    public static final <S, T> List<T> cloneByProperties(Collection<S> srcCollection, Class<T> targetItem) {
         List<T> dest = new ArrayList<>();
         for (S s : srcCollection) {
             T t = null;
@@ -387,12 +379,20 @@ public abstract class CollectionSugar {
     }
 
 
+    public static final <T> List<T> arrayToList(Object source) {
+        return CollectionUtils.arrayToList(source);
+    }
 
-//    public final static List tolist(Iterator iterator) {
-//        return IteratorUtils.toList(iterator);
-//    }
+    public static <T> ArrayList<T> newArrayList(T... ts) {
+        ArrayList<T> tArrayList = new ArrayList<>();
+        for (T t: ts) {
+            tArrayList.add(t);
+        }
+        return tArrayList;
+    }
 
-    private final static <T> List<T> toList(Iterator<T> iterator, int estimatedSize) {
+
+    private static final <T> List<T> toList(Iterator<T> iterator, int estimatedSize) {
         if (iterator == null) {
             throw new NullPointerException("Iterator must not be null");
         } else if (estimatedSize < 1) {
@@ -408,46 +408,43 @@ public abstract class CollectionSugar {
         }
     }
 
-    public final static Object[] toArray(Object source) {
+    public static final Object[] toArray(Object source) {
         return ObjectUtils.toObjectArray(source);
     }
 
-    public final static <T> List<T> arrayToList(Object source) {
-        return CollectionUtils.arrayToList(source);
+//    public static final List tolist(Iterator iterator) {
+//        return IteratorUtils.toList(iterator);
+//    }
+
+    public static final <T> List<T> toList(Iterator<T> iterator) {
+        return toList(iterator, 128);
     }
 
-    public final static <T> List<T> toList(Iterator<T> iterator) {
-        return toList(iterator, 10);
+    public static final <T> List<T> asList(T... a) {
+        return new ArrayList<>(Arrays.asList(a));
     }
 
-    public final static <T> List<T> toList(T... array) {
-//        List<T> list = new ArrayList<>(Arrays.asList((T[]) new Object[array.length]));
-        List<T> list = new ArrayList<>(Arrays.asList(array));
-        return list;
-    }
-
-
-    public final static <T> ArrayList<T> toList(Enumeration<T> e) {
+    public static final <T> ArrayList<T> toList(Enumeration<T> e) {
         return java.util.Collections.list(e);
     }
 
-    public final static <T> Enumeration<T> toEnumeration(final Collection<T> c) {
+    public static final <T> Enumeration<T> toEnumeration(final Collection<T> c) {
         return java.util.Collections.enumeration(c);
     }
 
-//    public final static Object[] toArray(List<?> list) {
+//    public static final Object[] toArray(List<?> list) {
 //        return list.stream().toArray();
 //    }
 
-    public final static <T> T[] toArray(@NotNull List<T> list, IntFunction<T[]> generator) {
+    public static final <T> T[] toArray(@NotNull List<T> list, IntFunction<T[]> generator) {
         return list.stream().toArray(generator);
     }
 
-    public final static <T> T[] toArrayNullable(@NotNull List<T> list) {
+    public static final <T> T[] toArrayNullable(@NotNull List<T> list) {
         return list.size() < 1 ? null : toArray(list, (Class<T>)list.get(0).getClass());
     }
 
-    public final static <T> T[] toArray(@NotNull List<T> list, @NotNull Class<T> componentType) {
+    public static final <T> T[] toArray(@NotNull List<T> list, @NotNull Class<T> componentType) {
         T[] array = (T[])Array.newInstance(componentType, list.size());
         int size = list.size();
         for (int i = 0; i < size; i++) {
@@ -463,16 +460,16 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T[] toArray(List<T> list, T[] t) {
+    public static final <T> T[] toArray(List<T> list, T[] t) {
         return list.toArray(t);
     }
 
-    public final static <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+    public static final <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
         HashMap<K, V> map = stream.collect(HashMap::new, (_map, _entity) -> _map.put(keyMapper.apply(_entity), valueMapper.apply(_entity)), HashMap::putAll);
         return map;
     }
 
-    public final static <T> List<T> flatNextToList(T t, Function<T, T> getNextFunction) {
+    public static final <T> List<T> flatNextToList(T t, Function<T, T> getNextFunction) {
         List<T> list = new ArrayList<>();
         while (t != null) {
             list.add(t);
@@ -481,13 +478,13 @@ public abstract class CollectionSugar {
         return list;
     }
 
-    public final static <T> Map<T, Long> groupCount(List<T> list) {
+    public static final <T> Map<T, Long> groupCount(List<T> list) {
         Map<T, Long> map = list.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         return map;
     }
 
-    public final static String join(List<String> list, String delimiter) {
+    public static final String join(List<String> list, String delimiter) {
         return list.stream().collect(Collectors.joining(delimiter));
     }
 

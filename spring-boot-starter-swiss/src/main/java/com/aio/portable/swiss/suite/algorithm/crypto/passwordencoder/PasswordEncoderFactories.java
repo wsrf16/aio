@@ -9,7 +9,7 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class PasswordEncoderFactories {
-    public final static Map<String, PasswordEncoder> encoders = new HashMap();
+    public static final Map<String, PasswordEncoder> encoders = new HashMap();
 
     static {
         encoders.put("bcrypt", new BCryptPasswordEncoder());
@@ -25,17 +25,17 @@ public class PasswordEncoderFactories {
         encoders.put("MD5Base64", new MD5Base64PasswordEncoder());
     }
 
-    public final static PasswordEncoder createDelegatingPasswordEncoder() {
+    public static final PasswordEncoder createDelegatingPasswordEncoder() {
         String encodingId = "bcrypt";
         return createDelegatingPasswordEncoder(encodingId);
     }
 
-    public final static PasswordEncoder createDelegatingPasswordEncoder(String encodingId) {
+    public static final PasswordEncoder createDelegatingPasswordEncoder(String encodingId) {
         return new DelegatingPasswordEncoder(encodingId, encoders);
     }
 
 
-    public final static PasswordEncoder createDelegatingPasswordEncoderMD5Base64() {
+    public static final PasswordEncoder createDelegatingPasswordEncoderMD5Base64() {
         return new DelegatingPasswordEncoder("MD5Base64", encoders);
     }
 }

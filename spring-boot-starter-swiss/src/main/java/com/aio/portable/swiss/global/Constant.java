@@ -9,54 +9,54 @@ import java.nio.charset.StandardCharsets;
 
 public class Constant {
     public class StorageUnit {
-        public final static long KB = 1024;
-        public final static long MB = 1 * KB * KB;
-        public final static long GB = 1 * KB * MB;
-        public final static long TB = 1 * KB * GB;
-        public final static long PB = 1 * KB * TB;
-        public final static long EB = 1 * KB * PB;
-        public final static long ZB = 1 * KB * EB;
-        public final static long YB = 1 * KB * ZB;
-        public final static long NB = 1 * KB * YB;
-        public final static long DB = 1 * KB * NB;
+        public static final long KB = 1024;
+        public static final long MB = 1 * KB * KB;
+        public static final long GB = 1 * KB * MB;
+        public static final long TB = 1 * KB * GB;
+        public static final long PB = 1 * KB * TB;
+        public static final long EB = 1 * KB * PB;
+        public static final long ZB = 1 * KB * EB;
+        public static final long YB = 1 * KB * ZB;
+        public static final long NB = 1 * KB * YB;
+        public static final long DB = 1 * KB * NB;
     }
 
     public class TimeUnit {
-        public final static long MilliSecond = 1;
-        public final static long Second = 1000 * MilliSecond;
-        public final static long Minute = 60 * Second;
-        public final static long Hour = 60 * Minute;
-        public final static long Day = 24 * Hour;
-        public final static long Week = 7 * Day;
+        public static final long MilliSecond = 1;
+        public static final long Second = 1000 * MilliSecond;
+        public static final long Minute = 60 * Second;
+        public static final long Hour = 60 * Minute;
+        public static final long Day = 24 * Hour;
+        public static final long Week = 7 * Day;
     }
 
 
-    public final static String LIBRARY_DIRECTORY = "Lib";
-    public final static String CURRENT_DIRECTORY = System.getProperty("user.dir");
-    public final static String CLASS_PATH = System.getProperty("java.class.path");
+    public static final String LIBRARY_DIRECTORY = "Lib";
+    public static final String CURRENT_DIRECTORY = System.getProperty("user.dir");
+    public static final String CLASS_PATH = System.getProperty("java.class.path");
     // \r\n
-    public final static String LINE_SEPARATOR = System.getProperty("line.separator");
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     // ; :
-    public final static String PATH_SEPARATOR = System.getProperty("line.separator");
-    //public final static String FILE_SEPARATOR = System.getProperty("file.separator");
+    public static final String PATH_SEPARATOR = System.getProperty("line.separator");
+    //public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
     // \
-    public final static String FILE_SEPARATOR = File.separator;
-    public final static String EMPTY = "";
+    public static final String FILE_SEPARATOR = File.separator;
+    public static final String EMPTY = "";
 
     public static class OriginEnum {
-        public final static Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-        public final static HttpStatus DEFAULT_HTTPSTATUS = HttpStatus.OK;
-        public final static MediaType DEFAULT_MEDIATYPE = MediaType.APPLICATION_JSON;
+        public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+        public static final HttpStatus DEFAULT_HTTPSTATUS = HttpStatus.OK;
+        public static final MediaType DEFAULT_MEDIATYPE = MediaType.APPLICATION_JSON;
     }
 
 //    class Directory {
-//        public final static String ExecutingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-//        public final static String EntryAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-//        public final static String CallingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location);
-//        public final static String CurrentDomainBaseDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
-//        public final static String EnvironmentCurrentDirectory = System.Environment.CURRENT_DIRECTORY;
-//        public final static String CURRENT_DIRECTORY = System.IO.Directory.GetCurrentDirectory();
+//        public static final String ExecutingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+//        public static final String EntryAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+//        public static final String CallingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location);
+//        public static final String CurrentDomainBaseDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+//        public static final String EnvironmentCurrentDirectory = System.Environment.CURRENT_DIRECTORY;
+//        public static final String CURRENT_DIRECTORY = System.IO.Directory.GetCurrentDirectory();
 
 //        public String DirectoryOf(System.Reflection.Assembly assembly) {
 //            String directory = System.IO.Path.GetDirectoryName(assembly.Location);

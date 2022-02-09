@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by York on 2017/11/23.
  */
 public class KafkaLog extends LogSingle {
-    private final static Log log = LogFactory.getLog(KafkaLog.class);
+    private static final Log log = LogFactory.getLog(KafkaLog.class);
     protected KafkaLogProperties properties;
 
     public KafkaLogProperties getProperties() {

@@ -1,14 +1,15 @@
 package com.aio.portable.swiss.suite.log.factory;
 
-import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.global.Constant;
+import com.aio.portable.swiss.suite.log.facade.LogHub;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LogHubPool {
     private static LogHubPool instance = new LogHubPool();
 
-    private HashMap<String, LogHub> storage = new HashMap<>();
+    private Map<String, LogHub> storage = new ConcurrentHashMap<>();
 
     public LogHubFactory logHubFactory;
 
@@ -23,7 +24,7 @@ public class LogHubPool {
     private LogHubPool() {
     }
 
-    public final static LogHubPool importLogHubFactory(LogHubFactory logHubFactory) {
+    public static final LogHubPool importLogHubFactory(LogHubFactory logHubFactory) {
         if (instance.getLogHubFactory() == null)
             synchronized (LogHubPool.class) {
                 if (instance.getLogHubFactory() == null) {

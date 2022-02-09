@@ -1,49 +1,64 @@
 package com.aio.portable.swiss.suite.algorithm.encode;
 
+import com.aio.portable.swiss.spring.web.Base64MultipartFile;
+import com.aio.portable.swiss.sugar.type.StreamSugar;
+import com.aio.portable.swiss.suite.io.IOSugar;
 import org.springframework.util.Base64Utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public abstract class SpringBase64Convert {
-    public final static byte[] encode(byte[] bytes) {
+    public static final byte[] encode(byte[] bytes) {
         return Base64Utils.encode(bytes);
     }
 
-    public final static byte[] decode(byte[] bytes) {
+    public static final byte[] decode(byte[] bytes) {
         return Base64Utils.decode(bytes);
     }
 
 
 
-    public final static byte[] encode(String text) {
+    public static final byte[] encode(String text) {
         return Base64Utils.encode(text.getBytes());
     }
 
-    public final static String encodeToString(byte[] bytes) {
+    public static final String encodeToString(byte[] bytes) {
         return Base64Utils.encodeToString(bytes);
     }
 
-    public final static String encodeToString(String text) {
+    public static final String encodeToString(String text) {
         return Base64Utils.encodeToString(text.getBytes());
     }
 
-    public final static byte[] decode(String text) {
+    public static final byte[] decode(String text) {
         return Base64Utils.decode(text.getBytes());
     }
 
-    public final static String decodeToString(byte[] bytes) {
+    public static final String decodeToString(byte[] bytes) {
         return Base64Utils.encodeToString(bytes);
     }
 
-    public final static String decodeToString(String text) {
+    public static final String decodeToString(String text) {
         return Base64Utils.encodeToString(text.getBytes());
     }
 
-    public final static String convertHexToBase64(String text) {
+    public static final String convertHexToBase64(String text) {
         String base64 = SpringBase64Convert.encodeToString(HexConvert.decode(text));
         return base64;
     }
 
-    public final static String convertBase64ToHex(String text) {
+    public static final String convertBase64ToHex(String text) {
         String hex = HexConvert.encode(SpringBase64Convert.decode(text));
         return hex;
+    }
+
+    public static final Base64MultipartFile decodeToMultipartFile(String text) {
+        return Base64MultipartFile.toMultipartFile(text);
+    }
+
+    public static final String encodeToString(File file) {
+        return SpringBase64Convert.encodeToString(IOSugar.Streams.toByteArray(file));
     }
 }

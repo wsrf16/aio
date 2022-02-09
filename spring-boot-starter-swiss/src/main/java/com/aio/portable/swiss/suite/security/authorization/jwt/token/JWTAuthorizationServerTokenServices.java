@@ -6,6 +6,7 @@ import com.aio.portable.swiss.suite.algorithm.adapter.Transcodable;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTExpiredDate;
 import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * JWTAuthorizationServerTokenServices (DefaultTokenServices)
@@ -53,57 +55,49 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
         this.tokenStore = tokenStore;
     }
 
-    static class TokenCase {
+    static class TokenWrapper {
         private String token;
-        private JWTExpiredDate jwtExpiredDate;
+        private Date expiresAt;
+
+        public TokenWrapper(String token, Date expiresAt) {
+            this.token = token;
+            this.expiresAt = expiresAt;
+        }
 
         public String getToken() {
             return token;
         }
 
-        public JWTExpiredDate getJwtExpiredDate() {
-            return jwtExpiredDate;
-        }
-
-        public TokenCase(String token, JWTExpiredDate jwtExpiredDate) {
-            this.token = token;
-            this.jwtExpiredDate = jwtExpiredDate;
+        public Date getExpiresAt() {
+            return expiresAt;
         }
     }
 
-    private final static TokenCase createToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+    private static final TokenWrapper createToken(JWTTemplate jwtTemplate, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
-        JWTExpiredDate validDate = jwtManager.getJwtConfig().createValidDate();
-        Date issuedAt = validDate.getIssuedAt();
-        Date expiresAt = validDate.getExpiresAt();
-
-        JWTCreator.Builder builder = jwtManager.createBuilder();
-        builder.withIssuer(issuer);
-        if (validDate.isValid()) {
-            builder.withIssuedAt(issuedAt);
-            builder.withExpiresAt(expiresAt);
-        }
-        String token = jwtManager.sign(builder);
-        return new TokenCase(token, validDate);
+        String token = jwtTemplate.sign(issuer);
+        DecodedJWT parse = jwtTemplate.parse(token);
+        Date expiresAt = parse.getExpiresAt();
+        return new TokenWrapper(token, expiresAt);
     }
 
-    private final static DefaultOAuth2AccessToken createAccessToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
-        TokenCase tokenCase = createToken(jwtManager, authentication);
+    private static final DefaultOAuth2AccessToken createAccessToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+        TokenWrapper tokenWrapper = createToken(jwtManager, authentication);
 
-        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(tokenCase.getToken());
-        accessToken.setExpiration(tokenCase.getJwtExpiredDate().getExpiresAt());
+        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(tokenWrapper.getToken());
+        accessToken.setExpiration(tokenWrapper.getExpiresAt());
         accessToken.setScope(authentication.getOAuth2Request().getScope());
         return accessToken;
     }
 
-    private final static DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
-        TokenCase tokenCase = createToken(jwtManager, authentication);
+    private static final DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+        TokenWrapper tokenWrapper = createToken(jwtManager, authentication);
 
-        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(tokenCase.getToken(), tokenCase.getJwtExpiredDate().getExpiresAt());
+        DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(tokenWrapper.getToken(), tokenWrapper.getExpiresAt());
         return refreshToken;
     }
 
-    private final static DefaultOAuth2AccessToken createAccessTokenAndBindRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+    private static final DefaultOAuth2AccessToken createAccessTokenAndBindRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken accessToken = createAccessToken(jwtManager, authentication);
         DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(jwtManager, authentication);
         accessToken.setRefreshToken(refreshToken);

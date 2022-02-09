@@ -19,7 +19,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public final static ServerBootstrap newServerBootstrap(Class<? extends ServerChannel> channelClass, ChannelHandler... childHandlerArrays) {
+    public static final ServerBootstrap newServerBootstrap(Class<? extends ServerChannel> channelClass, ChannelHandler... childHandlerArrays) {
         EventLoopGroup acceptGroup = new NioEventLoopGroup();
         EventLoopGroup transferGroup = new NioEventLoopGroup();
 
@@ -43,7 +43,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public final static void bindNewServerBootstrap(SocketAddress localAddress, ChannelHandler... childHandlerArrays) throws InterruptedException {
+    public static final void bindNewServerBootstrap(SocketAddress localAddress, ChannelHandler... childHandlerArrays) throws InterruptedException {
         ServerBootstrap server = newServerBootstrap(NioServerSocketChannel.class, childHandlerArrays);
         ChannelFuture channelFuture = null;
         try {
@@ -62,7 +62,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public final static Bootstrap newClientBootstrap(Class<? extends Channel> channelClass, ChannelHandler... childHandlerArrays) {
+    public static final Bootstrap newClientBootstrap(Class<? extends Channel> channelClass, ChannelHandler... childHandlerArrays) {
         EventLoopGroup group = new NioEventLoopGroup();
 
         Bootstrap client = new Bootstrap()

@@ -2,6 +2,14 @@ package com.aio.portable.swiss.suite.bytecode.bytebuddy;
 
 import com.aio.portable.swiss.suite.bytecode.bytebuddy.interceptorpoint.MethodInterceptorPoint;
 import com.aio.portable.swiss.suite.bytecode.bytebuddy.interceptorpoint.TypeInterceptorPoint;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.NotFoundException;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.FieldInfo;
+import javassist.bytecode.annotation.Annotation;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
@@ -18,13 +26,38 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public abstract class AgentBuilderSugar {
+
+
+    /**
+     * 功能，动态的给类属性添加注解
+     *
+     * @param className 类名
+     * @param attributeName 类属性
+     * @param typeName 注解类型
+     */
+    public static void addAnnotation(String className, String attributeName, String typeName) {
+        try {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass ct = pool.get(className);
+            CtField cf = ct.getField(attributeName);
+            FieldInfo fieldInfo = cf.getFieldInfo();
+            AnnotationsAttribute attribute = (AnnotationsAttribute) fieldInfo.getAttribute(AnnotationsAttribute.visibleTag);
+            ConstPool cp = fieldInfo.getConstPool();
+            Annotation annotation = new Annotation(typeName, cp);
+            attribute.addAnnotation(annotation);
+        } catch (NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     /**
      * attachInterceptor
      * @param agentBuilder
      * @param typeInterceptorPointCollection
      * @return
      */
-    public final static AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> typeInterceptorPointCollection) {
+    public static final AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> typeInterceptorPointCollection) {
         for (TypeInterceptorPoint item : typeInterceptorPointCollection) {
             agentBuilder = agentBuilder.type(item.getTypeMatcher()).transform(item.getTransformer());
         }
@@ -39,7 +72,7 @@ public abstract class AgentBuilderSugar {
      * @param <T>
      * @return
      */
-    public final static <T> DynamicType.Builder<T> attachInterceptor(DynamicType.Builder<T> builder, Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
+    public static final <T> DynamicType.Builder<T> attachInterceptor(DynamicType.Builder<T> builder, Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
         for (MethodInterceptorPoint item : methodInterceptorPointCollection) {
             builder = builder.method(item.getMethodMatcher()).intercept(item.getImplementation());
         }
@@ -52,7 +85,7 @@ public abstract class AgentBuilderSugar {
      * @param methodInterceptorPointCollection
      * @return
      */
-    public final static AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
+    public static final AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
         AgentBuilder.Transformer transformer = new AgentBuilder.Transformer() {
             @Override
             public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder,
@@ -72,7 +105,7 @@ public abstract class AgentBuilderSugar {
 //     * @param inst
 //     * @param elementMatcherCollection
 //     */
-//    public final static void interceptorToMethodInterceptorPoint(Collection<MethodInterceptorPoint> methodInterceptorPointCollection, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
+//    public static final void interceptorToMethodInterceptorPoint(Collection<MethodInterceptorPoint> methodInterceptorPointCollection, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
 //        AgentBuilder.Transformer transformer = buildTransformer(methodInterceptorPointCollection);
 //
 //        Collection<TypeInterceptorPoint> typeInterceptorCollection = new ArrayList<>();
@@ -90,7 +123,7 @@ public abstract class AgentBuilderSugar {
      * @param inst
      * @param elementMatcherCollection
      */
-    public final static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
+    public static final void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
         Collection<MethodInterceptorPoint> methodInterceptorPointCollection = new ArrayList<>();
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), implementation));
 
@@ -112,7 +145,7 @@ public abstract class AgentBuilderSugar {
      * @param inst
      * @param elementMatchers
      */
-    public final static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatchers) {
+    public static final void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatchers) {
         Collection<ElementMatcher<? super TypeDescription>> elementMatcherCollection = Arrays.asList(elementMatchers);
         interceptorToAnyMethod(implementation, inst, elementMatcherCollection);
     }
@@ -122,7 +155,7 @@ public abstract class AgentBuilderSugar {
          * buildListener
          * @return
          */
-    public final static AgentBuilder.Listener buildListener() {
+    public static final AgentBuilder.Listener buildListener() {
         AgentBuilder.Listener listener = new AgentBuilder.Listener() {
             @Override
             public void onDiscovery(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {

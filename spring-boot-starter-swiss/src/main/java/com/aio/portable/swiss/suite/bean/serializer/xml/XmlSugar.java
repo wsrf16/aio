@@ -18,7 +18,7 @@ public abstract class XmlSugar {
         CamelCase,
     }
 
-    private final static ObjectMapper mapper = new XmlMapper();
+    private static final ObjectMapper mapper = new XmlMapper();
 
     static {
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);//
@@ -64,7 +64,7 @@ public abstract class XmlSugar {
 
 
 
-    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
+    public static final ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
         ObjectMapper mapper = new Jackson2ObjectMapperBuilder().build()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

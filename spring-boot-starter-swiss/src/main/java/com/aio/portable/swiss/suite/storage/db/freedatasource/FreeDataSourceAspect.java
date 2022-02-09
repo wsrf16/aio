@@ -13,8 +13,8 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 public abstract class FreeDataSourceAspect {
-    private final static Log log = LogFactory.getLog(FreeDataSourceAspect.class);
-    public final static String POINTCUT = "pointcut()";
+    private static final Log log = LogFactory.getLog(FreeDataSourceAspect.class);
+    public static final String POINTCUT = "pointcut()";
 
     @Pointcut("@annotation(com.aio.portable.swiss.suite.storage.db.freedatasource.TargetDataSource)" +
             " || @within(com.aio.portable.swiss.suite.storage.db.freedatasource.TargetDataSource)")
@@ -48,7 +48,7 @@ public abstract class FreeDataSourceAspect {
     }
 
 
-    private final static String DEFAULT_DATASOURCE_KEY = "default";
+    private static final String DEFAULT_DATASOURCE_KEY = "default";
     @Around("pointcut()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         before(proceedingJoinPoint);

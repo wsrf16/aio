@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class NginxConfig {
     static class Match {
-        private final static BiFunction<NgxEntry, List<String>, Boolean> allInMatch = (entry, _condition) -> {
+        private static final BiFunction<NgxEntry, List<String>, Boolean> allInMatch = (entry, _condition) -> {
             if (entry instanceof NgxBlock) {
                 NgxBlock ngxBlock = (NgxBlock) entry;
                 boolean b = _condition.stream().allMatch(cond -> {
@@ -39,7 +39,7 @@ public class NginxConfig {
      * @param condition
      * @return
      */
-    public final static List<NgxBlock> findBlockWithAllInMatch(NgxConfig ngxConfig, List<String> params, List<String> condition) {
+    public static final List<NgxBlock> findBlockWithAllInMatch(NgxConfig ngxConfig, List<String> params, List<String> condition) {
         List<NgxBlock> all = ngxConfig.findAll(NgxBlock.class, params.toArray(new String[params.size()])).stream().map(c -> (NgxBlock) c).collect(Collectors.toList());
         List<NgxBlock> filter = all.stream().filter(entry -> Match.allInMatch.apply(entry, condition)).collect(Collectors.toList());
         return filter;
@@ -53,7 +53,7 @@ public class NginxConfig {
      * @param match
      * @return
      */
-    public final static List<NgxBlock> findBlock(NgxConfig ngxConfig, List<String> params, Predicate<NgxEntry> match) {
+    public static final List<NgxBlock> findBlock(NgxConfig ngxConfig, List<String> params, Predicate<NgxEntry> match) {
         List<NgxBlock> all = ngxConfig.findAll(NgxBlock.class, params.toArray(new String[params.size()])).stream().map(c -> (NgxBlock) c).collect(Collectors.toList());
         List<NgxBlock> filter = all.stream().filter(entry -> match.test(entry)).collect(Collectors.toList());
         return filter;
@@ -65,7 +65,7 @@ public class NginxConfig {
      * @param ngxConfig
      * @return
      */
-    public final static String dumps(NgxConfig ngxConfig) {
+    public static final String dumps(NgxConfig ngxConfig) {
         String dump = new NgxDumper(ngxConfig).dump();
         return dump;
     }
@@ -77,7 +77,7 @@ public class NginxConfig {
      * @param output
      * @throws IOException
      */
-    public final static void dump(NgxConfig ngxConfig, Path output) throws IOException {
+    public static final void dump(NgxConfig ngxConfig, Path output) throws IOException {
         String dump = new NgxDumper(ngxConfig).dump();
         byte[] bytes = dump.getBytes(StandardCharsets.UTF_8);
         Files.write(output, bytes, StandardOpenOption.CREATE);

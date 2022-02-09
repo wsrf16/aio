@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericSugar {
-    public final static List<Type> findParameterizedType(Class<?> child) {
+    public static final List<Type> findParameterizedType(Class<?> child) {
         Class<?> parameterizedTypeReferenceSubclass = findParameterizedTypeReferenceSubclass(child);
         // 获取父类的泛型类 ParameterizedTypeReference<具体类型>
         Type type = parameterizedTypeReferenceSubclass.getGenericSuperclass();
@@ -19,7 +19,7 @@ public abstract class GenericSugar {
         return Arrays.asList(actualTypeArguments);
     }
 
-    private final static Class<?> findParameterizedTypeReferenceSubclass(Class<?> child) {
+    private static final Class<?> findParameterizedTypeReferenceSubclass(Class<?> child) {
         Class<?> parent = child.getSuperclass();
         if (Object.class == parent) {
             throw new IllegalStateException("Expected ParameterizedTypeReference superclass");

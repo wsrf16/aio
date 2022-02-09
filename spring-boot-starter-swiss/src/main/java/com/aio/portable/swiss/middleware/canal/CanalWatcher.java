@@ -9,7 +9,7 @@ import org.apache.juli.logging.LogFactory;
 import java.util.function.Consumer;
 
 public class CanalWatcher {
-    private final static Log log = LogFactory.getLog(CanalWatcher.class);
+    private static final Log log = LogFactory.getLog(CanalWatcher.class);
 
     private CanalConnector connector;
     private final Consumer<SqlLog> handler;

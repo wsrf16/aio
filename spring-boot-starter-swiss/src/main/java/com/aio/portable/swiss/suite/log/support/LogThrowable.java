@@ -9,7 +9,7 @@ public class LogThrowable {
         setException(e);
     }
 
-    public final static LogThrowable build(Throwable e) {
+    public static final LogThrowable build(Throwable e) {
         return e == null ? null : new LogThrowable(e);
     }
 

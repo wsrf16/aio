@@ -20,17 +20,17 @@
 //        this(StackTraceSugar.Previous.getClassName());
 //    }
 //
-////    public final static Log4JLog build() {
+////    public static final Log4JLog build() {
 ////        String name = StackTraceSugar.Previous.getClassName();
 ////        return build(name);
 ////    }
 ////
-////    public final static Log4JLog build(Class clazz) {
+////    public static final Log4JLog build(Class clazz) {
 ////        String name = clazz.toString();
 ////        return build(name);
 ////    }
 ////
-////    public final static Log4JLog build(String name) {
+////    public static final Log4JLog build(String name) {
 ////        Log4JLog log4jLogger = new Log4JLog(name);
 ////        log4jLogger.logger = Logger.getLogger(name);
 ////        return log4jLogger;

@@ -2,8 +2,8 @@
 
 
 function mkdirLog() {
-  if [[ ! -d $log_dir ]]; then
-    mkdir $log_dir
+  if [[ ! -d ${log_dir} ]]; then
+    mkdir ${log_dir}
   else
     if [[ -f "${log_file_gc_latest}" ]]; then
       cat ${log_file_gc_latest} >>${log_file_gc_total}
@@ -67,7 +67,7 @@ function captureProcessLine() {
 function markProcess() {
   process_line=$(captureProcessLine $1)
 
-  echo $process_line >>$log_dir/process.log
+  echo $process_line >>${log_dir}/process.log
 }
 
 function getPid() {
@@ -92,8 +92,8 @@ function isRunning() {
 
 function run() {
   touch ${log_file}
-  #  tail -n ${log_remain_line} ${log_file} > $log_dir/tmp
-  #  mv -f $log_dir/tmp ${log_file}
+  #  tail -n ${log_remain_line} ${log_file} > ${log_dir}/tmp
+  #  mv -f ${log_dir}/tmp ${log_file}
   tail -n ${log_remain_line} ${log_file} >${log_file}
 
   echo -e "$ \033[33mjava $param -jar $1 \033[0m"
@@ -315,17 +315,18 @@ function get_param_dep() {
   echo $param_dep
 }
 
+# 不设HeapDumpPath，dump出的文件默认在/tomcat_home/bin目录下
 function get_param_jvm() {
   param_jvm="-XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
   if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:${log_file_gc_latest}"
+    param_jvm="${param_jvm} -Xloggc:${log_file_gc_latest} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${log_dir}"
   elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
-    param_jvm="$param_jvm -Xlog:gc* -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc:file=${log_file_gc_latest}:time,pid,level,tags"
+    param_jvm="${param_jvm} -Xlog:gc*  -Xlog:gc:file=${log_file_gc_latest}:time,pid,level,tags-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${log_dir}"
   else
     echo "sorry! jdk is error."
     exit 1
   fi
-  echo $param_jvm
+  echo ${param_jvm}
 }
 
 
@@ -372,13 +373,13 @@ else
   fi
 fi
 jar_filename=$(getFullFilename $jar_file)
-sh_file="$sh_dir/$self_filename"
+sh_file="${sh_dir}/$self_filename"
 jar_dir=$(getDirectory ${jar_file})
 log_dir=${jar_dir}/log
 log_file=/dev/null
-log_file=$log_dir/service.log
-log_file_gc_latest=$log_dir/gc_latest.log
-log_file_gc_total=$log_dir/gc_total.log
+log_file=${log_dir}/service.log
+log_file_gc_latest=${log_dir}/gc_latest.log
+log_file_gc_total=${log_dir}/gc_total.log
 
 
 param_jvm=$(get_param_jvm)

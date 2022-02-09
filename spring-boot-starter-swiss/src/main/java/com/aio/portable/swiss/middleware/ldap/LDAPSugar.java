@@ -23,7 +23,7 @@ public abstract class LDAPSugar {
 //     * @param password
 //     * @return
 //     */
-//    public final static Boolean authentication(LdapTemplate ldapTemplate, String dn, String password) {
+//    public static final Boolean authentication(LdapTemplate ldapTemplate, String dn, String password) {
 //        DirContext dirContext = null;
 //        Boolean b;
 //        try {
@@ -39,13 +39,13 @@ public abstract class LDAPSugar {
 //        return b;
 //    }
 
-    public final static boolean authenticateByUId(LdapTemplate ldapTemplate, String base, String uid, String password) {
+    public static final boolean authenticateByUId(LdapTemplate ldapTemplate, String base, String uid, String password) {
         EqualsFilter filter = new EqualsFilter("uid", uid);
         boolean authenticate = ldapTemplate.authenticate(base, filter.toString(), password);
         return authenticate;
     }
 
-    public final static boolean authenticate(LdapTemplate ldapTemplate, String base, String filter, String password) {
+    public static final boolean authenticate(LdapTemplate ldapTemplate, String base, String filter, String password) {
         boolean authenticate = ldapTemplate.authenticate(base, filter, password);
         return authenticate;
     }
@@ -59,7 +59,7 @@ public abstract class LDAPSugar {
      * @param <T>
      * @return
      */
-    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, AttributesMapper<T> mapper) {
+    public static final <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, AttributesMapper<T> mapper) {
         List<T> list = ldapTemplate.search(containerCriteria, mapper);
         return list;
     }
@@ -74,7 +74,7 @@ public abstract class LDAPSugar {
      * @param <T>
      * @return
      */
-    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
+    public static final <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
             Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.toNameClassMap(clazz);
             nameClass.entrySet().forEach(prop -> {
@@ -105,13 +105,13 @@ public abstract class LDAPSugar {
      * @param <T>
      * @return
      */
-    public final static <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz) {
+    public static final <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz) {
         T t = ClassSugar.newInstance(clazz);
         return search(ldapTemplate, containerCriteria, clazz, t);
     }
 
 
-    public final static <T> List<T> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName, Class<T> clazz) {
+    public static final <T> List<T> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName, Class<T> clazz) {
         ContainerCriteria containerCriteria = LdapQueryBuilder.query()
                 .where("sAMAccountName").is(samAccountName);
 
@@ -119,12 +119,12 @@ public abstract class LDAPSugar {
         return search;
     }
 
-    public final static List<LDAPAccount> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName) {
+    public static final List<LDAPAccount> searchBySamAccountName(LdapTemplate ldapTemplate, String samAccountName) {
         List<LDAPAccount> search = LDAPSugar.searchBySamAccountName(ldapTemplate, samAccountName, LDAPAccount.class);
         return search;
     }
 
-//    public final static LdapContextSource newLdapContextSource(LdapProperties properties) {
+//    public static final LdapContextSource newLdapContextSource(LdapProperties properties) {
 //            LdapContextSource source = new LdapContextSource();
 //            source.setUserDn(properties.getUsername());
 //            source.setPassword(properties.getPassword());
@@ -135,7 +135,7 @@ public abstract class LDAPSugar {
 //        return source;
 //    }
 //
-//    public final static LdapTemplate newLdapTemplate(LdapContextSource contextSource) {
+//    public static final LdapTemplate newLdapTemplate(LdapContextSource contextSource) {
 ////        Map<String, Object> config = new HashMap();
 ////        config.put("java.naming.referral", "follow");
 ////        contextSource.setBaseEnvironmentProperties(config);

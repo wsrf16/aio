@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.sugar;
 
 public abstract class StackTraceSugar {
-    private final static int CURRENT_STACK_INDEX_THREAD = 3;
-    private final static int CURRENT_STACK_INDEX_EXCEPTION = 2;
+    private static final int CURRENT_STACK_INDEX_THREAD = 3;
+    private static final int CURRENT_STACK_INDEX_EXCEPTION = 2;
 
-    private final static int PREVIOUS_STACK_INDEX_THREAD = CURRENT_STACK_INDEX_THREAD + 1;
-    private final static int PREVIOUS_STACK_INDEX_EXCEPTION = CURRENT_STACK_INDEX_EXCEPTION + 1;
+    private static final int PREVIOUS_STACK_INDEX_THREAD = CURRENT_STACK_INDEX_THREAD + 1;
+    private static final int PREVIOUS_STACK_INDEX_EXCEPTION = CURRENT_STACK_INDEX_EXCEPTION + 1;
 
     public static StackTraceElement[] getStackTraceElementByThread() {
         return Thread.currentThread().getStackTrace();

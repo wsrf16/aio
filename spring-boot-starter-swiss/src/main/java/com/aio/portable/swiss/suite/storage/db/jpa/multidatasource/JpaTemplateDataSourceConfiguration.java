@@ -20,21 +20,21 @@ import javax.sql.DataSource;
 //@EnableJpaRepositories(basePackages = {JpaTemplateDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = JpaTemplateDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = JpaTemplateDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 class JpaTemplateDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
-    public final static String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
-    public final static String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
-    private final static String SPECIAL_NAME = "third";
-    private final static String PERSISTENCE_UNIT = "persistenceUnit";
+    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
+    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
+    private static final String SPECIAL_NAME = "third";
+    private static final String PERSISTENCE_UNIT = "persistenceUnit";
 
-    protected final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
-    protected final static String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
+    protected static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    protected static final String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
 
-    protected final static String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
-    protected final static String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
-    protected final static String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
+    protected static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
+    protected static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
+    protected static final String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
 
-    protected final static String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
-    protected final static String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
-    protected final static String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
+    protected static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
+    protected static final String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
+    protected static final String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
 
 
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")

@@ -20,12 +20,12 @@ public abstract class PackageSugar {
      * @param clazz
      * @return
      */
-    public final static String getImplementationVersion(Class<?> clazz){
+    public static final String getImplementationVersion(Class<?> clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
     }
 
-//    public final static String getImplementationVersion(){
+//    public static final String getImplementationVersion(){
 //        String ver = Package.getPackage("java.lang").getImplementationVersion();
 //        return ver;
 //    }
@@ -37,7 +37,7 @@ public abstract class PackageSugar {
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public final static List<String> getClassNameList(String packageName) throws IOException {
+    public static final List<String> getClassNameList(String packageName) {
         String packagePath = packageName.replace(".", "/");
         List<URL> urlList = ResourceSugar.ByClassLoader.getResourceURLs(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
@@ -61,12 +61,12 @@ public abstract class PackageSugar {
         return classList;
     }
 
-//    private final static String DOT = ".";
-//    private final static String EXT_CLASS = "class";
-    private final static String EXT_DOT_CLASS = ".class";
-    private final static String EXT_JAR = "jar";
-    private final static String EXT_DOT_JAR = ".jar";
-    private final static String DIR_CLASSES = "classes";
+//    private static final String DOT = ".";
+//    private static final String EXT_CLASS = "class";
+    private static final String EXT_DOT_CLASS = ".class";
+    private static final String EXT_JAR = "jar";
+    private static final String EXT_DOT_JAR = ".jar";
+    private static final String DIR_CLASSES = "classes";
 
 
     /**
@@ -74,7 +74,7 @@ public abstract class PackageSugar {
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    public final static List<String> getClassNameByPath(String packagePath) {
+    public static final List<String> getClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -111,25 +111,30 @@ public abstract class PackageSugar {
      * @return
      * @throws IOException
      */
-    public final static List<String> getClassNameByJar(String packageURLInJar) throws IOException {
-        String[] jarInfo = packageURLInJar.split("!");
-        String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
+    public static final List<String> getClassNameByJar(String packageURLInJar) {
+        try {
+            String[] jarInfo = packageURLInJar.split("!");
+            String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
 //        jarFilePath = UrlDecode.getURLDecode(jarFilePath);
-        String packagePath = jarInfo[1].substring(1);
+            String packagePath = jarInfo[1].substring(1);
 
-        JarFile jarFile = new JarFile(jarPath);
-        Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
-        List<JarEntry> jarEntryList = Collections.list(jarEntryEnumeration);
-        List<String> classList = jarEntryList.stream().filter(c -> {
-            String entryName = c.getName();
-            return entryName.endsWith(EXT_DOT_CLASS) && entryName.startsWith(packagePath);
-        }).map(c -> {
-            String entryName = c.getName();
-            String className = entryName.substring(0, entryName.lastIndexOf(EXT_DOT_CLASS)).replace("/", ".");
-            return className;
-        }).collect(Collectors.toList());
+            JarFile jarFile = new JarFile(jarPath);
+            Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
+            List<JarEntry> jarEntryList = Collections.list(jarEntryEnumeration);
+            List<String> classList = jarEntryList.stream().filter(c -> {
+                String entryName = c.getName();
+                return entryName.endsWith(EXT_DOT_CLASS) && entryName.startsWith(packagePath);
+            }).map(c -> {
+                String entryName = c.getName();
+                String className = entryName.substring(0, entryName.lastIndexOf(EXT_DOT_CLASS)).replace("/", ".");
+                return className;
+            }).collect(Collectors.toList());
 
-        return classList;
+            return classList;
+        } catch (IOException e) {
+//            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -138,7 +143,7 @@ public abstract class PackageSugar {
      * @param annotations
      * @return
      */
-    public final static List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
+    public static final List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
         return ClassScanner.scan(basePackages, annotations);
     }
 
@@ -148,7 +153,7 @@ public abstract class PackageSugar {
      * @param annotations
      * @return
      */
-    public final static List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
+    public static final List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
         return ClassScanner.scan(basePackages, annotations);
     }
 

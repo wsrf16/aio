@@ -4,30 +4,11 @@ import com.aio.portable.swiss.hamlet.swagger.Swagger2Builder;
 import com.aio.portable.swiss.hamlet.swagger.Swagger3Builder;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger2Properties;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger3Properties;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMethod;
-import springfox.documentation.RequestHandler;
-import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.RequestParameterBuilder;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 //@Configuration
 @ConditionalOnClass(Docket.class)

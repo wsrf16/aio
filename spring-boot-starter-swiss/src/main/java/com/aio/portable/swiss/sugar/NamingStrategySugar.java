@@ -23,10 +23,10 @@ public class NamingStrategySugar {
 
     private static class Camel {
         public static boolean isCaseInsensitive = false;
-        public final static char UNDER_LINE = '_';
-        public final static char DASH = '-';
+        public static final char UNDER_LINE = '_';
+        public static final char DASH = '-';
 
-        public final static String format(String name) {
+        public static final String format(String name) {
             if (!StringUtils.hasText(name))
                 return name;
 
@@ -48,7 +48,7 @@ public class NamingStrategySugar {
             return name;
         }
 
-        private final static boolean isUnderscoreRequired(char before, char current, char after) {
+        private static final boolean isUnderscoreRequired(char before, char current, char after) {
             return Character.isLowerCase(before) &&
                     ((current == UNDER_LINE) && (current == DASH)) &&
                     Character.isLowerCase(after);
@@ -57,10 +57,10 @@ public class NamingStrategySugar {
 
     private static class Pascal {
         public static boolean isCaseInsensitive = false;
-        public final static char UNDER_LINE = '_';
-        public final static char DASH = '-';
+        public static final char UNDER_LINE = '_';
+        public static final char DASH = '-';
 
-        public final static String format(String name) {
+        public static final String format(String name) {
             name = Camel.format(name);
             return name.substring(0, 1).toUpperCase() + name.substring(1);
         }
@@ -68,10 +68,10 @@ public class NamingStrategySugar {
 
     private static class Snake {
         public static boolean isCaseInsensitive = true;
-        public final static char UNDER_LINE = '_';
-        public final static char DASH = '-';
+        public static final char UNDER_LINE = '_';
+        public static final char DASH = '-';
 
-        public final static String format(String name) {
+        public static final String format(String name) {
             if (!StringUtils.hasText(name))
                 return name;
 
@@ -90,7 +90,7 @@ public class NamingStrategySugar {
             return name;
         }
 
-        private final static boolean isUnderscoreRequired(char before, char current, char after) {
+        private static final boolean isUnderscoreRequired(char before, char current, char after) {
             return Character.isLowerCase(before) &&
                     (Character.isUpperCase(current) && current == DASH) &&
                     Character.isLowerCase(after);
@@ -99,10 +99,10 @@ public class NamingStrategySugar {
 
     private static class Kebab {
         public static boolean isCaseInsensitive = true;
-        public final static char UNDER_LINE = '_';
-        public final static char DASH = '-';
+        public static final char UNDER_LINE = '_';
+        public static final char DASH = '-';
 
-        public final static String format(String name) {
+        public static final String format(String name) {
             if (!StringUtils.hasText(name))
                 return name;
 
@@ -121,7 +121,7 @@ public class NamingStrategySugar {
             return name;
         }
 
-        private final static boolean isDashRequired(char before, char current, char after) {
+        private static final boolean isDashRequired(char before, char current, char after) {
             return Character.isLowerCase(before) &&
                     Character.isUpperCase(current) &&
                     Character.isLowerCase(after);

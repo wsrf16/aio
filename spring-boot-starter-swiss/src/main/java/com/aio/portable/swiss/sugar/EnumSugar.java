@@ -12,7 +12,8 @@
 //import java.util.Arrays;
 //import java.util.List;
 //
-//public class EnumSugar {
+//public class
+// {
 //    private static ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
 //
 //    private static void setFailsafeFieldValue(Field field, Object target, Object value) throws NoSuchFieldException,

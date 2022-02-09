@@ -7,13 +7,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ThrowableSugar {
-    public static String getStackTraceAsString(Throwable throwable) {
+    public final static String getStackTraceAsString(Throwable throwable) {
         StringWriter stringWriter = new StringWriter();
         throwable.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.toString();
     }
 
-    public static <R> R catchThenReturn(Supplier<R> supplier, Function<Throwable, R> failHandler) {
+    public final static <R> R catchThenReturn(Supplier<R> supplier, Function<Throwable, R> failHandler) {
         try {
             R r = supplier.get();
             return r;
@@ -24,7 +24,7 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static <R> R catchThenThrowRuntimeException(Supplier<R> supplier) {
+    public final static <R> R catchThenThrowRuntimeException(Supplier<R> supplier) {
         try {
             R r = supplier.get();
             return r;
@@ -33,7 +33,7 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static void catchThenHandle(Runnable runnable, Consumer<Throwable> failHandler) {
+    public final static void catchThenHandle(Runnable runnable, Consumer<Throwable> failHandler) {
         try {
             runnable.run();
         } catch (Throwable e) {
@@ -41,19 +41,19 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static void catchThenThrowRuntimeException(Runnable runnable) {
+    public final static void catchThenThrowRuntimeException(Runnable runnable) {
         catchThenHandle(runnable, e -> {
             throw new RuntimeException(e);
         });
     }
 
-    public static void catchThenPrintStackTrace(Runnable runnable) {
+    public final static void catchThenPrintStackTrace(Runnable runnable) {
         catchThenHandle(runnable, e -> {
             e.printStackTrace();
         });
     }
 
-    public static void catchThenSilent(Runnable runnable) {
+    public final static void catchThenSilent(Runnable runnable) {
         catchThenHandle(runnable, e -> {
         });
     }

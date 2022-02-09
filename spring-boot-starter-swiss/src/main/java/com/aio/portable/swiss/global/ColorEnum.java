@@ -44,12 +44,12 @@ public enum ColorEnum {
         this.code = code;
     }
 
-    public final static String begin(ColorEnum... colors) {
+    public static final String begin(ColorEnum... colors) {
         List<String> collect = Arrays.stream(colors).map(c -> c.getCode()).collect(Collectors.toList());
         return MessageFormat.format("{0}{1}{2}", ESC_START.getCode(), CollectionSugar.join(collect, ";"), ESC_END.getCode());
     }
 
-    public final static String end() {
+    public static final String end() {
         return MessageFormat.format("{0}{1}", ESC_START.getCode(), ESC_END.getCode());
     }
 }

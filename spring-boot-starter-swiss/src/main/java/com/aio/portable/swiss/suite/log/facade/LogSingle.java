@@ -1,8 +1,9 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
+import com.aio.portable.swiss.suite.log.action.LogAction;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogBean;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
@@ -28,9 +29,9 @@ public abstract class LogSingle implements LogAction {
     }
 
 
-    protected final static String NEWLINE = Constant.LINE_SEPARATOR;
-    protected final static String DELIMITER_CHAR = " ";
-    protected final static Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
+    protected static final String NEWLINE = Constant.LINE_SEPARATOR;
+    protected static final String DELIMITER_CHAR = " ";
+    protected static final Supplier<String> EMPTY_PREFIX = () -> Constant.EMPTY;
 
 
 //    protected Supplier<String> prefixSupplier;
@@ -44,11 +45,11 @@ public abstract class LogSingle implements LogAction {
 //    }
 
     protected StringSerializerAdapter serializerAdapter() {
-         return SerializerAdapterBuilder.buildSilentJackson();
+         return SerializerAdapterFactory.buildSilentJackson();
     }
 
     protected StringSerializerAdapter looseSerializerAdapter() {
-        return SerializerAdapterBuilder.buildSilentLongJackson();
+        return SerializerAdapterFactory.buildSilentLongJackson();
     }
 
     protected boolean async = true;
@@ -61,14 +62,13 @@ public abstract class LogSingle implements LogAction {
         this.async = async;
     }
 
-//    public final static ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
-    private final static long KEEP_ALIVE_TIME = 1000 * 10;
-    public final static ExecutorService executor = new ThreadPoolExecutor(
+//    public static final ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
+    public static final ExecutorService executor = new ThreadPoolExecutor(
         LogSingleThreadExecutor.CORE_POOL_SIZE,
         LogSingleThreadExecutor.MAX_POOL_SIZE,
-        KEEP_ALIVE_TIME,
+        LogSingleThreadExecutor.KEEP_ALIVE_TIME,
         TimeUnit.MILLISECONDS,
-        new ArrayBlockingQueue<Runnable>(LogSingleThreadExecutor.QUEUE_CAPACITY),
+        new ArrayBlockingQueue<>(LogSingleThreadExecutor.QUEUE_CAPACITY),
         new LogSingleThreadFactory(),
 //        new ThreadPoolExecutor.AbortPolicy()
         new ThreadPoolExecutor.DiscardOldestPolicy()
@@ -1129,9 +1129,10 @@ public abstract class LogSingle implements LogAction {
 
 
     static class LogSingleThreadExecutor {
-        private final static int QUEUE_CAPACITY = 1024 * 128;
-        private final static int CORE_POOL_SIZE = 4;
-        private final static int MAX_POOL_SIZE = 1024 * 1;
+        private static final int QUEUE_CAPACITY = 1024 * 128;
+        private static final int CORE_POOL_SIZE = 2;
+        private static final int MAX_POOL_SIZE = 3;
+        private static final long KEEP_ALIVE_TIME = 1000 * 10;
     }
 
     static class LogSingleThreadFactory implements ThreadFactory {

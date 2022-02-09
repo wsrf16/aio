@@ -7,40 +7,42 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JWTCache {
-    private final static String CLASSNAME_SUFFIX = "|class";
-    protected JWTTemplate jwtTemplate;
+public interface JWTExplicit {
+    Boolean getExplicit();
 
-    public JWTCache(JWTTemplate jwtTemplate) {
-        this.jwtTemplate = jwtTemplate;
+    default Map<String, Object> explicit(Map<String, Object> addition) {
+        Map<String, Object> map;
+        if (getExplicit() == true) {
+            Map<String, Object> explicit = new HashMap<>();
+            addition.entrySet().forEach(c -> {
+                String key = c.getKey();
+                Object value = c.getValue();
+                String keyClass = getKeyClass(key);
+                String valueClass = value.getClass().getName();
+
+                explicit.put(key, value);
+                explicit.put(keyClass, valueClass);
+            });
+            map = explicit;
+        } else {
+            map = addition;
+        }
+        return map;
     }
 
-    private static <T> Class<T> loadClass(String className) {
+    default String getKeyClass(String key) {
+        return key + CLASSNAME_SUFFIX;
+    }
+
+    String CLASSNAME_SUFFIX = "|class";
+
+
+    default <T> Class<T> loadClass(String className) {
         Class<T> clazz = (Class<T>) ClassLoaderSugar.load(className);
         return clazz;
     }
 
-    private final static String getKeyClass(String key) {
-        return key + CLASSNAME_SUFFIX;
-    }
-
-    private final Map<String, Object> strengthen(Map<String, Object> addition) {
-        Map<String, Object> toMap = new HashMap<>();
-        addition.entrySet().forEach(c -> {
-            String key = c.getKey();
-            Object value = c.getValue();
-            String keyClass = getKeyClass(key);
-            String valueClass = value.getClass().getName();
-
-            toMap.put(key, value);
-            toMap.put(keyClass, valueClass);
-        });
-        return toMap;
-    }
-
-
-
-    private final static Map<String, Object> parse(DecodedJWT decodedJWT) {
+    default Map<String, Object> forMap(DecodedJWT decodedJWT) {
         Map<String, Object> map = new HashMap<>();
         Map<String, Claim> claims = decodedJWT.getClaims();
 
@@ -88,35 +90,4 @@ public class JWTCache {
         });
         return map;
     }
-
-    public final String set(Map<String, Object> addition) {
-        String token = jwtTemplate.sign(strengthen(addition));
-        return token;
-    }
-
-    public final String set(Map<String, Object> addition, String issuer) {
-        String token = jwtTemplate.sign(issuer, strengthen(addition));
-        return token;
-    }
-
-    public final String set(Map<String, Object> addition, String issuer, int minutes) {
-        String token = jwtTemplate.sign(issuer, minutes, strengthen(addition));
-        return token;
-    }
-
-    public final Map<String, Object> get(String token) {
-        DecodedJWT decodedJWT = jwtTemplate.parse(token);
-        return parse(decodedJWT);
-    }
-
-    public final Object get(String token, String key) {
-        return get(token).get(key);
-    }
-
-    public final String getIssuer(String token) {
-        DecodedJWT decodedJWT = jwtTemplate.parse(token);
-        return decodedJWT.getIssuer();
-    }
-
-
 }

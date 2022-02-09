@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BizStatusEnum extends BaseBizStatusEnum {
-    private final static BizStatusEnum _ = new BizStatusEnum();
+    private static final BizStatusEnum _ = new BizStatusEnum();
 
 //    protected static BizStatusEnum instance;
 //

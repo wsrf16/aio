@@ -51,23 +51,23 @@ public enum LevelEnum {
 
 //class LevelEnum {
 //    //[Description("Verbose")]
-//    public final static int Verbose = 0;
-//    public final static String Verbose() {return  "Verbose";}
+//    public static final int Verbose = 0;
+//    public static final String Verbose() {return  "Verbose";}
 //    //[Description("Info")]
-//    public final static int Info = 1;
-//    public final static String Info() {return  "Info";}
+//    public static final int Info = 1;
+//    public static final String Info() {return  "Info";}
 //    //[Description("Debug")]
-//    public final static int Debug = 2;
-//    public final static String Debug() {return  "Debug";}
+//    public static final int Debug = 2;
+//    public static final String Debug() {return  "Debug";}
 //    //[Description("Warning")]
-//    public final static int Warning = 3;
-//    public final static String Warning() {return  "Warning";}
+//    public static final int Warning = 3;
+//    public static final String Warning() {return  "Warning";}
 //    //[Description("Error")]
-//    public final static int Error = 4;
-//    public final static String Error() {return  "Error";}
+//    public static final int Error = 4;
+//    public static final String Error() {return  "Error";}
 //    //[Description("Fatal")]
-//    public final static int Fatal = 5;
-//    public final static String Fatal() {return  "Fatal";}
+//    public static final int Fatal = 5;
+//    public static final String Fatal() {return  "Fatal";}
 //}
 
 

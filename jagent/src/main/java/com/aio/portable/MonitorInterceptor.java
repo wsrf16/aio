@@ -8,13 +8,13 @@ import java.util.concurrent.Callable;
 
 
 public class MonitorInterceptor {
-    private final static String prefix(Integer threshold) {
+    private static final String prefix(Integer threshold) {
         String prefix = MessageFormat.format("Cost time(>={0}ms):", threshold);
         return prefix;
     }
 
     @RuntimeType
-    public final static Object intercept(@This Object proxy,
+    public static final Object intercept(@This Object proxy,
                                    @AllArguments Object[] arguments,
                                    @Origin Class clazz,
                                    @Origin Method method,
@@ -34,7 +34,7 @@ public class MonitorInterceptor {
     }
 
     @RuntimeType
-    public final static Object staticIntercept(@AllArguments Object[] arguments,
+    public static final Object staticIntercept(@AllArguments Object[] arguments,
                                          @Origin Class clazz,
                                          @Origin Method method,
                                          @SuperCall Callable<?> callable) throws Exception {

@@ -10,16 +10,16 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ConfigurationProperties(prefix = "spring.log")
+//@Configuration
+//@ConfigurationProperties(prefix = "spring.log")
 public class LogHubProperties implements InitializingBean {
-    public final static String PREFIX = "spring.log";
+    public static final String PREFIX = "spring.log";
 
-    private final static Log log = LogFactory.getLog(LogHubProperties.class);
+    private static final Log log = LogFactory.getLog(LogHubProperties.class);
 
     private Boolean enabled = true;
 
-    private LevelEnum level = LevelEnum.INFORMATION;
+    private LevelEnum level = LevelEnum.ALL;
 
     private Boolean async;
 
@@ -59,7 +59,7 @@ public class LogHubProperties implements InitializingBean {
 
     private static LogHubProperties instance = new LogHubProperties();
 
-    public synchronized static LogHubProperties singletonInstance() {
+    public static LogHubProperties singletonInstance() {
         return instance;
     }
 
@@ -68,12 +68,12 @@ public class LogHubProperties implements InitializingBean {
         initialSingletonInstance(this);
     }
 
-    public final static void initialSingletonInstance(LogHubProperties properties) {
+    public static final void initialSingletonInstance(LogHubProperties properties) {
         instance = properties;
         log.info("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void initialSingletonInstance(Binder binder) {
+    public static final void initialSingletonInstance(Binder binder) {
         BindResult<LogHubProperties> bindResult = binder.bind(LogHubProperties.PREFIX, LogHubProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             LogHubProperties.initialSingletonInstance(bindResult.get());

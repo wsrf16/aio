@@ -1,6 +1,11 @@
 package com.aio.portable.park.controller;
 
 import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.spring.web.Base64MultipartFile;
+import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.system.HostInfo;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,15 +23,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
 
 @RestController
 @RequestMapping("tool")
 public class ToolController {
-    private final static String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
-    private final static String UPLOAD_DIRECTORY = "upload";
+    private static final String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
+    private static final String UPLOAD_DIRECTORY = "upload";
 
     private LogHub log = AppLogHubFactory.staticBuild();
 
@@ -35,7 +39,7 @@ public class ToolController {
 
 //    @ApiOperation(value = "upload接口")
     @PostMapping("/upload")
-    public String upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+    public ResponseWrapper<String> upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
@@ -46,7 +50,7 @@ public class ToolController {
         String realIP = HostInfo.getClientIpAddress(request);
         String uploadLocation = MessageFormat.format("{0}:{1}", realIP, targetFile.toAbsolutePath());
         log.info(UPLOAD_DIRECTORY, uploadLocation);
-        return uploadLocation;
+        return ResponseWrappers.succeed(uploadLocation);
     }
 
 //    @ApiOperation(value = "上传文件接口",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -62,7 +66,7 @@ public class ToolController {
                     @ApiImplicitParam(name = "file", dataType = "__File", value = "文件流对象,接收数组格式", required = true)
             }
     )
-    public List<String> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
+    public ResponseWrapper<List<String>> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
@@ -82,8 +86,23 @@ public class ToolController {
             }
         });
         log.info(UPLOAD_DIRECTORY, uploadLocationList);
-        return uploadLocationList;
+        return ResponseWrappers.succeed(uploadLocationList);
     }
+
+    @PostMapping(value = "/uploadBase64")
+    public ResponseWrapper<String> uploadBase64(String base64) throws IOException {
+        Base64MultipartFile multipartFile = Base64MultipartFile.toMultipartFile(base64);
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        Path targetFile = Paths.get(UPLOAD_DIRECTORY, originalFilename);
+        multipartFile.transferTo(targetFile);
+
+        String realIP = HostInfo.getClientIpAddress(request);
+        String uploadLocation = MessageFormat.format("{0}:{1}", realIP, targetFile.toAbsolutePath());
+        log.info(UPLOAD_DIRECTORY, uploadLocation);
+        return ResponseWrappers.succeed(uploadLocation);
+    }
+
 
 
 

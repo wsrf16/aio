@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 //@RestControllerAdvice
 public abstract class HamletExceptionAdvice {
 
-    private final static String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
-    private final static String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
+    private static final String GLOBAL_BUSINESS_EXCEPTION = "全局业务异常拦截";
+    private static final String GLOBAL_SYSTEM_EXCEPTION = "全局系统异常拦截";
     protected final LogHub log;
 
     @Autowired(required = false)

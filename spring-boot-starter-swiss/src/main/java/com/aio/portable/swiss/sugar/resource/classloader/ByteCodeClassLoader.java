@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 class ByteCodeClassLoader extends ClassLoader {
-    private final static Log log = LogFactory.getLog(ByteCodeClassLoader.class);
+    private static final Log log = LogFactory.getLog(ByteCodeClassLoader.class);
 
     private native Class<?> findBootstrapClass(String name);
 
@@ -23,7 +23,7 @@ class ByteCodeClassLoader extends ClassLoader {
 
     private String path;
 
-//    private final static URL[] toURLs(String[] files) {
+//    private static final URL[] toURLs(String[] files) {
 //        URL[] urls = new URL[files.length];
 //        for (int i = 0; i < files.length; i++) {
 //            try {
@@ -36,7 +36,7 @@ class ByteCodeClassLoader extends ClassLoader {
 //        return urls;
 //    }
 //
-//    private final static URL[] toURL(String file) {
+//    private static final URL[] toURL(String file) {
 //        URL[] urls = new URL[1];
 //        try {
 //            urls[0] = new URL(file);
@@ -125,8 +125,8 @@ class ByteCodeClassLoader extends ClassLoader {
             String filePath = path.toAbsolutePath().toString();
             try {
                 bytes = IOSugar.Streams.toByteArray(filePath);
-            } catch (IOException e) {
-                if (!(e instanceof FileNotFoundException))
+            } catch (Exception e) {
+                if (!(e.getCause() instanceof FileNotFoundException))
                     e.printStackTrace();
                 continue;
             }

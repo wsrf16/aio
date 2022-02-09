@@ -22,7 +22,7 @@ public class YamlSugar {
         YAML = new Yaml(new Constructor(), representer);
     }
 
-    private final static Yaml YAML;
+    private static final Yaml YAML;
 
     public static <T> T resource2T(ClassLoader classLoader, String resource, Class<T> clazz) {
         InputStream inputStream = classLoader.getResourceAsStream(resource);
@@ -35,7 +35,7 @@ public class YamlSugar {
         return t;
     }
 
-    public final static <T> T file2T(String path, Class<T> clazz) {
+    public static final <T> T file2T(String path, Class<T> clazz) {
         File file = new File(path);
         if (!file.exists())
             throw new RuntimeException(path);
@@ -70,7 +70,7 @@ public class YamlSugar {
 
 
 
-    public final static void yml2Properties(String path) {
+    public static final void yml2Properties(String path) {
         String DOT = ".";
         List<String> lines = new LinkedList<>();
         try {
@@ -120,7 +120,7 @@ public class YamlSugar {
         }
     }
 
-    public final static void properties2Yaml(String path) {
+    public static final void properties2Yaml(String path) {
         JsonParser parser = null;
         JavaPropsFactory factory = new JavaPropsFactory();
         try {

@@ -76,7 +76,7 @@ public class DynamicProxySugar {
 //        proxyFactory.setTarget(target);
 //        proxyFactory.setTargetClass(target.getClass());
 //        proxyFactory.setProxyTargetClass(true);
-        CollectionSugar.toList(advices)
+        CollectionSugar.asList(advices)
                 .stream()
                 .forEach(c -> proxyFactory.addAdvice(c));
         return (T) proxyFactory.getProxy();

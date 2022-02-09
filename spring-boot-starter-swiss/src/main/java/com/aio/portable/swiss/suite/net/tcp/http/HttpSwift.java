@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.net.tcp.http;
 
-import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
@@ -36,28 +36,28 @@ public class HttpSwift {
             .setRedirectsEnabled(true)
             .build();
 
-//    public final static HttpClientBuilder buildHttpClient() {
+//    public static final HttpClientBuilder buildHttpClient() {
 //        HttpClientBuilder factory = HttpClients.custom();
 //        return factory;
 //    }
 //
-//    public final static HttpClientBuilder setCookieStore(HttpClientBuilder factory, CookieStore cookieStore) {
+//    public static final HttpClientBuilder setCookieStore(HttpClientBuilder factory, CookieStore cookieStore) {
 //        factory = factory.setDefaultCookieStore(cookieStore);
 //        return factory;
 //    }
 //
-//    public final static HttpClientBuilder setProxy(HttpClientBuilder factory, HttpHost httpHost) {
+//    public static final HttpClientBuilder setProxy(HttpClientBuilder factory, HttpHost httpHost) {
 //        factory = factory.setProxy(httpHost);
 //        return factory;
 //    }
 //
-//    public final static HttpClientBuilder setProxy(HttpClientBuilder factory, String hostname, int port, String scheme) {
+//    public static final HttpClientBuilder setProxy(HttpClientBuilder factory, String hostname, int port, String scheme) {
 //        HttpHost httpHost = new HttpHost(hostname, port, scheme);
 //        factory = factory.setProxy(httpHost);
 //        return factory;
 //    }
 //
-//    public final static HttpHost buildHostProxy(String hostname, int port, String scheme) {
+//    public static final HttpHost buildHostProxy(String hostname, int port, String scheme) {
 //        HttpHost proxy = new HttpHost(hostname, port, scheme);
 //        return proxy;
 //    }
@@ -65,43 +65,43 @@ public class HttpSwift {
 
     protected static StringSerializerAdapter stringSerializerAdapter;
 
-    public final static StringSerializerAdapter getSerializerAdapter() {
+    public static final StringSerializerAdapter getSerializerAdapter() {
         return stringSerializerAdapter;
     }
 
-    public final static void setSerializerAdapter(StringSerializerAdapter stringSerializerAdapter) {
+    public static final void setSerializerAdapter(StringSerializerAdapter stringSerializerAdapter) {
         HttpSwift.stringSerializerAdapter = stringSerializerAdapter;
     }
 
     static {
 //        serializer = new SerializerSelector()::serialize;
-        stringSerializerAdapter = SerializerAdapterBuilder.buildJackson();
+        stringSerializerAdapter = SerializerAdapterFactory.buildJackson();
     }
 
-    public final static UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
+    public static final UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);
         return entity;
     }
 
-    public final static StringEntity buildJsonEntity(String json, Charset charset) {
+    public static final StringEntity buildJsonEntity(String json, Charset charset) {
         StringEntity entity = new StringEntity(json, charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public final static StringEntity buildJsonObjectEntity(Object body, Charset charset) {
+    public static final StringEntity buildJsonObjectEntity(Object body, Charset charset) {
         StringEntity entity = new StringEntity(stringSerializerAdapter.serialize(body), charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public final static StringEntity buildStringEntity(String body, Charset charset) {
+    public static final StringEntity buildStringEntity(String body, Charset charset) {
         StringEntity entity = new StringEntity(body, charset);
         // entity.setContentEncoding("UTF-8");
         return entity;
     }
 
-    public final static HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity) {
+    public static final HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity) {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(config);
         if (entity != null)
@@ -109,7 +109,7 @@ public class HttpSwift {
         return httpPost;
     }
 
-    public final static HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity, Header[] headers) {
+    public static final HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity, Header[] headers) {
         HttpPost httpPost = new HttpPost(url);
         if (config != null)
             httpPost.setConfig(config);
@@ -120,18 +120,18 @@ public class HttpSwift {
         return httpPost;
     }
 
-    public final static HttpGet buildGet(String url) throws URISyntaxException {
+    public static final HttpGet buildGet(String url) throws URISyntaxException {
         HttpGet httpGet = new HttpGet(url);
         return httpGet;
     }
 
-    public final static HttpGet buildGet(String url, RequestConfig config) throws URISyntaxException {
+    public static final HttpGet buildGet(String url, RequestConfig config) throws URISyntaxException {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setConfig(config);
         return httpGet;
     }
 
-    public final static HttpGet buildGet(String url, RequestConfig config, List<BasicNameValuePair> params, String charset) throws URISyntaxException {
+    public static final HttpGet buildGet(String url, RequestConfig config, List<BasicNameValuePair> params, String charset) throws URISyntaxException {
         String query = URLEncodedUtils.format(params, charset);
         url = MessageFormat.format("{0}?{1}", url, query);
         URI uri = new URI(url);
@@ -140,7 +140,7 @@ public class HttpSwift {
         return httpGet;
     }
 
-    public final static String getResult(HttpResponse response, Charset charset) throws IOException {
+    public static final String getResult(HttpResponse response, Charset charset) throws IOException {
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(entity, charset);
@@ -149,7 +149,7 @@ public class HttpSwift {
         }
     }
 
-    public final static String getResult(HttpResponse response) throws IOException {
+    public static final String getResult(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(entity);

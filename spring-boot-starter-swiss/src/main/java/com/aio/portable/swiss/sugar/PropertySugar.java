@@ -8,19 +8,19 @@ import org.springframework.core.io.Resource;
 import java.util.Properties;
 
 public abstract class PropertySugar {
-    public final static Properties getProperties(Resource... resources) {
+    public static final Properties getProperties(Resource... resources) {
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
         yaml.setResources(resources);
         return yaml.getObject();
     }
 
-//    public final static Properties getProperties(ClassPathResource resource) {
+//    public static final Properties getProperties(ClassPathResource resource) {
 //        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
 //        yaml.setResources(resource);
 //        return yaml.getObject();
 //    }
 //
-//    public final static Properties getProperties(FileSystemResource resource) {
+//    public static final Properties getProperties(FileSystemResource resource) {
 //        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
 //        yaml.setResources(resource);
 //        return yaml.getObject();

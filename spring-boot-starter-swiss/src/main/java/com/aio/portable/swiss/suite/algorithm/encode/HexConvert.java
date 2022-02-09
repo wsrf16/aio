@@ -4,9 +4,9 @@ import org.springframework.security.crypto.codec.Hex;
 import org.springframework.util.Base64Utils;
 
 public abstract class HexConvert {
-//    private final static char HEX_DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+//    private static final char HEX_DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 //
-//    public final static String toHex1(byte[] bytes) {
+//    public static final String toHex1(byte[] bytes) {
 //        char[] buf = new char[bytes.length * 2];
 //        int index = 0;
 //        for (byte b : bytes) {
@@ -17,7 +17,7 @@ public abstract class HexConvert {
 //    }
 //
 //
-//    public final static String toHex2(byte[] bytes) {
+//    public static final String toHex2(byte[] bytes) {
 //        // 一个byte为8位，可用两个十六进制位标识
 //        char[] buf = new char[bytes.length * 2];
 //        int a = 0;
@@ -36,7 +36,7 @@ public abstract class HexConvert {
 //        return new String(buf);
 //    }
 //
-//    public final static String toHex3(byte[] bytes) {
+//    public static final String toHex3(byte[] bytes) {
 //        StringBuilder buf = new StringBuilder(bytes.length * 2);
 //        for (byte b : bytes) {
 //            buf.append(String.format("%02x", b & 0xff));
@@ -45,9 +45,9 @@ public abstract class HexConvert {
 //    }
 //
 //
-//    private final static int RADIX_16 = 16;
+//    private static final int RADIX_16 = 16;
 //
-//    public final static byte[] toBytes(String hex) {
+//    public static final byte[] toBytes(String hex) {
 //        byte[] bytes = new byte[hex.length() / 2];
 //        for (int i = 0; i < bytes.length; i++) {
 //            // 16进制字符转换成int->位运算（取int(32位)低8位,即位与运算 &0xFF）->强转成byte
@@ -56,20 +56,20 @@ public abstract class HexConvert {
 //        return bytes;
 //    }
 
-    public final static String encode(byte[] bytes) {
+    public static final String encode(byte[] bytes) {
         return new String(Hex.encode(bytes));
     }
 
-    public final static byte[] decode(CharSequence s) {
+    public static final byte[] decode(CharSequence s) {
         return Hex.decode(s);
     }
 
-    public final static String convertHexToBase64(String text) {
+    public static final String convertHexToBase64(String text) {
         String base64 = JDKBase64Convert.encodeToString(HexConvert.decode(text));
         return base64;
     }
 
-    public final static String convertBase64ToHex(String text) {
+    public static final String convertBase64ToHex(String text) {
         String hex = HexConvert.encode(JDKBase64Convert.decode(text));
         return hex;
     }

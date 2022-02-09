@@ -1,7 +1,7 @@
 package com.aio.portable.park.config.db.choice;
 
 public class DataSourceKey {
-    public final static String DEFAULT = "default";
-    public final static String MASTER = "master";
-    public final static String SLAVE = "slave";
+    public static final String DEFAULT = "default";
+    public static final String MASTER = "master";
+    public static final String SLAVE = "slave";
 }

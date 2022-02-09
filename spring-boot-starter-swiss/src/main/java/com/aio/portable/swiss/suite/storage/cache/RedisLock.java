@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 // Redisson
 public class RedisLock {
-    private final static String KEY_NAME = "REDIS_LOCK";
+    private static final String KEY_NAME = "REDIS_LOCK";
     private RedisConnectionFactory redisConnectionFactory;
     private StringRedisTemplate redisTemplate;
 

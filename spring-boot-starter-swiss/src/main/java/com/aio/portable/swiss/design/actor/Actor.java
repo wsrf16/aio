@@ -99,7 +99,7 @@ public class Actor<T, R> implements ActorAction {
         this.actorBehaviorFunction = actorBehaviorFunction;
     }
 
-    public final static <T, R> Actor<T, R> build(Function<T, R> handler) {
+    public static final <T, R> Actor<T, R> build(Function<T, R> handler) {
         Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction = message -> {
             R r = handler.apply(message.getData());
             ReturnMessage<R> returnMessage = message.buildReturnMessage(r);

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public abstract class BeanSugar {
 
-    public final static <T> Boolean match(T match, T bean) {
+    public static final <T> Boolean match(T match, T bean) {
         if (match == null)
             return true;
         else {
@@ -47,7 +47,7 @@ public abstract class BeanSugar {
      * @param <T>
      * @return
      */
-    public final static <T> Boolean matchList(List<T> matchList, List<T> beanList) {
+    public static final <T> Boolean matchList(List<T> matchList, List<T> beanList) {
         Map<String, Object> nameValueMatch = BeanSugar.PropertyDescriptors.toNameValueMap(matchList.get(0));
         boolean equal = beanList.stream().anyMatch(bean -> {
             Map<String, Object> nameValueBean = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
@@ -58,7 +58,7 @@ public abstract class BeanSugar {
         return equal;
     }
 
-    private final static <SUB> boolean matchNameValueMap(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
+    private static final <SUB> boolean matchNameValueMap(Map<String, Object> nameValueMatch, Map<String, Object> nameValueBean) {
         Set<String> nameList = nameValueMatch.keySet();
         return nameList.stream().allMatch(key -> {
             Boolean b;
@@ -135,7 +135,7 @@ public abstract class BeanSugar {
     }
 
     public abstract static class Properties {
-        public final static String[] getNullProperties(Object src) {
+        public static final String[] getNullProperties(Object src) {
             //1.获取Bean
             BeanWrapper srcBean = new BeanWrapperImpl(src);
             //2.获取Bean的属性描述
@@ -153,17 +153,17 @@ public abstract class BeanSugar {
             return properties.toArray(new String[0]);
         }
 
-        public final static void copyNotNullProperties(Object source, Object target) {
+        public static final void copyNotNullProperties(Object source, Object target) {
             BeanUtils.copyProperties(source, target, Properties.getNullProperties(source));
         }
 
-        public final static void copyAllProperties(Object source, Object target) {
+        public static final void copyAllProperties(Object source, Object target) {
             BeanUtils.copyProperties(source, target);
         }
     }
 
     public abstract static class PropertyDescriptors {
-        public final static PropertyDescriptor getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
+        public static final PropertyDescriptor getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
             List<String> propertyDescriptorNameList = new ArrayList<>(Arrays.asList(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))).stream().map(PropertyDescriptor::getName).collect(Collectors.toList());
             PropertyDescriptor propertyDescriptor;
             if (propertyDescriptorNameList.contains(name)) {
@@ -179,7 +179,7 @@ public abstract class BeanSugar {
             return propertyDescriptor;
         }
 
-        public final static List<PropertyDescriptor> getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz) {
+        public static final List<PropertyDescriptor> getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz) {
             List<PropertyDescriptor> propertyDescriptorList = new ArrayList<>(Arrays.asList(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz)));
 
             Class<?> parentClazz = clazz.getSuperclass();
@@ -191,12 +191,12 @@ public abstract class BeanSugar {
             return propertyDescriptorList;
         }
 
-        private final static boolean isBuiltIn(PropertyDescriptor propertyDescriptor, Object bean) {
+        private static final boolean isBuiltIn(PropertyDescriptor propertyDescriptor, Object bean) {
             return propertyDescriptor.getName().equals("class")
                     || (propertyDescriptor.getName().equals("beanFactory") && DynamicProxySugar.isCglibProxy(bean));
         }
 
-        public final static Map<String, Class> toNameClassMap(Class clazz) {
+        public static final Map<String, Class> toNameClassMap(Class clazz) {
             Map<String, Class> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                     .filter(c -> !c.getName().equals("class"))
                     .collect(Collectors.toMap(c -> c.getName(), c -> c.getPropertyType()));
@@ -204,14 +204,14 @@ public abstract class BeanSugar {
         }
 
 
-        public final static Map<String, Object> toNameValueMap(Object bean) {
+        public static final Map<String, Object> toNameValueMap(Object bean) {
             Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
             return map;
         }
 
-        public final static Map<String, Object> toNameValueMapExceptNull(Object bean) {
+        public static final Map<String, Object> toNameValueMapExceptNull(Object bean) {
             Map<String, Object> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean) && getValue(bean, c) != null)
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property)), HashMap::putAll);
@@ -219,14 +219,14 @@ public abstract class BeanSugar {
         }
 
 
-        public final static Map<String, PropertyDescriptor> toNamePropertyMap(Object bean) {
+        public static final Map<String, PropertyDescriptor> toNamePropertyMap(Object bean) {
             Map<String, PropertyDescriptor> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
             return map;
         }
 
-        public final static Map<String, PropertyDescriptor> toNamePropertyMapExceptNull(Object bean) {
+        public static final Map<String, PropertyDescriptor> toNamePropertyMapExceptNull(Object bean) {
             Map<String, PropertyDescriptor> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean) && getValue(bean, c) != null)
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), _property), HashMap::putAll);
@@ -234,14 +234,14 @@ public abstract class BeanSugar {
         }
 
 
-        public final static Map<String, String> toNameStringMap(Object bean) {
+        public static final Map<String, String> toNameStringMap(Object bean) {
             Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
             return map;
         }
 
-        public final static Map<String, String> toNameStringMapExceptNull(Object bean) {
+        public static final Map<String, String> toNameStringMapExceptNull(Object bean) {
             Map<String, String> map = bean instanceof Map ? (Map) bean : Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(bean.getClass()))
                     .filter(c -> !isBuiltIn(c, bean))
                     .collect(HashMap::new, (_map, _property) -> _map.put(_property.getName(), getValue(bean, _property).toString()), HashMap::putAll);
@@ -310,7 +310,7 @@ public abstract class BeanSugar {
 
 
     public abstract static class Fields {
-        public final static Field getDeclaredFieldIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
+        public static final Field getDeclaredFieldIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
             List<String> fieldNameList = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())).stream().map(Field::getName).collect(Collectors.toList());
             Field field;
             if (fieldNameList.contains(name)) {
@@ -326,7 +326,7 @@ public abstract class BeanSugar {
             return field;
         }
 
-        public final static List<Field> getDeclaredFieldIncludeParents(Class<?> clazz) {
+        public static final List<Field> getDeclaredFieldIncludeParents(Class<?> clazz) {
             List<Field> fieldList = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())).stream().collect(Collectors.toList());
             Class<?> parentClazz = clazz.getSuperclass();
             if (parentClazz != null) {
@@ -337,7 +337,7 @@ public abstract class BeanSugar {
             return fieldList;
         }
 
-        public final static Field getFieldIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
+        public static final Field getFieldIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
             List<String> fieldNameList = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())).stream().map(Field::getName).collect(Collectors.toList());
             Field field;
             if (fieldNameList.contains(name)) {
@@ -353,7 +353,7 @@ public abstract class BeanSugar {
             return field;
         }
 
-        public final static List<Field> getFieldIncludeParents(Class<?> clazz) {
+        public static final List<Field> getFieldIncludeParents(Class<?> clazz) {
             List<Field> fieldList = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())).stream().collect(Collectors.toList());
             Class<?> parentClazz = clazz.getSuperclass();
             if (parentClazz != null) {
@@ -367,7 +367,7 @@ public abstract class BeanSugar {
 
 
     public abstract static class Methods {
-        public final static Method getDeclaredMethodIncludeParents(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
+        public static final Method getDeclaredMethodIncludeParents(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
             List<String> methodNameList = new ArrayList<>(Arrays.asList(clazz.getDeclaredMethods())).stream().map(Method::getName).collect(Collectors.toList());
             Method method;
             if (methodNameList.contains(name)) {
@@ -383,7 +383,7 @@ public abstract class BeanSugar {
             return method;
         }
 
-        public final static Method getMethodIncludeParents(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
+        public static final Method getMethodIncludeParents(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
             List<String> methodNameList = new ArrayList<>(Arrays.asList(clazz.getMethods())).stream().map(Method::getName).collect(Collectors.toList());
             Method method;
             if (methodNameList.contains(name)) {

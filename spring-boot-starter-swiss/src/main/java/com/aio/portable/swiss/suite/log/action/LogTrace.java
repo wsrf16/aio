@@ -6,7 +6,7 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
 /**
  * The lifeblood of operational intelligence - things happen.
  */
-public interface LogTrace {
+interface LogTrace {
     void trace(String message);
 
     default void trace(String message, Object[] arguments) {

@@ -20,7 +20,7 @@ public class HotURLClassLoader extends URLClassLoader {
         return findBootstrapClass(name);
     }
 
-    private final static URL[] toURLs(String[] files) {
+    private static final URL[] toURLs(String[] files) {
         URL[] urls = new URL[files.length];
         for (int i = 0; i < files.length; i++) {
             try {
@@ -33,7 +33,7 @@ public class HotURLClassLoader extends URLClassLoader {
         return urls;
     }
 
-    private final static URL[] toURL(String file) {
+    private static final URL[] toURL(String file) {
         URL[] urls = new URL[1];
         try {
             urls[0] = new URL(file);

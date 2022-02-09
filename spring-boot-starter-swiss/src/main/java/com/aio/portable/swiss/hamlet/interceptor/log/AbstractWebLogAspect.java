@@ -30,12 +30,12 @@ class AbstractWebLogAspect {
     protected static String RESPONSE_SUMMARY = "输出";
     protected static String EXCEPTION_SUMMARY = "异常";
 
-    protected final static String POINTCUT_CONTROLLER = "" +
+    protected static final String POINTCUT_CONTROLLER = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.PostMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected final static String POINTCUT_MAPPING = "" +
+    protected static final String POINTCUT_MAPPING = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.PostMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)" +
@@ -44,17 +44,17 @@ class AbstractWebLogAspect {
             " || @annotation(org.springframework.web.bind.annotation.Mapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected final static String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker";
-    protected final static String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarkerExcept";
+    protected static final String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker";
+    protected static final String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarkerExcept";
 
-    protected final static String POINTCUT_SPECIAL_MAPPING = "" +
+    protected static final String POINTCUT_SPECIAL_MAPPING = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")"
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")"
             + " && (" + POINTCUT_MAPPING + "))"
             + " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
 
-    protected final static String POINTCUT_SPECIAL = "" +
+    protected static final String POINTCUT_SPECIAL = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")"
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + "))"
             + " || @annotation("+ LOG_MARKER_TYPENAME +")";
@@ -110,13 +110,13 @@ class AbstractWebLogAspect {
             response.addHeader(ResponseWrapper.SPAN_ID_HEADER, spanId);
     }
 
-    private final static void addSpanIdIfResponseWrapper(Object responseRecord, String traceId) {
+    private static final void addSpanIdIfResponseWrapper(Object responseRecord, String traceId) {
         if (responseRecord instanceof ResponseWrapper) {
             ((ResponseWrapper) responseRecord).setSpanId(traceId);
         }
     }
 
-    private final static String generateUniqueId() {
+    private static final String generateUniqueId() {
         return IDS.uuid();
     }
 }

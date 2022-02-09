@@ -5,7 +5,7 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
 /**
  * Service is degraded or endangered.
  */
-public interface LogWarning {
+interface LogWarning {
     void warn(String message);
 
     default void warn(String message, Object[] arguments) {

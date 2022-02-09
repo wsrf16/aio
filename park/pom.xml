@@ -50,6 +50,7 @@
         <mybatis.version>2.1.0</mybatis.version>
         <java-jwt.version>3.15.0</java-jwt.version>
         <canal.version>1.1.5</canal.version>
+        <redisson.version>3.16.6</redisson.version>
 
         <!--        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>-->
         <!-- swagger2markup -->
@@ -464,6 +465,15 @@
             <artifactId>jol-core</artifactId>
             <version>0.16</version>
 <!--            <scope>provided</scope>-->
+            <optional>true</optional>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>

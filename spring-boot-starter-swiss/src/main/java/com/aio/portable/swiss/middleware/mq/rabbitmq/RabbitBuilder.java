@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class RabbitBuilder {
-    private final static Log log = LogFactory.getLog(RabbitBuilder.class);
+    private static final Log log = LogFactory.getLog(RabbitBuilder.class);
 
     private static class Exchange {
-        public final static String DIRECT = "direct";
-        public final static String TOPIC = "topic";
-        public final static String FANOUT = "fanout";
+        public static final String DIRECT = "direct";
+        public static final String TOPIC = "topic";
+        public static final String FANOUT = "fanout";
     }
 
     private static Binding binding(RabbitAdmin rabbitAdmin, RabbitMQBindingProperty rabbitMQBindingProperty) {
@@ -97,17 +97,17 @@ public abstract class RabbitBuilder {
         }
     }
 
-    private final static List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
+    private static final List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
         List<Binding> bindingList = rabbitMQBindingPropertyList.stream().map(c -> binding(rabbitAdmin, c)).collect(Collectors.toList());
         return bindingList;
     }
 
-    public final static List<Binding> binding(RabbitAdmin rabbitAdmin, RabbitMQProperties rabbitMQProperties) {
+    public static final List<Binding> binding(RabbitAdmin rabbitAdmin, RabbitMQProperties rabbitMQProperties) {
         List<Binding> bindingList = rabbitMQProperties.getBindingList() == null ? null : binding(rabbitAdmin, rabbitMQProperties.getBindingList());
         return bindingList;
     }
 
-    public final static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
+    public static final SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -123,7 +123,7 @@ public abstract class RabbitBuilder {
         return container;
     }
 
-    public final static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
+    public static final SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -138,7 +138,7 @@ public abstract class RabbitBuilder {
         return container;
     }
 
-//    public final static AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
+//    public static final AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
 //        ExponentialBackOffPolicy policy = new ExponentialBackOffPolicy();
 //        policy.setInitialInterval(500);
 //        policy.setMultiplier(10.0);
@@ -156,51 +156,47 @@ public abstract class RabbitBuilder {
 //    }
 
 
-    public final static ConnectionFactory buildConnectionFactory(RabbitMQProperties properties) {
+    public static final ConnectionFactory buildConnectionFactory(RabbitMQProperties properties) {
         CachingConnectionFactory connectionFactory = null;
         if (connectionFactory == null) {
-            synchronized (RabbitBuilder.class) {
-                if (connectionFactory == null) {
 //                    validProperties();
-                    String host = properties.getHost();
-                    int port = properties.getPort();
-                    connectionFactory = new CachingConnectionFactory(host, port);
-                    connectionFactory.setUsername(properties.getUsername());
-                    connectionFactory.setPassword(properties.getPassword());
-                    connectionFactory.setVirtualHost(properties.getVirtualHost());
-                    if (properties.getConnectionTimeout() != null)
-                        connectionFactory.setConnectionTimeout(((int) properties.getConnectionTimeout().toMillis()));
-                    if (properties.getRequestedHeartbeat() != null)
-                        connectionFactory.setRequestedHeartBeat((int) properties.getRequestedHeartbeat().getSeconds());
+            String host = properties.getHost();
+            int port = properties.getPort();
+            connectionFactory = new CachingConnectionFactory(host, port);
+            connectionFactory.setUsername(properties.getUsername());
+            connectionFactory.setPassword(properties.getPassword());
+            connectionFactory.setVirtualHost(properties.getVirtualHost());
+            if (properties.getConnectionTimeout() != null)
+                connectionFactory.setConnectionTimeout(((int) properties.getConnectionTimeout().toMillis()));
+            if (properties.getRequestedHeartbeat() != null)
+                connectionFactory.setRequestedHeartBeat((int) properties.getRequestedHeartbeat().getSeconds());
 
-                    RabbitProperties.Cache cache = properties.getCache();
-                    RabbitProperties.Cache.Channel channel = cache.getChannel();
-                    if (channel != null) {
-                        if (channel.getSize() != null)
-                            connectionFactory.setChannelCacheSize(channel.getSize());
-                        if (channel.getCheckoutTimeout() != null)
-                            connectionFactory.setChannelCheckoutTimeout(channel.getCheckoutTimeout().toMillis());
-                    }
-
-                    RabbitProperties.Cache.Connection connection = cache.getConnection();
-                    connectionFactory.setCacheMode(connection.getMode());
-                    if (connection.getSize() != null)
-                        connectionFactory.setConnectionCacheSize(connection.getSize());
-//                    connectionFactory.setPublisherConfirms(properties.isPublisherConfirms());
-                    connectionFactory.setPublisherReturns(properties.isPublisherReturns());
-                }
+            RabbitProperties.Cache cache = properties.getCache();
+            RabbitProperties.Cache.Channel channel = cache.getChannel();
+            if (channel != null) {
+                if (channel.getSize() != null)
+                    connectionFactory.setChannelCacheSize(channel.getSize());
+                if (channel.getCheckoutTimeout() != null)
+                    connectionFactory.setChannelCheckoutTimeout(channel.getCheckoutTimeout().toMillis());
             }
+
+            RabbitProperties.Cache.Connection connection = cache.getConnection();
+            connectionFactory.setCacheMode(connection.getMode());
+            if (connection.getSize() != null)
+                connectionFactory.setConnectionCacheSize(connection.getSize());
+//                    connectionFactory.setPublisherConfirms(properties.isPublisherConfirms());
+            connectionFactory.setPublisherReturns(properties.isPublisherReturns());
         }
         return connectionFactory;
     }
 
 
-    private final static boolean determineMandatoryFlag(RabbitMQProperties properties) {
+    private static final boolean determineMandatoryFlag(RabbitMQProperties properties) {
         Boolean mandatory = properties.getTemplate().getMandatory();
         return mandatory != null ? mandatory : properties.isPublisherReturns();
     }
 
-    public final static RabbitTemplate buildTemplate(RabbitMQProperties properties) {
+    public static final RabbitTemplate buildTemplate(RabbitMQProperties properties) {
         RabbitTemplate rabbitTemplate = null;
         if (rabbitTemplate == null) {
             synchronized (RabbitBuilder.class) {

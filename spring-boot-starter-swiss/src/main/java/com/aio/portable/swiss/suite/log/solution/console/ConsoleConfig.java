@@ -17,7 +17,7 @@ public class ConsoleConfig {
     public static String LOG_EXTENSION = ".log";
     public static String ZIP_EXTENSION = ".zip";
     public static String SECTION_SEPARATOR = Constant.FILE_SEPARATOR;
-    public static String LINE_SEPARATOR = " : ";
+    public static String LINE_SEPARATOR = " ";
     public static String OCCUPY_SEPARATOR = "_";
     public static String SEPARATOR_CHAR = "_";
     public static int OCCUPY_MAX = 30;

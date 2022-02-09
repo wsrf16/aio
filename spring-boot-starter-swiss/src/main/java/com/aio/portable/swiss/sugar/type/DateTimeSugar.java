@@ -65,8 +65,7 @@ public abstract class DateTimeSugar {
         }
 
         public static Calendar now() {
-            Calendar calendar = Calendar.getInstance();
-            return calendar;
+            return Calendar.getInstance();
         }
 
         public static Calendar fromDate(Date date) {
@@ -105,54 +104,54 @@ public abstract class DateTimeSugar {
             return localDateTime.plusDays(daysToAdd);
         }
 
-        public final static long nowEpochMillli() {
+        public static final long nowEpochMillli() {
             long epochMilli = Instant.now().toEpochMilli();
             return epochMilli;
         }
 
-        public final static LocalDateTime parse(@NotNull String text, String format) {
+        public static final LocalDateTime parse(@NotNull String text, String format) {
             LocalDateTime localDateTime = LocalDateTime.parse(text, DateTimeFormatter.ofPattern(format));
             return localDateTime;
         }
 
-        public final static String format(@NotNull LocalDateTime localDateTime, String format) {
+        public static final String format(@NotNull LocalDateTime localDateTime, String format) {
             String text = localDateTime.format(DateTimeFormatter.ofPattern(format));
             return text;
         }
 
-        public final static Date toDate(@NotNull LocalDateTime localDateTime, ZoneId zoneId) {
+        public static final Date toDate(@NotNull LocalDateTime localDateTime, ZoneId zoneId) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public final static Date toDate(@NotNull LocalDateTime localDateTime) {
+        public static final Date toDate(@NotNull LocalDateTime localDateTime) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public final static LocalDateTime fromDate(Date date, ZoneId zoneId) {
+        public static final LocalDateTime fromDate(Date date, ZoneId zoneId) {
             Instant instant = date.toInstant();
             return instant.atZone(zoneId).toLocalDateTime();
         }
 
-        public final static LocalDateTime fromDate(Date date) {
+        public static final LocalDateTime fromDate(Date date) {
             Instant instant = date.toInstant();
             return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
 
-        public final static LocalDateTime now() {
+        public static final LocalDateTime now() {
             return LocalDateTime.now();
         }
     }
 
 
     public static class Format {
-        public final static String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-        public final static String FORMAT_NORMAL_LONGEST = "yyyy-MM-dd HH:mm:ss.SSS";
-        public final static String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
-        public final static String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
-        public final static String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";
-        public final static String FORMAT_TIGHT_SHORT = "yyyyMMdd";
+        public static final String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+        public static final String FORMAT_NORMAL_LONGEST = "yyyy-MM-dd HH:mm:ss.SSS";
+        public static final String FORMAT_NORMAL_LONG = "yyyy-MM-dd HH:mm:ss";
+        public static final String FORMAT_NORMAL_SHORT = "yyyy-MM-dd";
+        public static final String FORMAT_TIGHT_LONG = "yyyyMMddHHmmssSSS";
+        public static final String FORMAT_TIGHT_SHORT = "yyyyMMdd";
 
         /**
          * 从String转换为Date
@@ -294,12 +293,12 @@ public abstract class DateTimeSugar {
         }
 
         static class EpochTime {
-            public final static int YEAR = 1970;
-            public final static int MONTH = 1;
-            public final static int DAY_OF_MONTH = 1;
-            public final static int HOUR = 0;
-            public final static int MINUTE = 0;
-            public final static int SECOND = 0;
+            public static final int YEAR = 1970;
+            public static final int MONTH = 1;
+            public static final int DAY_OF_MONTH = 1;
+            public static final int HOUR = 0;
+            public static final int MINUTE = 0;
+            public static final int SECOND = 0;
         }
     }
 

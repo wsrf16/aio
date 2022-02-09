@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.storage.db.freedatasource;
 
 public class DataSourceHolder {
-    public final static ThreadLocal<String> contextHolder = new ThreadLocal<>();
+    public static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
     public static void putDataSource(String key) {
         contextHolder.set(key);

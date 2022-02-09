@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.text.MessageFormat;
 
 public class NetworkProxyBean implements InitializingBean {
-    private final static Log log = LogFactory.getLog(NetworkProxyBean.class);
+    private static final Log log = LogFactory.getLog(NetworkProxyBean.class);
 
     @Autowired(required = false)
     HttpProxyBean httpProxyBean;
@@ -40,7 +40,7 @@ public class NetworkProxyBean implements InitializingBean {
         }
     }
 
-    public final static boolean test(String host, Integer port) {
+    public static final boolean test(String host, Integer port) {
         boolean telnet = TcpSugar.telnet(host, port, 5000);
         if (telnet)
             log.info(MessageFormat.format("Test connection: {0}:{1} - Connection succeeded.", host, String.valueOf(port)));
@@ -49,7 +49,7 @@ public class NetworkProxyBean implements InitializingBean {
         return telnet;
     }
 
-//    public final static String info(ProxyBean proxyObject) {
+//    public static final String info(ProxyBean proxyObject) {
 //        return MessageFormat.format("set proxy: host-{0} port-{1}", proxyObject.getHost(), String.valueOf(proxyObject.getPort()));
 //    }
 }

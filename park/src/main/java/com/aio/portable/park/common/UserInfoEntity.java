@@ -49,6 +49,14 @@ public class UserInfoEntity implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("22222222222222222222");
+        System.out.println("userInfoEntity afterPropertiesSet");
+    }
+
+    public static UserInfoEntity sample() {
+        UserInfoEntity userInfoEntity = new UserInfoEntity();
+        userInfoEntity.setId(1);
+        userInfoEntity.setName("Jerry");
+        userInfoEntity.setNextId(2);
+        return userInfoEntity;
     }
 }

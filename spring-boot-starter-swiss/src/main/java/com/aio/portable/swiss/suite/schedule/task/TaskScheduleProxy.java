@@ -35,7 +35,7 @@ public class TaskScheduleProxy implements Task {
         abstractTask.run();
     }
 
-    private void start() {
+    public void start() {
         scheduler.schedule(() -> abstractTask.run(), new CronTrigger(cron));
     }
 

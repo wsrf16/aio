@@ -30,7 +30,7 @@ import java.util.Map;
 
 
 public abstract class FreeDataSourceConfiguration {
-    public final static String DEFAULT = "default";
+    public static final String DEFAULT = "default";
 
     @Autowired
     protected MybatisProperties properties;

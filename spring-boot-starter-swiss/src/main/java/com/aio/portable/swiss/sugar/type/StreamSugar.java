@@ -24,7 +24,7 @@ public abstract class StreamSugar {
      * @param stream Stream to reverse
      * @return Reversed stream
      */
-    public final static <T> Stream<T> reverse(final Stream<T> stream) {
+    public static final <T> Stream<T> reverse(final Stream<T> stream) {
         List<T> reverseList = stream.collect(Collectors.toList());
         java.util.Collections.reverse(reverseList);
         return reverseList.stream();
@@ -86,11 +86,11 @@ public abstract class StreamSugar {
      *
      * @return An immutable toX of this stream.
      */
-    public final static <T> Collection<T> toLazyCollection(final Stream<T> stream) {
+    public static final <T> Collection<T> toLazyCollection(final Stream<T> stream) {
         return toLazyCollection(stream.iterator());
     }
 
-    public final static <T> Collection<T> toLazyCollection(final Iterator<T> iterator) {
+    public static final <T> Collection<T> toLazyCollection(final Iterator<T> iterator) {
         return toLazyCollection(iterator, false);
     }
 
@@ -98,20 +98,20 @@ public abstract class StreamSugar {
      * Lazily constructs a Collection from specified Stream. Collections iterator may be safely used
      * concurrently by multiple threads.
      */
-    public final static <T> Collection<T> toConcurrentLazyCollection(final Stream<T> stream) {
+    public static final <T> Collection<T> toConcurrentLazyCollection(final Stream<T> stream) {
         return toConcurrentLazyCollection(stream.iterator());
     }
 
-    public final static <T> Collection<T> toConcurrentLazyCollection(final Iterator<T> iterator) {
+    public static final <T> Collection<T> toConcurrentLazyCollection(final Iterator<T> iterator) {
         return toLazyCollection(iterator, true);
     }
 
-    private final static <T> Collection<T> toLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
+    private static final <T> Collection<T> toLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
         return createLazyCollection(iterator, concurrent);
 
     }
 
-    private final static <T> Collection<T> createLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
+    private static final <T> Collection<T> createLazyCollection(final Iterator<T> iterator, final boolean concurrent) {
         return new AbstractCollection<T>() {
 
             @Override

@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
  * RandomValueAuthorizationCodeServices
  */
 public class JdbcLongAuthorizationCodeServices extends JdbcAuthorizationCodeServices {
-    private final static int AUTHORIZATION_CODE_LENGTH = 16;
+    private static final int AUTHORIZATION_CODE_LENGTH = 16;
 
     private int length = AUTHORIZATION_CODE_LENGTH;
 

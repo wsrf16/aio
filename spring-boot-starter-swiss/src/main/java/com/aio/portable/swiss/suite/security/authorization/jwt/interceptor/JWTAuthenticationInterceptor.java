@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public abstract class JWTAuthenticationInterceptor extends AuthenticationInterceptor {
-    private final static String AUTHORIZATION = JWTSugar.HEAD_VALUE_AUTHORIZATION;
-    private final static String BEARER = JWTSugar.HEAD_VALUE_BEAR;
+    private static final String AUTHORIZATION = JWTSugar.HEAD_VALUE_AUTHORIZATION;
+    private static final String BEARER = JWTSugar.HEAD_VALUE_BEAR;
 
     @Autowired
     private JWTTemplate jwtTemplate;

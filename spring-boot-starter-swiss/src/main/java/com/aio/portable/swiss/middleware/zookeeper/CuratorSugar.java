@@ -25,49 +25,49 @@ public abstract class CuratorSugar {
 //        createBuilder. if
 //    }
 
-    public final static class RetryPolicyBuilder {
-        public final static ExponentialBackoffRetry newExponentialBackoffRetry(int baseSleepTimeMs, int maxRetries, int maxSleepMs) {
+    public static final class RetryPolicyBuilder {
+        public static final ExponentialBackoffRetry newExponentialBackoffRetry(int baseSleepTimeMs, int maxRetries, int maxSleepMs) {
             ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(baseSleepTimeMs, maxRetries, maxSleepMs);
             return retryPolicy;
         }
 
-        public final static RetryForever newRetryForever(int retryIntervalMs) {
+        public static final RetryForever newRetryForever(int retryIntervalMs) {
             RetryForever retryPolicy = new RetryForever(retryIntervalMs);
             return retryPolicy;
         }
 
-        public final static RetryNTimes newRetryNTimes(int n, int sleepMsBetweenRetries) {
+        public static final RetryNTimes newRetryNTimes(int n, int sleepMsBetweenRetries) {
             RetryNTimes retryPolicy = new RetryNTimes(n, sleepMsBetweenRetries);
             return retryPolicy;
         }
 
-        public final static RetryUntilElapsed newRetryUntilElapsed(int maxElapsedTimeMs, int sleepMsBetweenRetries) {
+        public static final RetryUntilElapsed newRetryUntilElapsed(int maxElapsedTimeMs, int sleepMsBetweenRetries) {
             RetryUntilElapsed retryPolicy = new RetryUntilElapsed(maxElapsedTimeMs, sleepMsBetweenRetries);
             return retryPolicy;
         }
     }
 
-    public final static class InterProcessBuilder {
+    public static final class InterProcessBuilder {
         /**
          * 公平锁
          * @param client
          * @param path
          * @return
          */
-        public final static InterProcessMutex newInterProcessMutex(CuratorFramework client, String path) {
+        public static final InterProcessMutex newInterProcessMutex(CuratorFramework client, String path) {
             return new InterProcessMutex(client, path);
         }
 
-        public final static InterProcessMutex newInterProcessMutex(CuratorFramework client, String path, LockInternalsDriver driver) {
+        public static final InterProcessMutex newInterProcessMutex(CuratorFramework client, String path, LockInternalsDriver driver) {
             return new InterProcessMutex(client, path, driver);
         }
 
-        public final static <T> T interProcessMutex(CuratorFramework client, String path, Supplier<T> supplier) {
+        public static final <T> T interProcessMutex(CuratorFramework client, String path, Supplier<T> supplier) {
             InterProcessMutex interProcessMutex = newInterProcessMutex(client, path);
             return execute(interProcessMutex, supplier);
         }
 
-        public final static <T> T execute(InterProcessMutex interProcessMutex, Supplier<T> supplier) {
+        public static final <T> T execute(InterProcessMutex interProcessMutex, Supplier<T> supplier) {
             try {
                 interProcessMutex.acquire();
                 T t = supplier.get();
@@ -84,38 +84,38 @@ public abstract class CuratorSugar {
             }
         }
 
-        public final static InterProcessMultiLock newInterProcessMultiLock(CuratorFramework client, List<String> paths) {
+        public static final InterProcessMultiLock newInterProcessMultiLock(CuratorFramework client, List<String> paths) {
             return new InterProcessMultiLock(client, paths);
         }
 
-        public final static InterProcessMultiLock newInterProcessMultiLock(List<InterProcessLock> locks) {
+        public static final InterProcessMultiLock newInterProcessMultiLock(List<InterProcessLock> locks) {
             return new InterProcessMultiLock(locks);
         }
 
-        public final static InterProcessReadWriteLock newInterProcessReadWriteLock(CuratorFramework client, String basePath) {
+        public static final InterProcessReadWriteLock newInterProcessReadWriteLock(CuratorFramework client, String basePath) {
             return new InterProcessReadWriteLock(client, basePath);
         }
 
-        public final static InterProcessReadWriteLock newInterProcessReadWriteLock(CuratorFramework client, String basePath, byte[] lockData) {
+        public static final InterProcessReadWriteLock newInterProcessReadWriteLock(CuratorFramework client, String basePath, byte[] lockData) {
             return new InterProcessReadWriteLock(client, basePath, lockData);
         }
 
-        public final static InterProcessSemaphoreV2 newInterProcessSemaphoreV2(CuratorFramework client, String path, int maxLeases) {
+        public static final InterProcessSemaphoreV2 newInterProcessSemaphoreV2(CuratorFramework client, String path, int maxLeases) {
             return new InterProcessSemaphoreV2(client, path, maxLeases);
         }
 
-        public final static InterProcessSemaphoreV2 newInterProcessSemaphoreV2(CuratorFramework client, String path, SharedCountReader count) {
+        public static final InterProcessSemaphoreV2 newInterProcessSemaphoreV2(CuratorFramework client, String path, SharedCountReader count) {
             return new InterProcessSemaphoreV2(client, path, count);
         }
     }
 
     // https://github.com/apache/curator/blob/master/curator-examples/src/main/java/cache/CuratorCacheExample.java
-    public final static class ListenerUtil {
-        public final static CuratorCacheListenerBuilder newCuratorCacheListenerBuilder() {
+    public static final class ListenerUtil {
+        public static final CuratorCacheListenerBuilder newCuratorCacheListenerBuilder() {
             return CuratorCacheListener.builder();
         }
 
-        public final static CuratorCache addListener(CuratorFramework curatorFramework, String path, CuratorCacheListener curatorCacheListener) {
+        public static final CuratorCache addListener(CuratorFramework curatorFramework, String path, CuratorCacheListener curatorCacheListener) {
             try {
                 CuratorCache curatorCache = CuratorCache.build(curatorFramework, path);
                 curatorCache.listenable().addListener(curatorCacheListener);
@@ -125,7 +125,7 @@ public abstract class CuratorSugar {
             }
         }
 
-        public final static void addListener(CuratorCache curatorCache, CuratorCacheListener curatorCacheListener) {
+        public static final void addListener(CuratorCache curatorCache, CuratorCacheListener curatorCacheListener) {
             try {
                 curatorCache.listenable().addListener(curatorCacheListener);
             } catch (Exception e) {
@@ -133,20 +133,20 @@ public abstract class CuratorSugar {
             }
         }
 
-        public final static CuratorCache addListenerAndStart(CuratorFramework curatorFramework, String path, CuratorCacheListener curatorCacheListener) {
+        public static final CuratorCache addListenerAndStart(CuratorFramework curatorFramework, String path, CuratorCacheListener curatorCacheListener) {
             CuratorCache curatorCache = addListener(curatorFramework, path, curatorCacheListener);
             curatorCache.start();
             return curatorCache;
         }
 
-        public final static void addListenerAndStart(CuratorCache curatorCache, CuratorCacheListener curatorCacheListener) {
+        public static final void addListenerAndStart(CuratorCache curatorCache, CuratorCacheListener curatorCacheListener) {
             addListener(curatorCache, curatorCacheListener);
             curatorCache.start();
         }
     }
 
-    public final static class TransactionUtil {
-        public final static TransactionOp buildCuratorOp(CuratorFramework curatorFramework) {
+    public static final class TransactionUtil {
+        public static final TransactionOp buildCuratorOp(CuratorFramework curatorFramework) {
             try {
                 TransactionOp transactionOp = curatorFramework.transactionOp();
                 return transactionOp;
@@ -155,7 +155,7 @@ public abstract class CuratorSugar {
             }
         }
 
-        public final static List<CuratorTransactionResult> commit(CuratorFramework curatorFramework, CuratorOp... curatorOps) {
+        public static final List<CuratorTransactionResult> commit(CuratorFramework curatorFramework, CuratorOp... curatorOps) {
             try {
                 CuratorMultiTransaction transaction = curatorFramework.transaction();
                 List<CuratorTransactionResult> curatorTransactionResults = transaction.forOperations(curatorOps);
@@ -165,7 +165,7 @@ public abstract class CuratorSugar {
             }
         }
 
-        public final static List<CuratorTransactionResult> commit(CuratorFramework curatorFramework, List<CuratorOp> curatorOpList) {
+        public static final List<CuratorTransactionResult> commit(CuratorFramework curatorFramework, List<CuratorOp> curatorOpList) {
             try {
                 CuratorMultiTransaction transaction = curatorFramework.transaction();
                 List<CuratorTransactionResult> curatorTransactionResults = transaction.forOperations(curatorOpList);
@@ -179,7 +179,7 @@ public abstract class CuratorSugar {
     }
 
 
-    public final static String create(CuratorFramework curatorFramework, CreateMode createMode, String path) {
+    public static final String create(CuratorFramework curatorFramework, CreateMode createMode, String path) {
         try {
             String forPath = curatorFramework.create().creatingParentsIfNeeded().withMode(createMode).forPath(path);
             return forPath;
@@ -188,7 +188,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static String create(CuratorFramework curatorFramework, CreateMode createMode, String path, byte[] bytes) {
+    public static final String create(CuratorFramework curatorFramework, CreateMode createMode, String path, byte[] bytes) {
         try {
             String forPath = curatorFramework.create().creatingParentsIfNeeded().withMode(createMode).forPath(path, bytes);
             return forPath;
@@ -197,7 +197,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path) {
+    public static final String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path) {
         String forPath = null;
         Stat stat = checkExists(curatorFramework, path);
         if (stat == null) {
@@ -206,7 +206,7 @@ public abstract class CuratorSugar {
         return forPath;
     }
 
-    public final static String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path, byte[] bytes) {
+    public static final String createIfNotExist(CuratorFramework curatorFramework, CreateMode createMode, String path, byte[] bytes) {
         String forPath = null;
         Stat stat = checkExists(curatorFramework, path);
         if (stat == null) {
@@ -215,7 +215,7 @@ public abstract class CuratorSugar {
         return forPath;
     }
 
-    public final static List<String> getChildren(CuratorFramework curatorFramework, String path) {
+    public static final List<String> getChildren(CuratorFramework curatorFramework, String path) {
         try {
             List<String> forPath = curatorFramework.getChildren().forPath(path);
             return forPath;
@@ -224,7 +224,7 @@ public abstract class CuratorSugar {
         }
     }
 
-//    public final static List<String> getGrandChildren(CuratorFramework curatorFramework, String path) {
+//    public static final List<String> getGrandChildren(CuratorFramework curatorFramework, String path) {
 //        try {
 //            List<String> forPath = curatorFramework.getChildren().forPath(path);
 //            return forPath;
@@ -234,7 +234,7 @@ public abstract class CuratorSugar {
 //        }
 //    }
 
-    public final static void delete(CuratorFramework curatorFramework, String path) {
+    public static final void delete(CuratorFramework curatorFramework, String path) {
         try {
             curatorFramework.delete().deletingChildrenIfNeeded().forPath(path);
         } catch (Exception e) {
@@ -242,7 +242,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static void delete(CuratorFramework curatorFramework, String path, int version) {
+    public static final void delete(CuratorFramework curatorFramework, String path, int version) {
         try {
             curatorFramework.delete().deletingChildrenIfNeeded().withVersion(version).forPath(path);
         } catch (Exception e) {
@@ -250,7 +250,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static Stat checkExists(CuratorFramework curatorFramework, String path) {
+    public static final Stat checkExists(CuratorFramework curatorFramework, String path) {
         try {
             return curatorFramework.checkExists().forPath(path);
         } catch (Exception e) {
@@ -258,7 +258,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static byte[] getData(CuratorFramework curatorFramework, String path) {
+    public static final byte[] getData(CuratorFramework curatorFramework, String path) {
         try {
             return curatorFramework.getData().forPath(path);
         } catch (Exception e) {
@@ -266,7 +266,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static Stat setData(CuratorFramework curatorFramework, String path, byte[] bytes) {
+    public static final Stat setData(CuratorFramework curatorFramework, String path, byte[] bytes) {
         try {
             Stat forPath = curatorFramework.setData().forPath(path, bytes);
             return forPath;
@@ -275,7 +275,7 @@ public abstract class CuratorSugar {
         }
     }
 
-    public final static Stat setData(CuratorFramework curatorFramework, String path, byte[] bytes, int version) {
+    public static final Stat setData(CuratorFramework curatorFramework, String path, byte[] bytes, int version) {
         try {
             Stat forPath = curatorFramework.setData().withVersion(version).forPath(path, bytes);
             return forPath;

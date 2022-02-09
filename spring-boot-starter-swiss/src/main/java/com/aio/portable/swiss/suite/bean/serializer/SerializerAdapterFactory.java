@@ -5,49 +5,49 @@ import com.aio.portable.swiss.suite.bean.serializer.xml.adapter.JackXmlSerialize
 import com.aio.portable.swiss.suite.bean.serializer.xml.adapter.ShortJackXmlSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.bean.serializer.yaml.adapter.YamlSerializerAdapterImpl;
 
-public abstract class SerializerAdapterBuilder {
-    public final static StringSerializerAdapter buildYaml() {
+public abstract class SerializerAdapterFactory {
+    public static final YamlSerializerAdapterImpl buildJacksonYaml() {
         return new YamlSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildJackXml() {
+    public static final JackXmlSerializerAdapterImpl buildJacksonXml() {
         return new JackXmlSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildShortJackXml() {
+    public static final ShortJackXmlSerializerAdapterImpl buildShortJacksonXml() {
         return new ShortJackXmlSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildGson() {
+    public static final ByteSerializerAdapterImpl buildGson() {
         return new ByteSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildJackson() {
+    public static final JacksonSerializerAdapterImpl buildJackson() {
         return new JacksonSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildLongJackson() {
+    public static final LongJacksonSerializerAdapterImpl buildLongJackson() {
         return new LongJacksonSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildShortJackson() {
+    public static final ShortJacksonSerializerAdapterImpl buildShortJackson() {
         return new ShortJacksonSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildSilentJackson() {
+    public static final SilentJacksonSerializerAdapterImpl buildSilentJackson() {
         return new SilentJacksonSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildSilentLongJackson() {
+    public static final SilentLongJacksonSerializerAdapterImpl buildSilentLongJackson() {
         return new SilentLongJacksonSerializerAdapterImpl();
     }
 
-    public final static StringSerializerAdapter buildSilentShortJackson() {
+    public static final SilentShortJacksonSerializerAdapterImpl buildSilentShortJackson() {
         return new SilentShortJacksonSerializerAdapterImpl();
     }
 
-    public final static ByteSerializerAdapter buildByte() {
-        return new com.aio.portable.swiss.suite.bean.serializer.bytes.adapter.ByteSerializerAdapterImpl();
+    public static final ByteSerializerAdapterImpl buildByte() {
+        return new ByteSerializerAdapterImpl();
     }
 
 }

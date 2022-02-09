@@ -1,12 +1,16 @@
 package com.aio.portable.swiss.suite.io;
 
+import com.aio.portable.swiss.sugar.ThrowableSugar;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.Selector;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 /**
  * Created by York on 2017/11/28.
@@ -14,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class IOSugar {
     public static class Files {
 
-        public final static File getDirectoryOfFile(File file) {
+        public static final File getDirectoryOfFile(File file) {
             File dir;
             if (file.isFile()) {
                 dir = file.getParentFile();
@@ -24,23 +28,23 @@ public abstract class IOSugar {
             }
         }
 
-        public final static File getDirectoryOfFile(String path) {
+        public static final File getDirectoryOfFile(String path) {
             File file = new File(path);
             return getDirectoryOfFile(file);
         }
 
-//        public final static void createDirectoryIfNotExists(Path path) throws IOException {
+//        public static final void createDirectoryIfNotExists(Path path) throws IOException {
 //            if (Files.notExists(path))
 //                Files.createDirectory(path);
 //        }
 //
-//        public final static void createDirectoryIfNotExists(File directory) throws IOException {
+//        public static final void createDirectoryIfNotExists(File directory) throws IOException {
 //            Path path = directory.toPath();
 //            if (Files.notExists(path))
 //                Files.createDirectory(path);
 //        }
 
-        public final static String readFileForText(String path) {
+        public static final String readFileForText(String path) {
             StringBuffer sb = null;
             try {
                 File f = new File(path);
@@ -61,7 +65,7 @@ public abstract class IOSugar {
             return sb.toString();
         }
 
-        public final static byte[] readFileForByte(String path) {
+        public static final byte[] readFileForByte(String path) {
             try {
                 FileInputStream fis = null;
                 fis = new FileInputStream(path);
@@ -75,7 +79,7 @@ public abstract class IOSugar {
             }
         }
 
-        public final static void writeFile(String path, String content) {
+        public static final void writeFile(String path, String content) {
             try {
                 File f = new File(path);
                 if (!f.exists()) {
@@ -93,7 +97,7 @@ public abstract class IOSugar {
             }
         }
 
-        public final static void writeFile(String path, byte[] bytes) {
+        public static final void writeFile(String path, byte[] bytes) {
             try {
                 File file = new File(path);
                 if (!file.exists()) {
@@ -108,12 +112,12 @@ public abstract class IOSugar {
             }
         }
 
-        public final static boolean delete(String path) {
+        public static final boolean delete(String path) {
             File file = new File(path);
             return delete(file);
         }
 
-        public final static boolean delete(File path) {
+        public static final boolean delete(File path) {
             boolean hasDeleted = false;
             if (path.exists()) {
                 if (path.isDirectory()) {
@@ -128,24 +132,24 @@ public abstract class IOSugar {
             return hasDeleted;
         }
 
-        public final static File createParentDirectories(File path) {
+        public static final File createParentDirectories(File path) {
             File dir = path.getParentFile();
             return createDirectories(dir);
         }
 
-        public final static File createDirectories(File dir) {
+        public static final File createDirectories(File dir) {
             if (null != dir && !dir.exists()) {
                 dir.mkdirs();
             }
             return dir;
         }
 
-        public final static File createParentDirectories(String path) {
+        public static final File createParentDirectories(String path) {
             File dir = new File(path);
             return createParentDirectories(dir);
         }
 
-        public final static File createDirectories(String path) {
+        public static final File createDirectories(String path) {
             File dir = new File(path);
             return createDirectories(dir);
         }
@@ -218,11 +222,11 @@ public abstract class IOSugar {
 
     public static class Streams {
 
-        public final static String toString(InputStream inputStream) {
+        public static final String toString(InputStream inputStream) {
             return toString(inputStream, StandardCharsets.UTF_8);
         }
 
-        public final static String toString(InputStream inputStream, Charset charset) {
+        public static final String toString(InputStream inputStream, Charset charset) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
             int length;
@@ -232,13 +236,12 @@ public abstract class IOSugar {
                 }
                 return outputStream.toString(charset.displayName());
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
 
 
-//        private final static FileInputStream newFileInputStream(File file) {
+//        private static final FileInputStream newFileInputStream(File file) {
 //            try(FileInputStream fileInputStream = new FileInputStream(file)) {
 //                return fileInputStream;
 //            } catch (IOException e) {
@@ -247,13 +250,17 @@ public abstract class IOSugar {
 //            }
 //        }
 
-        public static byte[] toByteArray(String filePath) throws IOException {
-            File file = new File(filePath);
-            return toByteArray(file);
+        public static byte[] toByteArray(String filePath) {
+            return toByteArray(new File(filePath));
         }
 
-        public static byte[] toByteArray(File file) throws IOException {
-            FileInputStream fileInputStream = new FileInputStream(file);
+        public static byte[] toByteArray(File file) {
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
             return toByteArray(fileInputStream);
         }
 
@@ -263,7 +270,7 @@ public abstract class IOSugar {
             return output.toByteArray();
         }
 
-        public static byte[] toByteArray(InputStream input, int size) throws IOException {
+        public static byte[] toByteArray(InputStream input, int size) {
             if (size < 0) {
                 throw new IllegalArgumentException("Size must be equal or greater than zero: " + size);
             }
@@ -276,23 +283,31 @@ public abstract class IOSugar {
             int offset = 0;
             int readed;
 
-            while (offset < size && (readed = input.read(data, offset, size - offset)) != EOF) {
-                offset += readed;
-            }
+            try {
+                while (offset < size && (readed = input.read(data, offset, size - offset)) != EOF) {
+                    offset += readed;
+                }
 
-            if (offset != size) {
-                throw new IOException("Unexpected readed size. current: " + offset + ", excepted: " + size);
+                if (offset != size) {
+                    throw new RuntimeException("Unexpected readed size. current: " + offset + ", excepted: " + size);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
             return data;
         }
 
-        public static byte[] toByteArray(URLConnection urlConn) throws IOException {
-            InputStream inputStream = urlConn.getInputStream();
+        public static byte[] toByteArray(URLConnection urlConn) {
             try {
-                return IOUtils.toByteArray(inputStream);
-            } finally {
-                inputStream.close();
+                InputStream inputStream = urlConn.getInputStream();
+                try {
+                    return IOUtils.toByteArray(inputStream);
+                } finally {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -356,5 +371,8 @@ public abstract class IOSugar {
                 this.bytes = bytes;
             }
         }
+
+
+
     }
 }

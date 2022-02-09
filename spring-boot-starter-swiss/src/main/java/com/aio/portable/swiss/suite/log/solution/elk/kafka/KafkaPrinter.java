@@ -9,11 +9,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class KafkaPrinter implements Printer {
-    private final static Log log = LogFactory.getLog(KafkaPrinter.class);
+    private static final Log log = LogFactory.getLog(KafkaPrinter.class);
 
     String logName;
     KafkaLogProperties properties;
@@ -25,7 +25,7 @@ public class KafkaPrinter implements Printer {
         this.kafkaTemplate = KafkaBuilder.buildTemplate(properties);
     }
 
-    private static Map<String, KafkaPrinter> instanceMaps = new HashMap<>();
+    private static Map<String, KafkaPrinter> instanceMaps = new ConcurrentHashMap<>();
 
 
     /**
@@ -33,7 +33,7 @@ public class KafkaPrinter implements Printer {
      *
      * @param logName
      */
-    public final static synchronized KafkaPrinter instance(String logName, KafkaLogProperties properties) {
+    public static final synchronized KafkaPrinter instance(String logName, KafkaLogProperties properties) {
         String section = String.join(Constant.EMPTY, logName);
         {
             if (instanceMaps.keySet().contains(section))

@@ -9,7 +9,7 @@ class MD5Base64PasswordEncoder implements PasswordEncoder {
         return digest(rawPassword);
     }
 
-    private final static String digest(CharSequence rawPassword) {
+    private static final String digest(CharSequence rawPassword) {
         String encodedPassword = SpringMD5Convert.encodeToBase64(rawPassword.toString());
         return encodedPassword;
     }

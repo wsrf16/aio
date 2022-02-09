@@ -12,28 +12,35 @@ import org.springframework.core.type.classreading.MethodMetadataReadingVisitor;
 
 public class LogHubUtils {
     public static class SLF4J {
-        public final static String DEPENDENCY = "org.slf4j.Logger";
+        public static final String DEPENDENCY = "org.slf4j.Logger";
         public static boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
     public static class Kafka {
-        public final static String DEPENDENCY = "org.springframework.kafka.core.KafkaTemplate";
+        public static final String DEPENDENCY = "org.springframework.kafka.core.KafkaTemplate";
         public static boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
     public static class RabbitMQ {
-        public final static String DEPENDENCY = "org.springframework.amqp.rabbit.core.RabbitTemplate";
+        public static final String DEPENDENCY = "org.springframework.amqp.rabbit.core.RabbitTemplate";
+        public static boolean existDependency() {
+            return ClassLoaderSugar.isPresent(DEPENDENCY);
+        }
+    }
+
+    public static class Spring {
+        public static final String DEPENDENCY = "org.springframework.beans.factory.InitializingBean";
 
         public static boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
-    private final static void importSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
+    private static final void importSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
         String[] names = beanFactory.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = beanFactory.getBeanDefinition(names[i]);
@@ -52,7 +59,7 @@ public class LogHubUtils {
         }
     }
 
-    private final static void importSingletonLogFactory(BeanDefinitionRegistry registry) {
+    private static final void importSingletonLogFactory(BeanDefinitionRegistry registry) {
         String[] names = registry.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = registry.getBeanDefinition(names[i]);

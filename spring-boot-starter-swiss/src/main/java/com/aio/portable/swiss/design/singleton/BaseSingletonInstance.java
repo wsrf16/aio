@@ -2,13 +2,13 @@ package com.aio.portable.swiss.design.singleton;
 
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BaseSingletonInstance {
-    private final static BaseSingletonInstance SELF = new BaseSingletonInstance();
+    private static final BaseSingletonInstance SELF = new BaseSingletonInstance();
 
-    protected Map<Class<?>, Object> instanceMap = new HashMap<>();
+    protected Map<Class<?>, Object> instanceMap = new ConcurrentHashMap<>();
 
 //    public synchronized static SingletonInstance self() {
 //        return SINGLETON_INSTANCE == null ? new SingletonInstance() : SINGLETON_INSTANCE;

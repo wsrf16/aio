@@ -3,7 +3,7 @@ package com.aio.portable.swiss.sugar;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 public abstract class ThreadPoolTaskExecutors {
-    public final static ThreadPoolTaskExecutor newInstance(int corePoolSize,
+    public static final ThreadPoolTaskExecutor newInstance(int corePoolSize,
                                                            int maxPoolSize,
                                                            boolean waitForJobsToCompleteOnShutdown) {
         ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
@@ -13,7 +13,7 @@ public abstract class ThreadPoolTaskExecutors {
         return pool;
     }
 
-    public final static ThreadPoolTaskExecutor newInstanceAndInitialize(int corePoolSize,
+    public static final ThreadPoolTaskExecutor newInstanceAndInitialize(int corePoolSize,
                                                            int maxPoolSize,
                                                            boolean waitForJobsToCompleteOnShutdown) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = newInstance(corePoolSize, maxPoolSize, waitForJobsToCompleteOnShutdown);

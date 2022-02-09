@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ZooKeeperPO implements NodePersistence {
-    private final static String DELIMITER = "/";
-    private final static String EMPTY = "";
+    private static final String DELIMITER = "/";
+    private static final String EMPTY = "";
 
     private String database;
 
@@ -29,11 +29,11 @@ public class ZooKeeperPO implements NodePersistence {
 
     private static ZooKeeperPO instance;
 
-//    public final static ZooKeeperPO singletonInstance(ZooKeeper zooKeeper) {
+//    public static final ZooKeeperPO singletonInstance(ZooKeeper zooKeeper) {
 //        return instance = instance == null ? new ZooKeeperPO(zooKeeper) : instance;
 //    }
 
-    public final static ZooKeeperPO singletonInstance(ZooKeeper zooKeeper, String database) {
+    public static final ZooKeeperPO singletonInstance(ZooKeeper zooKeeper, String database) {
         return instance = instance == null ? new ZooKeeperPO(zooKeeper, database) : instance;
     }
 

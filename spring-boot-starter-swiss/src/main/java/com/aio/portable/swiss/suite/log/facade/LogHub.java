@@ -16,10 +16,10 @@ import java.util.*;
 /**
  * Created by York on 2017/11/23.
  */
-public class LogHub extends LogBundle implements LogHubProxy {
+public class LogHub extends LogBundle implements LogBase {
     private static final Log log = LogFactory.getLog(LogHub.class);
 
-    private final static float DEFAULT_SAMPLER_RATE = 1f;
+    private static final float DEFAULT_SAMPLER_RATE = 1f;
 
     private boolean enabled = true;
 
@@ -38,7 +38,7 @@ public class LogHub extends LogBundle implements LogHubProxy {
 
 
 
-    private final static void throwEmptyList() {
+    private static final void throwEmptyList() {
         try {
             throw new IllegalArgumentException(MessageFormat.format("{0} is Empty.Please register and try again!", LogHub.class.getTypeName()));
         } catch (IllegalArgumentException e) {
@@ -67,19 +67,19 @@ public class LogHub extends LogBundle implements LogHubProxy {
         return f <= samplerRate;
     }
 
-    public final static LogHub build(List<LogSingle> logSingleList) {
+    public static final LogHub build(List<LogSingle> logSingleList) {
         LogHub logHub = new LogHub(logSingleList);
         LogHub proxy = Proxy.toProxy(logHub);
         return proxy;
     }
 
-    public final static LogHub build(LogSingle... logSingles) {
+    public static final LogHub build(LogSingle... logSingles) {
         List<LogSingle> logSingleList = logSingles == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logSingles));
         LogHub logHub = build(logSingleList);
         return logHub;
     }
 
-    public final static LogHub buildSync(List<LogSingle> logSingleList){
+    public static final LogHub buildSync(List<LogSingle> logSingleList){
         LogHub logHub = build(logSingleList);
         logHub.setAsync(false);
         return logHub;
@@ -205,8 +205,8 @@ public class LogHub extends LogBundle implements LogHubProxy {
             return proxy;
         }
 
-        protected static LogHubProxy toJDKProxy(LogHub logHub) {
-            LogHubProxy proxy = DynamicProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
+        protected static LogBase toJDKProxy(LogHub logHub) {
+            LogBase proxy = DynamicProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
                         @Override
                         public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                             LogHub hub = logHub;

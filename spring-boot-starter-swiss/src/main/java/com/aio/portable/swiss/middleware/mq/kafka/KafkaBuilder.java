@@ -10,12 +10,12 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 
 public class KafkaBuilder {
-    public final static <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties) {
+    public static final <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
         return new DefaultKafkaProducerFactory<>(producerProperties);
     }
 
-    public final static <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties, Map<String, Object> additionalProperties, String transactionIdPrefix) {
+    public static final <K, V> DefaultKafkaProducerFactory<K, V> buildProducerFactory(KafkaProperties properties, Map<String, Object> additionalProperties, String transactionIdPrefix) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
         producerProperties.putAll(additionalProperties);
 
@@ -26,19 +26,19 @@ public class KafkaBuilder {
         return factory;
     }
 
-    public final static <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties) {
+    public static final <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
         return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 
-    public final static <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties, Map<String, Object> additionalProperties) {
+    public static final <K, V> DefaultKafkaConsumerFactory<K, V> buildConsumerFactory(KafkaProperties properties, Map<String, Object> additionalProperties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
         consumerProperties.putAll(additionalProperties);
 
         return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 
-    public final static <K, V> KafkaTemplate<K, V> buildTemplate(KafkaProperties properties) {
+    public static final <K, V> KafkaTemplate<K, V> buildTemplate(KafkaProperties properties) {
         ProducerFactory<K, V> kafkaProducerFactory = KafkaBuilder.buildProducerFactory(properties);
         KafkaTemplate<K, V> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
 

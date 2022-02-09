@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
 public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean, DeepCloneable {
-    private final static Log log = LogFactory.getLog(RabbitMQLogProperties.class);
-    public final static String PREFIX = "spring.log.rabbitmq";
+    private static final Log log = LogFactory.getLog(RabbitMQLogProperties.class);
+    public static final String PREFIX = "spring.log.rabbitmq";
 
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
 
@@ -38,12 +38,12 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
         initialSingletonInstance(this);
     }
 
-    public final static void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
+    public static final void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
         log.info("RabbitMQLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void initialSingletonInstance(Binder binder) {
+    public static final void initialSingletonInstance(Binder binder) {
         BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             RabbitMQLogProperties.initialSingletonInstance(bindResult.get());

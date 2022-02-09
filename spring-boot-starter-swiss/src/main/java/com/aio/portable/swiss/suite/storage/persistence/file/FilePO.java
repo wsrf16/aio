@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.storage.persistence.file;
 
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterBuilder;
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.io.NIOSugar;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class FilePO implements NodePersistence {
     private static String DEFAULT_DATABASE = "default";
-    private final static String EMPTY = "";
+    private static final String EMPTY = "";
 
     private static String DEFAULT_ROOT = Paths.get(Constant.CURRENT_DIRECTORY).toString();
 
@@ -32,18 +32,18 @@ public class FilePO implements NodePersistence {
 
     private static Charset charset = StandardCharsets.UTF_8;
 
-    protected StringSerializerAdapter stringSerializerAdapter = SerializerAdapterBuilder.buildJackson();
+    protected StringSerializerAdapter stringSerializerAdapter = SerializerAdapterFactory.buildJackson();
 
 
-    public final static FilePO singletonInstance(String root, String database) {
+    public static final FilePO singletonInstance(String root, String database) {
         return instance = instance == null ? new FilePO(root, database) : instance;
     }
 
-    public final static FilePO singletonInstance(String database) {
+    public static final FilePO singletonInstance(String database) {
         return instance = instance == null ? new FilePO(DEFAULT_ROOT, database) : instance;
     }
 
-    public final static FilePO singletonInstance() {
+    public static final FilePO singletonInstance() {
         return instance = instance == null ? new FilePO(DEFAULT_ROOT, DEFAULT_DATABASE) : instance;
     }
 
@@ -194,57 +194,57 @@ public class FilePO implements NodePersistence {
     }
 
 
-    public final static void set(String database, String key, Object value, String... parent) {
+    public static final void set(String database, String key, Object value, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         filePO.set(key, value, parent);
     }
 
-    public final static void remove(String database, String key, String... parent) {
+    public static final void remove(String database, String key, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         filePO.remove(key, parent);
     }
 
-    public final static void remove(String database) {
+    public static final void remove(String database) {
         FilePO filePO = FilePO.singletonInstance(database);
         filePO.remove();
     }
 
-    public final static void clear(String database) {
+    public static final void clear(String database) {
         FilePO filePO = FilePO.singletonInstance(database);
         filePO.clear();
     }
 
-    private final static boolean exists(String database, String key, String... parent) {
+    private static final boolean exists(String database, String key, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.exists(key, parent);
     }
 
-    public final static boolean exists(String database) {
+    public static final boolean exists(String database) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.exists();
     }
 
-    public final static List<String> keys(String database, String key, String... parent) {
+    public static final List<String> keys(String database, String key, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.keys(key, parent);
     }
 
-    public final static <T> T get(String database, String key, Class<T> clazz, String... parent) {
+    public static final <T> T get(String database, String key, Class<T> clazz, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.get(key, clazz, parent);
     }
 
-    public final static <T> T get(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
+    public static final <T> T get(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.get(key, valueTypeRef, parent);
     }
 
-    public final static <T> Map<String, T> getChildren(String database, String key, Class<T> clazz, String... parent) {
+    public static final <T> Map<String, T> getChildren(String database, String key, Class<T> clazz, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.getChildren(key, clazz, parent);
     }
 
-    public final static <T> Map<String, T> getChildren(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
+    public static final <T> Map<String, T> getChildren(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
         FilePO filePO = FilePO.singletonInstance(database);
         return filePO.getChildren(key, valueTypeRef, parent);
     }

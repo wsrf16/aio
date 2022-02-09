@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit;
 
+import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.adapter.JacksonSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import lombok.Data;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class JacksonTest {
         list = JacksonSugar.json2T(JacksonSugar.obj2Json(list));
         map = JacksonSugar.json2T(JacksonSugar.obj2Json(map));
 
-        String listjson = new JacksonSerializerAdapterImpl().serialize(list);
+        String listjson = SerializerAdapterFactory.buildJackson().serialize(list);
     }
 
     class JsonModel {

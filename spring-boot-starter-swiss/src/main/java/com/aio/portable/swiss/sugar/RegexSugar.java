@@ -8,21 +8,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public abstract class RegexSugar {
-    //    private final static String REGEX_PHONE = "^(1)\\d{10}$";
-    private final static String REGEX_PHONE_BLUR = "(^1\\d{2})\\d{4}(\\d{4})";
-    private final static String REGEX_PHONE_BLUR_REPLACE = "$1****$2";
-    private final static String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
-    private final static String FAKE_TEXT = "****";
-    private final static String REGEX_DATE = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
+    //    private static final String REGEX_PHONE = "^(1)\\d{10}$";
+    private static final String REGEX_PHONE_BLUR = "(^1\\d{2})\\d{4}(\\d{4})";
+    private static final String REGEX_PHONE_BLUR_REPLACE = "$1****$2";
+    private static final String FULL_REGEX_PHONE = "^((00|\\+)86)?1\\d{10}$";
+    private static final String FAKE_TEXT = "****";
+    private static final String REGEX_DATE = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
             "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\\.([0-9]+))?)?" +
             "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
 
     public static class Application {
-        public final static boolean validatePhone(String phone) {
+        public static final boolean validatePhone(String phone) {
             return Pattern.compile(FULL_REGEX_PHONE).matcher(phone).find();
         }
 
-//        public final static String blurPhone(String phone) {
+//        public static final String blurPhone(String phone) {
 //            if (phone.length() != 11)
 //                return phone;
 //            String result = null;
@@ -56,7 +56,7 @@ public abstract class RegexSugar {
      * @param input
      * @return
      */
-    public final static boolean match(String regex, String input) {
+    public static final boolean match(String regex, String input) {
         return Pattern.compile(regex).matcher(input).find();
     }
 
@@ -68,7 +68,7 @@ public abstract class RegexSugar {
      * @param input
      * @return
      */
-    public final static Matcher matcher(String regex, String input) {
+    public static final Matcher matcher(String regex, String input) {
         return Pattern.compile(regex).matcher(input);
     }
 
@@ -79,7 +79,7 @@ public abstract class RegexSugar {
      * @param input
      * @return
      */
-    public final static List<List<String>> findGroup(String regex, String input) {
+    public static final List<List<String>> findGroup(String regex, String input) {
         Matcher matcher = Pattern.compile(regex).matcher(input);
         List<List<String>> matches = new ArrayList<>();
         // 针对一个regex，匹配到多次
@@ -98,7 +98,7 @@ public abstract class RegexSugar {
     }
 
 
-    public final static List<String> find(String regex, String input) {
+    public static final List<String> find(String regex, String input) {
         List<String> eachFirst = findGroup(regex, input).stream().map(c -> c.get(0)).collect(Collectors.toList());
         return eachFirst;
     }
@@ -111,7 +111,7 @@ public abstract class RegexSugar {
 //     * @param replacement
 //     * @return
 //     */
-//    public final static String replaceAll(String content, String regex, String replacement) {
+//    public static final String replaceAll(String content, String regex, String replacement) {
 //        Pattern pattern = Pattern.compile(regex);
 //        Matcher matcher = pattern.matcher(content);
 //
@@ -128,7 +128,7 @@ public abstract class RegexSugar {
      * @param replacement
      * @return
      */
-    public final static String replaceAll(String input, String regex, Object replacement) {
+    public static final String replaceAll(String input, String regex, Object replacement) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
@@ -145,7 +145,7 @@ public abstract class RegexSugar {
      * @param replacement
      * @return
      */
-    public final static String replaceAll(String input, List<String> regexList, Object replacement) {
+    public static final String replaceAll(String input, List<String> regexList, Object replacement) {
         String result = input;
         for (String regex : regexList) {
             result = RegexSugar.replaceAll(result, regex, replacement);

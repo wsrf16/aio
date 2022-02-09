@@ -26,7 +26,7 @@ abstract class CriteriaUtil {
      * @param predicateList
      * @param <T>
      */
-    final static <T> void fillPredicateWithLikesCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
+    static final <T> void fillPredicateWithLikesCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
         Field field = property.getField();
         String name = property.getName();
         String value = (String) property.getValue();
@@ -67,7 +67,7 @@ abstract class CriteriaUtil {
      * @param predicateList
      * @param <T>
      */
-    final static <T extends Comparable<? super T>> void fillPredicateWithEqualsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
+    static final <T extends Comparable<? super T>> void fillPredicateWithEqualsCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
         Field field = property.getField();
         String name = property.getName();
         T value = (T) property.getValue();
@@ -110,7 +110,7 @@ abstract class CriteriaUtil {
      * @param predicateList
      * @param <T>
      */
-    final static <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<T> root, PropertyItem property, List<Predicate> predicateList) {
+    static final <T> void fillPredicateWithInsCriteria(CriteriaBuilder criteriaBuilder, Root<T> root, PropertyItem property, List<Predicate> predicateList) {
         Field field = property.getField();
         String name = property.getName();
         String fixName;
@@ -157,7 +157,7 @@ abstract class CriteriaUtil {
      * @param predicateList
      * @param <T>
      */
-    final static <T extends Comparable<? super T>> void fillPredicateWithBetweenCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
+    static final <T extends Comparable<? super T>> void fillPredicateWithBetweenCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
         Field field = property.getField();
         String name = property.getName();
         String fixName;
@@ -198,7 +198,7 @@ abstract class CriteriaUtil {
         }
     }
 
-//    private final static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
+//    private static final <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
 //        if (property.getValue() instanceof Collection<?>) {
 //            Collection<T> value = (Collection<T>) property.getValue();
 //            if (!CollectionSugar.isEmpty(value)) {
@@ -226,7 +226,7 @@ abstract class CriteriaUtil {
      * @param predicateList
      * @param <T>
      */
-    final static <T extends Comparable<? super T>> void fillPredicateWithComparableCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
+    static final <T extends Comparable<? super T>> void fillPredicateWithComparableCriteria(CriteriaBuilder criteriaBuilder, Root<?> root, PropertyItem property, List<Predicate> predicateList) {
         Field field = property.getField();
         String name = property.getName();
         T value = (T) property.getValue();

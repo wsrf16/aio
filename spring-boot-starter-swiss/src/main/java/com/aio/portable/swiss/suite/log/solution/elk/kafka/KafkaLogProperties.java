@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KafkaLogProperties extends KafkaProperties implements InitializingBean, DeepCloneable {
-    private final static Log log = LogFactory.getLog(KafkaLogProperties.class);
-    public final static String PREFIX = "spring.log.kafka";
+    private static final Log log = LogFactory.getLog(KafkaLogProperties.class);
+    public static final String PREFIX = "spring.log.kafka";
 
     private static KafkaLogProperties instance = new KafkaLogProperties();
 
@@ -45,12 +45,12 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
         initialSingletonInstance(this);
     }
 
-    public final static void initialSingletonInstance(KafkaLogProperties kafkaLogProperties) {
+    public static final void initialSingletonInstance(KafkaLogProperties kafkaLogProperties) {
         instance = kafkaLogProperties;
         log.info("KafkaLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void initialSingletonInstance(Binder binder) {
+    public static final void initialSingletonInstance(Binder binder) {
         BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             KafkaLogProperties.initialSingletonInstance(bindResult.get());

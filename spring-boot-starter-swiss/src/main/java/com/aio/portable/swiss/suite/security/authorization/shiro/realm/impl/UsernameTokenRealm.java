@@ -6,7 +6,7 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.util.ByteSource;
 
 public abstract class UsernameTokenRealm extends TokenAuthorizingRealm {
-//    final static String AUTHORIZATION = JWTAction.AUTHORIZATION_HEAD;
+//    static final String AUTHORIZATION = JWTAction.AUTHORIZATION_HEAD;
 
     public UsernameTokenRealm(CredentialsMatcher credentialsMatcher) {
         super(credentialsMatcher);

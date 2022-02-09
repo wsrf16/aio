@@ -15,7 +15,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class RSASugar {
 
-    public final static RSAKeyPair generateRSAKeyPair() {
+    public static final RSAKeyPair generateRSAKeyPair() {
         try {
             KeyPairGenerator generator = KeyPairGenerator.getInstance(RSA);
             KeyPair keyPair = generator.generateKeyPair();
@@ -30,15 +30,15 @@ public class RSASugar {
     }
 
 
-    private final static String RSA = "RSA";
-    public final static String SHA1WithRSA = "SHA1WithRSA";
-    private final static String X509 = "X.509";
-//    public final static CertificateFactory CERTIFICATE_FACTORY = certificateFactoryInstance();
+    private static final String RSA = "RSA";
+    public static final String SHA1WithRSA = "SHA1WithRSA";
+    private static final String X509 = "X.509";
+//    public static final CertificateFactory CERTIFICATE_FACTORY = certificateFactoryInstance();
 
-    public final static KeyFactory KEY_FACTORY = keyFactoryInstance();
+    public static final KeyFactory KEY_FACTORY = keyFactoryInstance();
 
 
-    private final static KeyFactory keyFactoryInstance() {
+    private static final KeyFactory keyFactoryInstance() {
         try {
             return KeyFactory.getInstance(RSA);
         } catch (NoSuchAlgorithmException e) {
@@ -47,7 +47,7 @@ public class RSASugar {
         }
     }
 
-//    private final static CertificateFactory certificateFactoryInstance() {
+//    private static final CertificateFactory certificateFactoryInstance() {
 //        try {
 //            return CertificateFactory.getInstance(X509);
 //        } catch (CertificateException e) {
@@ -57,7 +57,7 @@ public class RSASugar {
 //    }
 
 
-    public final static PrivateKey getPrivateKey(byte[] privateKeyBytes) {
+    public static final PrivateKey getPrivateKey(byte[] privateKeyBytes) {
         try {
             return KEY_FACTORY.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
         } catch (InvalidKeySpecException e) {
@@ -66,12 +66,12 @@ public class RSASugar {
         }
     }
 
-    public final static PrivateKey getPrivateKey(String privateKey) {
+    public static final PrivateKey getPrivateKey(String privateKey) {
         byte[] keyBytes = JDKBase64Convert.decode(privateKey.getBytes());
         return getPrivateKey(keyBytes);
     }
 
-    public final static PublicKey getPublicKey(byte[] publicKeyBytes) {
+    public static final PublicKey getPublicKey(byte[] publicKeyBytes) {
         try {
             return KEY_FACTORY.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
         } catch (InvalidKeySpecException e) {
@@ -80,7 +80,7 @@ public class RSASugar {
         }
     }
 
-//    public final static PublicKey getPublicKey1(byte[] publicKeyBytes) {
+//    public static final PublicKey getPublicKey1(byte[] publicKeyBytes) {
 //        try (InputStream in = new ByteArrayInputStream(publicKeyBytes)) {
 //            PublicKey publicKey = CERTIFICATE_FACTORY
 //                    .generateCertificate(in)
@@ -92,12 +92,12 @@ public class RSASugar {
 //        }
 //    }
 
-    public final static PublicKey getPublicKey(String publicKey) {
+    public static final PublicKey getPublicKey(String publicKey) {
         byte[] keyBytes = JDKBase64Convert.decode(publicKey.getBytes());
         return getPublicKey(keyBytes);
     }
 
-    public final static byte[] encrypt(byte[] bytes, byte[] publicKeyBytes) {
+    public static final byte[] encrypt(byte[] bytes, byte[] publicKeyBytes) {
         try {
             PublicKey publicKey = KEY_FACTORY.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
             Cipher cipher = Cipher.getInstance(RSA);
@@ -115,14 +115,14 @@ public class RSASugar {
         }
     }
 
-    public final static String encrypt(String text, String publicKey) {
+    public static final String encrypt(String text, String publicKey) {
         byte[] publicKeyBytes = JDKBase64Convert.decode(publicKey);
         byte[] bytes = text.getBytes();
         byte[] encrypt = encrypt(bytes, publicKeyBytes);
         return JDKBase64Convert.encodeToString(encrypt);
     }
 
-    public final static byte[] decrypt(byte[] bytes, byte[] privateKeyBytes) {
+    public static final byte[] decrypt(byte[] bytes, byte[] privateKeyBytes) {
         try {
             PrivateKey privateKey = getPrivateKey(privateKeyBytes);
             Cipher cipher = Cipher.getInstance(RSA);
@@ -134,14 +134,14 @@ public class RSASugar {
         }
     }
 
-    public final static String decrypt(String text, String privateKey) {
+    public static final String decrypt(String text, String privateKey) {
         byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] bytes = JDKBase64Convert.decode(text);
         byte[] encrypt = decrypt(bytes, privateKeyBytes);
         return new String(encrypt);
     }
 
-    public final static byte[] sign(byte[] bytes, byte[] privateKeyBytes) {
+    public static final byte[] sign(byte[] bytes, byte[] privateKeyBytes) {
         PrivateKey privateKey = getPrivateKey(privateKeyBytes);
         try {
             Signature signature = Signature.getInstance(SHA1WithRSA);
@@ -155,7 +155,7 @@ public class RSASugar {
         }
     }
 
-    public final static String sign(String text, String privateKey) {
+    public static final String sign(String text, String privateKey) {
         byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] bytes = text.getBytes();
         byte[] sign = sign(bytes, privateKeyBytes);

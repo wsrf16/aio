@@ -8,6 +8,7 @@ import org.springframework.util.ReflectionUtils;
 import java.beans.Introspector;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class ClassSugar {
-    private final static Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap(8);
+    private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap(8);
 
     static {
         primitiveWrapperTypeMap.put(Byte.class, Byte.TYPE);
@@ -62,10 +63,11 @@ public abstract class ClassSugar {
 
     /**
      * 获取类所有的路径
+     *
      * @param clazz
      * @return
      */
-    public final static String getPath(final Class<?> clazz) {
+    public static final String getPath(final Class<?> clazz) {
         String clazzFile = convertClassNameToResourceLocation(clazz.getTypeName());
         URL location = null;
         ProtectionDomain domain = clazz.getProtectionDomain();
@@ -114,35 +116,35 @@ public abstract class ClassSugar {
     }
 
 
-
-
-
     /**
      * getShortName -> org.springframework.util.ClassUtils
+     *
      * @param className
      * @return
      */
-    public final static String getShortName(String className) {
+    public static final String getShortName(String className) {
         String shortClassName = org.springframework.util.ClassUtils.getShortName(className);
         return shortClassName;
     }
 
     /**
      * getClassFileName -> org.springframework.util.ClassUtils
+     *
      * @param clazz
      * @return
      */
-    public final static String getClassFileName(Class<?> clazz) {
+    public static final String getClassFileName(Class<?> clazz) {
         String classFileName = org.springframework.util.ClassUtils.getClassFileName(clazz);
         return classFileName;
     }
 
     /**
      * getPackageName -> org.springframework.util.ClassUtils.getPackageName
+     *
      * @param clazz
      * @return
      */
-    public final static String getPackageName(Class<?> clazz) {
+    public static final String getPackageName(Class<?> clazz) {
         String classFileName = org.springframework.util.ClassUtils.getPackageName(clazz);
         return classFileName;
     }
@@ -150,13 +152,26 @@ public abstract class ClassSugar {
 
     /**
      * getBeanName -> Introspector.decapitalize
+     *
      * @param shortClassName
      * @return
      */
-    public final static String getBeanName(String shortClassName) {
+    public static final String getBeanName(String shortClassName) {
         return Introspector.decapitalize(shortClassName);
     }
 
+
+    public static final ArrayList<Class<?>> listLoadedClasses() {
+        try {
+            Field field = ClassLoader.class.getDeclaredField("classes");
+            field.setAccessible(true);
+            Vector<Class<?>> o = (Vector<Class<?>>) field.get(ClassLoader.getSystemClassLoader());
+            ArrayList<Class<?>> classArrayList = CollectionSugar.toList(o.elements());
+            return classArrayList;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 //    /**
 //     * convertClassName2ResourceLocation
@@ -164,17 +179,18 @@ public abstract class ClassSugar {
 //     * @param className className/packageName eg. com.company.biz | com.company.biz.Book
 //     * @return com/company/biz | com/company/biz/Book.class
 //     */
-//    public final static String convertClassNameToResourceLocation(String className) {
+//    public static final String convertClassNameToResourceLocation(String className) {
 //        String path = org.springframework.util.ClassUtils.convertClassNameToResourcePath(className).concat(".class");
 //        return path;
 //    }
 
     /**
      * convertClassNameToLocation
+     *
      * @param className com.company.biz | com.company.biz.Book
      * @return className/packageName eg. com/company/biz | com/company/biz/Book.class
      */
-    public final static String convertClassNameToResourceLocation(String className) {
+    public static final String convertClassNameToResourceLocation(String className) {
         String temp = className.replace(".", "/");
         String lastWord = StringSugar.getLastWord(temp, "/");
         temp = StringSugar.isCapitalize(lastWord) ? temp + ".class" : temp;
@@ -183,22 +199,24 @@ public abstract class ClassSugar {
 
     /**
      * convertLocationToClassName
+     *
      * @param location className/packageName eg. com/company/biz | com/company/biz/Book.class
      * @return com.company.biz | com.company.biz.Book
      */
-    public final static String convertResourceLocationToClassName(String location) {
+    public static final String convertResourceLocationToClassName(String location) {
         return ResourceSugar.convertResourceLocationToClassName(location);
     }
 
 
     /**
      * newInstance
+     *
      * @param clazz
      * @param parameterTypes
      * @param <T>
      * @return
      */
-    public synchronized final static <T> T newInstance(Class<T> clazz, Class<?>... parameterTypes) {
+    public static final <T> T newInstance(Class<T> clazz, Class<?>... parameterTypes) {
         try {
             return clazz.getConstructor(parameterTypes).newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -208,12 +226,13 @@ public abstract class ClassSugar {
 
     /**
      * declaredNewInstance
+     *
      * @param clazz
      * @param parameterTypes
      * @param <T>
      * @return
      */
-    public synchronized final static <T> T newDeclaredInstance(Class<T> clazz, Class<?>... parameterTypes) {
+    public static final <T> T newDeclaredInstance(Class<T> clazz, Class<?>... parameterTypes) {
         try {
             Constructor<T> declaredConstructor = parameterTypes == null ? clazz.getDeclaredConstructor() : clazz.getDeclaredConstructor(parameterTypes);
             ReflectionUtils.makeAccessible(declaredConstructor);
@@ -225,30 +244,33 @@ public abstract class ClassSugar {
 
     /**
      * isSimpleValueType
+     *
      * @param clazz
      * @return
      */
-    public final static boolean isSimpleValueType(Class<?> clazz) {
+    public static final boolean isSimpleValueType(Class<?> clazz) {
         return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
     }
 
     /**
      * isSuper
+     *
      * @param superClazz
      * @param extendClazz
      * @return
      */
-    public final static boolean isSuper(Class<?> superClazz, Class<?> extendClazz) {
+    public static final boolean isSuper(Class<?> superClazz, Class<?> extendClazz) {
         return superClazz.isAssignableFrom(extendClazz);
     }
 
     /**
      * isSuper
+     *
      * @param superClazz
      * @param extendClassName
      * @return
      */
-    public final static boolean isSuper(Class<?> superClazz, String extendClassName) {
+    public static final boolean isSuper(Class<?> superClazz, String extendClassName) {
         try {
             Class<?> extendClazz = Class.forName(extendClassName);
             return superClazz.isAssignableFrom(extendClazz);
@@ -259,11 +281,12 @@ public abstract class ClassSugar {
 
     /**
      * isSuper
+     *
      * @param superClassName
      * @param extendClazz
      * @return
      */
-    public final static boolean isSuper(String superClassName, Class<?> extendClazz) {
+    public static final boolean isSuper(String superClassName, Class<?> extendClazz) {
         try {
             Class<?> superClazz = Class.forName(superClassName);
             return superClazz.isAssignableFrom(extendClazz);
@@ -274,11 +297,12 @@ public abstract class ClassSugar {
 
     /**
      * isSuper
+     *
      * @param superClassName
      * @param extendClassName
      * @return
      */
-    public final static boolean isSuper(String superClassName, String extendClassName) {
+    public static final boolean isSuper(String superClassName, String extendClassName) {
         try {
             Class<?> superClazz = Class.forName(superClassName);
             Class<?> extendClazz = Class.forName(extendClassName);
@@ -291,33 +315,35 @@ public abstract class ClassSugar {
 
     /**
      * collectSuperObject
+     *
      * @param clazz
      * @param includeClass
      * @return
      */
-    private final static List<Class<?>> collectSuperObject(Class<?> clazz, boolean includeClass) {
-        List<Class<?>> clazzList = new ArrayList<>(CollectionSugar.toList(clazz));
+    private static final List<Class<?>> collectSuperObject(Class<?> clazz, boolean includeClass) {
+        List<Class<?>> clazzList = CollectionSugar.asList(clazz);
         return collectSuperObject(clazzList, includeClass);
     }
 
     /**
      * collectSuperObject
+     *
      * @param clazzList
      * @param includeClass
      * @return
      */
-    private final static List<Class<?>> collectSuperObject(List<Class<?>> clazzList, boolean includeClass) {
+    private static final List<Class<?>> collectSuperObject(List<Class<?>> clazzList, boolean includeClass) {
         List<Class<?>> collect = clazzList
                 .stream()
                 .filter(c -> c.getInterfaces().length > 0 || c.getSuperclass() != null)
                 .flatMap(c -> {
 
                     List<Class<?>> list = new ArrayList();
-                    List<Class<?>> interfaces = CollectionSugar.toList(c.getInterfaces());
+                    List<Class<?>> interfaces = CollectionSugar.asList(c.getInterfaces());
                     if (!CollectionSugar.isEmpty(interfaces))
                         list.addAll(interfaces);
 
-                    List<Class<?>> superInterfaces = CollectionSugar.toList(c.getInterfaces());
+                    List<Class<?>> superInterfaces = CollectionSugar.asList(c.getInterfaces());
                     if (!CollectionSugar.isEmpty(superInterfaces))
                         list.addAll(collectSuperObject(superInterfaces, true));
 
@@ -338,10 +364,11 @@ public abstract class ClassSugar {
 
     /**
      * collectSuperInterfaces
+     *
      * @param clazz
      * @return
      */
-    public final static Class<?>[] collectSuperInterfaces(Class<?> clazz) {
+    public static final Class<?>[] collectSuperInterfaces(Class<?> clazz) {
         List<Class<?>> classList = collectSuperObject(clazz, false);
         return classList.toArray(new Class<?>[0]);
     }
@@ -352,9 +379,7 @@ public abstract class ClassSugar {
 //    }
 
 
-
-
-    private final static boolean matchTypes(Object[] parameters, Class<?>[] parameterTypes) {
+    private static final boolean matchTypes(Object[] parameters, Class<?>[] parameterTypes) {
         boolean match = true;
         if (parameters == null || parameters.length != parameterTypes.length)
             match = false;
@@ -366,7 +391,7 @@ public abstract class ClassSugar {
                     else
                         match = false;
                 } else {
-                    if(parameterTypes[i].equals(parameters[i].getClass()))
+                    if (parameterTypes[i].equals(parameters[i].getClass()))
                         match = true;
                     else
                         match = false;
@@ -376,13 +401,63 @@ public abstract class ClassSugar {
         return match;
     }
 
-    public final static <R> R invoke(Object obj, String methodName, Object[] parameters) {
+    public static final Method getMethod(Class<?> clazz, String methodName) {
+        try {
+            Method method = clazz.getDeclaredMethod(methodName);
+            ReflectionUtils.makeAccessible(method);
+            return method;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final Method getMethod(Class<?> clazz, String methodName, Object[] parameters) {
+        Class<?>[] parameterTypes = new Class<?>[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            parameterTypes[i] = parameters[i].getClass();
+        }
+        Method[] methods = clazz.getDeclaredMethods();
+        Method method = Arrays.stream(methods)
+                .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
+                .findFirst().get();
+
+        ReflectionUtils.makeAccessible(method);
+        return method;
+    }
+
+    public static final Method getMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+        try {
+            Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            ReflectionUtils.makeAccessible(method);
+            return method;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static final <R> R invoke(Object obj, Class<?> clazz, String methodName) {
+        try {
+            Method method = clazz.getDeclaredMethod(methodName);
+            ReflectionUtils.makeAccessible(method);
+            R ret = (R) method.invoke(obj);
+            return ret;
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final <R> R invoke(Object obj, String methodName) {
+        return invoke(obj, obj.getClass(), methodName);
+    }
+
+    public static final <R> R invoke(Object obj, Class<?> clazz, String methodName, Object[] parameters) {
         try {
             Class<?>[] parameterTypes = new Class<?>[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
                 parameterTypes[i] = parameters[i].getClass();
             }
-            Method[] methods = obj.getClass().getDeclaredMethods();
+            Method[] methods = clazz.getDeclaredMethods();
             Method method = Arrays.stream(methods)
                     .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
                     .findFirst().get();
@@ -390,23 +465,46 @@ public abstract class ClassSugar {
             ReflectionUtils.makeAccessible(method);
             R ret = (R) method.invoke(obj, parameters);
             return ret;
-        } catch (IllegalAccessException|InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public final static <R> R invoke(Object obj, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+    public static final <R> R invoke(Object obj, String methodName, Object[] parameters) {
+        return invoke(obj, obj.getClass(), methodName, parameters);
+    }
+
+    public static final <R> R invoke(Object obj, Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
         try {
-            Method method = obj.getClass().getDeclaredMethod(methodName, parameterTypes);
+            Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
             ReflectionUtils.makeAccessible(method);
             R ret = (R) method.invoke(obj, parameters);
             return ret;
-        } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public final static <T> List<T> getListOfSPI(Class<T> interfaze) {
+    public static final <R> R invoke(Object obj, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+        return invoke(obj, obj.getClass(), methodName, parameterTypes, parameters);
+    }
+
+    public static final <R> R getDeclaredField(Object obj, Class<?> clazz, String name) {
+        try {
+            Field field = clazz.getDeclaredField(name);
+            ReflectionUtils.makeAccessible(field);
+            R ret = (R) field.get(obj);
+            return ret;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final <R> R getDeclaredField(Object obj, String name) {
+        return getDeclaredField(obj, obj.getClass(), name);
+    }
+
+    public static final <T> List<T> getListOfSPI(Class<T> interfaze) {
         Iterator<T> iterator = ServiceLoader.load(interfaze).iterator();
         List<T> list = CollectionSugar.toList(iterator);
         return list;

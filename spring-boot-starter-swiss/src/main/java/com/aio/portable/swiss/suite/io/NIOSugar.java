@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 
 public abstract class NIOSugar {
     public static class Files {
-        public final static void write(String path, String content, Charset charset, OpenOption... options) {
+        public static final void write(String path, String content, Charset charset, OpenOption... options) {
             write(Paths.get(path), content, charset, options);
         }
 
-        public final static void write(Path path, String content, Charset charset, OpenOption... options) {
+        public static final void write(Path path, String content, Charset charset, OpenOption... options) {
             try (BufferedWriter writer = java.nio.file.Files.newBufferedWriter(path, charset, options)) {
                 writer.write(content);
             } catch (IOException e) {
@@ -31,11 +31,11 @@ public abstract class NIOSugar {
             }
         }
 
-        public final static String read(String path, Charset charset) {
+        public static final String read(String path, Charset charset) {
             return read(Paths.get(path), charset);
         }
 
-        public final static String read(Path path, Charset charset) {
+        public static final String read(Path path, Charset charset) {
             try {
                 String content = new String(java.nio.file.Files.readAllBytes(path), charset);
                 return content;
@@ -47,7 +47,7 @@ public abstract class NIOSugar {
 
 //        Files.newBufferedReader()
 
-//    public final static void write(Path path, String content, OpenOption... options) {
+//    public static final void write(Path path, String content, OpenOption... options) {
 //        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
 //            writer.write(content);
 //        } catch (IOException e) {
@@ -56,11 +56,11 @@ public abstract class NIOSugar {
 //        }
 //    }
 
-        public final static List<Path> listFileNames(String path) {
+        public static final List<Path> listFileNames(String path) {
             return listFileNames(Paths.get(path));
         }
 
-        public final static List<Path> listFileNames(Path path) {
+        public static final List<Path> listFileNames(Path path) {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.getFileName()).collect(Collectors.toList());
             } catch (IOException e) {
@@ -69,11 +69,11 @@ public abstract class NIOSugar {
             }
         }
 
-        public final static List<Path> listFileAbsolutePath(String path) {
+        public static final List<Path> listFileAbsolutePath(String path) {
             return listFileAbsolutePath(Paths.get(path));
         }
 
-        public final static List<Path> listFileAbsolutePath(Path path) {
+        public static final List<Path> listFileAbsolutePath(Path path) {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.toAbsolutePath()).collect(Collectors.toList());
             } catch (IOException e) {
@@ -82,11 +82,11 @@ public abstract class NIOSugar {
             }
         }
 
-        public final static Path createDirectories(String path, FileAttribute<?>... attrs) {
+        public static final Path createDirectories(String path, FileAttribute<?>... attrs) {
             return createDirectories(Paths.get(path), attrs);
         }
 
-        public final static Path createDirectories(Path path, FileAttribute<?>... attrs) {
+        public static final Path createDirectories(Path path, FileAttribute<?>... attrs) {
             try {
                 return java.nio.file.Files.createDirectories(path, attrs);
             } catch (IOException e) {
@@ -95,19 +95,19 @@ public abstract class NIOSugar {
             }
         }
 
-        public final static Path createParentDirectories(String path) {
+        public static final Path createParentDirectories(String path) {
             return createParentDirectories(Paths.get(path));
         }
 
-        public final static Path createParentDirectories(Path path) {
+        public static final Path createParentDirectories(Path path) {
             return createDirectories(path.getParent());
         }
 
-        public final static void deleteIfExists(String path) {
+        public static final void deleteIfExists(String path) {
             deleteIfExists(Paths.get(path));
         }
 
-        public final static void deleteIfExists(Path path) {
+        public static final void deleteIfExists(Path path) {
             try {
                 if (new File(path.toString()).isFile())
                     java.nio.file.Files.deleteIfExists(path);
@@ -120,11 +120,11 @@ public abstract class NIOSugar {
             }
         }
 
-        private final static void deleteDirectories(String path){
+        private static final void deleteDirectories(String path){
             deleteDirectories(Paths.get(path));
         }
 
-        private final static void deleteDirectories(Path path) {
+        private static final void deleteDirectories(Path path) {
             try {
                 if (new File(path.toString()).exists()) {
                     java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -148,11 +148,11 @@ public abstract class NIOSugar {
         }
 
 
-        public final static List<Path> listChildrenFilePath(String path) {
+        public static final List<Path> listChildrenFilePath(String path) {
             return listChildrenFilePath(Paths.get(path));
         }
 
-        public final static List<Path> listChildrenFilePath(Path path) {
+        public static final List<Path> listChildrenFilePath(Path path) {
             final List<Path> paths = new ArrayList<>();
             try {
                 java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -172,11 +172,11 @@ public abstract class NIOSugar {
         }
 
 
-//    public final static <T> List<Path> listChildrenFilePath(String path, Predicate<T> predicate, T t) {
+//    public static final <T> List<Path> listChildrenFilePath(String path, Predicate<T> predicate, T t) {
 //        return listChildrenFilePath(Paths.get(path), predicate, t);
 //    }
 
-        private final static List<Path> listChildrenFilePath(Path path, BiFunction<Path, List<String>, Boolean> biFunction, List<String> condition) {
+        private static final List<Path> listChildrenFilePath(Path path, BiFunction<Path, List<String>, Boolean> biFunction, List<String> condition) {
             final List<Path> paths = new ArrayList<>();
             try {
                 java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -197,17 +197,17 @@ public abstract class NIOSugar {
         }
 
 
-        public final static List<Path> listChildrenFilePath(Path path, String endsWith) {
+        public static final List<Path> listChildrenFilePath(Path path, String endsWith) {
             List<String> anyEndsWithList = new ArrayList<>();
             anyEndsWithList.add(endsWith);
             return listChildrenFilePath(path, anyEndsWithList);
         }
 
-        public final static List<Path> listChildrenFilePath(String path, String endsWith) {
+        public static final List<Path> listChildrenFilePath(String path, String endsWith) {
             return listChildrenFilePath(Paths.get(path), endsWith);
         }
 
-        public final static List<Path> listChildrenFilePath(Path path, List<String> anyEndsWithList) {
+        public static final List<Path> listChildrenFilePath(Path path, List<String> anyEndsWithList) {
             return listChildrenFilePath(path, new BiFunction<Path, List<String>, Boolean>() {
                 @Override
                 public Boolean apply(Path path, List<String> condition) {
@@ -216,20 +216,73 @@ public abstract class NIOSugar {
             }, anyEndsWithList);
         }
 
-        public final static List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
+        public static final List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
             return listChildrenFilePath(Paths.get(path), anyEndsWithList);
         }
     }
 
-    public final static void map(String file, Consumer<MappedByteBuffer> consumer) {
-        try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
-            try(FileChannel channel = randomAccessFile.getChannel()) {
-                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, 0, 5);
-                consumer.accept(map);
-            }
 
+
+//    public static long orderWrite(byte[] buffer, int offset, File file) {
+//        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
+//            try (FileChannel channel = randomAccessFile.getChannel()) {
+//                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, 0, 1);
+//                map.position(offset);
+//                map.put(buffer);
+//                return map.position();
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+
+
+    public static MappedByteBuffer mmpRead(File file, long position, long size) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
+            try (FileChannel channel = randomAccessFile.getChannel()) {
+                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, position, size);
+                return map;
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
+    public static final void mmap(File file, long position, long size, Consumer<MappedByteBuffer> consumer) {
+        try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
+            try(FileChannel channel = randomAccessFile.getChannel()) {
+                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, position, size);
+                consumer.accept(map);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void mmpCopy(Path from, Path to, long position, long size) {
+        try (FileChannel readChannel = FileChannel.open(from, StandardOpenOption.READ)) {
+            MappedByteBuffer mappedByteBuffer = readChannel.map(FileChannel.MapMode.READ_ONLY, position, size);
+            try (FileChannel writeChannel = FileChannel.open(to, StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+                writeChannel.write(mappedByteBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void sendFile(Path from, Path to, long position, long size) {
+        try (FileChannel readChannel = FileChannel.open(from, StandardOpenOption.READ)) {
+            try (FileChannel writeChannel = FileChannel.open(to, StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+                readChannel.transferTo(position, size, writeChannel);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

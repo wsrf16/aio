@@ -21,44 +21,44 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 public class RestTemplater {
-    public final static class Headers {
-        public final static HttpHeaders newContentTypeApplicationJson() {
+    public static final class Headers {
+        public static final HttpHeaders newContentTypeApplicationJson() {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return headers;
         }
 
-        public final static HttpHeaders newContentTypeApplicationJsonUtf8() {
+        public static final HttpHeaders newContentTypeApplicationJsonUtf8() {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
             return headers;
         }
 
-        public final static HttpHeaders newContentTypeApplicationForm() {
+        public static final HttpHeaders newContentTypeApplicationForm() {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
             return headers;
         }
 
-        public final static HttpHeaders newContentTypeApplicationXml() {
+        public static final HttpHeaders newContentTypeApplicationXml() {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE);
             return headers;
         }
 
-        public final static void addContentTypeApplicationJson(HttpHeaders headers) {
+        public static final void addContentTypeApplicationJson(HttpHeaders headers) {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         }
 
-        public final static void addContentTypeApplicationJsonUtf8(HttpHeaders headers) {
+        public static final void addContentTypeApplicationJsonUtf8(HttpHeaders headers) {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
         }
 
-        public final static void addContentTypeForm(HttpHeaders headers) {
+        public static final void addContentTypeForm(HttpHeaders headers) {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         }
 
-        public final static void addAuthorization(HttpHeaders headers, String username, String password) {
+        public static final void addAuthorization(HttpHeaders headers, String username, String password) {
             headers.add(HttpHeaders.AUTHORIZATION,
                     MessageFormat.format("Basic {0}",
                             JDKBase64Convert.encodeToString(MessageFormat.format("{0}:{1}", username, password))));
@@ -77,27 +77,27 @@ public class RestTemplater {
         }
     }
 
-    public final static void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
+    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
         SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
         restTemplate.setRequestFactory(factory);
     }
 
-    public final static void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
+    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
         HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
         restTemplate.setRequestFactory(factory);
     }
 
-    public final static void setSkipSSLRequestFactory(RestTemplate restTemplate) {
+    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate) {
         SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory();
         restTemplate.setRequestFactory(factory);
     }
 
-    public final static void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
+    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
         SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory(host, port);
         restTemplate.setRequestFactory(factory);
     }
 
-    public final static class HttpRequestFactory {
+    public static final class HttpRequestFactory {
         // http://www.it1352.com/215149.html
         public static HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
             HttpHost httpHost = new HttpHost(host, port);

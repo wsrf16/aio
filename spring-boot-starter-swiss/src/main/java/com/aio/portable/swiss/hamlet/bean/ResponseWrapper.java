@@ -8,7 +8,7 @@ import java.util.Date;
 
 //@ApiModel("返回实体")
 public class ResponseWrapper<T> {
-    public final static String SPAN_ID_HEADER = "span-id";
+    public static final String SPAN_ID_HEADER = "span-id";
 //    protected static ResponseWrapper singleton = new ResponseWrapper();
 
     /**

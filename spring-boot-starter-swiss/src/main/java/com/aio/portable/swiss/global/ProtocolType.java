@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.global;
 
 public class ProtocolType {
-    public final static String file = "file";
-    public final static String jar = "jar";
+    public static final String file = "file";
+    public static final String jar = "jar";
 }

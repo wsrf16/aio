@@ -58,7 +58,7 @@ public class ESLogBean extends StandardLogBean {
         setTimeStamp(DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
     }
 
-    public final static String formatIndex(String name) {
+    public static final String formatIndex(String name) {
 
         String result = name;
         if (StringSugar.containUpperCase(result))

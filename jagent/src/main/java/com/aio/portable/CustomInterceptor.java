@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 
 public class CustomInterceptor {
     @RuntimeType
-    public final static Object dynamicIntercept(@This Object proxy,
+    public static final Object dynamicIntercept(@This Object proxy,
                                    @AllArguments Object[] arguments,
                                    @Origin Class clazz,
                                    @Origin Method method,
@@ -42,7 +42,7 @@ public class CustomInterceptor {
     }
 
     @RuntimeType
-    public final static Object staticIntercept(@AllArguments Object[] arguments,
+    public static final Object staticIntercept(@AllArguments Object[] arguments,
                                    @Origin Class clazz,
                                    @Origin Method method,
                                    @SuperCall Callable<?> callable) throws Exception {

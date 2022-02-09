@@ -45,7 +45,7 @@ public class PreMain {
 
 
 
-    public final static void premain(String agentOps, Instrumentation inst)
+    public static final void premain(String agentOps, Instrumentation inst)
     {
         System.out.println("Hello World! PreMain.premain(String agentOps, Instrumentation inst)");
         System.out.println(agentOps);

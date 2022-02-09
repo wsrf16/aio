@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
 public class Slf4JLogProperties implements InitializingBean {
-    public final static String PREFIX = "spring.log.slf4j";
+    public static final String PREFIX = "spring.log.slf4j";
 
-    private final static Log log = LogFactory.getLog(Slf4JLogProperties.class);
+    private static final Log log = LogFactory.getLog(Slf4JLogProperties.class);
 
     private Boolean enabled = true;
 
@@ -42,12 +42,12 @@ public class Slf4JLogProperties implements InitializingBean {
         initialSingletonInstance(this);
     }
 
-    public final static void initialSingletonInstance(Slf4JLogProperties properties) {
+    public static final void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
         log.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void initialSingletonInstance(Binder binder) {
+    public static final void initialSingletonInstance(Binder binder) {
         final BindResult<Slf4JLogProperties> bindResult = binder.bind(Slf4JLogProperties.PREFIX, Slf4JLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             Slf4JLogProperties.initialSingletonInstance(bindResult.get());

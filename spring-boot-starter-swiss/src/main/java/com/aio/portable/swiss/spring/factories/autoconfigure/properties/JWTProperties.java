@@ -1,15 +1,13 @@
 package com.aio.portable.swiss.spring.factories.autoconfigure.properties;
 
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTConfig;
-import org.springframework.beans.BeanUtils;
-
 import java.util.Date;
 
 public class JWTProperties {
-    private final static int DEFAULT_EXPIRED_MINUTES = 10;
-    private final static String SECRET = "secret";
+    private static final int DEFAULT_EXPIRED_MINUTES = 10;
+    private static final String SECRET = "secret";
 
-    protected Boolean require = true;
+    protected Boolean enabled = true;
+    protected Boolean explicit = true;
     protected String signAlgorithm = "HMAC256";
 //    protected String JWTId;
     protected String secret = SECRET;
@@ -23,12 +21,20 @@ public class JWTProperties {
     protected Integer expiredMinutes = DEFAULT_EXPIRED_MINUTES;
     protected Date notBefore;
 
-    public Boolean getRequire() {
-        return require;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setRequire(Boolean require) {
-        this.require = require;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Boolean getExplicit() {
+        return explicit;
+    }
+
+    public void setExplicit(Boolean explicit) {
+        this.explicit = explicit;
     }
 
     public String getSignAlgorithm() {
@@ -136,10 +142,10 @@ public class JWTProperties {
 //        return properties;
 //    }
 
-    public JWTConfig toConfig() {
-        JWTConfig jwtConfig = new JWTConfig();
-        BeanUtils.copyProperties(this, jwtConfig);
-        return jwtConfig;
-    }
+//    public JWTConfig toConfig() {
+//        JWTConfig jwtConfig = new JWTConfig();
+//        BeanUtils.copyProperties(this, jwtConfig);
+//        return jwtConfig;
+//    }
 }
 

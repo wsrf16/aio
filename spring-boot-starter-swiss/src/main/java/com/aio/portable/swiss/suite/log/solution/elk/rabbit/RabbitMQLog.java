@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by York on 2017/11/23.
  */
 public class RabbitMQLog extends LogSingle {
-    private final static Log log = LogFactory.getLog(RabbitMQLog.class);
+    private static final Log log = LogFactory.getLog(RabbitMQLog.class);
 
     protected RabbitMQLogProperties properties;
 

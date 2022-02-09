@@ -18,17 +18,17 @@ import javax.sql.DataSource;
 //@Configuration
 @MapperScan(basePackages = {MasterDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = MasterDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
 public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
-    public final static String BASE_PACKAGES = "com.aio.portable.parkdb.dao.master.mapper";
-    private final static String SPECIAL_NAME = "master";
+    public static final String BASE_PACKAGES = "com.aio.portable.parkdb.dao.master.mapper";
+    private static final String SPECIAL_NAME = "master";
 
-    private final static String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
-    public final static String SQL_SESSION_TEMPLATE_BEAN = SPECIAL_NAME + "SQLSessionTemplate";
-    private final static String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
-    private final static String SQL_SESSION_FACTORY_BEAN = SPECIAL_NAME + "SQLSessionFactory";
-    private final static String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
+    private static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    public static final String SQL_SESSION_TEMPLATE_BEAN = SPECIAL_NAME + "SQLSessionTemplate";
+    private static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
+    private static final String SQL_SESSION_FACTORY_BEAN = SPECIAL_NAME + "SQLSessionFactory";
+    private static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
 
-    private final static String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
-    private final static String MYBATIS_PROPERTIES_BEAN = SPECIAL_NAME + "MybatisProperties";
+    private static final String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
+    private static final String MYBATIS_PROPERTIES_BEAN = SPECIAL_NAME + "MybatisProperties";
 
     @Bean(MYBATIS_PROPERTIES_BEAN)
     @Primary

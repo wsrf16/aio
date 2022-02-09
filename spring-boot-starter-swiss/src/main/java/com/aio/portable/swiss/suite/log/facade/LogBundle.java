@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.sugar.ThrowableSugar;
+import com.aio.portable.swiss.suite.log.action.LogAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by York on 2017/11/22.
  */
 public abstract class LogBundle implements LogAction {
-    private final static Log log = LogFactory.getLog(LogBundle.class);
+    private static final Log log = LogFactory.getLog(LogBundle.class);
 
     protected List<LogSingle> logList;
 

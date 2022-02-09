@@ -1,5 +1,5 @@
-package com.aio.portable.swiss.spring.factories.autoconfigure;
-
+//package com.aio.portable.swiss.spring.factories.autoconfigure;
+//
 //import org.elasticsearch.client.Client;
 //import org.elasticsearch.client.transport.TransportClient;
 //import org.elasticsearch.common.settings.Settings;
@@ -42,9 +42,9 @@ package com.aio.portable.swiss.spring.factories.autoconfigure;
 //    @Autowired
 //    ElasticsearchProperties properties;
 //
-//    private final static String NETTY3 = "NETTY3";
-//    private final static String NETTY4 = "NETTY4";
-//    private final static String DEFAULT_MODE = NETTY4;
+//    private static final String NETTY3 = "NETTY3";
+//    private static final String NETTY4 = "NETTY4";
+//    private static final String DEFAULT_MODE = NETTY4;
 //
 //
 //    @Bean

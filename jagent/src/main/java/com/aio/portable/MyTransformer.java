@@ -10,8 +10,8 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 public class MyTransformer implements ClassFileTransformer {
-    final static String prefix = "\nlong startTime = System.currentTimeMillis();\n";
-    final static String postfix = "\nlong endTime = System.currentTimeMillis();\n";
+    static final String prefix = "\nlong startTime = System.currentTimeMillis();\n";
+    static final String postfix = "\nlong endTime = System.currentTimeMillis();\n";
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {

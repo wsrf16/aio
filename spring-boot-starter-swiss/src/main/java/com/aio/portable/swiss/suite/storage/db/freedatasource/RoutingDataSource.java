@@ -7,7 +7,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import java.text.MessageFormat;
 
 public class RoutingDataSource extends AbstractRoutingDataSource {
-    private final static Log log = LogFactory.getLog(RoutingDataSource.class);
+    private static final Log log = LogFactory.getLog(RoutingDataSource.class);
 
     @Override
     protected Object determineCurrentLookupKey() {

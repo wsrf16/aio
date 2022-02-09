@@ -1,4 +1,4 @@
-package com.aio.portable.swiss.suite.schedule.xxljob;
+package com.aio.portable.park.xxljob;
 
 public class Admin {
     private String addresses;

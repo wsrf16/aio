@@ -11,7 +11,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class NodePersistenceTest {
 
     @Autowired
-    public StringRedisTemplate stringRedisTemplate;
+    public RedisTemplate redisTemplate;
 
     @Test
     public void foobar() {
@@ -44,27 +44,30 @@ public class NodePersistenceTest {
         map4.put("key4", 4444);
 
         NodePersistence po;
-
-        {
-            ZooKeeper zooKeeper = ZooKeeperSugar.build("10.124.202.121:32181", 60000, new Watcher() {
-                @Override
-                public void process(WatchedEvent watchedEvent) {
-                    System.out.println(watchedEvent);
-                }
-            });
-            po = ZooKeeperPO.singletonInstance(zooKeeper, "database1");
-            po(map1, map2, map3, map4, po);
+        String type = "redis";
+        switch (type) {
+            case "zookeeper": {
+                ZooKeeper zooKeeper = ZooKeeperSugar.build("10.124.202.121:32181", 60000, new Watcher() {
+                    @Override
+                    public void process(WatchedEvent watchedEvent) {
+                        System.out.println(watchedEvent);
+                    }
+                });
+                po = ZooKeeperPO.singletonInstance(zooKeeper, "database1");
+            }
+            break;
+            case "redis": {
+                po = RedisPO.singletonInstance(redisTemplate, "database1");
+            }
+            break;
+            case "file":
+            default: {
+                po = FilePO.singletonInstance("database1");
+            }
+            break;
         }
+        po(map1, map2, map3, map4, po);
 
-        {
-            po = RedisPO.singletonInstance(stringRedisTemplate, "database1");
-            po(map1, map2, map3, map4, po);
-        }
-
-        {
-            po = FilePO.singletonInstance("database1");
-            po(map1, map2, map3, map4, po);
-        }
     }
 
     private void po(Map<String, Object> map1, Map<String, Object> map2, Map<String, Object> map3, Map<String, Object> map4, NodePersistence po) {

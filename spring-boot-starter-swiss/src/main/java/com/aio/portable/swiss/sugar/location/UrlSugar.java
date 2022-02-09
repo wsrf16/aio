@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class UrlSugar {
 //    UriComponentsBuilder
 
-    public final static String addQueries(String uri, Object bean) {
+    public static final String addQueries(String uri, Object bean) {
         Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
         String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
 
@@ -23,7 +23,7 @@ public abstract class UrlSugar {
     }
 
 
-    public final static String concat(String first, String... urls) {
+    public static final String concat(String first, String... urls) {
         String reduce = Arrays.stream(urls).reduce(first, (sum, element) -> {
             String left = StringSugar.trimAllEnd(sum, "/");
             String right = StringSugar.trimAllStart(element, "/");

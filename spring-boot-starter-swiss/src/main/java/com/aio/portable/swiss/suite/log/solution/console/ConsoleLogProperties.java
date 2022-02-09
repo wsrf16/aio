@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
 public class ConsoleLogProperties implements InitializingBean {
-    public final static String PREFIX = "spring.log.console";
+    public static final String PREFIX = "spring.log.console";
 
-    private final static Log log = LogFactory.getLog(ConsoleLogProperties.class);
+    private static final Log log = LogFactory.getLog(ConsoleLogProperties.class);
 
     private Boolean enabled = true;
 
@@ -42,12 +42,12 @@ public class ConsoleLogProperties implements InitializingBean {
         initialSingletonInstance(this);
     }
 
-    public final static void initialSingletonInstance(ConsoleLogProperties properties) {
+    public static final void initialSingletonInstance(ConsoleLogProperties properties) {
         instance = properties;
         log.info("ConsoleLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public final static void initialSingletonInstance(Binder binder) {
+    public static final void initialSingletonInstance(Binder binder) {
         BindResult<ConsoleLogProperties> bindResult = binder.bind(ConsoleLogProperties.PREFIX, ConsoleLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             ConsoleLogProperties.initialSingletonInstance(bindResult.get());

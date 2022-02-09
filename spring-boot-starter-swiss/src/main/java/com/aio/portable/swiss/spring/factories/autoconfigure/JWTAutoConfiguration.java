@@ -25,7 +25,7 @@ public class JWTAutoConfiguration {
     @Bean
     @ConditionalOnBean(JWTProperties.class)
     public JWTTemplate jwtTemplate(JWTProperties jwtProperties) {
-        JWTConfig jwtConfig = jwtProperties.toConfig();
+        JWTConfig jwtConfig = JWTConfig.build(jwtProperties);
         return new JWTTemplate(jwtConfig);
     }
 }

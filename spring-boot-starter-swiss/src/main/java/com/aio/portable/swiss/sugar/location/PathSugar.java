@@ -19,20 +19,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class PathSugar {
-    final static String[] SEPARATORS = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
+    static final String[] SEPARATORS = new String[]{"\\/", "/\\", "\\\\", "//", "\\", "/"};
 
-    final static String SEPARATOR = File.separator;
+    static final String SEPARATOR = File.separator;
 
-    public final static String path(String first, String... more) {
+    public static final String path(String first, String... more) {
         return Paths.get(first, more).toString();
     }
 
 
-    public final static String concatByOS(String... parts) {
+    public static final String concatByOS(String... parts) {
         return concatBy(SEPARATOR, parts);
     }
 
-    public final static String concatBy(String separator, String... parts) {
+    public static final String concatBy(String separator, String... parts) {
         if (CollectionSugar.isEmpty(parts))
             return Constant.EMPTY;
 
@@ -50,9 +50,9 @@ public abstract class PathSugar {
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
-    final static String DELIMITER_CHAR = "/";
+    static final String DELIMITER_CHAR = "/";
 
-    public final static String getPathByResourceUtils(String path) throws FileNotFoundException {
+    public static final String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
             urlPath = StringSugar.trimStart(urlPath, DELIMITER_CHAR);
@@ -60,20 +60,20 @@ public abstract class PathSugar {
         return urlPath;
     }
 
-    public final static String getAbsolutePathByFile(String path) {
+    public static final String getAbsolutePathByFile(String path) {
         return new File(path).getAbsolutePath();
     }
 
-    public final static String getCanonicalPathByFile(String path) throws IOException {
+    public static final String getCanonicalPathByFile(String path) throws IOException {
         return new File(path).getCanonicalPath();
     }
     //Relative
 
-    public final static Path getJarDirectoryPath(Class<?> sourceClass) {
+    public static final Path getJarDirectoryPath(Class<?> sourceClass) {
         return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
     }
 
-    public final static Path getClassesDirectoryPath(Class<?> sourceClass) {
+    public static final Path getClassesDirectoryPath(Class<?> sourceClass) {
         return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
     }
 

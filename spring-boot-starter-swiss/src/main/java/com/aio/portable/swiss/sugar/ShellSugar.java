@@ -11,19 +11,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class ShellSugar {
-    private final static String VARIABLE_LONG = "\\$\\'{'{0}\\'}'";
-    private final static String VARIABLE_SHORT = "\\${0}";
-    private final static List<String> VARIABLE_LIST = Arrays.asList(VARIABLE_LONG, VARIABLE_SHORT);
+    private static final String VARIABLE_LONG = "\\$\\'{'{0}\\'}'";
+    private static final String VARIABLE_SHORT = "\\${0}";
+    private static final List<String> VARIABLE_LIST = Arrays.asList(VARIABLE_LONG, VARIABLE_SHORT);
 
-    public final static String spellLongVariable(String name) {
+    public static final String spellLongVariable(String name) {
         return MessageFormat.format(VARIABLE_LONG, name);
     }
 
-    public final static String spellShortVariable(String name) {
+    public static final String spellShortVariable(String name) {
         return MessageFormat.format(VARIABLE_SHORT, name);
     }
 
-    public final static String setVariable(String input, Object bean) {
+    public static final String setVariable(String input, Object bean) {
         Map<String, Object> map = bean instanceof Map ? (Map<String, Object>) bean : BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(bean);
         String result = input;
         for (Map.Entry<String, Object> entry : map.entrySet()) {

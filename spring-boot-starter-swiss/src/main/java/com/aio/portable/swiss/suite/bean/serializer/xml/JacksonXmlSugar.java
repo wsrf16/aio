@@ -17,15 +17,15 @@ public class JacksonXmlSugar {
         Default,
         CamelCase,
     }
-    private final static ObjectMapper shortObjectMapper = getObjectMapper(false, false, null);
-    private final static ObjectMapper longObjectMapper = getObjectMapper(true, true, null);
-    private final static ObjectMapper normalObjectMapper = getObjectMapper(false, true, null);
-    private final static ObjectMapper dumpObjectMapper = Jackson2ObjectMapperBuilder.xml().build()
+    private static final ObjectMapper shortObjectMapper = getObjectMapper(false, false, null);
+    private static final ObjectMapper longObjectMapper = getObjectMapper(true, true, null);
+    private static final ObjectMapper normalObjectMapper = getObjectMapper(false, true, null);
+    private static final ObjectMapper dumpObjectMapper = Jackson2ObjectMapperBuilder.xml().build()
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
             .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-//    private final static ObjectMapper objectMapper = new ObjectMapper();
+//    private static final ObjectMapper objectMapper = new ObjectMapper();
 //
 //    static {
 //        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -40,7 +40,7 @@ public class JacksonXmlSugar {
      * @param obj
      * @return
      */
-    public final static String obj2TightXml(Object obj) {
+    public static final String obj2TightXml(Object obj) {
 //        return obj2Json(obj, false, false);
         ObjectMapper mapper = shortObjectMapper;
         String json;
@@ -59,7 +59,7 @@ public class JacksonXmlSugar {
      * @param throwException
      * @return
      */
-    public final static String obj2TightXml(Object obj, Boolean throwException) {
+    public static final String obj2TightXml(Object obj, Boolean throwException) {
         if (throwException)
             return obj2TightXml(obj);
         else {
@@ -78,7 +78,7 @@ public class JacksonXmlSugar {
      * @param obj
      * @return
      */
-    public final static String obj2LongXml(Object obj) {
+    public static final String obj2LongXml(Object obj) {
 //        return obj2Json(obj, true, true);
         ObjectMapper mapper = longObjectMapper;
         String json;
@@ -97,7 +97,7 @@ public class JacksonXmlSugar {
      * @param throwException
      * @return
      */
-    public final static String obj2LongXml(Object obj, Boolean throwException) {
+    public static final String obj2LongXml(Object obj, Boolean throwException) {
         if (throwException)
             return obj2LongXml(obj);
         else {
@@ -116,7 +116,7 @@ public class JacksonXmlSugar {
      * @param obj
      * @return
      */
-    public final static String obj2Xml(Object obj) {
+    public static final String obj2Xml(Object obj) {
 //        return obj2Json(obj, false, true);
         ObjectMapper mapper = normalObjectMapper;
         String json;
@@ -134,7 +134,7 @@ public class JacksonXmlSugar {
      * @param obj
      * @return
      */
-    public final static String obj2Xml(Object obj, Boolean throwException) {
+    public static final String obj2Xml(Object obj, Boolean throwException) {
         if (throwException)
             return obj2Xml(obj, false, true);
         else {
@@ -171,7 +171,7 @@ public class JacksonXmlSugar {
      * @param includeNullAndEmpty
      * @return
      */
-    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty) {
+    public static final ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty) {
         return getObjectMapper(indent, includeNullAndEmpty, null, null);
     }
 
@@ -182,7 +182,7 @@ public class JacksonXmlSugar {
      * @param strategy
      * @return
      */
-    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
+    public static final ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
         return getObjectMapper(indent, includeNullAndEmpty, strategy, null);
     }
 
@@ -194,7 +194,7 @@ public class JacksonXmlSugar {
      * @param dateFormat
      * @return
      */
-    public final static ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
+    public static final ObjectMapper getObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat) {
         ObjectMapper mapper = Jackson2ObjectMapperBuilder.xml().build()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -235,7 +235,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T xml2T(String jsonStr, Class<T> clazz) {
+    public static final <T> T xml2T(String jsonStr, Class<T> clazz) {
         ObjectMapper mapper = dumpObjectMapper;
         try {
             return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
@@ -251,7 +251,7 @@ public class JacksonXmlSugar {
 //     * @param jsonStr
 //     * @return
 //     */
-//    public final static JsonNode xml2XmlNode(String jsonStr) {
+//    public static final JsonNode xml2XmlNode(String jsonStr) {
 //        ObjectMapper mapper = dumpObjectMapper;
 //        try {
 //            return mapper.readTree(jsonStr);
@@ -268,7 +268,7 @@ public class JacksonXmlSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> T xml2T(String jsonStr) {
+    public static final <T> T xml2T(String jsonStr) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
             TypeReference<T> valueTypeRef = new TypeReference<T>() {
@@ -288,7 +288,7 @@ public class JacksonXmlSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> T xml2T(String jsonStr, TypeReference<T> valueTypeRef) {
+    public static final <T> T xml2T(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
             ObjectMapper mapper = dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
@@ -305,7 +305,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> boolean can2T(String jsonStr, Class<T> clazz) {
+    public static final <T> boolean can2T(String jsonStr, Class<T> clazz) {
         boolean can = xml2T(jsonStr, clazz) == null ? false : true;
         return can;
     }
@@ -318,7 +318,7 @@ public class JacksonXmlSugar {
      * @return
      * @throws IOException
      */
-    public final static <T> boolean can2T(String jsonStr, TypeReference<T> valueTypeRef) {
+    public static final <T> boolean can2T(String jsonStr, TypeReference<T> valueTypeRef) {
         boolean can = xml2T(jsonStr, valueTypeRef) == null ? false : true;
         return can;
     }
@@ -328,7 +328,7 @@ public class JacksonXmlSugar {
      * @param jsonStr {"key" : "value"}
      * @return
      */
-//    public final static JSONObject json2JObj(String jsonStr) {
+//    public static final JSONObject json2JObj(String jsonStr) {
 //        return new JSONObject(jsonStr);
 //    }
 
@@ -337,7 +337,7 @@ public class JacksonXmlSugar {
      * @param jsonStr [{"key1" : "value1"}, {"key2" : "value2"}]
      * @return
      */
-//    public final static JSONArray json2JArray(String jsonStr) {
+//    public static final JSONArray json2JArray(String jsonStr) {
 //        return new JSONArray(jsonStr);
 //    }
 
@@ -348,7 +348,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T deepCopy(Object source, Class<T> targetClass) {
+    public static final <T> T deepCopy(Object source, Class<T> targetClass) {
         T t = JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(source), targetClass);
         return t;
     }
@@ -360,7 +360,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
+    public static final <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
         T t = JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(source), valueTypeRef);
         return t;
     }
@@ -371,7 +371,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T deepCopy(T source) {
+    public static final <T> T deepCopy(T source) {
         T t = (T) JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(source), source.getClass());
         return t;
     }
@@ -382,12 +382,12 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T newInstance(TypeReference<T> valueTypeRef) {
+    public static final <T> T newInstance(TypeReference<T> valueTypeRef) {
         T t = JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(new Object()), valueTypeRef);
         return t;
     }
 
-    public final static <T> T newInstance(Class<T> clazz) {
+    public static final <T> T newInstance(Class<T> clazz) {
         T t = JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(new Object()), clazz);
         return t;
     }
@@ -397,7 +397,7 @@ public class JacksonXmlSugar {
      * @param <T>
      * @return
      */
-    public final static <T> T newInstance() {
+    public static final <T> T newInstance() {
         T t = JacksonXmlSugar.xml2T(JacksonXmlSugar.obj2Xml(new Object()));
         return t;
     }

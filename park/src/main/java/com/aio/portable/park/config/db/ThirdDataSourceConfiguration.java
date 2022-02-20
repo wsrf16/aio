@@ -1,29 +1,40 @@
 package com.aio.portable.park.config.db;
 
 import com.aio.portable.swiss.suite.storage.db.jpa.multidatasource.JpaBaseDataSourceConfiguration;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
+import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
+@EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {ThirdDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = ThirdDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = ThirdDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 //@Import(HibernateJpaAutoConfiguration.class)
 public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
-    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
+    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.repository";
     public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
     private static final String SPECIAL_NAME = "third";
     private static final String PERSISTENCE_UNIT = "persistenceUnit";
@@ -32,6 +43,9 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     protected static final String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
 
     protected static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
+    protected static final String JPA_VENDOR_ADAPTER_BEAN = SPECIAL_NAME + "JpaVendorAdapter";
+    protected static final String ENTITY_MANAGER_FACTORY_BUILDER_BEAN = SPECIAL_NAME + "EntityManagerFactoryBuilder";
+
     protected static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
     protected static final String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
 
@@ -43,48 +57,57 @@ public class ThirdDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
-    @Primary
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }
 
-    @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
     @Bean(JPA_PROPERTIES_BEAN)
     @ConfigurationProperties(prefix = JPA_PREFIX)
-    @Primary
     public JpaProperties jpaProperties() {
         return super.jpaProperties();
     }
 
-    @ConditionalOnBean(name = DATA_SOURCE_PROPERTIES_BEAN)
     @Bean(DATA_SOURCE_BEAN)
-//    @Primary
-    public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) throws ClassNotFoundException {
+    public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
         return super.dataSource(properties);
     }
 
-    @ConditionalOnBean(name = DATA_SOURCE_BEAN)
+    @Bean(JPA_VENDOR_ADAPTER_BEAN)
+    public JpaVendorAdapter jpaVendorAdapter(
+            @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties,
+            @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource) {
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setShowSql(jpaProperties.isShowSql());
+        adapter.setDatabase(jpaProperties.determineDatabase(dataSource));
+        adapter.setDatabasePlatform(jpaProperties.getDatabasePlatform());
+        adapter.setGenerateDdl(jpaProperties.isGenerateDdl());
+        return adapter;
+    }
+
+    @Bean(ENTITY_MANAGER_FACTORY_BUILDER_BEAN)
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder(
+            JpaVendorAdapter jpaVendorAdapter,
+            ObjectProvider<PersistenceUnitManager> persistenceUnitManager,
+            ObjectProvider<EntityManagerFactoryBuilderCustomizer> customizers,
+            @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
+        EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(jpaVendorAdapter,
+                jpaProperties.getProperties(), persistenceUnitManager.getIfAvailable());
+        customizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
+        return builder;
+    }
+
     @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
-    @Primary
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
         return super.localContainerEntityManagerFactoryBean(dataSource, builder, jpaProperties, ENTITY_BASE_PACKAGES, PERSISTENCE_UNIT);
     }
 
-    @ConditionalOnBean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
     @Bean(name = ENTITY_MANAGER_BEAN)
     public EntityManager entityManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
         return super.entityManager(factory);
     }
 
-//    @ConditionalOnBean(name = DATA_SOURCE_BEAN)
-//    @Bean(PLATFORM_TRANSACTION_MANAGER_BEAN)
-//    public PlatformTransactionManager platformTransactionManager(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource) {
-//        return super.dataPlatformTransactionManager(dataSource);
-//    }
-
-    @ConditionalOnBean(name = LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
     @Bean(PLATFORM_TRANSACTION_MANAGER_BEAN)
-    public PlatformTransactionManager platformTransactionManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
+    public JpaTransactionManager jpaTransactionManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
         return super.jpaPlatformTransactionManager(factory);
     }
 }

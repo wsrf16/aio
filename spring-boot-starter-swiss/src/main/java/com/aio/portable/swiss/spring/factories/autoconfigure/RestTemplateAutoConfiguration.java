@@ -29,7 +29,7 @@ public class RestTemplateAutoConfiguration {
     }
 
     @Bean("restTemplate")
-    @Primary
+//    @Primary
     @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class})
     public RestTemplate proxyRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
         RestTemplateProperties.Agent agent = restTemplateProperties.getAgent();
@@ -43,7 +43,7 @@ public class RestTemplateAutoConfiguration {
     }
 
     @Bean("restTemplate")
-    @Primary
+//    @Primary
     @ConditionalOnBean({RestTemplateBuilder.class})
     @ConditionalOnMissingBean(RestTemplateProperties.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
@@ -62,6 +62,8 @@ public class RestTemplateAutoConfiguration {
         RestTemplate restTemplate = restTemplateBuilder.build();
         if (enabled)
             RestTemplater.setSkipSSLRequestFactory(restTemplate, agentHost, agentPort);
+        else
+            RestTemplater.setSkipSSLRequestFactory(restTemplate);
         return restTemplate;
     }
 

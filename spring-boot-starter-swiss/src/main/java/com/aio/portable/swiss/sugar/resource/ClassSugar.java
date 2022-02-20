@@ -7,10 +7,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -209,35 +206,103 @@ public abstract class ClassSugar {
 
 
     /**
-     * newInstance
+     * getConstructor
      *
      * @param clazz
      * @param parameterTypes
      * @param <T>
      * @return
      */
-    public static final <T> T newInstance(Class<T> clazz, Class<?>... parameterTypes) {
+    private static final <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
         try {
-            return clazz.getConstructor(parameterTypes).newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            Constructor<T> constructor = clazz.getConstructor(parameterTypes);
+            ReflectionUtils.makeAccessible(constructor);
+            return constructor;
+        } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * declaredNewInstance
+     * getDeclaredConstructor
      *
      * @param clazz
      * @param parameterTypes
      * @param <T>
      * @return
      */
-    public static final <T> T newDeclaredInstance(Class<T> clazz, Class<?>... parameterTypes) {
+    private static final <T> Constructor<T> getDeclaredConstructor(Class<T> clazz, Class<?>... parameterTypes) {
         try {
             Constructor<T> declaredConstructor = parameterTypes == null ? clazz.getDeclaredConstructor() : clazz.getDeclaredConstructor(parameterTypes);
             ReflectionUtils.makeAccessible(declaredConstructor);
-            return declaredConstructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            return declaredConstructor;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * newInstance
+     * @param clazz
+     * @param parameterTypes
+     * @param initargs
+     * @param <T>
+     * @return
+     */
+    public static final <T> T newInstance(Class<T> clazz,
+                                          Class<?>[] parameterTypes,
+                                          Object[] initargs) {
+        try {
+            return getConstructor(clazz, parameterTypes).newInstance(initargs);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * newDeclaredInstance
+     * @param clazz
+     * @param parameterTypes
+     * @param initargs
+     * @param <T>
+     * @return
+     */
+    public static final <T> T newDeclaredInstance(Class<T> clazz,
+                                          Class<?>[] parameterTypes,
+                                          Object[] initargs) {
+        try {
+            return getDeclaredConstructor(clazz, parameterTypes).newInstance(initargs);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * newInstance
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static final <T> T newInstance(Class<T> clazz) {
+        try {
+            return getConstructor(clazz).newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * newInstance
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static final <T> T newDeclaredInstance(Class<T> clazz) {
+        try {
+            return getDeclaredConstructor(clazz).newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
@@ -404,11 +469,23 @@ public abstract class ClassSugar {
     public static final Method getMethod(Class<?> clazz, String methodName) {
         try {
             Method method = clazz.getDeclaredMethod(methodName);
-            ReflectionUtils.makeAccessible(method);
+            makeAccessible(method);
             return method;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static final void makeAccessible(Method method) {
+        ReflectionUtils.makeAccessible(method);
+    }
+
+    public static final void makeAccessible(Constructor<?> constructor) {
+        ReflectionUtils.makeAccessible(constructor);
+    }
+
+    public static final void makeAccessible(Field field) {
+        ReflectionUtils.makeAccessible(field);
     }
 
     public static final Method getMethod(Class<?> clazz, String methodName, Object[] parameters) {
@@ -421,14 +498,14 @@ public abstract class ClassSugar {
                 .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
                 .findFirst().get();
 
-        ReflectionUtils.makeAccessible(method);
+        makeAccessible(method);
         return method;
     }
 
     public static final Method getMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
         try {
             Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-            ReflectionUtils.makeAccessible(method);
+            makeAccessible(method);
             return method;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -439,7 +516,7 @@ public abstract class ClassSugar {
     public static final <R> R invoke(Object obj, Class<?> clazz, String methodName) {
         try {
             Method method = clazz.getDeclaredMethod(methodName);
-            ReflectionUtils.makeAccessible(method);
+            makeAccessible(method);
             R ret = (R) method.invoke(obj);
             return ret;
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -462,7 +539,7 @@ public abstract class ClassSugar {
                     .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
                     .findFirst().get();
 
-            ReflectionUtils.makeAccessible(method);
+            makeAccessible(method);
             R ret = (R) method.invoke(obj, parameters);
             return ret;
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -477,7 +554,7 @@ public abstract class ClassSugar {
     public static final <R> R invoke(Object obj, Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
         try {
             Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-            ReflectionUtils.makeAccessible(method);
+            makeAccessible(method);
             R ret = (R) method.invoke(obj, parameters);
             return ret;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -492,7 +569,7 @@ public abstract class ClassSugar {
     public static final <R> R getDeclaredField(Object obj, Class<?> clazz, String name) {
         try {
             Field field = clazz.getDeclaredField(name);
-            ReflectionUtils.makeAccessible(field);
+            makeAccessible(field);
             R ret = (R) field.get(obj);
             return ret;
         } catch (NoSuchFieldException | IllegalAccessException e) {

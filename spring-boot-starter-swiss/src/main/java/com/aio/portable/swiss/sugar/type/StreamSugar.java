@@ -30,7 +30,17 @@ public abstract class StreamSugar {
         return reverseList.stream();
     }
 
+    public static final <T> Stream<T> except(final Stream<T> stream1, final Stream<T> stream2) {
+        final List<T> collection2 = stream2.collect(Collectors.toList());
+        Stream<T> stream = stream1.filter(item -> !collection2.contains(item));
+        return stream;
+    }
 
+    public static <T> Stream<T> intersect(final Stream<T> stream1, final Stream<T> stream2) {
+        final List<T> collection2 = stream2.collect(Collectors.toList());
+        Stream<T> stream = stream1.filter(c -> collection2.contains(c));
+        return stream;
+    }
 
     /**
      * tail
@@ -42,6 +52,12 @@ public abstract class StreamSugar {
         long count = stream.count();
         Optional<T> optional = stream.skip(count-1).findFirst();
         return optional;
+    }
+
+    public static <T> boolean anyEquals(final Stream<T> source, final Stream<T> target) {
+        final List<T> targetCollection = target.collect(Collectors.toList());
+        boolean anyMatch = source.anyMatch(src -> targetCollection.contains(src));
+        return anyMatch;
     }
 
 
@@ -221,20 +237,7 @@ public abstract class StreamSugar {
         };
     }
 
-    /**
-     * split
-     * @param list
-     * @param size
-     * @param <T>
-     * @return
-     */
-    public static <T> List<List<T>> split(List<T> list, int size) {
-        List<List<T>> segments = new ArrayList<>();
-        int loop = list.size() / size + (list.size() % size == 0 ? 0 : 1);
-        Stream.iterate(0, n -> n + 1).limit(loop).forEach(i ->
-                segments.add(list.stream().skip(i * size).limit(size).collect(Collectors.toList())));
-        return segments;
-    }
+
 
 
 

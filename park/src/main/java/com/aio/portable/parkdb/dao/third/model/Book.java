@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 //@Table
-//@Table(name = "book")
+@Table(name = "book")
 @EntityListeners(AuditingEntityListener.class)
 public class Book {
     public Long getId() {

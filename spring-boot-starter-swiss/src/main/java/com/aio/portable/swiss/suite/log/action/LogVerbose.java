@@ -5,7 +5,7 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
 /**
  * Anything and everything you might want to know about a running block of code.
  */
-interface LogVerbose {
+public interface LogVerbose {
     void verbose(String message);
 
     default void verbose(String message, Object[] arguments) {

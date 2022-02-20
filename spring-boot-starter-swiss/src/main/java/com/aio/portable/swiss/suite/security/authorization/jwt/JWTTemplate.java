@@ -189,9 +189,25 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm, JWTExplicit
         return Base64TokenAlgorithm.super.parse(token);
     }
 
+    /**
+     * parseForMap (be replaced of parseToMap)
+     * @param token
+     * @return
+     */
+    @Deprecated
     public Map<String, Object> parseForMap(String token) {
+        return parseToMap(token);
+    }
+
+    public Map<String, Object> parseToMap(String token) {
         DecodedJWT parsed = this.parse(token);
         Map<String, Object> map = forMap(parsed);
         return map;
+    }
+
+    public <T> T parseTo(String token, String key) {
+        DecodedJWT parsed = this.parse(token);
+        Map<String, Object> map = forMap(parsed);
+        return (T)map.get(key);
     }
 }

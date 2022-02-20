@@ -80,7 +80,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(URL[] urls, String className) throws ClassNotFoundException {
+    public static final Class<?> loadFrom(URL[] urls, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(urls);
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
         Class<?> clazz = classLoader.loadClass(className);
@@ -94,7 +94,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(List<URL> urls, String className) throws ClassNotFoundException {
+    public static final Class<?> loadFrom(List<URL> urls, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
         Class<?> clazz = classLoader.loadClass(className);
@@ -108,7 +108,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    private static final Class<?> loadClass(URL url, String className) throws ClassNotFoundException {
+    private static final Class<?> loadFrom(URL url, String className) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
         Class<?> clazz = classLoader.loadClass(className);
         return clazz;
@@ -120,22 +120,22 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(URL url) throws ClassNotFoundException {
+    public static final Class<?> loadFrom(URL url) throws ClassNotFoundException {
         URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
         String className = ResourceSugar.convertURLToClassName(url.toString());
         Class<?> clazz = classLoader.loadClass(className);
         return clazz;
     }
 
-    public static final Class<?> load(String className, boolean initialize, ClassLoader classLoader) {
+    public static final <T> Class<T> load(String className, boolean initialize, ClassLoader classLoader) {
         try {
-            return Class.forName(className, initialize, classLoader);
+            return (Class<T>) Class.forName(className, initialize, classLoader);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static final Class<?> load(String className, boolean initialize) {
+    public static final <T> Class<T> load(String className, boolean initialize) {
         return load(className, initialize, ClassLoaderSugar.getDefaultClassLoader());
     }
 
@@ -144,7 +144,7 @@ public abstract class ClassLoaderSugar {
      * @param className
      * @return
      */
-    public static final Class<?> load(String className) {
+    public static final <T> Class<T> load(String className) {
         return load(className, true, ClassLoaderSugar.getDefaultClassLoader());
     }
 

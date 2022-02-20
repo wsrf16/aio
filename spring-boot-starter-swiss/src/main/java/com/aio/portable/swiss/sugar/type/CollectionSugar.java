@@ -49,10 +49,10 @@ public abstract class CollectionSugar {
     }
 
     /**
-     * Create a reversed Stream from a List
+     * Create a reversed List
      * <pre>
      * {@code
-     * StreamSugar.reversedStream(asList(1,2,3))
+     * reversed(asList(1,2,3))
      * .map(i->i*100)
      * .forEach(System.out::println);
      * assertThat(StreamSugar.reversedStream(Arrays.asList(1,2,3)).collect(CyclopsCollectors.toList())
@@ -62,10 +62,10 @@ public abstract class CollectionSugar {
      * </pre>
      *
      * @param list from to create a reversed
-     * @return Reversed Stream
+     * @return Reversed List
      */
-    public static <T> Stream<T> reverse(final List<T> list) {
-        return StreamSugar.reverse(list.stream());
+    public static <T> List<T> reverse(final List<T> list) {
+        return StreamSugar.reverse(list.stream()).collect(Collectors.toList());
     }
 
 
@@ -76,49 +76,49 @@ public abstract class CollectionSugar {
      * @param collection2
      * @return
      */
-    public static final <T> Stream<T> except(final Collection<T> collection1, final Collection<T> collection2) {
+    public static final <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2) {
         Stream<T> stream = collection1.stream().filter(item -> !collection2.contains(item));
-        return stream;
+        return stream.collect(Collectors.toList());
     }
 
 
     /**
      * except
-     * @param source
-     * @param target
+     * @param collection1
+     * @param collection2
      * @param equalFunction
      * @param <T>
      * @return
      */
-    public static <T> Stream<T> except(final List<T> source, final List<T> target, BiFunction<T, T, Boolean> equalFunction) {
-        Stream<T> stream = source.stream().filter(src -> !target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
-        return stream;
+    public static <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = collection1.stream().filter(src -> !collection2.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream.collect(Collectors.toList());
     }
 
 
     /**
      * intersect
-     * @param source
-     * @param target
+     * @param collection1
+     * @param collection2
      * @param <T>
      * @return
      */
-    public static <T> Stream<T> intersect(final Collection<T> source, final Collection<T> target) {
-        Stream<T> stream = source.stream().filter(c -> target.contains(c));
-        return stream;
+    public static <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2) {
+        Stream<T> stream = collection1.stream().filter(c -> collection2.contains(c));
+        return stream.collect(Collectors.toList());
     }
 
     /**
      * intersect
-     * @param source
-     * @param target
+     * @param collection1
+     * @param collection2
      * @param equalFunction
      * @param <T>
      * @return
      */
-    public static <T> Stream<T> intersect(final Collection<T> source, final Collection<T> target, BiFunction<T, T, Boolean> equalFunction) {
-        Stream<T> stream = source.stream().filter(src -> target.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
-        return stream;
+    public static <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = collection1.stream().filter(src -> collection2.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+        return stream.collect(Collectors.toList());
     }
 
     public static <T> boolean anyEquals(final Collection<T> source, final Collection<T> target) {
@@ -176,8 +176,23 @@ public abstract class CollectionSugar {
      * @param collections
      * @return
      */
-    public static final <T> Stream<T> union(Collection<T>... collections) {
-        return concat(collections).stream().distinct();
+    public static final <T> List<T> union(Collection<T>... collections) {
+        return concat(collections).stream().distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * split
+     * @param list
+     * @param size
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> split(List<T> list, int size) {
+        List<List<T>> segments = new ArrayList<>();
+        int loop = list.size() / size + (list.size() % size == 0 ? 0 : 1);
+        Stream.iterate(0, n -> n + 1).limit(loop).forEach(i ->
+                segments.add(list.stream().skip(i * size).limit(size).collect(Collectors.toList())));
+        return segments;
     }
 
 
@@ -420,12 +435,12 @@ public abstract class CollectionSugar {
         return toList(iterator, 128);
     }
 
-    public static final <T> List<T> asList(T... a) {
-        return new ArrayList<>(Arrays.asList(a));
-    }
-
     public static final <T> ArrayList<T> toList(Enumeration<T> e) {
         return java.util.Collections.list(e);
+    }
+
+    public static final <T> List<T> asList(T... a) {
+        return new ArrayList<>(Arrays.asList(a));
     }
 
     public static final <T> Enumeration<T> toEnumeration(final Collection<T> c) {

@@ -5,7 +5,7 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
 /**
  * If you have a pager, it goes off when one of these occurs.
  */
-interface LogFatal {
+public interface LogFatal {
     void fatal(String message);
 
     default void fatal(String message, Object[] arguments) {

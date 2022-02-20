@@ -13,7 +13,7 @@
     </resultMap>
 
     <select id="getAll" resultType="com.aio.portable.parkdb.dao.slave.model.Book">
-        SELECT * FROM book_store
+        SELECT * FROM book
     </select>
     <select id="get" parameterType="java.lang.Integer" resultType="com.aio.portable.parkdb.dao.slave.model.Book">
         SELECT * FROM book WHERE id=#{id}

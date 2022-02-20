@@ -100,7 +100,8 @@ class AbstractWebLogAspect {
             return responseRecord;
         } catch (Exception e) {
             log.e(MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, spanId), requestRecord, e);
-            throw new HandOverException(e, requestRecord, spanId);
+                throw request != null ?
+                        new HandOverException(e, requestRecord, spanId) : e;
         }
     }
 

@@ -5,7 +5,7 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
 /**
  * Internal system events that aren't necessarily observable from the outside.
  */
-interface LogDebug {
+public interface LogDebug {
     void debug(String message);
 
     default void debug(String message, Object[] arguments) {

@@ -22,7 +22,8 @@ public class JWTTest {
         }};
         String token = jwtTemplate.sign(map);
         DecodedJWT parse = jwtTemplate.parse(token);
-        Map<String, Object> stringObjectMap = jwtTemplate.parseForMap(token);
+        Map<String, Object> stringObjectMap = jwtTemplate.parseToMap(token);
+        String i = jwtTemplate.parseTo(token, "response");
 
     }
 }

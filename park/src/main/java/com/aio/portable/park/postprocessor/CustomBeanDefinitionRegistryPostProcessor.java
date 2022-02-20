@@ -12,7 +12,10 @@ import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 
 import java.lang.reflect.InvocationTargetException;
 
-@Configuration
+/**
+ * beanDefinition aspect
+ */
+//@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean

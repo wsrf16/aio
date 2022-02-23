@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt;
 
-import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.crypto.AlgorithmSugar;
 import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSASugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.encryption.Base64TokenAlgorithm;
@@ -12,12 +11,10 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 //import com.nimbusds.jwt.JWTParser;
 
-public class JWTTemplate implements JWTAction, Base64TokenAlgorithm, JWTExplicit {
+public class JWTTemplateType implements JWTAction, Base64TokenAlgorithm, JWTExplicitType {
     private JWTConfig jwtConfig;
 
     private Algorithm algorithm;
@@ -32,7 +29,7 @@ public class JWTTemplate implements JWTAction, Base64TokenAlgorithm, JWTExplicit
         return this.jwtConfig.getExplicit();
     }
 
-    public JWTTemplate(JWTConfig jwtConfig) {
+    public JWTTemplateType(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 

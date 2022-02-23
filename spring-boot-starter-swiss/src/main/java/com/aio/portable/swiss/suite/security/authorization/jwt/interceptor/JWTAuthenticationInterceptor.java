@@ -4,7 +4,7 @@ import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTSugar;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +16,7 @@ public abstract class JWTAuthenticationInterceptor extends AuthenticationInterce
     private static final String BEARER = JWTSugar.HEAD_VALUE_BEAR;
 
     @Autowired
-    private JWTTemplate jwtTemplate;
+    private JWTTemplateType jwtTemplate;
 
     @Autowired(required = false)
     BaseBizStatusEnum baseBizStatusEnum;

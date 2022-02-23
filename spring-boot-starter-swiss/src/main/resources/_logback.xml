@@ -41,5 +41,5 @@
         <!--<appender-ref ref="ROLE_FILE_LOG"/>-->
     </root>
 
-    <!--<logger name="com.taoche.baseservice.fiv.db.main.dao" level="debug" />-->
+    <!--<logger name="com.chetao.baseservice.fiv.db.main.dao" level="debug" />-->
 </configuration>

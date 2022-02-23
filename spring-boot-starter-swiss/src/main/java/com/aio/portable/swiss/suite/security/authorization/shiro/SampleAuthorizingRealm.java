@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authorization.shiro;
 
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
 import com.aio.portable.swiss.suite.security.authorization.shiro.realm.impl.BearerTokenRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -17,7 +17,7 @@ import java.util.Set;
 //@Component
 public class SampleAuthorizingRealm extends BearerTokenRealm {
     @Autowired
-    JWTTemplate jwtTemplate;
+    JWTTemplateType jwtTemplate;
 
     public SampleAuthorizingRealm(CredentialsMatcher credentialsMatcher) {
         super(credentialsMatcher);

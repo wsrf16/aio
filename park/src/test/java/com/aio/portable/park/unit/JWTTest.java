@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.Map;
 @TestComponent
 public class JWTTest {
     @Autowired
-    JWTTemplate jwtTemplate;
+    JWTTemplateType jwtTemplate;
 
     @Test
     public void foobar() {

@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface JWTExplicit {
+public interface JWTExplicitType {
     Boolean getExplicit();
 
     default Map<String, Object> explicit(Map<String, Object> addition) {

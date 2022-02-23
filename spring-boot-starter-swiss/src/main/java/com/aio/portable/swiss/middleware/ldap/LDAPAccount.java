@@ -6,7 +6,7 @@ import org.springframework.ldap.odm.annotations.Id;
 
 import javax.naming.Name;
 
-//@Entry(base = "dc=qdingnet,dc=cn", objectClasses = "person")
+//@Entry(base = "dc=dddingnet,dc=cn", objectClasses = "person")
 @Entry(objectClasses = {"top", "person", "organizationalPerson", "user"})
 class LDAPAccount {
 

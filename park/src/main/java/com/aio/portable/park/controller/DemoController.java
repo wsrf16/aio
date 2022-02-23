@@ -55,7 +55,7 @@ public class DemoController {
 
     @GetMapping("mqsend")
     public String mqsend() {
-        amqpTemplate.convertAndSend("tc.exchange", "taoche", "aaaaaaaaaaaaa");
+        amqpTemplate.convertAndSend("tc.exchange", "chetao", "aaaaaaaaaaaaa");
         String msg = MessageFormat.format("现在的时间是{0}", DateTimeSugar.UnixTime.convertUnix2DateTime(DateTimeSugar.UnixTime.nowUnix()));
         amqpTemplate.convertAndSend("application-log-queue", msg);
         return msg;

@@ -3,9 +3,8 @@ package com.aio.portable.swiss.suite.security.authorization.jwt.token;
 import com.aio.portable.swiss.suite.algorithm.adapter.Transcoder;
 import com.aio.portable.swiss.suite.algorithm.adapter.classic.TranscoderBase64;
 import com.aio.portable.swiss.suite.algorithm.adapter.Transcodable;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTExpiredDate;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
@@ -19,14 +18,13 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * JWTAuthorizationServerTokenServices (DefaultTokenServices)
  * Method "configure(AuthorizationServerEndpointsConfigurer endpoints)" In AuthorizationServerConfigurerAdapter.class
  */
 public class JWTAuthorizationServerTokenServices implements AuthorizationServerTokenServices, Transcodable {
-    private JWTTemplate jwtTemplate;
+    private JWTTemplateType jwtTemplate;
 
     /**
      * 配置AccessToken的存储方式:此处使用Redis存储
@@ -50,7 +48,7 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
         return transcoder;
     }
 
-    public JWTAuthorizationServerTokenServices(JWTTemplate jwtTemplate, TokenStore tokenStore) {
+    public JWTAuthorizationServerTokenServices(JWTTemplateType jwtTemplate, TokenStore tokenStore) {
         this.jwtTemplate = jwtTemplate;
         this.tokenStore = tokenStore;
     }
@@ -73,7 +71,7 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
         }
     }
 
-    private static final TokenWrapper createToken(JWTTemplate jwtTemplate, OAuth2Authentication authentication) {
+    private static final TokenWrapper createToken(JWTTemplateType jwtTemplate, OAuth2Authentication authentication) {
         String issuer = authentication.getUserAuthentication().getName();
         String token = jwtTemplate.sign(issuer);
         DecodedJWT parse = jwtTemplate.parse(token);
@@ -81,7 +79,7 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
         return new TokenWrapper(token, expiresAt);
     }
 
-    private static final DefaultOAuth2AccessToken createAccessToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+    private static final DefaultOAuth2AccessToken createAccessToken(JWTTemplateType jwtManager, OAuth2Authentication authentication) {
         TokenWrapper tokenWrapper = createToken(jwtManager, authentication);
 
         DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(tokenWrapper.getToken());
@@ -90,14 +88,14 @@ public class JWTAuthorizationServerTokenServices implements AuthorizationServerT
         return accessToken;
     }
 
-    private static final DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+    private static final DefaultExpiringOAuth2RefreshToken createRefreshToken(JWTTemplateType jwtManager, OAuth2Authentication authentication) {
         TokenWrapper tokenWrapper = createToken(jwtManager, authentication);
 
         DefaultExpiringOAuth2RefreshToken refreshToken = new DefaultExpiringOAuth2RefreshToken(tokenWrapper.getToken(), tokenWrapper.getExpiresAt());
         return refreshToken;
     }
 
-    private static final DefaultOAuth2AccessToken createAccessTokenAndBindRefreshToken(JWTTemplate jwtManager, OAuth2Authentication authentication) {
+    private static final DefaultOAuth2AccessToken createAccessTokenAndBindRefreshToken(JWTTemplateType jwtManager, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken accessToken = createAccessToken(jwtManager, authentication);
         DefaultExpiringOAuth2RefreshToken refreshToken = createRefreshToken(jwtManager, authentication);
         accessToken.setRefreshToken(refreshToken);

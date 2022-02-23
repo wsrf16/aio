@@ -2,7 +2,7 @@ package com.aio.portable.swiss.spring.factories.autoconfigure;
 
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.JWTProperties;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTConfig;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,8 +24,8 @@ public class JWTAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(JWTProperties.class)
-    public JWTTemplate jwtTemplate(JWTProperties jwtProperties) {
+    public JWTTemplateType jwtTemplate(JWTProperties jwtProperties) {
         JWTConfig jwtConfig = JWTConfig.build(jwtProperties);
-        return new JWTTemplate(jwtConfig);
+        return new JWTTemplateType(jwtConfig);
     }
 }

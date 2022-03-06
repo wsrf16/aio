@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    main:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
+      username: root
+      password: 123456
+      mybatis:
+        mapper-locations: classpath:mapper/*.xml
+
+  rabbitmq:
+    main:
+      host: mecs.com
+      port: 5672
+      username: admin
+      password: admin
+      auto-declare: true
+      binding-list:
+        - type: direct
+          routing-key: application-log-queue
+          queue: application-log-queue
+          exchange: application-log-exchange
+
+  redis:
+    host: 192.168.155.150
+    port: 6379
+    password: YYYYYYYY
+
+  log:
+    ennabled: true
+    rabbitmq:
+      enabled: false
+      host: mecs.com
+      port: 5672
+      username: usernameorpassword
+      password: usernameorpassword
+      virtual-host: yx_mq
+      es-index: @project.deploy.finalName@-@profiles.active@-log
+      publisher-confirms: true
+      publisher-returns: true
+      binding-list:
+      - type: direct
+        routing-key: application-log-queue
+        queue: application-log-queue
+        exchange: application-log-exchange
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: ${spring.cloud.client.ipAddress}:${server.port}
+    lease-expiration-duration-in-seconds: 60        # default value
+    lease-renewal-interval-in-seconds: 30           # default value
+  client:
+    service-url:
+      defaultZone: http://192.168.155.105:7777/eureka, http://192.168.155.105:8888/eureka, http://192.168.155.105:9999/eureka
+    register-with-eureka: true
+
+

@@ -1,0 +1,146 @@
+# http://u8xy4y2s.dongtaiyuming.net/
+
+server:
+  port: 8880
+  # 700,656 -> 1,232
+
+  compression:
+    min-response-size: 2048
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+#  tomcat:
+#    max-connections: 888
+
+
+
+
+
+spring:
+  log:
+    level: error
+  application:
+    name: @project.deploy.finalName@
+
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+
+  mail:
+    host: 1.1.1.1
+    username: username@163.com
+    password: pppppppp
+
+  profiles:
+    active:
+      @profiles.active@
+
+  boot:
+    enableautoconfiguration: true
+
+  rest:
+    agent:
+      enabled: false
+      host: 127.0.0.1
+      port: 8888
+
+  jwt:
+    enabled: true
+    secret: 123456
+    expiredMinutes: 12
+    issuer: ladder
+    basePackages:
+      - com.chinaunicom.software.passport.api.controller
+    explicit: true
+
+  ldap:
+    urls: ldap://dc-01.dddingnet.cn:389
+    base: dc=dddingnet,dc=cn
+    username: itadmin
+    password: Aa123456789
+    baseEnvironment:
+      java:
+        naming:
+          referral: follow
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
+ribbon:
+  readTimeout: 60000
+  connectTimeout: 60000
+
+
+swagger:
+  enabled: true
+  api-info:
+    title: 对外接口在线文档
+    description: 这是一段文字描述。
+    version: 1.1
+    license: Apache 2.0
+    licenseUrl: http://www.apache.org/licenses/LICENSE-2.0
+    termsOfServiceUrl: www.taobudaoche.com
+    contact:
+      name: XX
+      url: www.taobudaoche.com
+      email: xxxx@taobudaoche.com
+
+business:
+  taskMigrate:
+    cron: 0 0 1 1 * ?
+
+config:
+  abc: abc
+
+
+# http://www.xuxueli.com/
+xxl:
+  job:
+    admin:
+      # 调度中心部署跟地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
+      addresses: http://192.168.155.224:8081/xxl-job-admin-1.9.1
+    accessToken: 310dcbbf4cce62f762a2aaa148d556bd
+    executor:
+      # 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
+      appname: @project.build.finalName@-xxl-job-executor
+      # 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
+      #ip:
+      # 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
+      #port: 18275
+      # 执行器运行日志文件存储磁盘路径 [选填] ：需要对该路径拥有读写权限；为空则使用默认路径；
+      logpath: ./log
+      # 执行器日志保存天数 [选填] ：值大于3时生效，启用执行器Log文件定期清理功能，否则不生效；
+      logretentiondays: -1
+
+
+#knife4j:
+#  enableAggregation: true
+#  cloud:
+#    enable: true
+#    routes:
+#      - name: 测试分组1
+#        uri: localhost:8880
+#        location: /v2/api-docs
+#      - name: 测试分组2
+#        uri: localhost:58882
+#        location: /v2/api-docs
+#      - name: 测试分组3
+#        uri: localhost:8084
+#        location: /v2/api-docs
+
+proxy:
+  http:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818
+  https:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818
+  socks:
+    automatically: false
+    host: 1.1.1.1
+    port: 58818

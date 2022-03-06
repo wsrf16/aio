@@ -70,7 +70,7 @@ public class LogHubProperties implements InitializingBean {
 
     public static final void initialSingletonInstance(LogHubProperties properties) {
         instance = properties;
-        log.info("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.debug("LogHubProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

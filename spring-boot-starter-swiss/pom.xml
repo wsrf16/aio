@@ -57,8 +57,8 @@
 <!--        <mysql.version>8.0.16</mysql.version>-->
 <!--        <elasticsearch.version>6.4.3</elasticsearch.version>-->
 <!--        <slf4j.version>1.7.26</slf4j.version>-->
-<!--        <log4j2.version>2.11.2</log4j2.version>-->
-<!--        <logback.version>1.2.3</logback.version>-->
+        <log4j2.version>2.17.1</log4j2.version>
+        <logback.version>1.2.10</logback.version>
 <!--        <jackson.version>2.9.9</jackson.version>-->
 <!--        <gson.version>2.8.5</gson.version>-->
         <shiro.version>1.7.1</shiro.version>
@@ -624,6 +624,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+<!--                <version>3.8.1</version>-->
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>

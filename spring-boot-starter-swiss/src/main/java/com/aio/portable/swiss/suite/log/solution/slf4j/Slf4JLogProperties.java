@@ -44,7 +44,7 @@ public class Slf4JLogProperties implements InitializingBean {
 
     public static final void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
-        log.info("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.debug("Slf4jLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

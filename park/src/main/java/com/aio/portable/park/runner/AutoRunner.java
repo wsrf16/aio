@@ -54,7 +54,7 @@ public class AutoRunner implements ApplicationRunner {
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, "https://tianti.tg.unicom.local/a/login/", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
+//        ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, "https://tianti.tg.unicom.local/a/login/", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
 
 //        ExecutorService executorService = Executors.newScheduledThreadPool()
         // UriComponentsBuilder.fromHttpUrl()

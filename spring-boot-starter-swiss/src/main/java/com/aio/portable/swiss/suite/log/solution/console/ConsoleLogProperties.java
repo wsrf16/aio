@@ -44,7 +44,7 @@ public class ConsoleLogProperties implements InitializingBean {
 
     public static final void initialSingletonInstance(ConsoleLogProperties properties) {
         instance = properties;
-        log.info("ConsoleLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.debug("ConsoleLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

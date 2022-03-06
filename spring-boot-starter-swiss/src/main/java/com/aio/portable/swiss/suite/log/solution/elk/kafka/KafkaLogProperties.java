@@ -47,7 +47,7 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
 
     public static final void initialSingletonInstance(KafkaLogProperties kafkaLogProperties) {
         instance = kafkaLogProperties;
-        log.info("KafkaLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.debug("KafkaLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

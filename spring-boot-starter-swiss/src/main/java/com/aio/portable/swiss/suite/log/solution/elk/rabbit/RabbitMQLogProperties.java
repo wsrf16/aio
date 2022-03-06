@@ -40,7 +40,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
 
     public static final void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
-        log.info("RabbitMQLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.debug("RabbitMQLogProperties importSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

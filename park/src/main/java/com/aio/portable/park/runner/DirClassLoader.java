@@ -53,7 +53,7 @@ public class DirClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         //这个classLoader的主要方法
-        System.out.println("findClassfindClassfindClassfindClass");
+        System.out.println("findClass-findClass-findClass-findClass");
         Class clazz = null;
         try {
             byte[] data = getClassFileBytes(getObjFile());

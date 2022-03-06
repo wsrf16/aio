@@ -4,8 +4,14 @@ package com.aio.portable.park;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.test.observer.MyObservable;
 import com.aio.portable.park.test.observer.ReaderObserver;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
+import org.apache.shardingsphere.sql.parser.api.CacheOption;
+import org.apache.shardingsphere.sql.parser.api.SQLParserEngine;
+import org.apache.shardingsphere.sql.parser.api.SQLVisitorEngine;
+import org.apache.shardingsphere.sql.parser.core.ParseContext;
+import org.apache.shardingsphere.sql.parser.spi.DatabaseTypedSQLParserFacade;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +22,10 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.ServiceLoader;
 
 
 @SpringBootApplication(exclude = {
@@ -38,7 +48,18 @@ public class ParkApplication {
     public static void main(String[] args) {
 //        log.i("static","loghub");
 
-
+//        org.apache.shardingsphere.sql.parser.mysql.parser.MySQLParserFacade ll;
+//        List<DatabaseTypedSQLParserFacade> databaseTypedSQLParserFacades = CollectionSugar.toList(ServiceLoader.load(DatabaseTypedSQLParserFacade.class).iterator());
+//        String sql = "select order_id from t_order where status = 'OK'";
+//        CacheOption cacheOption = new CacheOption(128, 1024L, 4);
+//        SQLParserEngine parserEngine = new SQLParserEngine("MySQL",
+//                cacheOption, false);
+//        ParseContext parseContext = parserEngine.parse(sql, false);
+//        SQLVisitorEngine visitorEngine = new SQLVisitorEngine("MySQL",
+//                "FORMAT", new Properties());
+//        String result = visitorEngine.visit(parseContext);
+//        System.out.println(result);
+//        System.out.println(result);
 
 //        ReaderObserver readerObserver = new ReaderObserver();
 //        MyObservable observable = new MyObservable();

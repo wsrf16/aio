@@ -29,7 +29,7 @@
 //    @Test
 //    public void lock() {
 //        {
-//            RLock lock = redisson.getLock("grade3:class2:123");
+//            RLock lock = redisson.getLock("grade3:class2:no123");
 //            // 具有Watch Dog 自动延期机制 默认续30s 每隔30/3=10 秒续到30s。可以通过修改Config.lockWatchdogTimeout来另行指定
 //            try {
 //                lock.lock();

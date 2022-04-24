@@ -44,12 +44,24 @@ public abstract class LogSingle implements LogAction {
 //        this.prefixSupplier = EMPTY_PREFIX;
 //    }
 
-    protected StringSerializerAdapter serializerAdapter() {
-         return SerializerAdapterFactory.buildSilentJackson();
+    private StringSerializerAdapter serializerAdapter = SerializerAdapterFactory.buildSilentJackson();
+
+    private StringSerializerAdapter looseSerializerAdapter = SerializerAdapterFactory.buildSilentLongJackson();
+
+    protected StringSerializerAdapter getSerializerAdapter() {
+         return serializerAdapter;
     }
 
-    protected StringSerializerAdapter looseSerializerAdapter() {
-        return SerializerAdapterFactory.buildSilentLongJackson();
+    public void setSerializerAdapter(StringSerializerAdapter serializerAdapter) {
+        this.serializerAdapter = serializerAdapter;
+    }
+
+    protected StringSerializerAdapter getLooseSerializerAdapter() {
+        return looseSerializerAdapter;
+    }
+
+    public void setLooseSerializerAdapter(StringSerializerAdapter looseSerializerAdapter) {
+        this.looseSerializerAdapter = looseSerializerAdapter;
     }
 
     protected boolean async = true;
@@ -104,7 +116,7 @@ public abstract class LogSingle implements LogAction {
     protected void output(Printer printer, LogBean logBean) {
         try {
             String text = logBean.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
-                    serializerAdapter().serialize(logBean) : looseSerializerAdapter().serialize(logBean);
+                    getSerializerAdapter().serialize(logBean) : getLooseSerializerAdapter().serialize(logBean);
             output(printer, text, logBean.getLevel());
         } catch (Exception e) {
 //            e.printStackTrace();
@@ -115,7 +127,7 @@ public abstract class LogSingle implements LogAction {
     protected void output(Printer printer, Map<String, Object> logBean, LevelEnum level) {
         try {
             String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
-                    serializerAdapter().serialize(logBean) : looseSerializerAdapter().serialize(logBean);
+                    getSerializerAdapter().serialize(logBean) : getLooseSerializerAdapter().serialize(logBean);
             output(printer, text, level);
         } catch (Exception e) {
 //            e.printStackTrace();

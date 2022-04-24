@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 public abstract class ThrowableSugar {
     public final static String getStackTraceAsString(Throwable throwable) {
+        if (throwable == null)
+            return null;
         StringWriter stringWriter = new StringWriter();
         throwable.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.toString();

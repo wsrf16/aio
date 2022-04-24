@@ -4,22 +4,10 @@ spring:
       path: /h2-console #进入h2 web操作界面的路径
       enabled: true #开启h2 web界面
   datasource:
-#    driver-class-name: org.h2.Driver
-#    user.graphqls:
-#      - classpath:db/user.graphqls-h2.sql
-#    data:
-#      - classpath:db/data-h2.sql
-#    initialization-mode: always
-#    jdbc-url: jdbc:h2:mem:test
-#    username: root
-#    password: 1111
-#    mybatis:
-#      mapper-locations: classpath:mapper/*.xml, classpath:config/mapper/*.xml
-
     master:
       driver-class-name: org.h2.Driver
       schema:
-        - classpath:db/user.graphqls-h2.sql
+        - classpath:db/schema-h2.sql
       data:
         - classpath:db/data-h2.sql
       initialization-mode: always
@@ -138,7 +126,7 @@ spring:
     console:
       enabled: true
     slf4j:
-      enabled: false
+      enabled: true
 
 #eureka:
 #  instance:

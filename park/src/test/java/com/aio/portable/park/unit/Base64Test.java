@@ -19,7 +19,7 @@ public class Base64Test {
             String base64 = SpringBase64Convert.encodeToString("1111".getBytes());
             byte[] binary = SpringBase64Convert.decode(base64);
         }
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoderMD5Base64();
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createPureMD5PasswordEncoder();
         String md5 = passwordEncoder.encode("1");
         boolean md51 = passwordEncoder.matches("1", md5);
     }

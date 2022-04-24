@@ -1,7 +1,7 @@
 # http://u8xy4y2s.dongtaiyuming.net/
 
 server:
-  port: 8880
+  port: 7777
   # 700,656 -> 1,232
 
   compression:
@@ -17,8 +17,8 @@ server:
 
 
 spring:
-  log:
-    level: error
+#  log:
+#    level: error
   application:
     name: @project.deploy.finalName@
 

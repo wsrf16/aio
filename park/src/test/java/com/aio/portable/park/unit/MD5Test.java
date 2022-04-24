@@ -16,7 +16,7 @@ public class MD5Test {
         String s1 = SpringMD5Convert.convertBase64ToHex(md5AsBase64);
         String s2 = SpringMD5Convert.convertHexToBase64(md5AsHex);
 
-        PasswordEncoder md5PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoderMD5Base64();
+        PasswordEncoder md5PasswordEncoder = PasswordEncoderFactories.createPureMD5PasswordEncoder();
         String md5 = md5PasswordEncoder.encode("1");
         boolean md51 = md5PasswordEncoder.matches("1", md5);
     }

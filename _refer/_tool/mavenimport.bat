@@ -43,7 +43,7 @@ rem echo cmd /v:off
 rem set "b=1"
 rem echo %b%
 rem http://www.baidu.com
-rem mavenimport http://ccp.tianti.tg.unicom.local/artifactory/zhaoy-test-maven-releases-local/ zhaoy asdfjadsfadsfas
+rem mavenimport http://abc.com/artifactory/zhaoy-test-maven-releases-local/
 
 
 

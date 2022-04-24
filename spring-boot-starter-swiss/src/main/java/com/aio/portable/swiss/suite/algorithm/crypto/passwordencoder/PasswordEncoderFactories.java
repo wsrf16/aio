@@ -22,20 +22,20 @@ public class PasswordEncoderFactories {
         encoders.put("SHA-1", new MessageDigestPasswordEncoder("SHA-1"));
         encoders.put("SHA-256", new MessageDigestPasswordEncoder("SHA-256"));
         encoders.put("sha256", new StandardPasswordEncoder());
-        encoders.put("MD5Base64", new MD5Base64PasswordEncoder());
+        encoders.put("PureMD5", new PureMD5PasswordEncoder());
     }
 
-    public static final PasswordEncoder createDelegatingPasswordEncoder() {
-        String encodingId = "bcrypt";
-        return createDelegatingPasswordEncoder(encodingId);
-    }
+//    public static final PasswordEncoder createDelegatingPasswordEncoder() {
+//        String encodingId = "bcrypt";
+//        return createDelegatingPasswordEncoder(encodingId);
+//    }
 
-    public static final PasswordEncoder createDelegatingPasswordEncoder(String encodingId) {
+    public static final PasswordEncoder createPasswordEncoder(String encodingId) {
         return new DelegatingPasswordEncoder(encodingId, encoders);
     }
 
 
-    public static final PasswordEncoder createDelegatingPasswordEncoderMD5Base64() {
-        return new DelegatingPasswordEncoder("MD5Base64", encoders);
+    public static final PasswordEncoder createPureMD5PasswordEncoder() {
+        return createPasswordEncoder("PureMD5");
     }
 }

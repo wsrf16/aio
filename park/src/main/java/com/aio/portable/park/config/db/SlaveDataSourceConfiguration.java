@@ -23,15 +23,15 @@ public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfigura
     private static final String SPECIAL_NAME = "slave";
 
     private static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
-    public static final String SQL_SESSION_TEMPLATE_BEAN = SPECIAL_NAME + "SQLSessionTemplate";
+    private static final String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
+
+    private static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
     private static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
+    public static final String SQL_SESSION_TEMPLATE_BEAN = SPECIAL_NAME + "SQLSessionTemplate";
     private static final String SQL_SESSION_FACTORY_BEAN = SPECIAL_NAME + "SQLSessionFactory";
     private static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
-
-    protected static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
-    private static final String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
     private static final String MYBATIS_PROPERTIES_BEAN = SPECIAL_NAME + "MybatisProperties";
-    protected static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
+    private static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
 
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
     @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)

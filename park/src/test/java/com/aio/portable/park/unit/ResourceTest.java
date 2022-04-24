@@ -1,6 +1,5 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.park.ParkApplication;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.sugar.resource.ResourceSugar;
@@ -55,7 +54,7 @@ public class ResourceTest {
             // file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
             try {
                 System.out.println("--√4.ParkApplication.class.getResource(\"/1.properties\").getFile()");
-                String path = ParkApplication.class.getResource("/1.properties").getFile();
+                String path = this.getClass().getResource("/1.properties").getFile();
                 System.out.println(path);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,7 +64,7 @@ public class ResourceTest {
             // java.lang.NullPointerException
             try {
                 System.out.println("--5.ParkApplication.class.getResource(\"1.properties\").getFile()");
-                String path = ParkApplication.class.getResource("1.properties").getFile();
+                String path = this.getClass().getResource("1.properties").getFile();
                 System.out.println(path);
             } catch (Exception e) {
                 e.printStackTrace();

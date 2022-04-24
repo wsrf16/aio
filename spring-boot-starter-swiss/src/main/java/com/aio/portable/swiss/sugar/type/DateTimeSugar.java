@@ -221,13 +221,22 @@ public abstract class DateTimeSugar {
 
     public static class UnixTime {
         /**
-         * 获取Unix时间（1970年至今经过了多少秒）
+         * 获取Unix时间（1970年至今经过了多少毫秒）
          *
          * @return long
          */
         public static long nowUnix() {
-            long time = System.currentTimeMillis();
-            long nowTimeStamp = time / 1000;
+            long nowTimeStamp = System.currentTimeMillis();
+            return nowTimeStamp;
+        }
+
+        /**
+         * 获取Unix时间（1970年至今经过了多少秒）
+         *
+         * @return long
+         */
+        public static long nowUnixSeconds() {
+            long nowTimeStamp = System.currentTimeMillis() / 1000;
             return nowTimeStamp;
         }
 

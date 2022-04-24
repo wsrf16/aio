@@ -55,7 +55,7 @@ public class AutoRunner implements ApplicationRunner {
     @LogMarker
     public void run(ApplicationArguments applicationArguments) throws Exception {
         log.info("aaaaaaaaaaaaaaa");
-//        ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, "https://tianti.tg.unicom.local/a/login/", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
+//        ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, "https://www.163.com", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
 
         // UriComponentsBuilder.fromHttpUrl()
 

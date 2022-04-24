@@ -51,7 +51,7 @@ spring:
     expiredMinutes: 12
     issuer: ladder
     basePackages:
-      - com.chinaunicom.software.passport.api.controller
+      - com.aio.portable.park.controller
     explicit: true
 
   ldap:

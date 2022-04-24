@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -66,6 +67,10 @@ public class SpringContextHolder implements ApplicationContextAware {
 
     public static final ConfigurableApplicationContext getConfigurableApplicationContext() {
         return SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
+    }
+
+    public static final Binder getBinder() {
+        return Binder.get(getConfigurableApplicationContext().getEnvironment());
     }
 
     public static final <T extends BeanFactory> T getBeanFactory() {

@@ -4,7 +4,7 @@ import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEnc
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public abstract class BcryptConvert {
-        private static final PasswordEncoder bcrypt = PasswordEncoderFactories.createDelegatingPasswordEncoder("bcrypt");
+        private static final PasswordEncoder bcrypt = PasswordEncoderFactories.createPasswordEncoder("bcrypt");
 
     public static final String encode(CharSequence rawPassword) {
         return bcrypt.encode(rawPassword);

@@ -55,6 +55,40 @@ public abstract class StringSugar {
         return result;
     }
 
+    public static final String toString(Object obj) {
+        return obj == null ? "" : obj.toString();
+    }
+
+    public static final String changeFirstCharacterCase(String str, boolean toUpperCase) {
+        if (!StringUtils.hasLength(str)) {
+            return str;
+        }
+
+        char baseChar = str.charAt(0);
+        char updatedChar;
+        if (toUpperCase) {
+            updatedChar = Character.toUpperCase(baseChar);
+        }
+        else {
+            updatedChar = Character.toLowerCase(baseChar);
+        }
+        if (baseChar == updatedChar) {
+            return str;
+        }
+
+        char[] chars = str.toCharArray();
+        chars[0] = updatedChar;
+        return new String(chars, 0, chars.length);
+    }
+
+//    public static final Boolean containUpperCase(String text) {
+//        for (char c : text.toCharArray()) {
+//            if (Character.isUpperCase(c))
+//                return true;
+//        }
+//        return false;
+//    }
+
     public static final String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
         return replaceEach(text, searchList, replacementList, false, 0);
     }
@@ -329,6 +363,11 @@ public abstract class StringSugar {
 
     public static final boolean containLowerCase(String name) {
         String regex=".*[a-z]+.*";
+        return Pattern.compile(regex).matcher(name).matches();
+    }
+
+    public static final boolean containChar(String name, char c) {
+        String regex=".*" + c +"+.*";
         return Pattern.compile(regex).matcher(name).matches();
     }
 

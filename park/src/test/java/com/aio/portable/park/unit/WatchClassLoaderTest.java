@@ -11,7 +11,7 @@ public class WatchClassLoaderTest {
     @Test
     public void foobar() {
         try {
-            String name = "com.chinaunicom.software.origin.api.config.AAAA";
+            String name = "com.china.software.origin.api.config.AAAA";
             WatchClassLoader classLoader = new WatchClassLoader("D:/AAAA/");
             Class<?> clazz = classLoader.loadClass(name);
             Object obj = clazz.newInstance();

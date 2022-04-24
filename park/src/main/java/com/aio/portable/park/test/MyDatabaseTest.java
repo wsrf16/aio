@@ -1,21 +1,16 @@
 package com.aio.portable.park.test;
 
 import com.aio.portable.parkdb.dao.master.mapper.BookMasterMapper;
-import com.aio.portable.parkdb.dao.master.mapper.BookMasterPlusMapper;
 import com.aio.portable.parkdb.dao.slave.mapper.BookSlaveMapper;
-import com.aio.portable.parkdb.dao.third.repository.BookThirdRepository;
 import com.aio.portable.parkdb.dao.third.model.Book;
 import com.aio.portable.parkdb.dao.third.model.BookVO;
-import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.parkdb.dao.third.repository.BookThirdRepository;
 import com.aio.portable.swiss.suite.storage.db.jpa.JPASugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +18,6 @@ import java.util.List;
 public class MyDatabaseTest {
     @Autowired(required = false)
     BookMasterMapper bookMasterMapper;
-    @Autowired(required = false)
-    BookMasterPlusMapper bookMasterPlusMapper;
     @Autowired(required = false)
     BookSlaveMapper bookSlaveMapper;
     @Autowired(required = false)
@@ -61,9 +54,6 @@ public class MyDatabaseTest {
             if (bookMasterMapper != null) {
 //                bookMasterMapper.insert(book);
             }
-        }
-        if (bookMasterPlusMapper != null) {
-            com.aio.portable.parkdb.dao.master.model.Book book = bookMasterPlusMapper.selectById(1);
         }
     }
 

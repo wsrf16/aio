@@ -120,7 +120,7 @@ public abstract class NIOSugar {
             }
         }
 
-        private static final void deleteDirectories(String path){
+        private static final void deleteDirectories(String path) {
             deleteDirectories(Paths.get(path));
         }
 
@@ -222,7 +222,6 @@ public abstract class NIOSugar {
     }
 
 
-
 //    public static long orderWrite(byte[] buffer, int offset, File file) {
 //        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
 //            try (FileChannel channel = randomAccessFile.getChannel()) {
@@ -237,45 +236,55 @@ public abstract class NIOSugar {
 //    }
 
 
+    public static MappedByteBuffer mmapRead(Path from, long position, long size) {
+        OpenOption[] options = {StandardOpenOption.READ, StandardOpenOption.WRITE};
+        return mmapRead(from, position, size, options);
+    }
 
-    public static MappedByteBuffer mmpRead(File file, long position, long size) {
-        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
-            try (FileChannel channel = randomAccessFile.getChannel()) {
+    public static MappedByteBuffer mmapRead(Path from, long position, long size, OpenOption... options) {
+            try (FileChannel channel = FileChannel.open(from, options)) {
                 MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, position, size);
                 return map;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static final void mmap(File file, long position, long size, Consumer<MappedByteBuffer> consumer) {
-        try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
-            try(FileChannel channel = randomAccessFile.getChannel()) {
-                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, position, size);
-                consumer.accept(map);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void mmpCopy(Path from, Path to, long position, long size) {
-        try (FileChannel readChannel = FileChannel.open(from, StandardOpenOption.READ)) {
-            MappedByteBuffer mappedByteBuffer = readChannel.map(FileChannel.MapMode.READ_ONLY, position, size);
-            try (FileChannel writeChannel = FileChannel.open(to, StandardOpenOption.READ, StandardOpenOption.WRITE)) {
-                writeChannel.write(mappedByteBuffer);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+//        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode)) {
+//            try (FileChannel channel = randomAccessFile.getChannel()) {
+//                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_WRITE, position, size);
+//                return map;
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+    }
+
+    public static void mmapWrite(MappedByteBuffer mappedByteBuffer, Path to, OpenOption... options) {
+        try (FileChannel fileChannel = FileChannel.open(to, options)) {
+            fileChannel.write(mappedByteBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void sendFile(Path from, Path to, long position, long size) {
+    public static void mmapWrite(MappedByteBuffer mappedByteBuffer, Path to) {
+        OpenOption[] options = {StandardOpenOption.READ, StandardOpenOption.WRITE};
+        mmapWrite(mappedByteBuffer, to, options);
+    }
+
+    public static void mmapCopy(Path from, long position, long size, OpenOption[] fromOptions, Path to, OpenOption[] toOptions) {
+        MappedByteBuffer mappedByteBuffer = mmapRead(from, position, size, fromOptions);
+        mmapWrite(mappedByteBuffer, to, toOptions);
+    }
+
+    public static void mmapCopy(Path from, long position, long size, Path to) {
+        OpenOption[] options = {StandardOpenOption.READ, StandardOpenOption.WRITE};
+        MappedByteBuffer mappedByteBuffer = mmapRead(from, position, size, options);
+        mmapWrite(mappedByteBuffer, to, options);
+    }
+
+    public static void sendFile(Path from, Path to, long position, long size, OpenOption... options) {
         try (FileChannel readChannel = FileChannel.open(from, StandardOpenOption.READ)) {
-            try (FileChannel writeChannel = FileChannel.open(to, StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+            try (FileChannel writeChannel = FileChannel.open(to, options)) {
                 readChannel.transferTo(position, size, writeChannel);
             } catch (IOException e) {
                 throw new RuntimeException(e);

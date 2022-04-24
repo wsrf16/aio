@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
+import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -133,9 +134,15 @@ public class LogHub extends LogBundle implements LogBase {
         return this;
     }
 
+    public LogHub setSerializerAdapter(StringSerializerAdapter adapter) {
+        getLogList().forEach(c -> c.setSerializerAdapter(adapter));
+        return this;
+    }
 
-
-
+    public LogHub setLooseSerializerAdapter(StringSerializerAdapter adapter) {
+        getLogList().forEach(c -> c.setLooseSerializerAdapter(adapter));
+        return this;
+    }
 
     static class Proxy {
         public static LogHub toProxy(LogHub logHub) {

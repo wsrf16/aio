@@ -47,7 +47,7 @@ public class BatchRequestTest {
             this.object = object;
         }
     }
-    public static class BatchResponse<T> {
+    static class BatchResponse<T> {
         String id = IDS.uuid();
         BatchRequest<T> object;
 

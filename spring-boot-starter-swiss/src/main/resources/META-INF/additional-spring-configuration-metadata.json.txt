@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "spring.log.level",
+      "type": "com.aio.portable.swiss.suite.log.support.LevelEnum",
+      "sourceType": "com.aio.portable.swiss.suite.log.support.LogHubProperties"
+    },
+    {
+      "name": "abc.def",
+      "type": "com.aio.portable.swiss.suite.log.support.LevelEnum",
+      "sourceType": "com.aio.portable.swiss.suite.log.support.LogHubProperties"
+    }
+  ]
+}

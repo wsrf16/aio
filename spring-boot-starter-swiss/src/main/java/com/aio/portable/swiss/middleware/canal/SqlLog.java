@@ -13,8 +13,12 @@ public class SqlLog {
     private List<Entry> entryList;
     private Map<String, Class<?>> tableModelMapping = new HashMap<>();
 
-    public SqlLog(List<Entry> entryList) {
+    protected SqlLog(List<Entry> entryList) {
         this.entryList = entryList;
+    }
+
+    public static final SqlLog convert(List<Entry> entryList) {
+        return new SqlLog(entryList);
     }
 
     public List<Entry> getEntryList() {

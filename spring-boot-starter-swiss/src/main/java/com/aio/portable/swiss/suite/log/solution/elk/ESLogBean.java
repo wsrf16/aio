@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.solution.elk;
 
-import com.aio.portable.swiss.sugar.NamingStrategySugar;
+import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;

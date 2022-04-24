@@ -3,14 +3,22 @@ package com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder;
 import com.aio.portable.swiss.suite.algorithm.encode.SpringMD5Convert;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-class MD5Base64PasswordEncoder implements PasswordEncoder {
+class PureMD5PasswordEncoder implements PasswordEncoder {
+    private boolean encodeHashAsBase64;
+
+    public void setEncodeHashAsBase64(boolean encodeHashAsBase64) {
+        this.encodeHashAsBase64 = encodeHashAsBase64;
+    }
+
     @Override
     public String encode(CharSequence rawPassword) {
         return digest(rawPassword);
     }
 
-    private static final String digest(CharSequence rawPassword) {
-        String encodedPassword = SpringMD5Convert.encodeToBase64(rawPassword.toString());
+    private final String digest(CharSequence rawPassword) {
+        String encodedPassword = this.encodeHashAsBase64 ?
+                SpringMD5Convert.encodeToBase64(rawPassword.toString()) :
+                SpringMD5Convert.encodeToHex(rawPassword.toString());
         return encodedPassword;
     }
 

@@ -15,6 +15,7 @@ public class CanalWatcher {
     private final Consumer<SqlLog> handler;
     private int batchSize = 1000;
     private int sleepMillis = 1000;
+    private boolean toContinue = true;
 
     public void setConnector(CanalConnector connector) {
         this.connector = connector;
@@ -49,7 +50,7 @@ public class CanalWatcher {
             //回滚到未进行ack的地方，下次fetch的时候，可以从最后一个没有ack的地方开始拿
             connector.rollback();
 
-            while (true) {
+            while (toContinue) {
                 Message message = connector.getWithoutAck(batchSize);
                 //获取批量ID
                 long batchId = message.getId();
@@ -63,8 +64,9 @@ public class CanalWatcher {
 //                        e.printStackTrace();
                         log.error("listen error", e);
                     }
+                    continue;
                 } else {
-                    SqlLog sqlLog = new SqlLog(message.getEntries());
+                    SqlLog sqlLog = SqlLog.convert(message.getEntries());
                     handler.accept(sqlLog);
 
 //                    sqlLog.getTableModelMapping().put("tb_commodity_info", TableModel.class);
@@ -75,8 +77,8 @@ public class CanalWatcher {
 //                            final TableModel afterRowModel = (TableModel) d.getAfterRowModel();
 //                        });
 //                    });
+                    connector.ack(batchId);
                 }
-                connector.ack(batchId);
             }
         } catch (CanalClientException e) {
 //            e.printStackTrace();

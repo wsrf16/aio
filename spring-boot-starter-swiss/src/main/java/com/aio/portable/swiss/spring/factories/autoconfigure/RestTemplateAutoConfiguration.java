@@ -69,6 +69,7 @@ public class RestTemplateAutoConfiguration {
 
     @Bean("skipSSLRestTemplate")
     @ConditionalOnBean({RestTemplateBuilder.class})
+    @ConditionalOnMissingBean(RestTemplateProperties.class)
     public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RestTemplater.setSkipSSLRequestFactory(restTemplate);

@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>park</artifactId>
-    <version>1.1.20-SNAPSHOT</version>
+    <version>1.1.21-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>park</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>com.aio.portable</groupId>
         <artifactId>all-in-one</artifactId>
-        <version>1.1.20-SNAPSHOT</version>
+        <version>1.1.21-SNAPSHOT</version>
 <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
 <!--        <relativePath>../</relativePath>-->
     </parent>
@@ -48,10 +48,11 @@
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <mysql.version>8.0.11</mysql.version>
         <mybatis.version>2.1.0</mybatis.version>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <java-jwt.version>3.15.0</java-jwt.version>
         <canal.version>1.1.5</canal.version>
         <redisson.version>3.16.6</redisson.version>
+        <swiss.version>1.1.21-SNAPSHOT</swiss.version>
 
         <!--        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>-->
         <!-- swagger2markup -->
@@ -142,7 +143,7 @@
         <dependency>
             <groupId>com.aio.portable</groupId>
             <artifactId>spring-boot-starter-swiss</artifactId>
-            <version>1.1.20-SNAPSHOT</version>
+            <version>${swiss.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
@@ -560,6 +561,13 @@
             <version>12.0.2</version>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/ch.hsr/geohash -->
+        <dependency>
+            <groupId>ch.hsr</groupId>
+            <artifactId>geohash</artifactId>
+            <version>1.3.0</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -694,6 +702,7 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <!-- springboot打fat包-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -732,6 +741,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- 非springboot打fat包-->
 <!--            <plugin>-->
 <!--                <artifactId>maven-assembly-plugin</artifactId>-->
 <!--                <version>${maven-assembly-plugin.version}</version>-->

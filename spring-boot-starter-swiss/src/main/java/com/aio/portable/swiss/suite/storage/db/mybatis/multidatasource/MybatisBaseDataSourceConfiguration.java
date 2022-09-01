@@ -1,6 +1,9 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis.multidatasource;
 
 import com.aio.portable.swiss.suite.storage.db.AbstractDataSourceConfiguration;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -21,6 +24,10 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 
     public MybatisProperties mybatisProperties() {
         return new MybatisProperties();
+    }
+
+    public MybatisPlusProperties mybatisPlusProperties() {
+        return new MybatisPlusProperties();
     }
 
 //    @PostConstruct
@@ -72,7 +79,54 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
         return factoryBean.getObject();
     }
 
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties) throws Exception {
+        MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
+//        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+        factoryBean.setDataSource(dataSource);
+        factoryBean.setVfs(SpringBootVFS.class);
+        String configLocation = properties.getConfigLocation();
+        if (StringUtils.hasText(configLocation)) {
+            factoryBean.setConfigLocation(new ClassPathResource(configLocation));
+        }
+        MybatisConfiguration configuration = properties.getConfiguration();
+        if (configuration == null && !StringUtils.hasText(configLocation)) {
+            configuration = new MybatisConfiguration();
+        }
+//        if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
+//            for (ConfigurationCustomizer customizer : this.configurationCustomizers) {
+//                customizer.customize(configuration);
+//            }
+//        }
+        factoryBean.setConfiguration(configuration);
+        if (properties.getConfigurationProperties() != null) {
+            factoryBean.setConfigurationProperties(properties.getConfigurationProperties());
+        }
+//        if (!ObjectUtils.isEmpty(this.interceptors)) {
+//            factory.setPlugins(this.interceptors);
+//        }
+//        if (this.databaseIdProvider != null) {
+//            factory.setDatabaseIdProvider(this.databaseIdProvider);
+//        }
+        if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
+            factoryBean.setTypeAliasesPackage(properties.getTypeAliasesPackage());
+        }
+        if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
+            factoryBean.setTypeHandlersPackage(properties.getTypeHandlersPackage());
+        }
+        if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
+            factoryBean.setMapperLocations(properties.resolveMapperLocations());
+        }
+
+        return factoryBean.getObject();
+    }
+
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisProperties properties) throws Exception {
+        ExecutorType executorType = properties.getExecutorType();
+        return executorType == null ?
+                new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);
+    }
+
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisPlusProperties properties) throws Exception {
         ExecutorType executorType = properties.getExecutorType();
         return executorType == null ?
                 new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);

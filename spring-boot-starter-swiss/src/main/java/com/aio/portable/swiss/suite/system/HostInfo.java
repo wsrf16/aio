@@ -51,14 +51,16 @@ public abstract class HostInfo {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
+
+        if ("localhost".equalsIgnoreCase(ip) || "127.0.0.1".equalsIgnoreCase(ip) || "0:0:0:0:0:0:0:1".equalsIgnoreCase(ip)){
+            // 根据网卡取本机配置的IP
+            ip = getHostIp();
         }
         return ip;
     }
 
 
-    public static InetAddress getInetAddress() {
+    public static InetAddress getLocalHost() {
         try {
             return InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
@@ -68,14 +70,14 @@ public abstract class HostInfo {
     }
 
     public static String getHostIp() {
-        InetAddress inetAddress = getInetAddress();
-        String ip = null == inetAddress ? null : inetAddress.getHostAddress();
+        InetAddress localHost = getLocalHost();
+        String ip = null == localHost ? null : localHost.getHostAddress();
         return ip;
     }
 
     public static String getHostName() {
-        InetAddress inetAddress = getInetAddress();
-        String name = null == inetAddress ? null : inetAddress.getHostName(); //get the host address
+        InetAddress localHost = getLocalHost();
+        String name = null == localHost ? null : localHost.getHostName(); //get the host address
         return name;
     }
 

@@ -51,7 +51,7 @@ public class ESLogBean extends StandardLogBean {
     public ESLogBean() {}
 
     public ESLogBean(LogBean logBean, String esIndex, String serverIp) {
-        BeanSugar.Cloneable.deepCopy(logBean, this);
+        BeanSugar.Cloneable.deepCloneByCglib(logBean, this);
 
         setEsIndex(esIndex);
         setServerIp(serverIp);

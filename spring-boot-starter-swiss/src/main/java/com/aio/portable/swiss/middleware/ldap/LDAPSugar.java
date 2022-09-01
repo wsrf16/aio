@@ -76,7 +76,7 @@ public abstract class LDAPSugar {
      */
     public static final <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
-            Map<String, Class> nameClass = BeanSugar.PropertyDescriptors.toNameClassMap(clazz);
+            Map<String, Class<?>> nameClass = BeanSugar.PropertyDescriptors.toNameClassMap(clazz);
             nameClass.entrySet().forEach(prop -> {
                 try {
                     String name = prop.getKey();

@@ -64,7 +64,7 @@ public abstract class CollectionSugar {
      * @param list from to create a reversed
      * @return Reversed List
      */
-    public static <T> List<T> reverse(final List<T> list) {
+    public static final <T> List<T> reverse(final List<T> list) {
         return StreamSugar.reverse(list.stream()).collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public static <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
+    public static final <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
         Stream<T> stream = collection1.stream().filter(src -> !collection2.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
         return stream.collect(Collectors.toList());
     }
@@ -103,7 +103,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public static <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2) {
+    public static final <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2) {
         Stream<T> stream = collection1.stream().filter(c -> collection2.contains(c));
         return stream.collect(Collectors.toList());
     }
@@ -116,12 +116,12 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public static <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
+    public static final <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
         Stream<T> stream = collection1.stream().filter(src -> collection2.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
         return stream.collect(Collectors.toList());
     }
 
-    public static <T> boolean anyEquals(final Collection<T> source, final Collection<T> target) {
+    public static final <T> boolean anyEquals(final Collection<T> source, final Collection<T> target) {
         boolean anyMatch = source.stream().anyMatch(src -> target.contains(src));
         return anyMatch;
     }
@@ -133,7 +133,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    public static <T> boolean containsAll(final Collection<T> source, final Collection<T> target) {
+    public static final <T> boolean containsAll(final Collection<T> source, final Collection<T> target) {
 //        boolean exist = source.stream().anyMatch(src -> target.contains(src));
 //        return exist;
         return (source == target) || (source != null && source.containsAll(target));
@@ -474,8 +474,7 @@ public abstract class CollectionSugar {
      * @param t eg. "new Integer[0]"
      * @param <T>
      * @return
-     */
-    public static final <T> T[] toArray(List<T> list, T[] t) {
+     */public static final <T> T[] toArray(List<T> list, T[] t) {
         return list.toArray(t);
     }
 

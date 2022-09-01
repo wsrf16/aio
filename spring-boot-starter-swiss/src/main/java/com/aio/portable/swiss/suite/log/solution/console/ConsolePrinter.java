@@ -56,9 +56,9 @@ public class ConsolePrinter implements Printer {
             if (instanceMaps.keySet().contains(section))
                 return instanceMaps.get(section);
             else {
-                ConsolePrinter _loc = new ConsolePrinter(logName, logFilePrefix, consoleLogProperties);
-                instanceMaps.put(section, _loc);
-                return _loc;
+                ConsolePrinter printer = new ConsolePrinter(logName, logFilePrefix, consoleLogProperties);
+                instanceMaps.put(section, printer);
+                return printer;
             }
         }
     }

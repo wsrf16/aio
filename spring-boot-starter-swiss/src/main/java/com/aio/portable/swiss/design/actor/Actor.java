@@ -13,7 +13,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
-public class Actor<T, R> implements ActorAction {
+public class Actor<T, R> implements BaseActor {
     Lock lock = new ReentrantLock();
 
     private static ExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
@@ -26,7 +26,7 @@ public class Actor<T, R> implements ActorAction {
 
     private Queue<ReturnMessage<R>> feedBackMailBox = new LinkedList<>();
 
-    private ActorStatus actorStatus = ActorStatus.INIT;
+    private ActorStatus status = ActorStatus.INIT;
 
     private Actor<R, ?> nextActor;
 
@@ -51,8 +51,8 @@ public class Actor<T, R> implements ActorAction {
         return feedBackMailBox;
     }
 
-    public ActorStatus getActorStatus() {
-        return actorStatus;
+    public ActorStatus getStatus() {
+        return status;
     }
 
     public void setNextActor(Actor<R, ?> nextActor) {
@@ -86,13 +86,13 @@ public class Actor<T, R> implements ActorAction {
 
 
     public ActorStatus tryStop() {
-        actorStatus = ActorStatus.STOPPING;
+        status = ActorStatus.STOPPING;
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return actorStatus;
+        return status;
     }
 
     private Actor(Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction) {
@@ -101,9 +101,10 @@ public class Actor<T, R> implements ActorAction {
 
     public static final <T, R> Actor<T, R> build(Function<T, R> handler) {
         Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction = message -> {
-            R r = handler.apply(message.getData());
-            ReturnMessage<R> returnMessage = message.buildReturnMessage(r);
-            return returnMessage;
+            T data = message.getData();
+            R rData = handler.apply(data);
+            ReturnMessage<R> rMessage = message.buildReturnMessage(rData);
+            return rMessage;
         };
         Actor<T, R> actor = new Actor<>(actorBehaviorFunction);
         return actor;
@@ -124,8 +125,7 @@ public class Actor<T, R> implements ActorAction {
     }
 
     public Actor<T, R> push(Collection<Message<T>> messages) {
-        messages.stream().forEach(message -> mailBox.add(message));
-        return this;
+        return push(new ArrayList<>(messages));
     }
 
     private Actor<T, R> pushToNextActor(Message<R> message) {
@@ -143,17 +143,17 @@ public class Actor<T, R> implements ActorAction {
     }
 
 
-    public Actor<T, R> setMailBox(Queue<Message<T>> mailBox) {
-        this.mailBox = mailBox;
-        return this;
-    }
+//    public Actor<T, R> setMailBox(Queue<Message<T>> mailBox) {
+//        this.mailBox = mailBox;
+//        return this;
+//    }
 
     public void run() {
-        if (actorStatus != ActorStatus.INIT)
+        if (status != ActorStatus.INIT)
             return;
 
-        boolean beLock = lock.tryLock();
-        if (beLock) {
+        boolean beLocked = lock.tryLock();
+        if (beLocked) {
             try {
                 loop:
                 while (true) {
@@ -170,12 +170,12 @@ public class Actor<T, R> implements ActorAction {
     }
 
     private void release() {
-        switch (actorStatus) {
+        switch (status) {
             case INIT:
             case RUNNING:
                 if (mailBox.size() > 0) {
                     try {
-                        actorStatus = ActorStatus.RUNNING;
+                        status = ActorStatus.RUNNING;
                         Message message = mailBox.poll();
                         ActorBehavior actorBehavior = new ActorBehavior(threadPool) {
                             @Override
@@ -193,13 +193,13 @@ public class Actor<T, R> implements ActorAction {
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        actorStatus = ActorStatus.CRASHING;
+                        status = ActorStatus.CRASHING;
                     } catch (ExecutionException e) {
                         e.printStackTrace();
-                        actorStatus = ActorStatus.CRASHING;
+                        status = ActorStatus.CRASHING;
                     }
                 } else {
-                    actorStatus = ActorStatus.IDLE;
+                    status = ActorStatus.IDLE;
                 }
                 break;
             case IDLE: {
@@ -208,19 +208,19 @@ public class Actor<T, R> implements ActorAction {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                actorStatus = ActorStatus.RUNNING;
+                status = ActorStatus.RUNNING;
             }
             break;
             case STOPPING:
             case CRASHING:
-                actorStatus = ActorStatus.STOPPED;
+                status = ActorStatus.STOPPED;
                 break;
             case STOPPED:
                 if (stoppedRecovery)
-                    actorStatus = ActorStatus.RUNNING;
+                    status = ActorStatus.RUNNING;
             default:
                 if (mailBox.size() < 1) {
-                    actorStatus = ActorStatus.STOPPED;
+                    status = ActorStatus.STOPPED;
                 }
                 break;
         }

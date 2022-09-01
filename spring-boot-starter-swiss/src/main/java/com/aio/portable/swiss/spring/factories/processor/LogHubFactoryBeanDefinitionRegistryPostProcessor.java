@@ -8,8 +8,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 
-public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
-    private static final Log log = LogFactory.getLog(LogHubBeanDefinitionRegistryPostProcessor.class);
+public class LogHubFactoryBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+    private static final Log log = LogFactory.getLog(LogHubFactoryBeanDefinitionRegistryPostProcessor.class);
 
     /**
      * 注册自定义bean
@@ -19,12 +19,6 @@ public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinition
      */
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-//        try {
-//            LogHubUtils.initLogHubFactory(registry);
-//        } catch (Exception e) {
-////            e.printStackTrace();
-//            log.warn("InitLogHubFactory failed.", e);
-//        }
     }
 
 
@@ -38,10 +32,13 @@ public class LogHubBeanDefinitionRegistryPostProcessor implements BeanDefinition
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         // 此处已autowired加载完
+        initLogHubFactorySilently(beanFactory);
+    }
+
+    private void initLogHubFactorySilently(ConfigurableListableBeanFactory beanFactory) {
         try {
             LogHubUtils.initLogHubFactory(beanFactory);
         } catch (Exception e) {
-//            e.printStackTrace();
             log.warn("InitLogHubFactory failed.", e);
         }
     }

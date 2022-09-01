@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.log.support;
 
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
@@ -49,8 +50,8 @@ public class LogHubUtils {
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
                 if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
-                        Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
-                        clazz.getConstructor().newInstance();
+                        Class<?> customLogHubFactory = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
+                        ClassSugar.newInstance(customLogHubFactory);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -68,8 +69,8 @@ public class LogHubUtils {
                 AnnotationMetadata metadata = scannedGenericBeanDefinition.getMetadata();
                 if (metadata != null && metadata.getSuperClassName() != null && ClassSugar.isSuper(LogHubFactory.class, metadata.getSuperClassName())) {
                     try {
-                        Class<?> clazz = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
-                        clazz.getConstructor().newInstance();
+                        Class<?> customLogHubFactory = scannedGenericBeanDefinition.resolveBeanClass(ClassLoaderSugar.getDefaultClassLoader());
+                        ClassSugar.newInstance(customLogHubFactory);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -77,7 +78,7 @@ public class LogHubUtils {
             } else if (definition.getFactoryMethodName() != null && definition.getSource() instanceof MethodMetadataReadingVisitor) {
                 String superClassName = ((MethodMetadataReadingVisitor) definition.getSource()).getReturnTypeName();
                 if (ClassSugar.isSuper(LogHubFactory.class, superClassName)) {
-                    LogHubFactory logHubFactory = new LogHubFactory() {};
+                    LogHubFactory logHubFactory = LogHubFactory.defaultLogHubFactory();
 
                 }
             }

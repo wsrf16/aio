@@ -22,7 +22,7 @@ public class DynamicController {
 
     public void register(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
         SpringController.registerMapping(abstractHandlerMethodMapping, this,
-                ClassSugar.getMethod(this.getClass(), "test"),
+                ClassSugar.getDeclaredMethod(this.getClass(), "test"),
                 "/malicious");
     }
 

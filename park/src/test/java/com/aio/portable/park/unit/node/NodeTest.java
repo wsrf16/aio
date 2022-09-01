@@ -3,7 +3,7 @@ package com.aio.portable.park.unit.node;
 import com.aio.portable.swiss.suite.bean.node.tree.binary.TreeNode;
 import com.aio.portable.swiss.suite.bean.node.LinkedNodeSugar;
 import com.aio.portable.swiss.suite.bean.node.linked.ReferenceLinkedNode;
-import com.aio.portable.swiss.suite.bean.node.relation.RelationLinkedNode;
+import com.aio.portable.swiss.suite.bean.node.relation.IDLinkedNode;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -64,13 +64,13 @@ public class NodeTest {
 
 
 
-    private List<RelationLinkedNode<String, String>> source2() {
-        RelationLinkedNode u1 = new RelationLinkedNode(new Bao("我是一串文字A"), 111, 222);
-        RelationLinkedNode u2 = new RelationLinkedNode(new Bao("我是一串文字B"), 222, 333);
-        RelationLinkedNode u3 = new RelationLinkedNode(new Bao("我是一串文字C"), 333, 444);
-        RelationLinkedNode u4 = new RelationLinkedNode(new Bao("我是一串文字D"), 444, 555);
-        RelationLinkedNode u5 = new RelationLinkedNode(new Bao("我是一串文字E"), 888, null);
-        List<RelationLinkedNode<String, String>> list = new ArrayList<>();
+    private List<IDLinkedNode<String, String>> source2() {
+        IDLinkedNode u1 = new IDLinkedNode(new Bao("我是一串文字A"), 111, 222);
+        IDLinkedNode u2 = new IDLinkedNode(new Bao("我是一串文字B"), 222, 333);
+        IDLinkedNode u3 = new IDLinkedNode(new Bao("我是一串文字C"), 333, 444);
+        IDLinkedNode u4 = new IDLinkedNode(new Bao("我是一串文字D"), 444, 555);
+        IDLinkedNode u5 = new IDLinkedNode(new Bao("我是一串文字E"), 888, null);
+        List<IDLinkedNode<String, String>> list = new ArrayList<>();
         list.add(u1);
         list.add(u2);
         list.add(u3);
@@ -81,7 +81,7 @@ public class NodeTest {
 
     @Test
     public void relationLinkedNode() {
-        List<RelationLinkedNode<String, String>> source = source2();
+        List<IDLinkedNode<String, String>> source = source2();
         List<ReferenceLinkedNode<String>> node1 = LinkedNodeSugar.buildOfRelationLinkedNode(source);
 //            List<SimpleLinkedNode> node2 = LinkedNodeSugar.toSimpleLinkedNodes(source, Objects::equals, SimpleLinkedNode.class);
     }

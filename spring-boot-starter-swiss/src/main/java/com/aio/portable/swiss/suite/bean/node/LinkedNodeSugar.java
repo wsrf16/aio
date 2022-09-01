@@ -2,8 +2,8 @@ package com.aio.portable.swiss.suite.bean.node;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.node.linked.ReferenceLinkedNode;
-import com.aio.portable.swiss.suite.bean.node.relation.RelationEquals;
-import com.aio.portable.swiss.suite.bean.node.relation.RelationLinkedNode;
+import com.aio.portable.swiss.suite.bean.node.relation.IDEquals;
+import com.aio.portable.swiss.suite.bean.node.relation.IDLinkedNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,30 +52,30 @@ public class LinkedNodeSugar {
      * @param <ID>
      * @return
      */
-    public static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list) {
-        return buildOfRelationLinkedNode(list, RelationEquals.OBJECTS_EQUALS);
+    public static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list) {
+        return buildOfRelationLinkedNode(list, IDEquals.OBJECTS_EQUALS);
     }
 
     /**
      * buildOfRelationLinkedNode
      * @param list
-     * @param relationEquals
+     * @param IDEquals
      * @param <ID>
      * @return
      */
-    private static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<RelationLinkedNode<ITEM, ID>> list, RelationEquals relationEquals) {
-        List<RelationLinkedNode<ITEM, ID>> tails = Utils.getTailList(list, relationEquals);
+    private static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list, IDEquals IDEquals) {
+        List<IDLinkedNode<ITEM, ID>> tails = Utils.getTailList(list, IDEquals);
         List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
 
         for (int i = 0; i < tails.size(); i++) {
-            RelationLinkedNode<ITEM, ID> current = tails.get(i);
+            IDLinkedNode<ITEM, ID> current = tails.get(i);
             LinkedList<ITEM> linkedList = new LinkedList<>();
             linkedList.offerFirst(current.getValue());
             resultOneStep.add(linkedList);
 
             while (true) {
                 ID byNextId = current.getId();
-                RelationLinkedNode<ITEM, ID> prev = Utils.findByNextId(list, byNextId, relationEquals);
+                IDLinkedNode<ITEM, ID> prev = Utils.findByNextId(list, byNextId, IDEquals);
                 if (prev != null) {
                     linkedList.offerFirst(prev.getValue());
                     current = prev;
@@ -100,38 +100,38 @@ public class LinkedNodeSugar {
 
 
     private static class Utils {
-        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
-            return getTailList(list, RelationEquals.OBJECTS_EQUALS);
+        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
+            return getTailList(list, IDEquals.OBJECTS_EQUALS);
         }
 
-        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, RelationEquals relationEquals) {
+        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, IDEquals IDEquals) {
             List<T> nullNextList = list.stream().filter(c -> c.tail()).collect(Collectors.toList());
             List<T> aloneNextList = list.stream()
                     .filter(c -> !c.tail())
-                    .filter(tail -> list.stream().noneMatch(head -> relationEquals.equals(tail.getNextId(), head.getId())))
+                    .filter(tail -> list.stream().noneMatch(head -> IDEquals.equals(tail.getNextId(), head.getId())))
                     .collect(Collectors.toList());
             List<T> tailList = CollectionSugar.concat(aloneNextList, nullNextList);
             return tailList;
         }
 
-        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
-            return getPreviousList(list, RelationEquals.OBJECTS_EQUALS);
+        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
+            return getPreviousList(list, IDEquals.OBJECTS_EQUALS);
         }
 
-        private static final <T extends RelationLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, RelationEquals relationEquals) {
+        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, IDEquals IDEquals) {
             List<T> full = list.stream().collect(Collectors.toList());
             List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
-            List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> relationEquals.equals(tail.getNextId(), head.getId()))).collect(Collectors.toList());
+            List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> IDEquals.equals(tail.getNextId(), head.getId()))).collect(Collectors.toList());
             return headList;
         }
 
-        private static final <T extends RelationLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final RelationEquals relationEquals) {
-            T t = list.stream().filter(c -> relationEquals.equals(c.getId(), id)).findFirst().orElse(null);
+        private static final <T extends IDLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final IDEquals IDEquals) {
+            T t = list.stream().filter(c -> IDEquals.equals(c.getId(), id)).findFirst().orElse(null);
             return t;
         }
 
-        private static final <T extends RelationLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final RelationEquals relationEquals) {
-            T t = list.stream().filter(c -> relationEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
+        private static final <T extends IDLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final IDEquals IDEquals) {
+            T t = list.stream().filter(c -> IDEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
             return t;
         }
     }

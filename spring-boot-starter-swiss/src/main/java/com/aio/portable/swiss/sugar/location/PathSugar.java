@@ -11,6 +11,9 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -75,6 +78,14 @@ public abstract class PathSugar {
 
     public static final Path getClassesDirectoryPath(Class<?> sourceClass) {
         return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
+    }
+
+    public static final Path getPath(URL url) {
+        try {
+            return Paths.get(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // UriComponentsBuilder UriComponents

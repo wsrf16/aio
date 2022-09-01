@@ -1,75 +1,111 @@
 package com.aio.portable.park.config.db;
 
-import com.aio.portable.swiss.suite.storage.db.mybatis.multidatasource.MybatisBaseDataSourceConfiguration;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
+import com.aio.portable.swiss.suite.storage.db.jpa.multidatasource.JpaBaseDataSourceConfiguration;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.context.annotation.*;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-@Configuration
-@MapperScan(basePackages = {SlaveDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = SlaveDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
-public class SlaveDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
-    public static final String BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.mapper";
+//@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {SlaveDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = SlaveDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = SlaveDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
+@ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
+//@Import(HibernateJpaAutoConfiguration.class)
+public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
+    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.repository";
+    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.model";
     private static final String SPECIAL_NAME = "slave";
+    private static final String PERSISTENCE_UNIT = "persistenceUnit";
 
-    private static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
-    private static final String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
+    protected static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    protected static final String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
 
-    private static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
-    private static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
-    public static final String SQL_SESSION_TEMPLATE_BEAN = SPECIAL_NAME + "SQLSessionTemplate";
-    private static final String SQL_SESSION_FACTORY_BEAN = SPECIAL_NAME + "SQLSessionFactory";
-    private static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
-    private static final String MYBATIS_PROPERTIES_BEAN = SPECIAL_NAME + "MybatisProperties";
+    protected static final String DATA_SOURCE_BEAN = SPECIAL_NAME + "DataSource";
+    protected static final String JPA_VENDOR_ADAPTER_BEAN = SPECIAL_NAME + "JpaVendorAdapter";
+    protected static final String ENTITY_MANAGER_FACTORY_BUILDER_BEAN = SPECIAL_NAME + "EntityManagerFactoryBuilder";
+
+    protected static final String PLATFORM_TRANSACTION_MANAGER_BEAN = SPECIAL_NAME + "PlatformTransactionManager";
+    protected static final String LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN = SPECIAL_NAME + "LocalContainerEntityManagerFactoryBean";
+
+    protected static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
+    protected static final String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
+    protected static final String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
     private static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
 
+
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
-    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
+    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }
 
-    @ConfigurationProperties(prefix = MYBATIS_PREFIX)
-    @Bean(MYBATIS_PROPERTIES_BEAN)
-    public MybatisProperties mybatisProperties() {
-        return super.mybatisProperties();
+    @Bean(JPA_PROPERTIES_BEAN)
+    @ConfigurationProperties(prefix = JPA_PREFIX)
+    public JpaProperties jpaProperties() {
+        return super.jpaProperties();
     }
 
     @Bean(DATA_SOURCE_BEAN)
-    public DataSource dataSource(
-            @Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties dataSourceProperties) {
-        return super.dataSource(dataSourceProperties);
+    public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
+        return super.dataSource(properties);
     }
 
-    @Bean(SQL_SESSION_FACTORY_BEAN)
-    public SqlSessionFactory sqlSessionFactory(
-            @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource,
-            @Qualifier(MYBATIS_PROPERTIES_BEAN)MybatisProperties mybatisProperties) throws Exception {
-        return super.sqlSessionFactory(dataSource, mybatisProperties);
+    @Bean(JPA_VENDOR_ADAPTER_BEAN)
+    public JpaVendorAdapter jpaVendorAdapter(
+            @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties,
+            @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource) {
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setShowSql(jpaProperties.isShowSql());
+        adapter.setDatabase(jpaProperties.determineDatabase(dataSource));
+        adapter.setDatabasePlatform(jpaProperties.getDatabasePlatform());
+        adapter.setGenerateDdl(jpaProperties.isGenerateDdl());
+        return adapter;
     }
 
-    @Bean(SQL_SESSION_TEMPLATE_BEAN)
-    public SqlSessionTemplate sqlSessionTemplate(
-            @Qualifier(SQL_SESSION_FACTORY_BEAN)SqlSessionFactory sqlSessionFactory,
-            @Qualifier(MYBATIS_PROPERTIES_BEAN)MybatisProperties properties) throws Exception {
-        return super.sqlSessionTemplate(sqlSessionFactory, properties);
+    @Bean(ENTITY_MANAGER_FACTORY_BUILDER_BEAN)
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder(
+            JpaVendorAdapter jpaVendorAdapter,
+            ObjectProvider<PersistenceUnitManager> persistenceUnitManager,
+            ObjectProvider<EntityManagerFactoryBuilderCustomizer> customizers,
+            @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
+        EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(jpaVendorAdapter,
+                jpaProperties.getProperties(), persistenceUnitManager.getIfAvailable());
+        customizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
+        return builder;
+    }
+
+    @Bean(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN)
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(@Qualifier(DATA_SOURCE_BEAN)DataSource dataSource, EntityManagerFactoryBuilder builder, @Qualifier(JPA_PROPERTIES_BEAN)JpaProperties jpaProperties) {
+        return super.localContainerEntityManagerFactoryBean(dataSource, builder, jpaProperties, ENTITY_BASE_PACKAGES, PERSISTENCE_UNIT);
+    }
+
+    @Bean(name = ENTITY_MANAGER_BEAN)
+    public EntityManager entityManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
+        return super.entityManager(factory);
     }
 
     @Bean(PLATFORM_TRANSACTION_MANAGER_BEAN)
-    public PlatformTransactionManager platformTransactionManager(
-            @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource) {
-        return super.dataPlatformTransactionManager(dataSource);
+    public JpaTransactionManager jpaTransactionManager(@Qualifier(LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN) LocalContainerEntityManagerFactoryBean factory) {
+        return super.jpaPlatformTransactionManager(factory);
     }
 
     @Bean(DATA_SOURCE_INITIALIZER_BEAN)

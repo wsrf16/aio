@@ -55,7 +55,7 @@ public class KafkaPrinter implements Printer {
                     kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), line);
                 } catch (Exception e) {
 //                    e.printStackTrace();
-                    log.error("kafka println error", e);
+                    log.warn("kafka println error", e);
                 }
             });
         }

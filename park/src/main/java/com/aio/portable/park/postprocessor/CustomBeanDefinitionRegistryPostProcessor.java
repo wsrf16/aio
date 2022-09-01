@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * beanDefinition aspect
  */
-//@Configuration
+@Configuration
 public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
     /**
      * 注册自定义bean
@@ -39,7 +39,8 @@ public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinition
         builder.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);
         // 注册到BeanDefinitionRegistry
         BeanDefinition rootBeanDefinition = builder.getBeanDefinition();
-//        registry.registerBeanDefinition("userInfoEntity", rootBeanDefinition);
+        if (!registry.containsBeanDefinition("userInfoEntity"))
+            registry.registerBeanDefinition("userInfoEntity", rootBeanDefinition);
     }
 
 

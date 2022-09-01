@@ -1,4 +1,4 @@
-package com.aio.portable.parkdb.dao.third.model;
+package com.aio.portable.parkdb.dao.slave.model;
 
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.order.OrderBy;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.*;

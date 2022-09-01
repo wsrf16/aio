@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.bean.node.relation;
 
-interface RelationNode<T, ID> {
+interface IDNode<T, ID> {
     T getValue();
 
     void setValue(T value);

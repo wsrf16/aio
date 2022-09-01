@@ -44,45 +44,45 @@ public class JWTExpiredDate {
         this.expiresAt = DateTimeSugar.CalendarUtils.add(issuedAt, calendarField, mount).getTime();
     }
 
-//    public final static JWTExpiredDate getExpiredMinutes(int expiredMinutes) {
+//    public static final JWTExpiredDate getExpiredMinutes(int expiredMinutes) {
 //        Calendar now = DateTimeSugar.CalendarUtils.now();
 //        return getExpiredMinutes(now, expiredMinutes);
 //    }
 
 
 
-    public final static JWTExpiredDate getExpiredSeconds(Calendar issuedAt, int expiredSeconds) {
+    public static final JWTExpiredDate getExpiredSeconds(Calendar issuedAt, int expiredSeconds) {
         return new JWTExpiredDate(issuedAt, Calendar.SECOND, expiredSeconds);
     }
 
-    public final static JWTExpiredDate getExpiredSeconds(int expiredSeconds) {
+    public static final JWTExpiredDate getExpiredSeconds(int expiredSeconds) {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         return new JWTExpiredDate(now, Calendar.SECOND, expiredSeconds);
     }
 
-    public final static JWTExpiredDate getExpiredMinutes(Calendar issuedAt, int expiredMinutes) {
+    public static final JWTExpiredDate getExpiredMinutes(Calendar issuedAt, int expiredMinutes) {
         return new JWTExpiredDate(issuedAt, Calendar.MINUTE, expiredMinutes);
     }
 
-    public final static JWTExpiredDate getExpiredMinutes(int expiredMinutes) {
+    public static final JWTExpiredDate getExpiredMinutes(int expiredMinutes) {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         return new JWTExpiredDate(now, Calendar.MINUTE, expiredMinutes);
     }
 
-    public final static JWTExpiredDate getExpiredHours(Calendar issuedAt, int expiredHours) {
+    public static final JWTExpiredDate getExpiredHours(Calendar issuedAt, int expiredHours) {
         return new JWTExpiredDate(issuedAt, Calendar.HOUR_OF_DAY, expiredHours);
     }
 
-    public final static JWTExpiredDate getExpiredHours(int expiredHours) {
+    public static final JWTExpiredDate getExpiredHours(int expiredHours) {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         return new JWTExpiredDate(now, Calendar.HOUR_OF_DAY, expiredHours);
     }
 
-    public final static JWTExpiredDate getExpiredDays(Calendar issuedAt, int expiredDays) {
+    public static final JWTExpiredDate getExpiredDays(Calendar issuedAt, int expiredDays) {
         return new JWTExpiredDate(issuedAt, Calendar.DAY_OF_YEAR, expiredDays);
     }
 
-    public final static JWTExpiredDate getExpiredDays(int expiredDays) {
+    public static final JWTExpiredDate getExpiredDays(int expiredDays) {
         Calendar now = DateTimeSugar.CalendarUtils.now();
         return new JWTExpiredDate(now, Calendar.DAY_OF_YEAR, expiredDays);
     }

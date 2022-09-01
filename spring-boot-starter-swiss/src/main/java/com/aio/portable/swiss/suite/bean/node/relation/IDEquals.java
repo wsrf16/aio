@@ -3,11 +3,11 @@ package com.aio.portable.swiss.suite.bean.node.relation;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface RelationEquals {
+public interface IDEquals {
     <ID> boolean equals(ID a, ID b);
 
-    RelationEquals OBJECTS_EQUALS = Objects::equals;
-    RelationEquals DOUBLE_EQUALS = new RelationEquals() {
+    IDEquals OBJECTS_EQUALS = Objects::equals;
+    IDEquals DOUBLE_EQUALS = new IDEquals() {
         @Override
         public <ID> boolean equals(ID a, ID b) {
             return a == b;

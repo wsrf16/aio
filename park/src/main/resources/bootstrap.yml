@@ -16,26 +16,26 @@ spring:
   profiles: dev
 
 apollo:
-  meta: http://10.124.192.118:8080
+  meta: http://110.124.192.118:18080
 
 ---
 spring:
   profiles: pro
 
 apollo:
-  meta: http://10.124.192.118:8081
+  meta: http://110.124.192.118:18081
 
 ---
 spring:
   profiles: uat
 
 apollo:
-  meta: http://10.124.192.118:8082
+  meta: http://110.124.192.118:18082
 
 ---
 spring:
   profiles: urgent
 
 apollo:
-  meta: http://10.124.192.118:8085
+  meta: http://110.124.192.118:18085
 

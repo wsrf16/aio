@@ -1,10 +1,15 @@
 package com.aio.portable.park.common;
 
+import jdk.internal.dynalink.beans.StaticClass;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserInfoEntity implements InitializingBean {
+    static {
+        System.out.println(UserInfoEntity.class);
+    }
+
     private Integer id;
 
     private Integer nextId;
@@ -12,6 +17,7 @@ public class UserInfoEntity implements InitializingBean {
     private String name;
 
     public UserInfoEntity() {
+        System.out.println("userInfoEntity Constructor");
     }
 
     public Integer getId() {
@@ -24,6 +30,10 @@ public class UserInfoEntity implements InitializingBean {
 
     public Integer getNextId() {
         return nextId;
+    }
+
+    public static Integer getNextId1() {
+        return 1;
     }
 
     public void setNextId(Integer nextId) {
@@ -53,6 +63,14 @@ public class UserInfoEntity implements InitializingBean {
     }
 
     public static UserInfoEntity sample() {
+        UserInfoEntity userInfoEntity = new UserInfoEntity();
+        userInfoEntity.setId(1);
+        userInfoEntity.setName("Jerry");
+        userInfoEntity.setNextId(2);
+        return userInfoEntity;
+    }
+
+    public UserInfoEntity one() {
         UserInfoEntity userInfoEntity = new UserInfoEntity();
         userInfoEntity.setId(1);
         userInfoEntity.setName("Jerry");

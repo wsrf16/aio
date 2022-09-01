@@ -50,10 +50,10 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         log.debug("LogHubApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
-        initializeLogProperties(environment);
+        initializeLogHubProperties(environment);
     }
 
-    private static void initializeLogProperties(ConfigurableEnvironment environment) {
+    private static void initializeLogHubProperties(ConfigurableEnvironment environment) {
         Binder binder = Binder.get(environment);
         try {
             LogHubProperties.initialSingletonInstance(binder);
@@ -97,7 +97,7 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
             if (ClassLoaderSugar.isPresent("org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext")
                     && applicationContext.getClass().equals(AnnotationConfigServletWebServerApplicationContext.class)
                     && !SpringContextHolder.hasLoaded())
-                SpringContextHolder.initialApplicationContext(applicationContext);
+                SpringContextHolder.setSingletonApplicationContext(applicationContext);
         } catch (Exception e) {
             log.warn("LogHub onApplicationPreparedEvent", e);
         }

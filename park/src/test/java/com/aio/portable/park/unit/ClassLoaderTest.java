@@ -23,16 +23,16 @@ public class ClassLoaderTest {
         printResult(name, b);
 
         name = "Wood";
-        b = ClassLoaderSugar.hasLoaded(name);
-        printResult(name, b);
+        name = "com.aio.portable.park.common.UserInfoEntity";
         b = ClassLoaderSugar.hasLoaded(name);
         printResult(name, b);
 
         name = "org.yaml.snakeyaml.Yaml";
-        boolean isPresent1 = ClassLoaderSugar.isPresent(name);
+        boolean isPresent = ClassLoaderSugar.isPresent(name);
         boolean hasLoaded = ClassLoaderSugar.hasLoaded(name);
-        Object yaml1 = ClassLoaderSugar.load(name, false);
-        org.yaml.snakeyaml.Yaml yaml2 = new org.yaml.snakeyaml.Yaml();
+        Object yaml1 = ClassLoaderSugar.load(name, ClassLoaderSugar.getDefaultClassLoader(), false);
+        Object yaml2 = ClassLoaderSugar.forName(name, ClassLoaderSugar.getDefaultClassLoader(), false);
+        org.yaml.snakeyaml.Yaml yaml3 = new org.yaml.snakeyaml.Yaml();
 
     }
 

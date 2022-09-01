@@ -50,7 +50,7 @@ public class ActorTest {
         });
     }
 
-    private static List<Message<List<Integer>>> groupbyPrime(Map<Integer, List<Integer>> collect1) {
+    private static List<Message<List<Integer>>> groupByPrime(Map<Integer, List<Integer>> collect1) {
         return collect1.values().stream().map(c -> new Message<>(c)).collect(Collectors.toList());
     }
 
@@ -64,7 +64,7 @@ public class ActorTest {
         // 产生1到100的正整数，并分组
         Map<Integer, List<Integer>> collect1 = generatePrime();
         // 构建Message
-        List<Message<List<Integer>>> collect2 = groupbyPrime(collect1);
+        List<Message<List<Integer>>> collect2 = groupByPrime(collect1);
         // 构建“输出Actor”
         Actor<List<Integer>, Void> actorConcat = buildActor1();
         // 构建“质数判断Actor”

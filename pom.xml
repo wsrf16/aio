@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>all-in-one</artifactId>
-    <version>1.1.20-SNAPSHOT</version>
+    <version>1.1.21-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>aio</name>
@@ -74,6 +74,17 @@
         <repository>
             <id>central</id>
             <url>http://central.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:30</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>repo</id>
+            <url>https://repo1.maven.org/maven2/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

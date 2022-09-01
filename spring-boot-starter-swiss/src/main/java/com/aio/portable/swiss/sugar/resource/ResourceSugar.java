@@ -3,11 +3,13 @@ package com.aio.portable.swiss.sugar.resource;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.ProtocolType;
 import com.aio.portable.swiss.sugar.type.StringSugar;
+import com.aio.portable.swiss.suite.io.IOSugar;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -178,6 +180,45 @@ public abstract class ResourceSugar {
             return location;
         }
 
+        /**
+         * getResourceAsStream
+         * @param clazz
+         * @param name
+         * @return
+         */
+        public static final InputStream getResourceAsStream(Class<?> clazz, String name) {
+            return clazz.getResourceAsStream(name);
+        }
+
+        /**
+         * getResourceAsStream
+         * @param name
+         * @return
+         */
+        public static final InputStream getResourceAsStream(String name) {
+            return getResourceAsStream(ResourceSugar.class, name);
+        }
+
+        /**
+         * getResourceAsString
+         * @param clazz
+         * @param name
+         * @return
+         */
+        public static final String getResourceAsString(Class<?> clazz, String name) {
+            InputStream inputStream = clazz.getResourceAsStream(name);
+            return IOSugar.Streams.toString(inputStream);
+        }
+
+        /**
+         * getResourceAsString
+         * @param name
+         * @return
+         */
+        public static final String getResourceAsString(String name) {
+            InputStream inputStream = getResourceAsStream(ResourceSugar.class, name);
+            return IOSugar.Streams.toString(inputStream);
+        }
     }
 
     public abstract static class ByClassLoader {
@@ -237,6 +278,46 @@ public abstract class ResourceSugar {
         public static final List<URL> getClassURLs(final String className) {
             String resourceRelationPath = ClassSugar.convertClassNameToResourceLocation(className);
             return getResourceURLs(resourceRelationPath);
+        }
+
+        /**
+         * getResourceAsStream
+         * @param classLoader
+         * @param path
+         * @return
+         */
+        public static final InputStream getResourceAsStream(ClassLoader classLoader, String path) {
+            return classLoader.getResourceAsStream(path);
+        }
+
+        /**
+         * getResourceAsStream
+         * @param path
+         * @return
+         */
+        public static final InputStream getResourceAsStream(String path) {
+            return getResourceAsStream(Thread.currentThread().getContextClassLoader(), path);
+        }
+
+        /**
+         * getResourceAsString
+         * @param classLoader
+         * @param path
+         * @return
+         */
+        public static final String getResourceAsString(ClassLoader classLoader, String path) {
+            InputStream inputStream = classLoader.getResourceAsStream(path);
+            return IOSugar.Streams.toString(inputStream);
+        }
+
+        /**
+         * getResourceAsString
+         * @param path
+         * @return
+         */
+        public static final String getResourceAsString(String path) {
+            InputStream inputStream = getResourceAsStream(Thread.currentThread().getContextClassLoader(), path);
+            return IOSugar.Streams.toString(inputStream);
         }
     }
 

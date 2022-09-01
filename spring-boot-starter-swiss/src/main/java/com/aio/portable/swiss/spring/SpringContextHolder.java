@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.annotation.AnnotationConfigurationException;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.Nullable;
@@ -56,6 +57,31 @@ public class SpringContextHolder implements ApplicationContextAware {
         }
     }
 
+    public static final void clearContext() {
+        SpringContextHolder.applicationContext = null;
+    }
+
+    public static final void setSingletonApplicationContext(ApplicationContext applicationContext) {
+        SpringContextHolder.applicationContext = applicationContext;
+    }
+
+    /**
+     * close
+     */
+    public static final void close() {
+        SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
+    }
+
+    /**
+     * restart
+     * @param primarySource
+     * @param args
+     */
+    public static final void restart(Class<?> primarySource, String[] args) {
+        SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
+        SpringApplication.run(primarySource, args);
+    }
+
     /**
      * 获取静态变量中的ApplicationContext.
      *
@@ -73,7 +99,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         return Binder.get(getConfigurableApplicationContext().getEnvironment());
     }
 
-    public static final <T extends BeanFactory> T getBeanFactory() {
+    public static final <T extends org.springframework.beans.factory.BeanFactory> T getBeanFactory() {
         return (T) getConfigurableApplicationContext().getBeanFactory();
     }
 
@@ -85,7 +111,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
-    public static final ConfigurableApplicationContext run(Class<?> primarySource, String[] args, Consumer<SpringApplication> otherAction) {
+    public static final ConfigurableApplicationContext run(Class<?> primarySource, Consumer<SpringApplication> otherAction, String[] args) {
         SpringApplication springApplication = new SpringApplication(primarySource);
         otherAction.accept(springApplication);
         return springApplication.run(args);
@@ -106,10 +132,11 @@ public class SpringContextHolder implements ApplicationContextAware {
         return null;
     }
 
-    public static class BeanCenter {
-        public static String getBeanName(@Nullable String simpleClassName) {
-            return Introspector.decapitalize(simpleClassName);
-        }
+    public static String getBeanName(@Nullable String simpleClassName) {
+        return Introspector.decapitalize(simpleClassName);
+    }
+
+    public static class BeanFactory {
 
         public static final <T> T getBean(@Nullable String beanName) {
             return (T) getBeanFactory().getBean(beanName);
@@ -179,64 +206,56 @@ public class SpringContextHolder implements ApplicationContextAware {
         return (ConfigurableEnvironment) applicationContext.getEnvironment();
     }
 
-    /**
-     * getPropertyBean
-     * @param environment
-     * @param name
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    public static final <T> T getPropertyBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
-        BindResult<T> bind = Binder.get(environment).bind(name, clazz);
-        return bind.isBound() ? bind.get() : null;
+    public static class PropertyBeanBound {
+        /**
+         * getPropertyBean
+         *
+         * @param environment
+         * @param name
+         * @param clazz
+         * @param <T>
+         * @return
+         */
+        public static final <T> T getPropertyBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
+            BindResult<T> bind = Binder.get(environment).bind(name, clazz);
+            T t = bind != null && bind.isBound() ? bind.get() : null;
+            return t;
+        }
+
+        /**
+         * getPropertyBean
+         *
+         * @param name
+         * @param clazz
+         * @param <T>
+         * @return
+         */
+        public static final <T> T getPropertyBean(String name, Class<T> clazz) {
+            ConfigurableEnvironment environment = getEnvironment();
+            return getPropertyBean(environment, name, clazz);
+        }
+
+
+        /**
+         * getPropertyBean
+         *
+         * @param clazz
+         * @param <T>
+         * @return
+         */
+        public static final <T> T getPropertyBean(Class<T> clazz) {
+            boolean present = clazz.isAnnotationPresent(ConfigurationProperties.class);
+            if (!present)
+                throw new AnnotationConfigurationException("Miss '@ConfigurationProperties' on " + clazz.getName() + ".");
+
+            ConfigurationProperties[] annotationsByType = clazz.getAnnotationsByType(ConfigurationProperties.class);
+            String name = StringSugar.getFirstHasText(null, annotationsByType[0].prefix(), annotationsByType[0].value());
+            if (name == null)
+                throw new AnnotationConfigurationException("'@ConfigurationProperties.class' prefix or value is null.");
+
+            T propertyBean = getPropertyBean(name, clazz);
+            return propertyBean;
+        }
     }
 
-    /**
-     * getPropertyBean
-     * @param name
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    public static final <T> T getPropertyBean(String name, Class<T> clazz) {
-        BindResult<T> bind = Binder.get(getEnvironment()).bind(name, clazz);
-        T t = bind != null && bind.isBound() ? bind.get() : null;
-        return t;
-    }
-
-
-    public static final <T> T getPropertyBean(Class<T> clazz) {
-        boolean present = clazz.isAnnotationPresent(ConfigurationProperties.class);
-        if (!present)
-            return null;
-
-        ConfigurationProperties[] annotationsByType = clazz.getAnnotationsByType(ConfigurationProperties.class);
-        String name = StringSugar.getFirstHasText(null, annotationsByType[0].prefix(), annotationsByType[0].value());
-        if (name == null)
-            return null;
-        BindResult<T> bind = Binder.get(getEnvironment()).bind(name, clazz);
-        if (bind == null || !bind.isBound())
-            return null;
-        return bind.get();
-    }
-
-    /**
-     * 清除SpringContextHolder中的ApplicationContext为Null.
-     */
-    public static final void clearHolder() {
-        applicationContext = null;
-    }
-
-    public static final void initialApplicationContext(ApplicationContext applicationContext) {
-        SpringContextHolder.applicationContext = applicationContext;
-    }
-
-    /**
-     * restart
-     */
-    public static final void restart(Class<?> primarySource, String[] args) {
-        SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
-        SpringApplication.run(primarySource, args);
-    }
 }

@@ -25,19 +25,19 @@ public class JacksonSugar {
         CAMEL_CASE,
     }
 
-    private final static class Instance {
+    private static final class Instance {
         private static final Instance singleton = new Instance();
         private static final Instance getInstance() {
             return singleton;
         }
 
-        private final static ObjectMapper shortObjectMapper = Builder.buildShortObjectMapper();
-        private final static ObjectMapper normalObjectMapper = Builder.buildObjectMapper();
-        private final static ObjectMapper longObjectMapper = Builder.buildLongObjectMapper();
-        private final static ObjectMapper dumpObjectMapper = Builder.buildDumpObjectMapper();
+        private static final ObjectMapper shortObjectMapper = Builder.buildShortObjectMapper();
+        private static final ObjectMapper normalObjectMapper = Builder.buildObjectMapper();
+        private static final ObjectMapper longObjectMapper = Builder.buildLongObjectMapper();
+        private static final ObjectMapper dumpObjectMapper = Builder.buildDumpObjectMapper();
     }
 
-    public final static class Builder {
+    public static final class Builder {
         /**
          * buildObjectMapper
          * @param indent

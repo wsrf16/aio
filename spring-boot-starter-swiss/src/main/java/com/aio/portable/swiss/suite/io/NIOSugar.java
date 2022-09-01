@@ -35,14 +35,20 @@ public abstract class NIOSugar {
             return read(Paths.get(path), charset);
         }
 
+        public static final String read(String path) {
+            return read(Paths.get(path), Charset.defaultCharset());
+        }
+
         public static final String read(Path path, Charset charset) {
             try {
-                String content = new String(java.nio.file.Files.readAllBytes(path), charset);
-                return content;
+                return new String(java.nio.file.Files.readAllBytes(path), charset);
             } catch (IOException e) {
-//                e.printStackTrace();
                 throw new RuntimeException(e);
             }
+        }
+
+        public static final String read(Path path) {
+            return read(path, Charset.defaultCharset());
         }
 
 //        Files.newBufferedReader()

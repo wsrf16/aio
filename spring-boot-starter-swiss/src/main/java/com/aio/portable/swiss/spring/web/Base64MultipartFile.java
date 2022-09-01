@@ -39,19 +39,31 @@ public class Base64MultipartFile implements MultipartFile {
         return Base64MultipartFile.toMultipartFile(charArray[0], bytes);
     }
 
+    public String getExtension() {
+        return getContentType().split("/")[1];
+    }
+
+    public String getEncodeType() {
+        return header.split(";")[1];
+    }
+
+    public String getPrefix() {
+        return header.split(":")[0];
+    }
+
     @Override
     public String getName() {
-        return  builder.build() + "." + header.split("/")[1];
+        return builder.build() + "." + this.getExtension();
     }
 
     @Override
     public String getOriginalFilename() {
-        return builder.build() + "." + header.split(";")[0].split("/")[1];
+        return builder.build() + "." + this.getExtension();
     }
 
     @Override
     public String getContentType() {
-        return header.split(":")[1];
+        return header.split(";")[0].split(":")[1];
     }
 
     @Override

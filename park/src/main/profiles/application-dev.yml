@@ -78,53 +78,53 @@
 ##    port: 6379
 ##    password: YYYYYYYY
 #
-#  log:
-##    enabled: false
+  log:
+#    enabled: false
 #    level: error
-##    async: false
-##    samplerRate: 0.0
-#    console:
-#      enabled: true
-#    slf4j:
-#      enabled: false
-#    rabbitmq:
-#      enabled: false
-#      host: 192.168.133.133
-#      port: 5672
-#      username: admin
-#      password: admin
-#      virtual-host: /
-#      es-index: @project.deploy.finalName@-@profiles.active@-log
-#      publisher-confirms: true
-#      publisher-returns: true
-#      auto-declare: true
-#      binding-list:
-#        - type: direct
-#          routing-key: application-log-queue
-#          queue: application-log-queue
-#          exchange: application-log-exchange
-#
-#    kafka:
-#      enabled: false
-#      esIndex: @project.deploy.finalName@-@profiles.active@-log
-##      bootstrap-servers: 192.168.133.133:9092
-##      template:
-##        defaultTopic: application-log
-#      binding-list:
-#        - topic: application-log
-#      producer:
-##        bootstrap-servers: mecs.com:9092
-#        properties:
-#          linger.ms: 100
-#          max.block.ms: 3000
-#          request.timeout.ms: 1000
-#          transaction.timeout.ms: 1000
-#          compression.type: gzip
-#          acks: 1
-##          security.protocol: SASL_PLAINTEXT
-##          sasl:
-##            mechanism: SCRAM-SHA-256
-##            jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="tianti-log-kafka" password="BNS8sn2jS81";
+#    async: false
+#    samplerRate: 0.0
+    console:
+      enabled: true
+    slf4j:
+      enabled: false
+    rabbitmq:
+      enabled: false
+      host: 192.168.133.133
+      port: 5672
+      username: admin
+      password: admin
+      virtual-host: /
+      es-index: @project.deploy.finalName@-@profiles.active@-log
+      publisher-confirms: true
+      publisher-returns: true
+      auto-declare: true
+      binding-list:
+        - type: direct
+          routing-key: application-log-queue
+          queue: application-log-queue
+          exchange: application-log-exchange
+
+    kafka:
+      enabled: false
+      esIndex: @project.deploy.finalName@-@profiles.active@-log
+#      bootstrap-servers: 192.168.133.133:9092
+#      template:
+#        defaultTopic: application-log
+      binding-list:
+        - topic: application-log
+      producer:
+#        bootstrap-servers: mecs.com:9092
+        properties:
+          linger.ms: 100
+          max.block.ms: 3000
+          request.timeout.ms: 1000
+          transaction.timeout.ms: 1000
+          compression.type: gzip
+          acks: 1
+#          security.protocol: SASL_PLAINTEXT
+#          sasl:
+#            mechanism: SCRAM-SHA-256
+#            jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="tianti-log-kafka" password="BNS8sn2jS81";
 #
 ##eureka:
 ##  instance:

@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.20-SNAPSHOT</version>
+    <version>1.1.21-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>
@@ -37,6 +37,7 @@
         <cron-utils.version>7.0.6</cron-utils.version>
         <druid.version>1.1.18</druid.version>
         <mybatis.version>2.1.1</mybatis.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <java-jwt.version>3.15.0</java-jwt.version>
@@ -212,6 +213,13 @@
                     <artifactId>spring-boot-starter-jdbc</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
@@ -641,6 +649,22 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+<!--                <version>3.2.1</version>-->
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- springboot: option -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -721,7 +745,7 @@
 
     <repositories>
         <repository>
-            <id>ali-maven</id>
+            <id>maven-ali</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
@@ -734,7 +758,7 @@
         </repository>
 
         <repository>
-            <id>central</id>
+            <id>maven-central</id>
             <url>http://central.maven.org/maven2/</url>
             <releases>
                 <enabled>true</enabled>
@@ -744,6 +768,22 @@
                 <updatePolicy>interval:30</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>maven-repo1</id>
+            <url>http://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:30</updatePolicy>
+            </snapshots>
+        </repository>
+
+<!--        <repository>-->
+<!--            <id>github-mvn-snapshot-repo</id>-->
+<!--            <url>https://raw.githubusercontent.com/947133297/fileuploader/master/repo</url>-->
+<!--        </repository>-->
     </repositories>
 
     <distributionManagement>
@@ -757,6 +797,7 @@
         <!--</snapshotRepository>-->
 
 
+        <!-- ladder-repository -->
         <repository>
             <id>nexus-releases</id>
             <name>user release resp</name>
@@ -768,6 +809,13 @@
             <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
 
+
+        <!-- local-repository -->
+<!--        <repository>-->
+<!--            <id>github-mvn-snapshot-repo</id>-->
+<!--            <name>local snapshot resp</name>-->
+<!--            <url>file://${basedir}/repo</url>-->
+<!--        </repository>-->
 <!--        <snapshotRepository>-->
 <!--            <id>nexus-snapshots</id>-->
 <!--            <name>user snapshot resp</name>-->

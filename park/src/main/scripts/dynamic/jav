@@ -316,12 +316,14 @@ function get_param_dep() {
 }
 
 # 不设HeapDumpPath，dump出的文件默认在/tomcat_home/bin目录下
+# jdk8: -Xloggc 回收日志  -XX:+PrintGCDetails 回收日志详情   -XX:+PrintGCDateStamps 回收日志时间戳
+# jdk9: -Xlog 回收日志  :gc* 打印标签为[gc*]的日志  :file=${log_file_gc_latest} 文件名称  :time,pid,level,tags 日志格式
 function get_param_jvm() {
   param_jvm="-XX:MetaspaceSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
   if [[ $(expr ${jdk_version} \<= 1.8) -eq 1 ]]; then
     param_jvm="${param_jvm} -Xloggc:${log_file_gc_latest} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${log_dir}"
   elif [[ $(expr ${jdk_version} \> 1.8) -eq 1 ]]; then
-    param_jvm="${param_jvm} -Xlog:gc*  -Xlog:gc:file=${log_file_gc_latest}:time,pid,level,tags-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${log_dir}"
+    param_jvm="${param_jvm} -Xlog:gc*:file=${log_file_gc_latest}:time,pid,level,tags -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${log_dir}"
   else
     echo "sorry! jdk is error."
     exit 1

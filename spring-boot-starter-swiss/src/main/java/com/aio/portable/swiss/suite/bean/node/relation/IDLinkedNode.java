@@ -1,17 +1,17 @@
 package com.aio.portable.swiss.suite.bean.node.relation;
 
-public class RelationLinkedNode<T, ID> implements RelationNode<T, ID> {
+public class IDLinkedNode<T, ID> implements IDNode<T, ID> {
     T value;
     ID id;
     ID nextId;
 
-    public RelationLinkedNode(T value, ID id, ID nextId) {
+    public IDLinkedNode(T value, ID id, ID nextId) {
         setValue(value);
         setId(id);
         setNextId(nextId);
     }
 
-    public RelationLinkedNode(T value, ID id) {
+    public IDLinkedNode(T value, ID id) {
         setValue(value);
         setId(id);
     }

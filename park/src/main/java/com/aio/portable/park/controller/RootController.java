@@ -19,9 +19,6 @@ public class RootController {
     @ApiOperation(value = "首页")
     @GetMapping("/")
     public String index() throws IOException {
-//        int i = 1;
-//        if (i == 1)
-//            throw new BizException(111, "aaaaaaaaaaa");
         return "doc.html";
     }
 

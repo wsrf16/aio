@@ -6,34 +6,20 @@ spring:
   datasource:
     master:
       driver-class-name: org.h2.Driver
+      url: jdbc:h2:mem:test
+      username: root
+      password: 1111
+      connection-timeout: 2000
       schema:
         - classpath:db/schema-h2.sql
       data:
         - classpath:db/data-h2.sql
       initialization-mode: always
-      url: jdbc:h2:mem:test
-      username: root
-      password: 1111
       mybatis:
         mapper-locations: classpath:mapper/*.xml, classpath:config/mapper/*.xml
 
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
-      username: root
-      password: 1111
-      connection-timeout: 2000
-      mybatis:
-        mapper-locations: classpath:mapper/*.xml, classpath:config/mapper/*.xml
-
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=&autoReconnect=true&allowMultiQueries=true&useCursorFetch=true
-#    username: root
-#    password: 1111
-
-    third:
-#      type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
@@ -105,24 +91,24 @@ spring:
         queue: application-log-queue
         exchange: application-log-exchange
 
-    kafka:
-      enabled: false
-      esIndex: @project.deploy.finalName@-@profiles.active@-log
-      bootstrap-servers: 192.168.133.133:9092
-#      template:
-#        defaultTopic: application-log
-#      producer:
-#        bootstrap-servers: mecs.com:9092
-#        bootstrap-servers: 192.168.133.133:9092
-      binding-list:
-        - topic: application-log
-      properties:
-        linger-ms: 100
-        max-block-ms: 3000
-        request-timeout-ms: 1000
-        transaction-timeout-ms: 1000
-        compression-type: gzip
-        acks: 1
+#    kafka:
+#      enabled: false
+#      esIndex: @project.deploy.finalName@-@profiles.active@-log
+#      bootstrap-servers: 192.168.133.133:9092
+##      template:
+##        defaultTopic: application-log
+##      producer:
+##        bootstrap-servers: mecs.com:9092
+##        bootstrap-servers: 192.168.133.133:9092
+#      binding-list:
+#        - topic: application-log
+#      properties:
+#        linger-ms: 100
+#        max-block-ms: 3000
+#        request-timeout-ms: 1000
+#        transaction-timeout-ms: 1000
+#        compression-type: gzip
+#        acks: 1
     console:
       enabled: true
     slf4j:

@@ -11,7 +11,7 @@ public class ActorManager {
 
     public ActorManager start() {
         actorQueue.stream()
-                .filter(c -> c.getActorStatus() == ActorStatus.INIT)
+                .filter(c -> c.getStatus() == ActorStatus.INIT)
                 .forEach(c -> new Thread(c).start());
         return this;
     }
@@ -23,9 +23,9 @@ public class ActorManager {
 
     public ActorManager tryStop(String name) {
         actorQueue.stream()
-                .filter(c -> c.getActorStatus() == ActorStatus.RUNNING)
+                .filter(c -> Objects.equals(c.getName(), name))
                 .forEach(c -> {
-                    if (Objects.equals(c.getName(), name))
+                    if (c.getStatus() == ActorStatus.RUNNING)
                         c.tryStop();
                 });
         return this;

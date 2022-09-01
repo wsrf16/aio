@@ -3,6 +3,8 @@ package com.aio.portable.park.unit;
 import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEncoderFactories;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import com.aio.portable.swiss.suite.algorithm.encode.SpringBase64Convert;
+import com.aio.portable.swiss.suite.algorithm.geo.GeoHash;
+import com.aio.portable.swiss.suite.algorithm.geo.GeoPoint;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,16 +13,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Base64Test {
     @Test
     public void foobar() {
-        {
-            String base64 = JDKBase64Convert.encodeToString("1111".getBytes());
-            byte[] binary = JDKBase64Convert.decode(base64);
-        }
-        {
-            String base64 = SpringBase64Convert.encodeToString("1111".getBytes());
-            byte[] binary = SpringBase64Convert.decode(base64);
-        }
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createPureMD5PasswordEncoder();
-        String md5 = passwordEncoder.encode("1");
-        boolean md51 = passwordEncoder.matches("1", md5);
+//        // 40.222012, 116.248283
+////        GeoHash geohash = new GeoHash();
+//        String s = geohash.encode(39.9257460000, 116.5998310000);
+////        System.out.println(s);
+//        geohash.getArroundGeoHash(39.9257460000, 116.5998310000);
+//        double[] geo = geohash.decode(s);
+////        System.out.println(geo[0]+" "+geo[1]);
+
+//        String encode = new GeoHashHelper().encode(39.97696,116.3764874, 20);
+
+        String hash = GeoHash.encode(39.97696,116.3764874, 7);
+        GeoPoint wx4g2jw = GeoHash.decode("wx4g2jw");
+        GeoPoint wx4g2jw1 = GeoHash.decodeToGeoHash("wx4g2jw").getBoundingBoxCenterPoint();
     }
 }

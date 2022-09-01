@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class UrlSugar {
-//    UriComponentsBuilder
+//    UriComponentsBuilder.fromHttpUrl()
 
     public static final String addQueries(String uri, Object bean) {
         Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(bean);

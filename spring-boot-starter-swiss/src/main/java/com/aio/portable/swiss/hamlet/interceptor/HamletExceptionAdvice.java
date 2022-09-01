@@ -12,6 +12,7 @@ import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 //@RestControllerAdvice
 public abstract class HamletExceptionAdvice {
@@ -52,6 +53,12 @@ public abstract class HamletExceptionAdvice {
             String spanId = instance.getSpanId();
             responseWrapper = buildResponseWrapper(e);
             responseWrapper.setSpanId(spanId);
+        } else if (input instanceof NoHandlerFoundException) {
+            NoHandlerFoundException instance = (NoHandlerFoundException) input;
+            e = instance;
+//            String spanId = instance.getSpanId();
+            responseWrapper = buildResponseWrapper(e);
+//            responseWrapper.setSpanId(spanId);
         } else {
             e = input;
             responseWrapper = buildResponseWrapper(e);

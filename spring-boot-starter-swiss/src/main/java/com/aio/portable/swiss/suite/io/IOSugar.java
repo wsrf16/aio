@@ -1,16 +1,28 @@
 package com.aio.portable.swiss.suite.io;
 
-import com.aio.portable.swiss.sugar.ThrowableSugar;
-import org.apache.commons.io.IOUtils;
+import com.aio.portable.swiss.sugar.resource.ResourceSugar;
 
-import java.io.*;
-import java.net.*;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URLConnection;
 import java.nio.channels.Selector;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Consumer;
 
 /**
  * Created by York on 2017/11/28.
@@ -45,24 +57,21 @@ public abstract class IOSugar {
 //        }
 
         public static final String readFileForText(String path) {
-            StringBuffer sb = null;
+            String text;
             try {
                 File f = new File(path);
                 if (f.isFile() && f.exists()) {
-                    sb = new StringBuffer();
-                    InputStreamReader read = new InputStreamReader(new FileInputStream(f), "UTF-8");
-                    BufferedReader reader = new BufferedReader(read);
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line);
-                    }
-                    read.close();
+                    text = IOSugar.Streams.toString(f);
+                } else if (ResourceSugar.ByClassLoader.existResource(path)) {
+                    text = ResourceSugar.ByClassLoader.getResourceAsString(path);
+                } else {
+                    throw new FileNotFoundException(f.getAbsolutePath());
                 }
+                return text;
             } catch (Exception e) {
 //                e.printStackTrace();
                 throw new RuntimeException(e);
             }
-            return sb.toString();
         }
 
         public static final byte[] readFileForByte(String path) {
@@ -221,6 +230,37 @@ public abstract class IOSugar {
     }
 
     public static class Streams {
+        public static final String toString(String path) {
+            try (FileInputStream inputStream = new FileInputStream(path)) {
+                return toString(inputStream, StandardCharsets.UTF_8);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static final String toString(String path, Charset charset) {
+            try (FileInputStream inputStream = new FileInputStream(path)) {
+                return toString(inputStream, charset);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static final String toString(File file) {
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                return toString(inputStream, StandardCharsets.UTF_8);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static final String toString(File file, Charset charset) {
+            try (FileInputStream inputStream = new FileInputStream(file)) {
+                return toString(inputStream, charset);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         public static final String toString(InputStream inputStream) {
             return toString(inputStream, StandardCharsets.UTF_8);
@@ -302,7 +342,7 @@ public abstract class IOSugar {
             try {
                 InputStream inputStream = urlConn.getInputStream();
                 try {
-                    return IOUtils.toByteArray(inputStream);
+                    return IOSugar.Streams.toByteArray(inputStream);
                 } finally {
                     inputStream.close();
                 }

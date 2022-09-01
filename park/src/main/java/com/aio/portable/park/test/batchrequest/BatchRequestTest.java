@@ -76,7 +76,7 @@ public class BatchRequestTest {
         init();
     }
 
-    Queue<BatchRequest> queue = new LinkedBlockingDeque<BatchRequest>();
+    Queue<BatchRequest> queue = new LinkedBlockingDeque<>();
 
     public CompletableFuture<BatchResponse<UserInfoEntity>> handle(UserInfoEntity userInfo) {
         BatchRequest<UserInfoEntity> batchRequest = new BatchRequest<>(userInfo);

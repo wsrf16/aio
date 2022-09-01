@@ -72,7 +72,7 @@ public class RabbitMQPrinter implements Printer {
                 try {
                     rabbitTemplate.convertAndSend(c.getExchange(), c.getRoutingKey(), msg);
                 } catch (AmqpException e) {
-                    log.error("rabbitmq println error", e);
+                    log.warn("rabbitmq println error", e);
                 }
             });
         }

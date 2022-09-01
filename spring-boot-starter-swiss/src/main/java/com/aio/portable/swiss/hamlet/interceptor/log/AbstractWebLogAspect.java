@@ -59,7 +59,7 @@ class AbstractWebLogAspect {
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + "))"
             + " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
-//    public void doBefore(ProceedingJoinPoint joinPoint) {
+//    public void doBefore(JoinPoint joinPoint) {
 //        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 //        HttpServletRequest request = attributes.getRequest();
 //        RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
@@ -70,7 +70,7 @@ class AbstractWebLogAspect {
 //        }
 //    }
 //
-//    public void doAfterReturning(ProceedingJoinPoint joinPoint, Object result) {
+//    public void doAfterReturning(JoinPoint joinPoint, Object result) {
 //        LogHub logger = loggerPool.get(joinPoint.getSignature().getDeclaringTypeName());
 //        if (logger != null) {
 //            logger.info(RESPONSE_SUMMARY, result);

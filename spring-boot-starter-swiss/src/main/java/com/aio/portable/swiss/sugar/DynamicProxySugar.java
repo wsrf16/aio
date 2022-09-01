@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 //import org.springframework.cglib.proxy.Proxy;
 
 public class DynamicProxySugar {
+    // JdkDynamicAopProxy
+    // DefaultAopProxyFactory
     public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
@@ -70,7 +72,22 @@ public class DynamicProxySugar {
 
     public static <T> T proxyFactory(Object target, Advice... advices) {
         ProxyFactory proxyFactory = new ProxyFactory(target);
-        Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(target.getClass());
+//        Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(target.getClass());
+//        proxyFactory.setInterfaces(interfaces);
+        proxyFactory.setOptimize(true);
+//        proxyFactory.setTarget(target);
+//        proxyFactory.setTargetClass(target.getClass());
+//        proxyFactory.setProxyTargetClass(true);
+        CollectionSugar.asList(advices)
+                .stream()
+                .forEach(c -> proxyFactory.addAdvice(c));
+        return (T) proxyFactory.getProxy();
+    }
+
+    public static <T> T proxyFactory(Object target, Class<T> interfaceClazz, Advice... advices) {
+        ProxyFactory proxyFactory = new ProxyFactory(target);
+        Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(interfaceClazz);
+        // 只有设置了interfaces和optimize=true时，才会生成jdkProxy，否则cglibProxy
 //        proxyFactory.setInterfaces(interfaces);
         proxyFactory.setOptimize(true);
 //        proxyFactory.setTarget(target);
@@ -92,50 +109,59 @@ public class DynamicProxySugar {
         return ClassUtils.isCglibProxy(object);
     }
 
+    public static Class<?> getUserClass(Class<?> clazz) {
+        return ClassUtils.getUserClass(clazz);
+    }
+
     public static <T> T unpackCglib(Object source, Class<T> clazz) {
-        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepClone(source), clazz);
+        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepCloneByCglib(source), clazz);
     }
 
     public static <T> T unpackCglib(Object source) {
-        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepClone(source), ClassUtils.getUserClass(source));
+        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepCloneByCglib(source), ClassUtils.getUserClass(source));
     }
 
-    public static <T> T getAopProxyTargetObject(T beanInstance) {
+    public static <T> T getAopTargetObject(T proxy) {
         T t = null;
-        if (AopUtils.isJdkDynamicProxy(beanInstance)) {
-            t = getAopJdkTargetObject(beanInstance);
-        } else if (AopUtils.isCglibProxy(beanInstance)) {
-            t = getAopCglibTargetObject(beanInstance);
+        if (AopUtils.isJdkDynamicProxy(proxy)) {
+            t = getAopJdkTargetObject(proxy);
+        } else if (AopUtils.isCglibProxy(proxy)) {
+            t = getAopCglibTargetObject(proxy);
         }
         return t;
     }
 
     private static <T> T getAopJdkTargetObject(T proxy)  {
         try {
-            Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
-            h.setAccessible(true);
-            AopProxy aopProxy = (AopProxy) h.get(proxy);
+//            Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
+//            h.setAccessible(true);
+//            AopProxy aopProxy = (AopProxy) h.get(proxy);
+            AopProxy aopProxy = (AopProxy) ClassSugar.getDeclaredField(proxy, proxy.getClass().getSuperclass(), "h");
 
-            Field advised = aopProxy.getClass().getDeclaredField("advised");
-            advised.setAccessible(true);
-
-            T target = (T) ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
+//            Field advised = aopProxy.getClass().getDeclaredField("advised");
+//            advised.setAccessible(true);
+//            T target = (T) ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
+            AdvisedSupport advisedSupport = ClassSugar.getDeclaredField(aopProxy, "advised");
+            T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static <T> T getAopCglibTargetObject(T beanInstance) {
+    private static <T> T getAopCglibTargetObject(T proxy) {
         try {
-            Field h = beanInstance.getClass().getDeclaredField("CGLIB$CALLBACK_0");
-            h.setAccessible(true);
-            Object dynamicAdvisedInterceptor = h.get(beanInstance);
+//            Field h = beanInstance.getClass().getDeclaredField("CGLIB$CALLBACK_0");
+//            h.setAccessible(true);
+//            Object dynamicAdvisedInterceptor = h.get(beanInstance);
+            Object dynamicAdvisedInterceptor = ClassSugar.getDeclaredField(proxy, "CGLIB$CALLBACK_0");
 
-            Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
-            advised.setAccessible(true);
-
-            T target = (T) ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
+//            Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
+//            advised.setAccessible(true);
+//
+//            T target = (T) ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
+            AdvisedSupport advisedSupport = ClassSugar.getDeclaredField(dynamicAdvisedInterceptor, "advised");
+            T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {
             throw new RuntimeException(e);

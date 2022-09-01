@@ -1,17 +1,22 @@
 package com.aio.portable.swiss.suite.bean;
 
+import com.aio.portable.swiss.sugar.resource.function.LambdaBiConsumer;
+import com.aio.portable.swiss.sugar.resource.function.LambdaConsumer;
+import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
+import com.aio.portable.swiss.sugar.resource.function.LambdaSupplier;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import org.apache.ibatis.reflection.ReflectionException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
-import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -84,29 +89,66 @@ public abstract class BeanSugar {
 
 
     public abstract static class Cloneable {
-        private static ConcurrentMap<Class<?>, BeanCopier> beanCopiers = new ConcurrentHashMap<Class<?>, BeanCopier>();
-
-        public static <T> T deepClone(T source) {
+        private static final ConcurrentMap<Class<?>, BeanCopier> beanCopierCache = new ConcurrentHashMap<Class<?>, BeanCopier>();
+        public static final <S> S deepCloneByProperties(S source) {
             try {
-                T target = (T)source.getClass().getConstructor().newInstance();
-                deepCopy(source, target);
+                S target = (S)source.getClass().getConstructor().newInstance();
+                deepCloneByProperties(source, target);
                 return target;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        public static <S, T> void deepCopy(S source, T target) {
-            BeanCopier copier = createCopier(source.getClass());
+        public static final <S, T> void deepCloneByProperties(S source, T target) {
+            BeanUtils.copyProperties(source, target);
+        }
+
+        public static final <S, T> T deepCloneByProperties(S source, Class<T> targetClazz) {
+            try {
+                T target = targetClazz.getConstructor().newInstance();
+                deepCloneByProperties(source, target);
+                return target;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static final <S> S deepCloneByCglib(S source) {
+            try {
+                S target = (S)source.getClass().getConstructor().newInstance();
+                deepCloneByCglib(source, target);
+                return target;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static final <S, T> void deepCloneByCglib(S source, T target) {
+            BeanCopier copier = createCopier(source.getClass(), target.getClass());
             copier.copy(source, target, new BeanConverter());
         }
 
-        private static BeanCopier createCopier(Class<?> clazz) {
-            if (beanCopiers.containsKey(clazz))
-                return beanCopiers.get(clazz);
-            beanCopiers.putIfAbsent(clazz, BeanCopier.create(clazz, clazz, true));
-            return beanCopiers.get(clazz);
+        public static final <S, T> T deepCloneByCglib(S source, Class<T> targetClazz) {
+            try {
+                T target = targetClazz.getConstructor().newInstance();
+                BeanCopier copier = createCopier(source.getClass(), targetClazz);
+                copier.copy(source, target, new BeanConverter());
+                return target;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
+        private static BeanCopier createCopier(Class<?> clazz) {
+            if (beanCopierCache.containsKey(clazz))
+                return beanCopierCache.get(clazz);
+            beanCopierCache.putIfAbsent(clazz, BeanCopier.create(clazz, clazz, true));
+            return beanCopierCache.get(clazz);
+        }
+
+        private static BeanCopier createCopier(Class<?> source, Class<?> target) {
+            return BeanCopier.create(source, target, true);
         }
 
         private static class BeanConverter implements Converter {
@@ -134,10 +176,10 @@ public abstract class BeanSugar {
         }
     }
 
-    public abstract static class Properties {
-        public static final String[] getNullProperties(Object src) {
+    public abstract static class PropertyDescriptors {
+        public static final String[] getNullPropertyNames(Object bean) {
             //1.获取Bean
-            BeanWrapper srcBean = new BeanWrapperImpl(src);
+            BeanWrapper srcBean = new BeanWrapperImpl(bean);
             //2.获取Bean的属性描述
             PropertyDescriptor[] pds = srcBean.getPropertyDescriptors();
             //3.获取Bean的空属性
@@ -145,7 +187,7 @@ public abstract class BeanSugar {
             for (PropertyDescriptor propertyDescriptor : pds) {
                 String propertyName = propertyDescriptor.getName();
                 Object propertyValue = srcBean.getPropertyValue(propertyName);
-                if (StringUtils.isEmpty(propertyValue)) {
+                if (propertyValue == null) {
                     srcBean.setPropertyValue(propertyName, null);
                     properties.add(propertyName);
                 }
@@ -153,16 +195,61 @@ public abstract class BeanSugar {
             return properties.toArray(new String[0]);
         }
 
+        public static final String[] getAllPropertyNames(Object bean) {
+            Map<String, Class<?>> stringClassMap = toNameClassMap(bean.getClass());
+            return stringClassMap.keySet().toArray(new String[0]);
+        }
+
+        public static final Object getPropertyValue(Object bean, String propertyName) {
+            BeanWrapper srcBean = new BeanWrapperImpl(bean);
+            return srcBean.getPropertyValue(propertyName);
+        }
+
         public static final void copyNotNullProperties(Object source, Object target) {
-            BeanUtils.copyProperties(source, target, Properties.getNullProperties(source));
+            BeanUtils.copyProperties(source, target, PropertyDescriptors.getNullPropertyNames(source));
         }
 
         public static final void copyAllProperties(Object source, Object target) {
             BeanUtils.copyProperties(source, target);
         }
-    }
 
-    public abstract static class PropertyDescriptors {
+        public static final void copyPropertiesOnly(Object source, Object target, List<String> onlyPropertyList) {
+            List<String> allPropertyNameList = Arrays.asList(PropertyDescriptors.getAllPropertyNames(source));
+            List<String> excludeList = CollectionSugar.except(allPropertyNameList, onlyPropertyList);
+            String[] excludeProperties = CollectionSugar.toArrayNullable(excludeList);
+            BeanUtils.copyProperties(source, target, excludeProperties);
+        }
+
+        public static final void copyPropertiesOnly(Object source, Object target, String... onlyProperties) {
+            List<String> allPropertyList = Arrays.asList(PropertyDescriptors.getAllPropertyNames(source));
+            List<String> onlyPropertyList = Arrays.asList(onlyProperties);
+            List<String> excludeList = CollectionSugar.except(allPropertyList, onlyPropertyList);
+            String[] excludeProperties = CollectionSugar.toArrayNullable(excludeList);
+            BeanUtils.copyProperties(source, target, excludeProperties);
+        }
+
+        public static final <S, T> void copyPropertiesOnly(S s, T t, LambdaFunction<S, ?>... properties) {
+            List<String> propertyList = Arrays.stream(properties).map(c -> BeanSugar.PropertyDescriptors.getPropertyName(c)).collect(Collectors.toList());
+            copyPropertiesOnly(s, t, propertyList);
+        }
+
+        public static final void copyAllPropertiesExclude(Object source, Object target, List<String> excludePropertyList) {
+            String[] excludeProperties = CollectionSugar.toArrayNullable(excludePropertyList);
+            BeanUtils.copyProperties(source, target, excludeProperties);
+        }
+
+        public static final void copyAllPropertiesExclude(Object source, Object target, String... excludeProperties) {
+            BeanUtils.copyProperties(source, target, excludeProperties);
+        }
+
+        public static final <S, T> void copyAllPropertiesExclude(S s, T t, LambdaFunction<S, ?>... properties) {
+            List<String> propertyList = Arrays.stream(properties).map(c -> BeanSugar.PropertyDescriptors.getPropertyName(c)).collect(Collectors.toList());
+            copyAllPropertiesExclude(s, t, propertyList);
+        }
+
+
+
+
         public static final PropertyDescriptor getDeclaredPropertyDescriptorIncludeParents(Class<?> clazz, String name) throws NoSuchFieldException {
             List<String> propertyDescriptorNameList = new ArrayList<>(Arrays.asList(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))).stream().map(PropertyDescriptor::getName).collect(Collectors.toList());
             PropertyDescriptor propertyDescriptor;
@@ -196,8 +283,8 @@ public abstract class BeanSugar {
                     || (propertyDescriptor.getName().equals("beanFactory") && DynamicProxySugar.isCglibProxy(bean));
         }
 
-        public static final Map<String, Class> toNameClassMap(Class clazz) {
-            Map<String, Class> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
+        public static final Map<String, Class<?>> toNameClassMap(Class<?> clazz) {
+            Map<String, Class<?>> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                     .filter(c -> !c.getName().equals("class"))
                     .collect(Collectors.toMap(c -> c.getName(), c -> c.getPropertyType()));
             return map;
@@ -248,7 +335,11 @@ public abstract class BeanSugar {
             return map;
         }
 
-        public static Object getValue(Object bean, PropertyDescriptor propertyDescriptor) {
+        public static final PropertyDescriptor getPropertyDescriptor(Object entity, String propertyName) {
+            return BeanUtils.getPropertyDescriptor(entity.getClass(), propertyName);
+        }
+
+        public static final Object getValue(Object bean, PropertyDescriptor propertyDescriptor) {
             try {
                 return propertyDescriptor.getReadMethod().invoke(bean);
             } catch (IllegalAccessException e) {
@@ -260,7 +351,7 @@ public abstract class BeanSugar {
             }
         }
 
-        public static Object getValue(Object bean, String propertyName) {
+        public static final Object getValue(Object bean, String propertyName) {
             try {
                 PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
                 return propertyDescriptor.getReadMethod().invoke(bean);
@@ -272,6 +363,36 @@ public abstract class BeanSugar {
                 throw new RuntimeException(e);
             }
         }
+
+        public static Object setValue(Object bean, String propertyName, Object value) {
+            try {
+                PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
+                return propertyDescriptor.getWriteMethod().invoke(bean, value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static Object setValueIfPresent(Object bean, String propertyName, Object value) {
+            try {
+                if (exist(bean, propertyName)) {
+                    PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
+                    return propertyDescriptor.getWriteMethod().invoke(bean, value);
+                } else
+                    return null;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
         public static boolean exist(Object bean, String propertyName) {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
             return propertyDescriptor != null;
@@ -305,6 +426,66 @@ public abstract class BeanSugar {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
+        }
+
+        public static <T> String getPropertyName(LambdaSupplier<T> fn) {
+            String methodName = getMethodName(fn);
+            String fieldName = convertMethodNameToPropertyName(methodName);
+            return fieldName;
+        }
+
+        public static <T> String getPropertyName(LambdaConsumer<T> fn) {
+            String methodName = getMethodName(fn);
+            String fieldName = convertMethodNameToPropertyName(methodName);
+            return fieldName;
+        }
+
+        public static <T> String getPropertyName(LambdaFunction<T, ?> fn) {
+            String methodName = getMethodName(fn);
+            String fieldName = convertMethodNameToPropertyName(methodName);
+            return fieldName;
+        }
+
+        public static <T> String getPropertyName(LambdaBiConsumer<T, ?> fn) {
+            String methodName = getMethodName(fn);
+            String fieldName = convertMethodNameToPropertyName(methodName);
+            return fieldName;
+        }
+
+        private static <T> String getMethodName(LambdaSupplier<T> fn) {
+            SerializedLambda serializedLambda = ClassSugar.invoke(fn, "writeReplace");
+            return serializedLambda.getImplMethodName();
+        }
+
+        private static <T> String getMethodName(LambdaConsumer<T> fn) {
+            SerializedLambda serializedLambda = ClassSugar.invoke(fn, "writeReplace");
+            return serializedLambda.getImplMethodName();
+        }
+
+        private static <T> String getMethodName(LambdaFunction<T, ?> fn) {
+            SerializedLambda serializedLambda = ClassSugar.invoke(fn, "writeReplace");
+            return serializedLambda.getImplMethodName();
+        }
+
+        private static <T> String getMethodName(LambdaBiConsumer<T, ?> fn) {
+            SerializedLambda serializedLambda = ClassSugar.invoke(fn, "writeReplace");
+            return serializedLambda.getImplMethodName();
+        }
+
+        private static String convertMethodNameToPropertyName(String name) {
+            if (name.startsWith("is")) {
+                name = name.substring(2);
+            } else if (name.startsWith("get") || name.startsWith("set")) {
+                name = name.substring(3);
+            } else {
+                throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+            }
+
+            if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
+                name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
+            }
+
+            return name;
         }
     }
 

@@ -27,15 +27,19 @@ public abstract class LogHubFactory {
         public static final String KAFKA_HUB_FACTORY = "kafkaHubFactory";
     }
 
-    public static class DefaultLogHubFactory extends LogHubFactory {
-        @Override
-        public LogHub build(String className) {
-            return super.build(className).setAsync(false);
-        }
+//    public static class DefaultLogHubFactory extends LogHubFactory {
+////        @Override
+////        public LogHub build(String className) {
+////            return super.build(className).setAsync(false);
+////        }
+//
+//    }
 
+    public static final LogHubFactory defaultLogHubFactory() {
+        return new LogHubFactory(){};
     }
 
-    protected static LogHubFactory singleton = new DefaultLogHubFactory();
+    protected static LogHubFactory singleton = defaultLogHubFactory();
     protected static boolean isInitial = false;
     boolean enabled = true;
     protected LevelEnum level = LevelEnum.ALL;
@@ -63,9 +67,12 @@ public abstract class LogHubFactory {
 
 
     protected LogHubFactory() {
+        setSingleton(this);
+    }
+
+    private static final void setSingleton(LogHubFactory singleton) {
         synchronized (LogHubFactory.class) {
-            LogHubFactory.singleton = this;
-//            LogHubFactory.singleton = LogHubFactory.singleton == null ? this : LogHubFactory.singleton;
+            LogHubFactory.singleton = singleton;
             isInitial = true;
         }
     }
@@ -120,11 +127,13 @@ public abstract class LogHubFactory {
             if (LogHubUtils.SLF4J.existDependency() && Slf4JLogProperties.singletonInstance().getEnabled()) {
                 list.add(new Slf4JLog(className));
             }
-            if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled() && RabbitMQLogProperties.singletonInstance().getEsIndex() != null) {
-                list.add(new RabbitMQLog(className));
+            if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.singletonInstance().getEnabled()) {
+                if (RabbitMQLogProperties.singletonInstance().getEsIndex() != null)
+                    list.add(new RabbitMQLog(className));
             }
-            if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled() && KafkaLogProperties.singletonInstance().getEsIndex() != null) {
-                list.add(new KafkaLog(className));
+            if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.singletonInstance().getEnabled()) {
+                if (KafkaLogProperties.singletonInstance().getEsIndex() != null)
+                    list.add(new KafkaLog(className));
             }
 
             LogHubProperties properties = LogHubProperties.singletonInstance();

@@ -2,11 +2,16 @@ package com.aio.portable.swiss.sugar.resource;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.ResolvableType;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -14,10 +19,13 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class ClassSugar {
-    private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap(8);
+
+    private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap();
 
     static {
         primitiveWrapperTypeMap.put(Byte.class, Byte.TYPE);
@@ -153,7 +161,7 @@ public abstract class ClassSugar {
      * @param shortClassName
      * @return
      */
-    public static final String getBeanName(String shortClassName) {
+    public static final String spellBeanName(String shortClassName) {
         return Introspector.decapitalize(shortClassName);
     }
 
@@ -162,8 +170,8 @@ public abstract class ClassSugar {
         try {
             Field field = ClassLoader.class.getDeclaredField("classes");
             field.setAccessible(true);
-            Vector<Class<?>> o = (Vector<Class<?>>) field.get(ClassLoader.getSystemClassLoader());
-            ArrayList<Class<?>> classArrayList = CollectionSugar.toList(o.elements());
+            Vector<Class<?>> vector = (Vector<Class<?>>) field.get(ClassLoaderSugar.getDefaultClassLoader());
+            ArrayList<Class<?>> classArrayList = CollectionSugar.toList(vector.elements());
             return classArrayList;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -243,6 +251,7 @@ public abstract class ClassSugar {
 
     /**
      * newInstance
+     *
      * @param clazz
      * @param parameterTypes
      * @param initargs
@@ -261,6 +270,7 @@ public abstract class ClassSugar {
 
     /**
      * newDeclaredInstance
+     *
      * @param clazz
      * @param parameterTypes
      * @param initargs
@@ -268,8 +278,8 @@ public abstract class ClassSugar {
      * @return
      */
     public static final <T> T newDeclaredInstance(Class<T> clazz,
-                                          Class<?>[] parameterTypes,
-                                          Object[] initargs) {
+                                                  Class<?>[] parameterTypes,
+                                                  Object[] initargs) {
         try {
             return getDeclaredConstructor(clazz, parameterTypes).newInstance(initargs);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -466,7 +476,77 @@ public abstract class ClassSugar {
         return match;
     }
 
-    public static final Method getMethod(Class<?> clazz, String methodName) {
+    public static final void makeAccessible(Constructor<?> constructor) {
+        ReflectionUtils.makeAccessible(constructor);
+    }
+
+    public static final void makeAccessible(Method method) {
+        ReflectionUtils.makeAccessible(method);
+    }
+
+    public static final void makeAccessible(Field field) {
+        ReflectionUtils.makeAccessible(field);
+    }
+
+    public static final HashMap<Field, ?> getDeclaredFields(Object obj, Class<?> clazz) {
+        Field[] declaredFields = clazz.getDeclaredFields();
+        return (HashMap) Arrays.stream(declaredFields).collect(Collectors.toMap(field -> field, field -> {
+            try {
+                makeAccessible(field);
+                return field.get(obj);
+            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+        }));
+    }
+
+    public static final <R> R getDeclaredField(Object obj, Class<?> clazz, String name) {
+        try {
+            Field field = clazz.getDeclaredField(name);
+            makeAccessible(field);
+            R ret = (R) field.get(obj);
+            return ret;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final <R> R getDeclaredField(Object obj, String name) {
+        return getDeclaredField(obj, obj.getClass(), name);
+    }
+
+    public static final HashMap<Field, ?> getFields(Object obj, Class<?> clazz) {
+        Field[] fields = clazz.getFields();
+        return (HashMap) Arrays.stream(fields).collect(Collectors.toMap(field -> field, field -> {
+            try {
+                makeAccessible(field);
+                return field.get(obj);
+            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+        }));
+    }
+
+    public static final <R> R getField(Object obj, Class<?> clazz, String name) {
+        try {
+            Field field = clazz.getField(name);
+            makeAccessible(field);
+            R ret = (R) field.get(obj);
+            return ret;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final <R> R getField(Object obj, String name) {
+        return getField(obj, obj.getClass(), name);
+    }
+
+    public static final Method getDeclaredMethod(Class<?> clazz, String methodName) {
         try {
             Method method = clazz.getDeclaredMethod(methodName);
             makeAccessible(method);
@@ -476,33 +556,7 @@ public abstract class ClassSugar {
         }
     }
 
-    public static final void makeAccessible(Method method) {
-        ReflectionUtils.makeAccessible(method);
-    }
-
-    public static final void makeAccessible(Constructor<?> constructor) {
-        ReflectionUtils.makeAccessible(constructor);
-    }
-
-    public static final void makeAccessible(Field field) {
-        ReflectionUtils.makeAccessible(field);
-    }
-
-    public static final Method getMethod(Class<?> clazz, String methodName, Object[] parameters) {
-        Class<?>[] parameterTypes = new Class<?>[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            parameterTypes[i] = parameters[i].getClass();
-        }
-        Method[] methods = clazz.getDeclaredMethods();
-        Method method = Arrays.stream(methods)
-                .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
-                .findFirst().get();
-
-        makeAccessible(method);
-        return method;
-    }
-
-    public static final Method getMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes, Object[] parameters) {
+    public static final Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
         try {
             Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
             makeAccessible(method);
@@ -512,6 +566,25 @@ public abstract class ClassSugar {
         }
     }
 
+    public static final Method getMethod(Class<?> clazz, String methodName) {
+        try {
+            Method method = clazz.getMethod(methodName);
+            makeAccessible(method);
+            return method;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+        try {
+            Method method = clazz.getMethod(methodName, parameterTypes);
+            makeAccessible(method);
+            return method;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static final <R> R invoke(Object obj, Class<?> clazz, String methodName) {
         try {
@@ -528,26 +601,15 @@ public abstract class ClassSugar {
         return invoke(obj, obj.getClass(), methodName);
     }
 
-    public static final <R> R invoke(Object obj, Class<?> clazz, String methodName, Object[] parameters) {
-        try {
-            Class<?>[] parameterTypes = new Class<?>[parameters.length];
-            for (int i = 0; i < parameters.length; i++) {
-                parameterTypes[i] = parameters[i].getClass();
-            }
-            Method[] methods = clazz.getDeclaredMethods();
-            Method method = Arrays.stream(methods)
-                    .filter(c -> c.getName().equals(methodName) && matchTypes(parameters, c.getParameterTypes()))
-                    .findFirst().get();
-
-            makeAccessible(method);
-            R ret = (R) method.invoke(obj, parameters);
-            return ret;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+    public static final <R> R invoke(Object obj, Class<?> clazz, String methodName, Object... parameters) {
+        Class<?>[] parameterTypes = new Class<?>[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            parameterTypes[i] = parameters[i].getClass();
         }
+        return invoke(obj, clazz, methodName, parameterTypes, parameters);
     }
 
-    public static final <R> R invoke(Object obj, String methodName, Object[] parameters) {
+    public static final <R> R invoke(Object obj, String methodName, Object... parameters) {
         return invoke(obj, obj.getClass(), methodName, parameters);
     }
 
@@ -566,22 +628,13 @@ public abstract class ClassSugar {
         return invoke(obj, obj.getClass(), methodName, parameterTypes, parameters);
     }
 
-    public static final <R> R getDeclaredField(Object obj, Class<?> clazz, String name) {
-        try {
-            Field field = clazz.getDeclaredField(name);
-            makeAccessible(field);
-            R ret = (R) field.get(obj);
-            return ret;
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    @Nullable
+    public static Class<?>[] resolveTypeArguments(Class<?> clazz, Class<?> genericIfc) {
+//        ResolvableType.forClass()
+        return GenericTypeResolver.resolveTypeArguments(clazz, genericIfc);
     }
 
-    public static final <R> R getDeclaredField(Object obj, String name) {
-        return getDeclaredField(obj, obj.getClass(), name);
-    }
-
-    public static final <T> List<T> getListOfSPI(Class<T> interfaze) {
+    public static final <T> List<T> getSPIList(Class<T> interfaze) {
         Iterator<T> iterator = ServiceLoader.load(interfaze).iterator();
         List<T> list = CollectionSugar.toList(iterator);
         return list;

@@ -1,5 +1,7 @@
 package com.aio.portable.park.unit.tutorial;
 
+import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.cglib.proxy.Callback;
@@ -9,7 +11,9 @@ import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @TestComponent
 public class OOM {
@@ -57,11 +61,24 @@ public class OOM {
 
     @Test
     // -Xms50M -Xmx50M
+    // VMoptions: -Xlog:gc*:file=/log.txt -Xloggc:/log2.txt -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/gc.txt
     public void oomHeapSpace1() {
         List<String> list = new ArrayList<>(999999);
         for (int i = 0; i < 999999; i++) {
             list.add(String.valueOf(i).intern());
         }
+    }
+
+    @Test
+    public void oomHeapSpace2() {
+        UserInfoEntity userInfoEntity = new UserInfoEntity();
+        userInfoEntity.setId(1);
+        userInfoEntity.setName("name");
+        userInfoEntity.setNextId(2);
+        int i = 1;
+        Map<Integer, Object> map = new HashMap<>();
+        while (i != 0)
+            map.put(i++, BeanSugar.Cloneable.deepCloneByCglib(userInfoEntity));
     }
 
     static long stack = 0;

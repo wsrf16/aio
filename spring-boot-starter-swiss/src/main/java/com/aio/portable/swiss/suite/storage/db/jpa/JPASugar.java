@@ -46,7 +46,7 @@ public class JPASugar {
         T target;
         if (optional.isPresent()) {
             target = optional.get();
-            BeanUtils.copyProperties(t, target, BeanSugar.Properties.getNullProperties(t));
+            BeanUtils.copyProperties(t, target, BeanSugar.PropertyDescriptors.getNullPropertyNames(t));
         } else {
             target = t;
         }

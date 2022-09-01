@@ -58,7 +58,7 @@ public abstract class ClassLoaderSugar {
      * @param classLoader
      * @return
      */
-    public static final boolean hasLoaded(String className, ClassLoader classLoader) {
+    public static final boolean hasLoadedClass(String className, ClassLoader classLoader) {
         boolean hasLoaded = findLoadedClass(className, classLoader) != null ? true : false;
         return hasLoaded;
     }
@@ -127,7 +127,29 @@ public abstract class ClassLoaderSugar {
         return clazz;
     }
 
-    public static final <T> Class<T> load(String className, boolean initialize, ClassLoader classLoader) {
+    public static final <T> Class<T> load(String className, ClassLoader classLoader, boolean link) {
+        return ClassSugar.invoke(classLoader, ClassLoader.class, "loadClass", new Class[]{String.class, boolean.class}, new Object[]{className, link});
+    }
+
+    public static final <T> Class<T> load(String className, ClassLoader classLoader) {
+        try {
+            return (Class<T>) classLoader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final <T> Class<T> load(String className) {
+        try {
+            return (Class<T>) getDefaultClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public static final <T> Class<T> forName(String className, ClassLoader classLoader, boolean initialize) {
         try {
             return (Class<T>) Class.forName(className, initialize, classLoader);
         } catch (ClassNotFoundException e) {
@@ -135,8 +157,8 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final <T> Class<T> load(String className, boolean initialize) {
-        return load(className, initialize, ClassLoaderSugar.getDefaultClassLoader());
+    public static final <T> Class<T> forName(String className, ClassLoader classLoader) {
+        return forName(className, classLoader, true);
     }
 
     /**
@@ -144,8 +166,8 @@ public abstract class ClassLoaderSugar {
      * @param className
      * @return
      */
-    public static final <T> Class<T> load(String className) {
-        return load(className, true, ClassLoaderSugar.getDefaultClassLoader());
+    public static final <T> Class<T> forName(String className) {
+        return forName(className, ClassLoaderSugar.getDefaultClassLoader(), true);
     }
 
     @Nullable
@@ -162,6 +184,7 @@ public abstract class ClassLoaderSugar {
                 try {
                     classLoader = ClassLoader.getSystemClassLoader();
                 } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

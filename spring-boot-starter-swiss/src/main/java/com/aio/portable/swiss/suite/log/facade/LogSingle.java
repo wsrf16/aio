@@ -104,8 +104,7 @@ public abstract class LogSingle implements LogAction {
                 executor.execute(() ->
                         printer.println(text, level)
                 );
-            }
-            else {
+            } else {
                 printer.println(text, level);
             }
         } catch (Exception e) {

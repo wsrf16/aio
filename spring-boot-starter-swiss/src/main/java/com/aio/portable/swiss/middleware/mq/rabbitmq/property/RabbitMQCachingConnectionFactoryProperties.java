@@ -13,7 +13,7 @@ package com.aio.portable.swiss.middleware.mq.rabbitmq.property;
 //
 //    private static RabbitMQCachingConnectionFactoryProperties instance = new RabbitMQCachingConnectionFactoryProperties();
 //
-//    public synchronized static RabbitMQCachingConnectionFactoryProperties singletonInstance() {
+//    public synchronized static RabbitMQCachingConnectionFactoryProperties getSingleton() {
 //        return instance;
 //    }
 //

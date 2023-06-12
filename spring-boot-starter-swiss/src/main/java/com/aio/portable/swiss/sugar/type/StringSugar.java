@@ -385,8 +385,7 @@ public abstract class StringSugar {
     }
 
     public static final String paint(String content, ColorEnum... colors) {
-//        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
-        return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
+        return ColorEnum.print(content, colors);
     }
 
     public static final boolean isCapitalize(String word) {

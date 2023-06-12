@@ -2,6 +2,8 @@ package com.aio.portable.swiss.suite.log.solution.slf4j;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.solution.slf4j.origin.CustomizeSlf4JFactory;
+import org.slf4j.LoggerFactory;
 
 public class Slf4JLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -11,14 +13,6 @@ public class Slf4JLog extends LogSingle {
     public Slf4JLogProperties getProperties() {
         return properties;
     }
-
-    public Slf4JLog setProperties(Slf4JLogProperties properties) {
-        this.properties = properties;
-        return this;
-    }
-
-
-
 
     public Slf4JLog(String name) {
         super(name);
@@ -32,9 +26,17 @@ public class Slf4JLog extends LogSingle {
         this(StackTraceSugar.Previous.getClassName());
     }
 
+    public static final boolean rewriteLoggerFactory() {
+        return CustomizeSlf4JFactory.class.isAssignableFrom(LoggerFactory.class);
+    }
+
     @Override
     protected void initialPrinter() {
-        properties = Slf4JLogProperties.singletonInstance();
+        refreshPrinter(null);
+    }
+
+    public void refreshPrinter(Slf4JLogProperties properties) {
+        this.properties = properties == null ? Slf4JLogProperties.getSingleton() : properties;
         this.printer = new Slf4JPrinter(this.getName());
     }
 

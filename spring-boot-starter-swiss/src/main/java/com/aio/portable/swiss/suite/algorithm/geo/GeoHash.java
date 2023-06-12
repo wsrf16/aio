@@ -140,6 +140,12 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
         return hash.toBase32();
     }
 
+    public static String encode(GeoPoint point, int precision) {
+        double latitude = point.getLatitude();
+        double longitude = point.getLongitude();
+        return encode(latitude, longitude, precision);
+    }
+
     private GeoHash(double latitude, double longitude, int desiredPrecision) {
         point = new GeoPoint(latitude, longitude);
         desiredPrecision = Math.min(desiredPrecision, MAX_BIT_PRECISION);

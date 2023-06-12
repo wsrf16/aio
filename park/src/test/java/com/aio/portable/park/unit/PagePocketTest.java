@@ -18,8 +18,8 @@ public class PagePocketTest {
         PagePocket<Integer> pocket = PagePocket.paging(ints, 3, 31);
         Integer currentPage = pocket.getPageIndex();
         List<Integer> currentPageItems = pocket.getCurrentPageItems();
-        Integer currentSize = pocket.getPageSize();
-        Integer currentSizeCapcity = pocket.getPageCapcity();
+        Integer currentSize = pocket.getCurrentPageSize();
+        Integer currentSizeCapcity = pocket.getPageCapacity();
 //        List<Integer> totalItems = pocket.totalItems;
         Integer totalPages = pocket.getTotalPages();
         Integer totalCount = pocket.getTotalCount();

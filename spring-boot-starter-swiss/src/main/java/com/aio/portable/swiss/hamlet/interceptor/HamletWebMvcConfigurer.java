@@ -1,8 +1,13 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -11,9 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
-//    @Autowired
-//    private ObjectMapper objectMapper;
-
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         AntPathMatcher matcher = new AntPathMatcher();
@@ -78,7 +80,7 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 //                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-//    static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS" };
+    private static final String[] ORIGINS = new String[] { "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS" };
 
     @Override
     @LoadBalanced
@@ -92,6 +94,33 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
+    //    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(corsFilter());
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        registration.addUrlPatterns("/*");
+        registration.setName("streamFilter");
+        return registration;
+    }
 
+
+    //    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // domain
+        corsConfiguration.addAllowedOrigin("*");
+        // header
+        corsConfiguration.addAllowedHeader("*");
+        // 暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
+        corsConfiguration.addExposedHeader("*");
+        // method
+        corsConfiguration.addAllowedMethod("*");
+        // cookie :false
+        corsConfiguration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
+    }
 
 }

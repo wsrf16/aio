@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by York on 2017/11/22.
  */
-public class StandardLogBean implements LogBean {
+public class StandardLogRecord implements LogRecord {
     @JsonProperty("level")
     public LevelEnum level;
     @JsonProperty("name")

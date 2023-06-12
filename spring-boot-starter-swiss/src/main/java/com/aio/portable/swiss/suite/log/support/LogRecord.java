@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by York on 2017/11/22.
  */
-public interface LogBean {
+public interface LogRecord {
     LevelEnum getLevel();
 
     void setLevel(LevelEnum level);

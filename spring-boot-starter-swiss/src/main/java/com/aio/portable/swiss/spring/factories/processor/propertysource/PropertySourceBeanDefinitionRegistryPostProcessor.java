@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.spring.factories.processor.propertysource;
 
 import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
@@ -17,7 +18,8 @@ import java.util.stream.Stream;
 
 //@Configuration
 public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
-    private static final Log log = LogFactory.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
+//    private static final Log log = LogFactory.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
+    private static final LocalLog log = LocalLog.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
 
     private ConfigurableEnvironment environment;
 

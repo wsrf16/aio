@@ -53,16 +53,16 @@ public class NodePersistenceTest {
                         System.out.println(watchedEvent);
                     }
                 });
-                po = ZooKeeperPO.singletonInstance(zooKeeper, "database1");
+                po = ZooKeeperPO.getSingleton(zooKeeper, "database1");
             }
             break;
             case "redis": {
-                po = RedisPO.singletonInstance(redisTemplate, "database1");
+                po = RedisPO.getSingleton(redisTemplate, "database1");
             }
             break;
             case "file":
             default: {
-                po = FilePO.singletonInstance("database1");
+                po = FilePO.getSingleton("database1");
             }
             break;
         }

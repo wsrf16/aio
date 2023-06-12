@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum LevelEnum {
     ALL("all", 00, "all"),
-    VERBOSE("verbose", 10, "Anything and everything you might want to know about a running block of code."),
+    VERB("verbose", 10, "verbose: Anything and everything you might want to know about a running block of code."),
     TRACE("trace", 20, "."),
-    DEBUG("debug", 30, "Internal system events that aren't necessarily observable from the outside."),
-    INFORMATION("info", 40, "The lifeblood of operational intelligence - things happen."),
-    WARNING("warn", 50, "Service is degraded or endangered."),
-    ERROR("error", 60, "Functionality is unavailable, invariants are broken or data is lost."),
-    FATAL("fatal", 70, "If you have a pager, it goes off when one of these occurs."),
+    DEBUG("debug", 30, "debug: Internal system events that aren't necessarily observable from the outside."),
+    INFO("info", 40, "information: The lifeblood of operational intelligence - things happen."),
+    WARN("warn", 50, "warning: Service is degraded or endangered."),
+    ERROR("error", 60, "error: Functionality is unavailable, invariants are broken or data is lost."),
+    FATAL("fatal", 70, "fatal: If you have a pager, it goes off when one of these occurs."),
     OFF("off", Integer.MAX_VALUE, "off");
 
 

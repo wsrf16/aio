@@ -1,24 +1,82 @@
 package com.aio.portable.swiss.sugar.resource;
 
 
+import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
+import javax.tools.ToolProvider;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ClassLoaderSugar {
-    /**
-     * exist 判断是否存在某一个类
-     *
-     * @param className eg. com.art.Book
-     * @return
-     * @throws IOException
-     */
+    // compile/load/
+
+    public static KeyValuePair<Boolean, DiagnosticCollector> compileFiles(String outputPath, String... javaFiles) {
+        return compileFiles(outputPath, Arrays.asList(javaFiles));
+    }
+        /**
+         * compile
+         *
+         * @param javaFiles eg. d:/book.java
+         * @return
+         */
+    public static KeyValuePair<Boolean, DiagnosticCollector> compileFiles(String outputPath, Iterable<String> javaFiles) {
+        DiagnosticCollector diagnostics = new DiagnosticCollector();
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+//            List<String> options = StringUtils.isEmpty(outputPath) ? null : Arrays.asList("-d", outputPath);
+            List<String> options = null;
+            fileManager.setLocation(StandardLocation.CLASS_OUTPUT,  Arrays.asList(new File[] { new File(outputPath) }));
+            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromStrings(javaFiles);
+            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, options,
+                    null, compilationUnits);
+            boolean success = task.call();
+            return new KeyValuePair<Boolean, DiagnosticCollector>(success, diagnostics);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static KeyValuePair<Boolean, DiagnosticCollector> compileCode(String outputPath, String className, String code) {
+        JavaFileObject javaFileObject = new StringJavaFileObject(className, code);
+        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(javaFileObject);
+
+        DiagnosticCollector diagnostics = new DiagnosticCollector();
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+//            List<String> options = StringUtils.isEmpty(outputPath) ? null : Arrays.asList("-d", outputPath);
+            List<String> options = null;
+            fileManager.setLocation(StandardLocation.CLASS_OUTPUT,  Arrays.asList(new File[] { new File(outputPath) }));
+            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, options,
+                    null, compilationUnits);
+            boolean success = task.call();
+            return new KeyValuePair<Boolean, DiagnosticCollector>(success, diagnostics);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+        /**
+         * exist 判断是否存在某一个类
+         *
+         * @param className eg. com.art.Book
+         * @return
+         * @throws IOException
+         */
     public static final boolean isPresent(String className) {
         String resource = ClassSugar.convertClassNameToResourceLocation(className);
         return ResourceSugar.ByClassLoader.existResource(resource);

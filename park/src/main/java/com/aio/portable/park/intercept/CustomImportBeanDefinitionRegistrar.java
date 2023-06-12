@@ -1,5 +1,6 @@
-package com.aio.portable.park.common;
+package com.aio.portable.park.intercept;
 
+import com.aio.portable.park.common.UserInfoEntity;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;

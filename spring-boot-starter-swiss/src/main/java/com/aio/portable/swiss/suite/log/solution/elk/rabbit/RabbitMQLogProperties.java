@@ -4,17 +4,24 @@ import com.aio.portable.swiss.design.clone.DeepCloneable;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.RabbitMQProperties;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
+import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
-public class RabbitMQLogProperties extends RabbitMQProperties implements InitializingBean, DeepCloneable {
-    private static final Log log = LogFactory.getLog(RabbitMQLogProperties.class);
+public class RabbitMQLogProperties extends RabbitMQProperties implements LogProperties, InitializingBean, DeepCloneable {
+    private static final boolean DEFAULT_ENABLED = true;
+
+    //    private static final Log log = LogFactory.getLog(RabbitMQLogProperties.class);
+    private static final LocalLog log = new LocalLog(RabbitMQLogProperties.class);
     public static final String PREFIX = "spring.log.rabbitmq";
 
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
+
+    public final Boolean getDefaultEnabledIfAbsent() {
+        return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
+    }
 
     private String esIndex;
 
@@ -26,8 +33,14 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
         this.esIndex = esIndex;
     }
 
-    public synchronized static RabbitMQLogProperties singletonInstance() {
+    public synchronized static RabbitMQLogProperties getSingleton() {
         return instance;
+    }
+
+    private static boolean initialized = false;
+
+    public static boolean initialized() {
+        return initialized;
     }
 
     public RabbitMQLogProperties() {
@@ -40,17 +53,15 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements Initial
 
     public static final void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
-        log.info("RabbitMQLogProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.info("RabbitMQLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
     public static final void initialSingletonInstance(Binder binder) {
         BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             RabbitMQLogProperties.initialSingletonInstance(bindResult.get());
-        } else {
-            if (instance != null)
-                instance.setEnabled(false);
         }
+        initialized = true;
     }
 
 

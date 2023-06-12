@@ -1,7 +1,5 @@
 package com.aio.portable.swiss.suite.log.action;
 
-import com.aio.portable.swiss.suite.log.action.*;
-
 /**
  * LogAction
  */

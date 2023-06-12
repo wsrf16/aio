@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.middleware.canal;
 
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.Message;
 import com.alibaba.otter.canal.protocol.exception.CanalClientException;
@@ -9,7 +10,7 @@ import org.apache.juli.logging.LogFactory;
 import java.util.function.Consumer;
 
 public class CanalWatcher {
-    private static final Log log = LogFactory.getLog(CanalWatcher.class);
+    private static final LocalLog log = LocalLog.getLog(CanalWatcher.class);
 
     private CanalConnector connector;
     private final Consumer<SqlLog> handler;
@@ -37,12 +38,16 @@ public class CanalWatcher {
         this.sleepMillis = sleepMillis;
     }
 
-    public CanalWatcher(CanalConnector connector, Consumer<SqlLog> handler) {
+    protected CanalWatcher(CanalConnector connector, Consumer<SqlLog> handler) {
         this.connector = connector;
         this.handler = handler;
     }
 
-    public void listen() {
+    public static void watch(CanalConnector connector, Consumer<SqlLog> handler) {
+        new CanalWatcher(connector, handler).watch();
+    }
+
+    public void watch() {
         try {
             connector.connect();
             //订阅数据库表,全部表
@@ -61,7 +66,6 @@ public class CanalWatcher {
                     try {
                         Thread.sleep(sleepMillis);
                     } catch (InterruptedException e) {
-//                        e.printStackTrace();
                         log.error("listen error", e);
                     }
                     continue;
@@ -81,7 +85,6 @@ public class CanalWatcher {
                 }
             }
         } catch (CanalClientException e) {
-//            e.printStackTrace();
             log.error("listen error", e);
         } finally {
             connector.disconnect();

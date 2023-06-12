@@ -1,9 +1,14 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
+import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import org.springframework.boot.test.context.TestComponent;
 
+import javax.tools.DiagnosticCollector;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 @TestComponent
@@ -34,6 +39,24 @@ public class ClassLoaderTest {
         Object yaml2 = ClassLoaderSugar.forName(name, ClassLoaderSugar.getDefaultClassLoader(), false);
         org.yaml.snakeyaml.Yaml yaml3 = new org.yaml.snakeyaml.Yaml();
 
+
+        String contents = "package com.company;\n" +
+                "class Demo {\n" +
+                "    Demo() {\n" +
+                "    }\n" +
+                "\n" +
+                "    public static String todo() {\n" +
+                "        byte var0 = 0;\n" +
+                "        System.out.println(\"测试运行 \" + var0);\n" +
+                "        return \"测试运行 \" + var0;\n" +
+                "    }\n" +
+                "}";
+        KeyValuePair<Boolean, DiagnosticCollector> ret = ClassLoaderSugar.compileCode("c:\\", "com.company.Demo", contents);
+        if (ret.getKey()) {
+            Class cls = StreamClassLoader.buildByFile("D:/com/company/Demo.class").loadClassByBinary("com.company.Demo");
+            Object result = ClassSugar.invoke(cls, "todo");
+            System.out.println(result);
+        }
     }
 
     private static void printResult(String name, boolean b) {

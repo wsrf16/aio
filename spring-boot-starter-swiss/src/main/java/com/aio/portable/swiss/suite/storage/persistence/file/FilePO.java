@@ -35,15 +35,15 @@ public class FilePO implements NodePersistence {
     protected StringSerializerAdapter stringSerializerAdapter = SerializerAdapterFactory.buildJackson();
 
 
-    public static final FilePO singletonInstance(String root, String database) {
+    public static final FilePO getSingleton(String root, String database) {
         return instance = instance == null ? new FilePO(root, database) : instance;
     }
 
-    public static final FilePO singletonInstance(String database) {
+    public static final FilePO getSingleton(String database) {
         return instance = instance == null ? new FilePO(DEFAULT_ROOT, database) : instance;
     }
 
-    public static final FilePO singletonInstance() {
+    public static final FilePO getSingleton() {
         return instance = instance == null ? new FilePO(DEFAULT_ROOT, DEFAULT_DATABASE) : instance;
     }
 
@@ -195,57 +195,57 @@ public class FilePO implements NodePersistence {
 
 
     public static final void set(String database, String key, Object value, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         filePO.set(key, value, parent);
     }
 
     public static final void remove(String database, String key, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         filePO.remove(key, parent);
     }
 
     public static final void remove(String database) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         filePO.remove();
     }
 
     public static final void clear(String database) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         filePO.clear();
     }
 
     private static final boolean exists(String database, String key, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.exists(key, parent);
     }
 
     public static final boolean exists(String database) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.exists();
     }
 
     public static final List<String> keys(String database, String key, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.keys(key, parent);
     }
 
     public static final <T> T get(String database, String key, Class<T> clazz, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.get(key, clazz, parent);
     }
 
     public static final <T> T get(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.get(key, valueTypeRef, parent);
     }
 
     public static final <T> Map<String, T> getChildren(String database, String key, Class<T> clazz, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.getChildren(key, clazz, parent);
     }
 
     public static final <T> Map<String, T> getChildren(String database, String key, TypeReference<T> valueTypeRef, String... parent) {
-        FilePO filePO = FilePO.singletonInstance(database);
+        FilePO filePO = FilePO.getSingleton(database);
         return filePO.getChildren(key, valueTypeRef, parent);
     }
 

@@ -1,4 +1,4 @@
-package com.aio.portable.park.controller;
+package com.aio.portable.park.endpoint.http;
 
 import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.park.common.AppLogHubFactory;
@@ -91,8 +91,13 @@ public class DemoController {
     }
 
     @GetMapping("input")
-    public String input(String in) {
-        return in;
+    public String input(String value) {
+        return value;
+    }
+
+    @GetMapping("echo")
+    public ResponseWrapper<String>  echo(String value) {
+        return ResponseWrappers.succeed(value);
     }
 
     @GetMapping("lock")

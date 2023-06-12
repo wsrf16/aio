@@ -14,7 +14,7 @@ public class BaseSingletonInstance {
 //        return SINGLETON_INSTANCE == null ? new SingletonInstance() : SINGLETON_INSTANCE;
 //    }
 
-    public synchronized static <T> T singletonInstance(Class<T> clazz) {
+    public synchronized static <T> T getSingleton(Class<T> clazz) {
         T t;
         if (SELF.instanceMap.containsKey(clazz)) {
             t = (T) SELF.instanceMap.get(clazz);

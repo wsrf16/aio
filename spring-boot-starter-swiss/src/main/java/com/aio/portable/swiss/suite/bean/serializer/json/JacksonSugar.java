@@ -25,17 +25,17 @@ public class JacksonSugar {
         CAMEL_CASE,
     }
 
-    private static final class Instance {
-        private static final Instance singleton = new Instance();
-        private static final Instance getInstance() {
-            return singleton;
-        }
-
-        private static final ObjectMapper shortObjectMapper = Builder.buildShortObjectMapper();
-        private static final ObjectMapper normalObjectMapper = Builder.buildObjectMapper();
-        private static final ObjectMapper longObjectMapper = Builder.buildLongObjectMapper();
-        private static final ObjectMapper dumpObjectMapper = Builder.buildDumpObjectMapper();
-    }
+//    private static final class Instance {
+//        private static final Instance singleton = new Instance();
+//        private static final Instance getInstance() {
+//            return singleton;
+//        }
+//
+//    }
+    private static final ObjectMapper shortObjectMapper = Builder.buildShortObjectMapper();
+    private static final ObjectMapper normalObjectMapper = Builder.buildObjectMapper();
+    private static final ObjectMapper longObjectMapper = Builder.buildLongObjectMapper();
+    private static final ObjectMapper dumpObjectMapper = Builder.buildDumpObjectMapper();
 
     public static final class Builder {
         /**
@@ -114,6 +114,8 @@ public class JacksonSugar {
         public static final ObjectMapper buildObjectMapper() {
             boolean present = ClassLoaderSugar.isPresent("org.springframework.http.converter.json.Jackson2ObjectMapperBuilder");
             if (present)
+//                return new ObjectMapper();
+                // log circular reference
                 return Jackson2ObjectMapperBuilder.json().build();
             else
                 return buildObjectMapper(false, true);
@@ -141,7 +143,7 @@ public class JacksonSugar {
      */
     public static final String obj2ShortJson(Object obj) {
 //        return obj2Json(obj, false, false);
-        ObjectMapper mapper = Instance.getInstance().shortObjectMapper;
+        ObjectMapper mapper = shortObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
@@ -185,7 +187,7 @@ public class JacksonSugar {
      */
     public static final String obj2LongJson(Object obj) {
 //        return obj2Json(obj, true, true);
-        ObjectMapper mapper = Instance.getInstance().longObjectMapper;
+        ObjectMapper mapper = longObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
@@ -229,7 +231,7 @@ public class JacksonSugar {
      */
     public static final String obj2Json(Object obj) {
 //        return obj2Json(obj, false, true);
-        ObjectMapper mapper = Instance.getInstance().normalObjectMapper;
+        ObjectMapper mapper = normalObjectMapper;
         String json;
         try {
             json = obj == null ? null : mapper.writeValueAsString(obj);
@@ -309,7 +311,7 @@ public class JacksonSugar {
      * @return
      */
     public static final <T> T json2T(String jsonStr, Class<T> clazz) {
-        ObjectMapper mapper = Instance.getInstance().dumpObjectMapper;
+        ObjectMapper mapper = dumpObjectMapper;
         try {
             return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
         } catch (IOException e) {
@@ -332,7 +334,7 @@ public class JacksonSugar {
      * @return
      */
     public static final JsonNode json2JsonNode(String jsonStr) {
-        ObjectMapper mapper = Instance.getInstance().dumpObjectMapper;
+        ObjectMapper mapper = dumpObjectMapper;
         try {
             return mapper.readTree(jsonStr);
         } catch (IOException e) {
@@ -350,7 +352,7 @@ public class JacksonSugar {
      */
     public static final <T> T json2T(String jsonStr) {
         try {
-            ObjectMapper mapper = Instance.getInstance().dumpObjectMapper;
+            ObjectMapper mapper = dumpObjectMapper;
             TypeReference<T> valueTypeRef = new TypeReference<T>() {
             };
             return mapper.readValue(jsonStr, valueTypeRef);
@@ -370,7 +372,7 @@ public class JacksonSugar {
      */
     public static final <T> T json2T(String jsonStr, TypeReference<T> valueTypeRef) {
         try {
-            ObjectMapper mapper = Instance.getInstance().dumpObjectMapper;
+            ObjectMapper mapper = dumpObjectMapper;
             return mapper.readValue(jsonStr, valueTypeRef);
         } catch (Exception e) {
             e.printStackTrace();

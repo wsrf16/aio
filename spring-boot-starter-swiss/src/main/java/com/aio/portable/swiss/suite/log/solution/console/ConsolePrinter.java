@@ -100,7 +100,7 @@ public class ConsolePrinter implements Printer {
         if (properties.getEnabled()) {
             String coloredLevel;
             switch (level) {
-                case VERBOSE: {
+                case VERB: {
                     coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
                 }
                 break;
@@ -112,11 +112,11 @@ public class ConsolePrinter implements Printer {
                     coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
                 }
                 break;
-                case INFORMATION: {
+                case INFO: {
                     coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
                 }
                 break;
-                case WARNING: {
+                case WARN: {
                     coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED);
                 }
                 break;
@@ -136,9 +136,24 @@ public class ConsolePrinter implements Printer {
             }
             String thread = StringSugar.paint(Thread.currentThread().toString(), ColorEnum.FG_YELLOW);
             String output = MessageFormat.format("{1}{0}{2}{0}{3}{0}{4}", LINE_SEPARATOR, nowTime(), thread, coloredLevel, line);
+//            output = output
+//                    .replace("\"name\"", "\"" + StringSugar.paint("name", ColorEnum.UNDERLINE) + "\"")
+//                    .replace("\"summary\"", "\"" + StringSugar.paint("summary", ColorEnum.UNDERLINE) + "\"")
+//                    .replace("\"message\"", "\"" + StringSugar.paint("message", ColorEnum.UNDERLINE) + "\"")
+//                    .replace("\"exception\"", "\"" + StringSugar.paint("exception", ColorEnum.UNDERLINE) + "\"")
+//            ;
+            output = formatOutput(output, "\"name\"", "\"summary\"" ,"\"message\"", "\"exception\"");
             println(output);
         }
 
+    }
+
+    private String formatOutput(String output, String... texts) {
+        String item = output;
+        for (String text : texts) {
+            item = item.replace(text, StringSugar.paint(text, ColorEnum.UNDERLINE));
+        }
+        return item;
     }
 
     private static final void println(String output) {

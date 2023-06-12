@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.sugar.resource;
 
+import com.aio.portable.swiss.suite.io.IOSugar;
+
 import java.io.*;
 import java.net.URL;
 import java.util.Collections;
@@ -34,9 +36,9 @@ public class StreamClassLoader extends ClassLoader {
         return new StreamClassLoader(file);
     }
 
-    public Class loadClassByBinary(String className) throws ClassNotFoundException {
+    public Class<?> loadClassByBinary(String className) throws ClassNotFoundException {
         if (file.toLowerCase().trim().endsWith(".class")) {
-            byte[] b = loadClassData(file);
+            byte[] b = IOSugar.Files.readFileForByte(file);
             return defineClass(className, b, 0, b.length);
         } else if (file.toLowerCase().trim().endsWith(".jar")) {
             JarFile jarFile;
@@ -56,55 +58,53 @@ public class StreamClassLoader extends ClassLoader {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                URL url = this.getClass().getResource("/" + _name);
-                byte[] b = loadClassData(inputStream);
+//                URL url = this.getClass().getResource("/" + _name);
+                byte[] b = IOSugar.Streams.toByteArray(inputStream);
                 return defineClass(className, b, 0, b.length);
             }).findFirst().get();
         }
         return null;
     }
 
-    //用于加载类文件
-    private static byte[] loadClassData(String file) {
-        //使用输入流读取类文件
-        InputStream in = null;
-        //使用byteArrayOutputStream保存类文件。然后转化为byte数组
-        try {
-            in = new FileInputStream(new File(file));
-            return loadClassData(in);
-        } catch (Exception e) {
-            e.getStackTrace();
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (in != null)
-                    in.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static byte[] loadClassData(InputStream in) {
-        ByteArrayOutputStream out = null;
-        try {
-            out = new ByteArrayOutputStream();
-            int i;
-            while ((i = in.read()) != -1) {
-                out.write(i);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                out.close();
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return out.toByteArray();
-    }
+//    private static byte[] loadClassData(String file) {
+//        InputStream in = null;
+//        try {
+//            in = new FileInputStream(new File(file));
+//            return loadClassData(in);
+//        } catch (Exception e) {
+////            e.getStackTrace();
+//            throw new RuntimeException(e);
+//        } finally {
+//            try {
+//                if (in != null)
+//                    in.close();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+//
+//    private static byte[] loadClassData(InputStream in) {
+//        ByteArrayOutputStream out = null;
+//        try {
+//            out = new ByteArrayOutputStream();
+//            int i;
+//            while ((i = in.read()) != -1) {
+//                out.write(i);
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            try {
+//                out.close();
+//                in.close();
+//            } catch (IOException e) {
+////                e.printStackTrace();
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return out.toByteArray();
+//    }
 
 
 }

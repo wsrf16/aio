@@ -9,5 +9,4 @@ public class AppLogHubFactory extends LogHubFactory {
 //    public LogHub build(String className) {
 //        return super.build(className).setAsync(false);
 //    }
-
 }

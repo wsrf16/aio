@@ -56,23 +56,30 @@ public abstract class HamletResponseBodyAdvice implements ResponseBodyAdvice<Obj
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<HttpMessageConverter<?>> converters = getHttpMessageConverters();
-//        Jackson2ObjectMapperBuilder json = Jackson2ObjectMapperBuilder.json();
-//        json.applicationContext(SpringContextHolder.getApplicationContext());
-
-        List<HttpMessageConverter<?>> jacksonHttpMessageConverters = getJacksonHttpMessageConverters(converters);
-        converters.removeAll(jacksonHttpMessageConverters);
-        converters.addAll(0, jacksonHttpMessageConverters);
+        setPriorityHighest();
     }
 
-    private List<HttpMessageConverter<?>> getHttpMessageConverters() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private void setPriorityHighest() throws Exception {
+        List<HttpMessageConverter<?>> converters = parseHttpMessageConverters();
+        List<HttpMessageConverter<?>> jacksonHttpMessageConverters = parseJacksonHttpMessageConverters(converters);
+        setPriorityHighest(converters, jacksonHttpMessageConverters);
+    }
+
+    private void setPriorityHighest(List<HttpMessageConverter<?>> converters, List<HttpMessageConverter<?>> highest) throws Exception {
+        if (!highest.contains(converters.get(0))) {
+            converters.removeAll(highest);
+            converters.addAll(0, highest);
+        }
+    }
+
+    private List<HttpMessageConverter<?>> parseHttpMessageConverters() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Method method = BeanSugar.Methods.getDeclaredMethodIncludeParents(WebMvcConfigurationSupport.class, "getMessageConverters");
         method.setAccessible(true);
         List<HttpMessageConverter<?>> converters = (List<HttpMessageConverter<?>>) method.invoke(webMvcConfigurationSupport);
         return converters;
     }
 
-    private List<HttpMessageConverter<?>> getJacksonHttpMessageConverters(List<HttpMessageConverter<?>> converters) {
+    private List<HttpMessageConverter<?>> parseJacksonHttpMessageConverters(List<HttpMessageConverter<?>> converters) {
         List<HttpMessageConverter<?>> converterList = converters.stream().filter(c -> c instanceof MappingJackson2HttpMessageConverter).collect(Collectors.toList());
         return converterList;
     }

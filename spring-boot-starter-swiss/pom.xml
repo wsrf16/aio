@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.21-SNAPSHOT</version>
+    <version>1.1.22-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>
@@ -41,7 +41,6 @@
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <java-jwt.version>3.15.0</java-jwt.version>
-        <xxl-job-core.version>2.3.0</xxl-job-core.version>
         <nginxparser.version>0.9.6</nginxparser.version>
         <netty-all.version>4.1.44.Final</netty-all.version>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
@@ -49,6 +48,7 @@
         <guava.version>[24.1.1,)</guava.version>
         <redisson.version>3.16.6</redisson.version>
 
+<!--        <xxl-job-core.version>2.3.0</xxl-job-core.version>-->
 <!--        <zookeeper.version>3.6.2</zookeeper.version>-->
 <!--        <commons-lang3.version>3.8.1</commons-lang3.version>-->
 <!--        <httpclient.version>4.5.9</httpclient.version>-->
@@ -472,7 +472,7 @@
 <!--            <version>1.1.1.RELEASE</version>-->
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
-        
+
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -786,6 +786,7 @@
 <!--        </repository>-->
     </repositories>
 
+    <!-- upload -->
     <distributionManagement>
         <!--<repository>-->
             <!--<id>nexus-release</id>-->

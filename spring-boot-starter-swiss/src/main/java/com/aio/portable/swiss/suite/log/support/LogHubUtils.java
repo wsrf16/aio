@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.suite.log.support;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
@@ -41,7 +40,7 @@ public class LogHubUtils {
         }
     }
 
-    private static final void importSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
+    private static final void initialSingletonLogFactory(ConfigurableListableBeanFactory beanFactory) {
         String[] names = beanFactory.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = beanFactory.getBeanDefinition(names[i]);
@@ -60,7 +59,7 @@ public class LogHubUtils {
         }
     }
 
-    private static final void importSingletonLogFactory(BeanDefinitionRegistry registry) {
+    private static final void initialSingletonLogFactory(BeanDefinitionRegistry registry) {
         String[] names = registry.getBeanDefinitionNames();
         for (int i = 0; i < names.length; i++) {
             BeanDefinition definition = registry.getBeanDefinition(names[i]);
@@ -87,12 +86,12 @@ public class LogHubUtils {
 
     public static void initLogHubFactory(BeanDefinitionRegistry registry) {
         if (!LogHubFactory.isInitial())
-            LogHubUtils.importSingletonLogFactory(registry);
+            LogHubUtils.initialSingletonLogFactory(registry);
     }
 
     public static void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
         if (!LogHubFactory.isInitial())
-            LogHubUtils.importSingletonLogFactory(beanFactory);
+            LogHubUtils.initialSingletonLogFactory(beanFactory);
     }
 
 

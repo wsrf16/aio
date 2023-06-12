@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar.resource.classloader;
 
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.io.listen.WatchServiceThread;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -10,7 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WatchClassLoader extends WatchServiceThread {
-    private static final Log log = LogFactory.getLog(WatchClassLoader.class);
+//    private static final Log log = LogFactory.getLog(WatchClassLoader.class);
+    private static final LocalLog log = LocalLog.getLog(WatchClassLoader.class);
 
     private ByteCodeClassLoader folderClassLoader;
 

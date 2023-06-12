@@ -9,7 +9,7 @@ public class LoghubTest {
 //    @Test
 //    public void foobar() {
 //        {
-//            LogHub log = AppLogHubFactory.singletonInstance().build();//.setSamplerRate(1f);
+//            LogHub log = AppLogHubFactory.getSingleton().build();//.setSamplerRate(1f);
 //            List<String> list = null;
 //            try {
 //                list = new ArrayList<>();

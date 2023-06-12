@@ -22,45 +22,29 @@ public class Constant {
     }
 
     public class TimeUnit {
-        public static final long MilliSecond = 1;
-        public static final long Second = 1000 * MilliSecond;
-        public static final long Minute = 60 * Second;
-        public static final long Hour = 60 * Minute;
-        public static final long Day = 24 * Hour;
-        public static final long Week = 7 * Day;
+        public static final long MILLISECOND = 1;
+        public static final long SECOND = 1000 * MILLISECOND;
+        public static final long MINUTE = 60 * SECOND;
+        public static final long HOUR = 60 * MINUTE;
+        public static final long DAY = 24 * HOUR;
+        public static final long WEEK = 7 * DAY;
     }
 
 
-    public static final String LIBRARY_DIRECTORY = "Lib";
     public static final String CURRENT_DIRECTORY = System.getProperty("user.dir");
+
     public static final String CLASS_PATH = System.getProperty("java.class.path");
     // \r\n
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     // ; :
-    public static final String PATH_SEPARATOR = System.getProperty("line.separator");
+    public static final String PATH_SEPARATOR = System.getProperty("path.separator");
+
     //public static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-    // \
+    // \/
     public static final String FILE_SEPARATOR = File.separator;
+
     public static final String EMPTY = "";
 
-    public static class OriginEnum {
-        public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-        public static final HttpStatus DEFAULT_HTTPSTATUS = HttpStatus.OK;
-        public static final MediaType DEFAULT_MEDIATYPE = MediaType.APPLICATION_JSON;
-    }
 
-//    class Directory {
-//        public static final String ExecutingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-//        public static final String EntryAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-//        public static final String CallingAssemblyDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetCallingAssembly().Location);
-//        public static final String CurrentDomainBaseDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
-//        public static final String EnvironmentCurrentDirectory = System.Environment.CURRENT_DIRECTORY;
-//        public static final String CURRENT_DIRECTORY = System.IO.Directory.GetCurrentDirectory();
-
-//        public String DirectoryOf(System.Reflection.Assembly assembly) {
-//            String directory = System.IO.Path.GetDirectoryName(assembly.Location);
-//            return directory;
-//        }
-//    }
 }

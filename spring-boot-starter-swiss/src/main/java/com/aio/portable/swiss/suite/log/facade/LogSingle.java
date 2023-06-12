@@ -4,13 +4,12 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.log.action.LogAction;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import com.aio.portable.swiss.suite.log.support.LogBean;
+import com.aio.portable.swiss.suite.log.support.LogRecord;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
-import com.aio.portable.swiss.suite.log.support.StandardLogBean;
+import com.aio.portable.swiss.suite.log.support.StandardLogRecord;
 import com.aio.portable.swiss.suite.system.HostInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -18,7 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class LogSingle implements LogAction {
-    private static final Log log = LogFactory.getLog(LogSingle.class);
+//    private static final Log log = LogFactory.getLog(LogSingle.class);
+    private static final LocalLog log = LocalLog.getLog(LogSingle.class);
 
     private String name;
     public String getName() {
@@ -98,7 +98,7 @@ public abstract class LogSingle implements LogAction {
 
 
 
-    protected void output(Printer printer, String text, LevelEnum level) {
+    protected void output(String text, LevelEnum level) {
         try {
             if (async) {
                 executor.execute(() ->
@@ -112,30 +112,31 @@ public abstract class LogSingle implements LogAction {
         }
     }
 
-    protected void output(Printer printer, LogBean logBean) {
+    protected void output(LogRecord logRecord) {
         try {
-            String text = logBean.getLevel().getPriority() < LevelEnum.WARNING.getPriority() ?
-                    getSerializerAdapter().serialize(logBean) : getLooseSerializerAdapter().serialize(logBean);
-            output(printer, text, logBean.getLevel());
+            String text = logRecord.getLevel().getPriority() < LevelEnum.WARN.getPriority() ?
+                    getSerializerAdapter().serialize(logRecord) : getLooseSerializerAdapter().serialize(logRecord);
+            output(text, logRecord.getLevel());
         } catch (Exception e) {
 //            e.printStackTrace();
             log.warn(e);
         }
     }
 
-    protected void output(Printer printer, Map<String, Object> logBean, LevelEnum level) {
+    protected void output(Map<String, Object> logBean, LevelEnum level) {
         try {
-            String text = level.getPriority() < LevelEnum.WARNING.getPriority() ?
+            String text = level.getPriority() < LevelEnum.WARN.getPriority() ?
                     getSerializerAdapter().serialize(logBean) : getLooseSerializerAdapter().serialize(logBean);
-            output(printer, text, level);
+            output(text, level);
         } catch (Exception e) {
 //            e.printStackTrace();
             log.warn(e);
         }
     }
 
-    public void attachTo(LogBean note) {
-        note.setOutputType(this.getClass().getSimpleName());
+    public void attachTo(LogRecord record) {
+        record.setName(name);
+        record.setOutputType(this.getClass().getSimpleName());
     }
 
     /**
@@ -143,15 +144,14 @@ public abstract class LogSingle implements LogAction {
      * @param message
      */
     @Override
-    public void verbose(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+    public void verb(String message) {
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.VERBOSE);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.VERB);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -171,16 +171,15 @@ public abstract class LogSingle implements LogAction {
      * @param message
      */
     @Override
-    public void verbose(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+    public void verb(String summary, String message) {
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.VERBOSE);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.VERB);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -201,15 +200,14 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void verbose(T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+    public <T> void verb(T t) {
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.VERBOSE);
-            note.setData(t);
+            record.setLevel(LevelEnum.VERB);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -219,16 +217,15 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void verbose(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+    public <T> void verb(String summary, T t) {
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.VERBOSE);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.VERB);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -239,17 +236,16 @@ public abstract class LogSingle implements LogAction {
      * @param <T>
      */
     @Override
-    public <T> void verbose(String summary, String message, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+    public <T> void verb(String summary, String message, T t) {
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.VERBOSE);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
+            record.setLevel(LevelEnum.VERB);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -258,14 +254,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void trace(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.TRACE);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.TRACE);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -286,15 +281,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void trace(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.TRACE);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.TRACE);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -316,14 +310,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.TRACE);
-            note.setData(t);
+            record.setLevel(LevelEnum.TRACE);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -334,15 +327,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.TRACE);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.TRACE);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -354,16 +346,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void trace(String summary, String message, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.TRACE);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
+            record.setLevel(LevelEnum.TRACE);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -372,14 +363,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void info(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.INFORMATION);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.INFO);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -400,15 +390,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void info(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.INFORMATION);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.INFO);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -430,14 +419,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.INFORMATION);
-            note.setData(t);
+            record.setLevel(LevelEnum.INFO);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -448,15 +436,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.INFORMATION);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.INFO);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -468,16 +455,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void info(String summary, String message, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.INFORMATION);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
+            record.setLevel(LevelEnum.INFO);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -486,14 +472,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void debug(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.DEBUG);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.DEBUG);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -514,15 +499,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void debug(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.DEBUG);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.DEBUG);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -544,14 +528,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.DEBUG);
-            note.setData(t);
+            record.setLevel(LevelEnum.DEBUG);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -562,15 +545,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.DEBUG);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.DEBUG);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -582,16 +564,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void debug(String summary, String message, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.DEBUG);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
+            record.setLevel(LevelEnum.DEBUG);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -600,14 +581,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.WARN);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -627,14 +607,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.WARN);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -644,15 +623,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -674,15 +652,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -693,16 +670,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void warn(String summary, String message, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -713,15 +689,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -733,16 +708,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -755,17 +729,16 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void warn(String summary, String message, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.WARNING);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.WARN);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -774,14 +747,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.ERROR);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -801,14 +773,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.ERROR);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -818,15 +789,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -848,15 +818,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -867,16 +836,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void error(String summary, String message, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -887,15 +855,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -907,16 +874,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -929,17 +895,16 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void error(String summary, String message, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.ERROR);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.ERROR);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -948,14 +913,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.FATAL);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -975,14 +939,13 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.FATAL);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -992,15 +955,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -1010,15 +972,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, String message) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setMessage(message);
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setMessage(message);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -1041,16 +1002,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public void fatal(String summary, String message, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -1061,15 +1021,14 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, T t) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setData(t);
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setData(t);
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -1082,17 +1041,16 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, String message, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setMessage(message);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setMessage(message);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     /**
@@ -1104,16 +1062,15 @@ public abstract class LogSingle implements LogAction {
      */
     @Override
     public <T> void fatal(String summary, T t, Throwable e) {
-        LogBean note = new StandardLogBean();
-        attachTo(note);
+        LogRecord record = new StandardLogRecord();
+        attachTo(record);
         {
-            note.setName(name);
-            note.setLevel(LevelEnum.FATAL);
-            note.setSummary(summary);
-            note.setData(t);
-            note.setException(LogThrowable.build(e));
+            record.setLevel(LevelEnum.FATAL);
+            record.setSummary(summary);
+            record.setData(t);
+            record.setException(LogThrowable.build(e));
         }
-        output(printer, note);
+        output(record);
     }
 
     @Override
@@ -1147,18 +1104,15 @@ public abstract class LogSingle implements LogAction {
     }
 
     static class LogSingleThreadFactory implements ThreadFactory {
-        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+//        private static final AtomicInteger poolNumber = new AtomicInteger(1);
         private final ThreadGroup group;
         private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix;
+        private final String namePrefix = "log-thread-pool-";
 
         LogSingleThreadFactory() {
             SecurityManager s = System.getSecurityManager();
             group = (s != null) ? s.getThreadGroup() :
                     Thread.currentThread().getThreadGroup();
-            namePrefix = "log-" + "pool-" +
-                    poolNumber.getAndIncrement() +
-                    "-thread-";
         }
 
         @Override

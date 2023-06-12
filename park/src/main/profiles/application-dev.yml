@@ -107,7 +107,7 @@
     kafka:
       enabled: false
       esIndex: @project.deploy.finalName@-@profiles.active@-log
-#      bootstrap-servers: 192.168.133.133:9092
+      bootstrap-servers: 192.168.133.133:9092
 #      template:
 #        defaultTopic: application-log
       binding-list:

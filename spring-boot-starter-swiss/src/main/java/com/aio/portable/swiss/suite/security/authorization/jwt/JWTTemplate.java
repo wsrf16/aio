@@ -12,9 +12,8 @@ import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
-//import com.nimbusds.jwt.JWTParser;
 
-public class JWTTemplateType implements JWTAction, Base64TokenAlgorithm, JWTExplicitType {
+public class JWTTemplate implements JWTAction, Base64TokenAlgorithm, JWTExplicitType {
     private JWTConfig jwtConfig;
 
     private Algorithm algorithm;
@@ -29,13 +28,13 @@ public class JWTTemplateType implements JWTAction, Base64TokenAlgorithm, JWTExpl
         return this.jwtConfig.getExplicit();
     }
 
-    public JWTTemplateType(JWTConfig jwtConfig) {
+    public JWTTemplate(JWTConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }
 
     private static Algorithm newAlgorithm(JWTConfig jwtConfig) {
         Algorithm algorithm;
-        String signAlgorithm = jwtConfig.getSignAlgorithm() == null ? "HMAC256" : jwtConfig.getSignAlgorithm().toUpperCase();
+        String signAlgorithm = jwtConfig.getAlgorithm() == null ? "HMAC256" : jwtConfig.getAlgorithm().toUpperCase();
         switch (signAlgorithm) {
             case "RSA256":
                 algorithm = AlgorithmSugar.newRSA(AlgorithmSugar.RSA.RSA256,
@@ -141,7 +140,7 @@ public class JWTTemplateType implements JWTAction, Base64TokenAlgorithm, JWTExpl
         return sign(builder);
     }
 
-    public String sign(Map<String, Object> addition, int expireMinutes) {
+    public String sign(int expireMinutes, Map<String, Object> addition) {
         JWTCreator.Builder builder = createBuilder();
         JWTExpiredDate expiredDate = JWTExpiredDate.getExpiredMinutes(expireMinutes);
         builder.withIssuedAt(expiredDate.getIssuedAt());
@@ -156,7 +155,7 @@ public class JWTTemplateType implements JWTAction, Base64TokenAlgorithm, JWTExpl
         return sign(builder);
     }
 
-    public String sign(String issuer, Map<String, Object> addition, int expireMinutes) {
+    public String sign(String issuer, int expireMinutes, Map<String, Object> addition) {
         JWTCreator.Builder builder = createBuilder();
         builder.withIssuer(issuer);
         JWTExpiredDate expiredDate = JWTExpiredDate.getExpiredMinutes(expireMinutes);

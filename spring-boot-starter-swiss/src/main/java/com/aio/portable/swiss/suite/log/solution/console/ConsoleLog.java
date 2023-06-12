@@ -13,11 +13,6 @@ public class ConsoleLog extends LogSingle {
         return properties;
     }
 
-    public ConsoleLog setProperties(ConsoleLogProperties properties) {
-        this.properties = properties;
-        return this;
-    }
-
     public ConsoleLog(String name) {
         super(name);
     }
@@ -33,7 +28,11 @@ public class ConsoleLog extends LogSingle {
 
     @Override
     protected void initialPrinter() {
-        properties = ConsoleLogProperties.singletonInstance();
-        printer = ConsolePrinter.instance(this.getName(), "", properties);
+        refreshPrinter(null);
+    }
+
+    public void refreshPrinter(ConsoleLogProperties properties) {
+        this.properties = properties == null ? ConsoleLogProperties.getSingleton() : properties;
+        this.printer = ConsolePrinter.instance(this.getName(), "", this.properties);
     }
 }

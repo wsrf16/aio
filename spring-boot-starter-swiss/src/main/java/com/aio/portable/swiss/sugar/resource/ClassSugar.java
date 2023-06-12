@@ -629,7 +629,7 @@ public abstract class ClassSugar {
     }
 
     @Nullable
-    public static Class<?>[] resolveTypeArguments(Class<?> clazz, Class<?> genericIfc) {
+    public static Class<?>[] resolveSuperClassArgumentType(Class<?> clazz, Class<?> genericIfc) {
 //        ResolvableType.forClass()
         return GenericTypeResolver.resolveTypeArguments(clazz, genericIfc);
     }

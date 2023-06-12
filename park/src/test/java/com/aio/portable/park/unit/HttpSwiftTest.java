@@ -4,6 +4,7 @@ import com.aio.portable.swiss.suite.bean.serializer.json.adapter.JacksonSerializ
 import com.aio.portable.swiss.suite.net.tcp.http.HttpSwift;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -11,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -63,5 +65,19 @@ public class HttpSwiftTest {
         headers.add(header1);
         headers.add(header2);
         return headers.toArray(new BasicHeader[0]);
+    }
+
+    @Test
+    public void setHttpClientProxy() {
+        String proxyHost = "127.0.0.1";
+        Integer proxyPort = 8088;
+        String scheme = "http";
+        //设置代理IP、端口
+        HttpHost proxy = new HttpHost(proxyHost, proxyPort, scheme);
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setRoutePlanner(routePlanner)
+                .build();
+        HttpClient httpclient1 = httpclient;
     }
 }

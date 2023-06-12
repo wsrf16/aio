@@ -21,22 +21,24 @@ public class PreMain {
 
 
     public static void sample(Instrumentation inst) {
-        // step one
-        Collection<MethodInterceptorPoint> methodInterceptorPointCollection = new ArrayList<>();
-        methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), MethodDelegation.to(CustomInterceptor.class)));
-        methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>named("statichello"), MethodDelegation.to(CustomInterceptor.class)));
-        AgentBuilder.Transformer transformer = AgentBuilderSugar.buildTransformer(methodInterceptorPointCollection);
+        // step one: Interceptors
+        Collection<MethodInterceptorPoint> methodList = new ArrayList<>();
+        methodList.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), MethodDelegation.to(CustomInterceptor.class)));
+        methodList.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>named("statichello"), MethodDelegation.to(CustomInterceptor.class)));
+        AgentBuilder.Transformer transformer = AgentBuilderSugar.buildTransformer(methodList);
 
-        // step two
-        Collection<TypeInterceptorPoint> typeInterceptorCollection = new ArrayList<>();
-        typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.named("com.mysql.cj.jdbc.ConnectionImpl"), transformer));
-        typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.named("java.sql.DriverManager"), transformer));
-        typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("java.sql"), transformer));
-        typeInterceptorCollection.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("com.aio.portable.park.runner"), transformer));
+        // step two: Classes to intercept
+        Collection<TypeInterceptorPoint> typeList = new ArrayList<>();
+        typeList.add(new TypeInterceptorPoint(ElementMatchers.named("com.mysql.cj.jdbc.ConnectionImpl"), transformer));
+        typeList.add(new TypeInterceptorPoint(ElementMatchers.named("java.sql.DriverManager"), transformer));
+        typeList.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("java.sql"), transformer));
+        typeList.add(new TypeInterceptorPoint(ElementMatchers.nameStartsWith("com.aio.portable.park.runner"), transformer));
 
+        AgentBuilder agentBuilder = new AgentBuilder.Default();
+        for (TypeInterceptorPoint item : typeList) {
+            agentBuilder = agentBuilder.type(item.getTypeMatcher()).transform(item.getTransformer());
+        }
 
-        AgentBuilderSugar.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
-                .installOn(inst);
     }
 
 

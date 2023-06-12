@@ -3,8 +3,8 @@ package com.aio.portable.swiss.suite.log.solution.elk.kafka;
 import com.aio.portable.swiss.design.clone.DeepCloneable;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
+import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.bind.BindResult;
@@ -13,9 +13,12 @@ import org.springframework.boot.context.properties.bind.Binder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KafkaLogProperties extends KafkaProperties implements InitializingBean, DeepCloneable {
-    private static final Log log = LogFactory.getLog(KafkaLogProperties.class);
+public class KafkaLogProperties extends KafkaProperties implements LogProperties, InitializingBean, DeepCloneable {
+//    private static final Log log = LogFactory.getLog(KafkaLogProperties.class);
+    private static final LocalLog log = LocalLog.getLog(KafkaLogProperties.class);
+
     public static final String PREFIX = "spring.log.kafka";
+    private static final boolean DEFAULT_ENABLED = true;
 
     private static KafkaLogProperties instance = new KafkaLogProperties();
 
@@ -31,9 +34,18 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
         this.esIndex = esIndex;
     }
 
+    public final Boolean getDefaultEnabledIfAbsent() {
+        return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
+    }
 
-    public synchronized static KafkaLogProperties singletonInstance() {
+    public synchronized static KafkaLogProperties getSingleton() {
         return instance;
+    }
+
+    private static boolean initialized = false;
+
+    public static boolean initialized() {
+        return initialized;
     }
 
     public KafkaLogProperties() {
@@ -45,19 +57,18 @@ public class KafkaLogProperties extends KafkaProperties implements InitializingB
         initialSingletonInstance(this);
     }
 
-    public static final void initialSingletonInstance(KafkaLogProperties kafkaLogProperties) {
-        instance = kafkaLogProperties;
-        log.info("KafkaLogProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+    public static final void initialSingletonInstance(KafkaLogProperties kafkaLogHubProperties) {
+        instance = kafkaLogHubProperties;
+        log.info("KafkaLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
+
     }
 
     public static final void initialSingletonInstance(Binder binder) {
         BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             KafkaLogProperties.initialSingletonInstance(bindResult.get());
-        } else {
-            if (instance != null)
-                instance.setEnabled(false);
         }
+        initialized = true;
     }
 
     public Boolean getEnabled() {

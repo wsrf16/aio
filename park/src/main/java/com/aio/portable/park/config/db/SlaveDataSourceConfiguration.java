@@ -65,6 +65,7 @@ public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     }
 
     @Bean(DATA_SOURCE_BEAN)
+    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX + ".hikari")
     public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
         return super.dataSource(properties);
     }

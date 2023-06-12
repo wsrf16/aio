@@ -38,7 +38,7 @@ package com.aio.portable.park.unit;
 //        map.put("bbbb", "bbbb");
 //        Event event = new Event(map, "tag-test");
 //
-//        EventBus build = EventBus.singletonInstance();
+//        EventBus build = EventBus.getSingleton();
 //        build.send(event);
 //    }
 //

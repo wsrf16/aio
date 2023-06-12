@@ -4,12 +4,12 @@ import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.log.support.LogBean;
-import com.aio.portable.swiss.suite.log.support.StandardLogBean;
+import com.aio.portable.swiss.suite.log.support.LogRecord;
+import com.aio.portable.swiss.suite.log.support.StandardLogRecord;
 
 import java.util.Date;
 
-public class ESLogBean extends StandardLogBean {
+public class ESLogRecord extends StandardLogRecord {
     public String getEsIndex() {
         return esIndex;
     }
@@ -48,10 +48,10 @@ public class ESLogBean extends StandardLogBean {
 
     private String serverIp;
 
-    public ESLogBean() {}
+    public ESLogRecord() {}
 
-    public ESLogBean(LogBean logBean, String esIndex, String serverIp) {
-        BeanSugar.Cloneable.deepCloneByCglib(logBean, this);
+    public ESLogRecord(LogRecord logRecord, String esIndex, String serverIp) {
+        BeanSugar.Cloneable.deepCloneByCglib(logRecord, this);
 
         setEsIndex(esIndex);
         setServerIp(serverIp);

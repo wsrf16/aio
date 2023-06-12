@@ -8,7 +8,6 @@ import com.aio.portable.swiss.hamlet.exception.HandOverException;
 import com.aio.portable.swiss.hamlet.interceptor.log.Slf4JLogHubFactory;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +24,7 @@ public abstract class HamletExceptionAdvice {
     BaseBizStatusEnum baseBizStatusEnum;
 
     public BaseBizStatusEnum getBizStatusEnum() {
-        return baseBizStatusEnum == null ? BaseBizStatusEnum.singletonInstance() : baseBizStatusEnum;
+        return baseBizStatusEnum == null ? BaseBizStatusEnum.getSingleton() : baseBizStatusEnum;
     }
 
     public HamletExceptionAdvice() {

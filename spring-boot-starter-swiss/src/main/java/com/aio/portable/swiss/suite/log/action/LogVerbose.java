@@ -6,53 +6,53 @@ import com.aio.portable.swiss.sugar.type.StringSugar;
  * Anything and everything you might want to know about a running block of code.
  */
 public interface LogVerbose {
-    void verbose(String message);
+    void verb(String message);
 
-    default void verbose(String message, Object[] arguments) {
+    default void verb(String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
-        verbose(message);
+        verb(message);
     }
 
-    <T> void verbose(T t);
+    <T> void verb(T t);
 
-    void verbose(String summary, String message);
+    void verb(String summary, String message);
 
-    default void verbose(String summary, String message, Object[] arguments) {
+    default void verb(String summary, String message, Object[] arguments) {
         if (arguments != null)
             message = StringSugar.format(message, arguments);
-        verbose(summary, message);
+        verb(summary, message);
     }
 
-    <T> void verbose(String summary, T t);
+    <T> void verb(String summary, T t);
 
-    <T> void verbose(String summary, String message, T t);
+    <T> void verb(String summary, String message, T t);
 
     default void v(String message) {
-        verbose(message);
+        verb(message);
     }
 
     default void v(String message, Object[] arguments) {
-        verbose(message, arguments);
+        verb(message, arguments);
     }
 
     default <T> void v(T t) {
-        verbose(t);
+        verb(t);
     }
 
     default void v(String summary, String message) {
-        verbose(summary, message);
+        verb(summary, message);
     }
 
     default void v(String summary, String message, Object[] arguments) {
-        verbose(summary, message, arguments);
+        verb(summary, message, arguments);
     }
 
     default <T> void v(String summary, T t) {
-        verbose(summary, t);
+        verb(summary, t);
     }
 
     default <T> void v(String summary, String message, T t) {
-        verbose(summary, message, t);
+        verb(summary, message, t);
     }
 }

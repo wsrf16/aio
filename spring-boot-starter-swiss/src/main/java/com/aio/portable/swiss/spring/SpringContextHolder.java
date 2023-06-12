@@ -2,6 +2,7 @@ package com.aio.portable.swiss.spring;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -30,7 +31,8 @@ import java.util.function.Consumer;
 
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
-    private static final Log log = LogFactory.getLog(SpringContextHolder.class);
+//    private static final Log log = LogFactory.getLog(SpringContextHolder.class);
+    private static final LocalLog log = LocalLog.getLog(SpringContextHolder.class);
 
     private static ApplicationContext applicationContext = null;
 
@@ -46,14 +48,15 @@ public class SpringContextHolder implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
-        synchronized(SpringContextHolder.class) {
-//            SpringContextHolder.applicationContext = applicationContext;
-            if (SpringContextHolder.applicationContext == null)
+        synchronized (SpringContextHolder.class) {
+            if (applicationContext != null)
                 SpringContextHolder.applicationContext = applicationContext;
-            else {
-                log.warn("applicationContext is not null");
-//                new UnsupportedOperationException().printStackTrace();
-            }
+//            if (SpringContextHolder.applicationContext == null)
+//                SpringContextHolder.applicationContext = applicationContext;
+//            else {
+//                log.warn("applicationContext is not null");
+////                new UnsupportedOperationException().printStackTrace();
+//            }
         }
     }
 
@@ -62,7 +65,9 @@ public class SpringContextHolder implements ApplicationContextAware {
     }
 
     public static final void setSingletonApplicationContext(ApplicationContext applicationContext) {
-        SpringContextHolder.applicationContext = applicationContext;
+        if (applicationContext != null
+                && SpringContextHolder.applicationContext == null)
+            SpringContextHolder.applicationContext = applicationContext;
     }
 
     /**

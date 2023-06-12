@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar.resource.classloader;
 
 import com.aio.portable.swiss.suite.io.IOSugar;
 import com.aio.portable.swiss.suite.io.NIOSugar;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,7 +12,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 class ByteCodeClassLoader extends ClassLoader {
-    private static final Log log = LogFactory.getLog(ByteCodeClassLoader.class);
+//    private static final Log log = LogFactory.getLog(ByteCodeClassLoader.class);
+    private static final LocalLog log = LocalLog.getLog(ByteCodeClassLoader.class);
 
     private native Class<?> findBootstrapClass(String name);
 

@@ -31,7 +31,7 @@
 //public class SwissElasticsearchAutoConfiguration {
 //    private static SwissElasticsearchAutoConfiguration instance;
 //
-//    public synchronized static SwissElasticsearchAutoConfiguration singletonInstance() {
+//    public synchronized static SwissElasticsearchAutoConfiguration getSingleton() {
 //        return instance;
 //    }
 //

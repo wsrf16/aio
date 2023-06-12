@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.log.solution.elk.kafka;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.middleware.mq.kafka.KafkaBuilder;
 import com.aio.portable.swiss.suite.log.facade.Printer;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,7 +14,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class KafkaPrinter implements Printer {
-    private static final Log log = LogFactory.getLog(KafkaPrinter.class);
+//    private static final Log log = LogFactory.getLog(KafkaPrinter.class);
+    private static final LocalLog log = LocalLog.getLog(KafkaPrinter.class);
 
     String logName;
     KafkaLogProperties properties;

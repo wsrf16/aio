@@ -1,13 +1,12 @@
 package com.aio.portable.park.common;
 
-import jdk.internal.dynalink.beans.StaticClass;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserInfoEntity implements InitializingBean {
     static {
-        System.out.println(UserInfoEntity.class);
+        System.out.println("--> " + UserInfoEntity.class);
     }
 
     private Integer id;
@@ -17,7 +16,7 @@ public class UserInfoEntity implements InitializingBean {
     private String name;
 
     public UserInfoEntity() {
-        System.out.println("userInfoEntity Constructor");
+        System.out.println("--> userInfoEntity Constructor");
     }
 
     public Integer getId() {
@@ -59,7 +58,7 @@ public class UserInfoEntity implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("userInfoEntity afterPropertiesSet");
+        System.out.println("--> userInfoEntity afterPropertiesSet");
     }
 
     public static UserInfoEntity sample() {

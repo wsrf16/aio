@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.net.tcp;
 
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -8,7 +9,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class TcpSugar {
-    private static final Log log = LogFactory.getLog(TcpSugar.class);
+    private static final LocalLog log = LocalLog.getLog(TcpSugar.class);
+
 
     /**
      * 测试telnet 机器端口的连通性

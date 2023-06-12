@@ -16,29 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class LDAPSugar {
-//    /**
-//     * authentication
-//     * @param ldapTemplate
-//     * @param dn
-//     * @param password
-//     * @return
-//     */
-//    public static final Boolean authentication(LdapTemplate ldapTemplate, String dn, String password) {
-//        DirContext dirContext = null;
-//        Boolean b;
-//        try {
-//            dirContext = ldapTemplate.getContextSource().getContext(dn, password);
-//            b = true;
-//        } catch (AuthenticationException e) {
-//            e.printStackTrace();
-//            b = false;
-//        } finally {
-//            if (dirContext != null)
-//                LdapUtils.closeContext(dirContext);
-//        }
-//        return b;
-//    }
-
     public static final boolean authenticateByUId(LdapTemplate ldapTemplate, String base, String uid, String password) {
         EqualsFilter filter = new EqualsFilter("uid", uid);
         boolean authenticate = ldapTemplate.authenticate(base, filter.toString(), password);
@@ -81,7 +58,6 @@ public abstract class LDAPSugar {
                 try {
                     String name = prop.getKey();
                     if (mapper.get(name) != null) {
-//                        Object val = mapper.get(name).get();
                         Object val = mapper.get(name).get();
                         PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(clazz, name);
                         propertyDescriptor.getWriteMethod().invoke(t, val);
@@ -124,22 +100,4 @@ public abstract class LDAPSugar {
         return search;
     }
 
-//    public static final LdapContextSource newLdapContextSource(LdapProperties properties) {
-//            LdapContextSource source = new LdapContextSource();
-//            source.setUserDn(properties.getUsername());
-//            source.setPassword(properties.getPassword());
-//            source.setAnonymousReadOnly(properties.getAnonymousReadOnly());
-//            source.setBase(properties.getBase());
-//            source.setUrls(properties.getUrls());
-//            source.setBaseEnvironmentProperties(Collections.unmodifiableMap(properties.getBaseEnvironment()));
-//        return source;
-//    }
-//
-//    public static final LdapTemplate newLdapTemplate(LdapContextSource contextSource) {
-////        Map<String, Object> config = new HashMap();
-////        config.put("java.naming.referral", "follow");
-////        contextSource.setBaseEnvironmentProperties(config);
-//        LdapTemplate ldapTemplate = new LdapTemplate(contextSource);
-//        return ldapTemplate;
-//    }
 }

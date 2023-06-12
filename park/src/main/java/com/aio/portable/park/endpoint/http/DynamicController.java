@@ -1,4 +1,4 @@
-package com.aio.portable.park.controller;
+package com.aio.portable.park.endpoint.http;
 
 import com.aio.portable.swiss.spring.SpringController;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;

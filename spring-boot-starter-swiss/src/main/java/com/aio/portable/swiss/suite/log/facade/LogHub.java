@@ -2,9 +2,8 @@ package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
 import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
@@ -18,13 +17,14 @@ import java.util.*;
  * Created by York on 2017/11/23.
  */
 public class LogHub extends LogBundle implements LogBase {
-    private static final Log log = LogFactory.getLog(LogHub.class);
+//    private static final Log log = LogFactory.getLog(LogHub.class);
+    private static final LocalLog log = LocalLog.getLog(LogHub.class);
 
     private static final float DEFAULT_SAMPLER_RATE = 1f;
 
     private boolean enabled = true;
 
-    private LevelEnum level = LevelEnum.ALL;
+    private LevelEnum level = LevelEnum.DEBUG;
 
     private float samplerRate = DEFAULT_SAMPLER_RATE;
 
@@ -158,15 +158,15 @@ public class LogHub extends LogBundle implements LogBase {
                     Object invoke = null;
 
                     switch (_method.getName()) {
-                        case "verbose":
+                        case "verb":
                         case "v": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.VERBOSE))
+                            if (hub.allow() && hub.level.beMatched(LevelEnum.VERB))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
                         case "info":
                         case "i": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.INFORMATION))
+                            if (hub.allow() && hub.level.beMatched(LevelEnum.INFO))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
@@ -184,7 +184,7 @@ public class LogHub extends LogBundle implements LogBase {
                         break;
                         case "warn":
                         case "w": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.WARNING))
+                            if (hub.allow() && hub.level.beMatched(LevelEnum.WARN))
                                 invoke = _method.invoke(hub, _args);
                         }
                         break;
@@ -222,13 +222,13 @@ public class LogHub extends LogBundle implements LogBase {
                             switch (_method.getName().toLowerCase()) {
                                 case "verbose":
                                 case "v": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.VERBOSE))
+                                    if (hub.allow() && hub.level.beMatched(LevelEnum.VERB))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
                                 case "info":
                                 case "i": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.INFORMATION))
+                                    if (hub.allow() && hub.level.beMatched(LevelEnum.INFO))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;
@@ -246,7 +246,7 @@ public class LogHub extends LogBundle implements LogBase {
                                 break;
                                 case "warn":
                                 case "w": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.WARNING))
+                                    if (hub.allow() && hub.level.beMatched(LevelEnum.WARN))
                                         invoke = _method.invoke(hub, _args);
                                 }
                                 break;

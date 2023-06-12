@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.function.Supplier;
 
 /**
  * Created by York on 2017/11/23.
@@ -161,8 +160,13 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Date convertText2Date(String format, String text) throws ParseException {
-            Date date = new SimpleDateFormat(format).parse(text);
+        public static Date convertText2Date(String format, String text) {
+            Date date = null;
+            try {
+                date = new SimpleDateFormat(format).parse(text);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             return date;
         }
 
@@ -246,7 +250,7 @@ public abstract class DateTimeSugar {
          * @return
          */
         public static long getCurrentZone() {
-            long zone = java.util.Calendar.getInstance().getTimeZone().getRawOffset() / Constant.TimeUnit.Hour;
+            long zone = java.util.Calendar.getInstance().getTimeZone().getRawOffset() / Constant.TimeUnit.HOUR;
             return zone;
         }
 

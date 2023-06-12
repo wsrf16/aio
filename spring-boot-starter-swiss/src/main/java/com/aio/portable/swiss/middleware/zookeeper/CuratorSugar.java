@@ -19,12 +19,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class CuratorSugar {
-//    public final public void newcuratorFramework(int baseSleepTimeMs, int maxRetries, int maxSleepMs) {
-//        CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient(connectionString, retryPolicy);
-//        CreateBuilder createBuilder = curatorFramework.create();
-//        createBuilder. if
-//    }
-
     public static final class RetryPolicyBuilder {
         public static final ExponentialBackoffRetry newExponentialBackoffRetry(int baseSleepTimeMs, int maxRetries, int maxSleepMs) {
             ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(baseSleepTimeMs, maxRetries, maxSleepMs);

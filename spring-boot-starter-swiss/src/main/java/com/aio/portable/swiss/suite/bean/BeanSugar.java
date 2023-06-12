@@ -1,13 +1,12 @@
 package com.aio.portable.swiss.suite.bean;
 
+import com.aio.portable.swiss.sugar.DynamicProxySugar;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.resource.function.LambdaBiConsumer;
 import com.aio.portable.swiss.sugar.resource.function.LambdaConsumer;
 import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
 import com.aio.portable.swiss.sugar.resource.function.LambdaSupplier;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.sugar.DynamicProxySugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
-import org.apache.ibatis.reflection.ReflectionException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -21,7 +20,15 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -478,7 +485,7 @@ public abstract class BeanSugar {
             } else if (name.startsWith("get") || name.startsWith("set")) {
                 name = name.substring(3);
             } else {
-                throw new ReflectionException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+                throw new RuntimeException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
             }
 
             if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {

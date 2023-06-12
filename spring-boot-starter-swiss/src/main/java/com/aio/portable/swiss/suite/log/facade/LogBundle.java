@@ -2,8 +2,7 @@ package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.sugar.ThrowableSugar;
 import com.aio.portable.swiss.suite.log.action.LogAction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,8 @@ import java.util.List;
  * Created by York on 2017/11/22.
  */
 public abstract class LogBundle implements LogAction {
-    private static final Log log = LogFactory.getLog(LogBundle.class);
+//    private static final Log log = LogFactory.getLog(LogBundle.class);
+    private static final LocalLog log = LocalLog.getLog(LogBundle.class);
 
     protected List<LogSingle> logList;
 
@@ -40,24 +40,24 @@ public abstract class LogBundle implements LogAction {
         ThrowableSugar.catchThenHandle(runnable, e -> log.warn(e));
     }
 
-    public void verbose(String message) {
-        logList.forEach(it -> silence(() -> it.verbose(message)));
+    public void verb(String message) {
+        logList.forEach(it -> silence(() -> it.verb(message)));
     }
 
-    public <T> void verbose(T t) {
-        logList.forEach(it -> silence(() -> it.verbose(t)));
+    public <T> void verb(T t) {
+        logList.forEach(it -> silence(() -> it.verb(t)));
     }
 
-    public void verbose(String summary, String message) {
-        logList.forEach(it -> silence(() -> it.verbose(summary, message)));
+    public void verb(String summary, String message) {
+        logList.forEach(it -> silence(() -> it.verb(summary, message)));
     }
 
-    public <T> void verbose(String summary, T t) {
-        logList.forEach(it -> silence(() -> it.verbose(summary, t)));
+    public <T> void verb(String summary, T t) {
+        logList.forEach(it -> silence(() -> it.verb(summary, t)));
     }
 
-    public <T> void verbose(String summary, String message, T t) {
-        logList.forEach(it -> silence(() -> it.verbose(summary, message, t)));
+    public <T> void verb(String summary, String message, T t) {
+        logList.forEach(it -> silence(() -> it.verb(summary, message, t)));
     }
 
     public void trace(String message) {

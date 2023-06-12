@@ -1,4 +1,4 @@
-package com.aio.portable.park.config.mq;
+package com.aio.portable.park.endpoint.mq;
 
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;

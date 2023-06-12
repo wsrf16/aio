@@ -28,22 +28,22 @@ public abstract class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (this.getEnabled()) {
+        if (this.getEnabled() == null || this.getEnabled()) {
             Class<?> clazz = method.getDeclaringClass();
 
-            boolean beRequiredPackage = getScanBasePackages() == null || getScanBasePackages().stream()
+            boolean bePackageToCheck = getScanBasePackages() == null || getScanBasePackages().stream()
                     .anyMatch(c -> clazz.getPackage().getName().startsWith(StringSugar.trimEnd(c.trim(), ".*")));
-            if (beRequiredPackage) {
-                boolean required;
+            if (bePackageToCheck) {
+                boolean beMethodToCheck;
                 if (method.isAnnotationPresent(Granted.class)) {
-                    required = method.getAnnotation(Granted.class).required();
+                    beMethodToCheck = method.getAnnotation(Granted.class).required();
                 } else if (clazz.isAnnotationPresent(Granted.class)) {
-                    required = clazz.getAnnotation(Granted.class).required();
+                    beMethodToCheck = clazz.getAnnotation(Granted.class).required();
                 } else {
-                    required = false;
+                    beMethodToCheck = false;
                 }
 
-                if (required) {
+                if (beMethodToCheck) {
                     check(httpServletRequest, httpServletResponse, handler);
                 }
             }

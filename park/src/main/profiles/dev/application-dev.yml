@@ -20,11 +20,18 @@ spring:
 
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
+#      type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1111
       connection-timeout: 2000
+      hikari:
+        connection-timeout: 30000
+        minimum-idle: 100
+        maximum-pool-size: 100
+        maxLifetime: 0
+        idle-timeout: 88888
       jpa:
         database: mysql
         #启动时需要初始化的建表语句
@@ -74,6 +81,7 @@ spring:
 
   log:
 #    enabled: false
+#    level: info
     rabbitmq:
       enabled: false
       host: mecs.com
@@ -91,28 +99,28 @@ spring:
         queue: application-log-queue
         exchange: application-log-exchange
 
-#    kafka:
-#      enabled: false
-#      esIndex: @project.deploy.finalName@-@profiles.active@-log
-#      bootstrap-servers: 192.168.133.133:9092
-##      template:
-##        defaultTopic: application-log
-##      producer:
-##        bootstrap-servers: mecs.com:9092
-##        bootstrap-servers: 192.168.133.133:9092
-#      binding-list:
-#        - topic: application-log
-#      properties:
-#        linger-ms: 100
-#        max-block-ms: 3000
-#        request-timeout-ms: 1000
-#        transaction-timeout-ms: 1000
-#        compression-type: gzip
-#        acks: 1
+    kafka:
+      enabled: false
+      esIndex: @project.deploy.finalName@-@profiles.active@-log
+      bootstrap-servers: 192.168.133.133:9092
+#      template:
+#        defaultTopic: appli10.124.163.9510.124.163.9510.124.163.9510.124.163.95cation-log
+#      producer:
+#        bootstrap-servers: mecs.com:9092
+#        bootstrap-servers: 192.168.133.133:9092
+      binding-list:
+        - topic: application-log
+      properties:
+        linger-ms: 100
+        max-block-ms: 3000
+        request-timeout-ms: 1000
+        transaction-timeout-ms: 1000
+        compression-type: gzip
+        acks: 1
     console:
       enabled: true
     slf4j:
-      enabled: true
+      enabled: false
 
 #eureka:
 #  instance:
@@ -134,3 +142,10 @@ spring:
 server:
   tomcat:
     max-connections: 999
+
+
+org:
+  springframework:
+    boot:
+      logging:
+        LoggingSystem: 1111

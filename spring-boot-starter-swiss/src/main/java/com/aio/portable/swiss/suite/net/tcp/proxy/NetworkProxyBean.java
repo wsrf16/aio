@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.net.tcp.proxy;
 
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.net.tcp.TcpSugar;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpsProxyBean;
@@ -12,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.text.MessageFormat;
 
 public class NetworkProxyBean implements InitializingBean {
-    private static final Log log = LogFactory.getLog(NetworkProxyBean.class);
+//    private static final Log log = LogFactory.getLog(NetworkProxyBean.class);
+    private static final LocalLog log = LocalLog.getLog(NetworkProxyBean.class);
 
     @Autowired(required = false)
     HttpProxyBean httpProxyBean;

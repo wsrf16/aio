@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.spring.factories.processor;
 
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,7 +10,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 
 public class LogHubFactoryBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
-    private static final Log log = LogFactory.getLog(LogHubFactoryBeanDefinitionRegistryPostProcessor.class);
+//    private static final Log log = LogFactory.getLog(LogHubFactoryBeanDefinitionRegistryPostProcessor.class);
+    private static final LocalLog log = LocalLog.getLog(LogHubFactoryBeanDefinitionRegistryPostProcessor.class);
 
     /**
      * 注册自定义bean

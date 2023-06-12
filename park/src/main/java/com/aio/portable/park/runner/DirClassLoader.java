@@ -9,10 +9,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
 
 public class DirClassLoader extends ClassLoader {
-    static {
-        System.out.println("11111111111111");
-    }
-
     public DirClassLoader() {
         super(ClassLoader.getSystemClassLoader());
     }

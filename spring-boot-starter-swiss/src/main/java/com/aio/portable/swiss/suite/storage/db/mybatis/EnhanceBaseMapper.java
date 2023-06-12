@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
 
     default Class<?> getEntityClass() {
-        return ClassSugar.resolveTypeArguments(this.getClass(), BaseMapper.class)[0];
+        return ClassSugar.resolveSuperClassArgumentType(this.getClass(), BaseMapper.class)[0];
     }
 
     default int insertBatch(Collection<S> list) {

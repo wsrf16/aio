@@ -12,7 +12,7 @@ public class ResponseWrapper<T> {
 //    protected static ResponseWrapper singleton = new ResponseWrapper();
 
     /**
-     * 作为一次请求的唯一标识，用于问题定位（不需赋值）
+     * 作为一次请求的唯一标识，用于问题定位（不需手动赋值）
      */
     @ApiModelProperty("唯一id")
     private String spanId;

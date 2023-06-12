@@ -54,68 +54,43 @@ public abstract class AgentBuilderSugar {
     /**
      * attachInterceptor
      * @param agentBuilder
-     * @param typeInterceptorPointCollection
+     * @param list
      * @return
      */
-    public static final AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> typeInterceptorPointCollection) {
-        for (TypeInterceptorPoint item : typeInterceptorPointCollection) {
+    public static final AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> list) {
+        for (TypeInterceptorPoint item : list) {
             agentBuilder = agentBuilder.type(item.getTypeMatcher()).transform(item.getTransformer());
         }
         return agentBuilder;
     }
 
 
-    /**
-     * attachInterceptor
-     * @param builder
-     * @param methodInterceptorPointCollection
-     * @param <T>
-     * @return
-     */
-    public static final <T> DynamicType.Builder<T> attachInterceptor(DynamicType.Builder<T> builder, Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
-        for (MethodInterceptorPoint item : methodInterceptorPointCollection) {
-            builder = builder.method(item.getMethodMatcher()).intercept(item.getImplementation());
-        }
-        return builder;
-    }
-
 
     /**
      * buildTransformer
-     * @param methodInterceptorPointCollection
+     * @param list
      * @return
      */
-    public static final AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> methodInterceptorPointCollection) {
+    public static final AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> list) {
         AgentBuilder.Transformer transformer = new AgentBuilder.Transformer() {
             @Override
             public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder,
                                                     TypeDescription typeDescription,
                                                     ClassLoader classLoader,
                                                     JavaModule javaModule) {
-                return AgentBuilderSugar.attachInterceptor(builder, methodInterceptorPointCollection);
+
+                for (MethodInterceptorPoint item : list) {
+                    builder = builder.method(item.getMethodMatcher())
+                            .intercept(item.getImplementation());
+                }
+
+                return builder;
+//                return AgentBuilderSugar.attachInterceptor(builder, list);
             }
         };
         return transformer;
     }
 
-
-//    /**
-//     * interceptorToMethodInterceptorPoint
-//     * @param methodInterceptorPointCollection
-//     * @param inst
-//     * @param elementMatcherCollection
-//     */
-//    public static final void interceptorToMethodInterceptorPoint(Collection<MethodInterceptorPoint> methodInterceptorPointCollection, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
-//        AgentBuilder.Transformer transformer = buildTransformer(methodInterceptorPointCollection);
-//
-//        Collection<TypeInterceptorPoint> typeInterceptorCollection = new ArrayList<>();
-//        typeInterceptorCollection.addAll(elementMatcherCollection.stream().map(c -> new TypeInterceptorPoint(c, transformer)).collect(Collectors.toList()));
-//
-//        AgentBuilder.Listener listener = buildListener();
-//        AgentBuilderWorld.attachInterceptor(new AgentBuilder.Default(), typeInterceptorCollection)
-//                .with(listener)
-//                .installOn(inst);
-//    }
 
     /**
      * interceptorToAnyMethod

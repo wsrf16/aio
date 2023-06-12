@@ -9,8 +9,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Component
-@WebFilter
+//@Component
+//@WebFilter
 public class CustomRepeatableRequestFilter extends HamletRepeatableRequestFilter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

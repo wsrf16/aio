@@ -3,23 +3,22 @@ package com.aio.portable.park.runner;
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.common.UserInfoEntity;
 import com.aio.portable.park.config.root.ApplicationConfig;
-import com.aio.portable.park.controller.DynamicController;
+import com.aio.portable.park.endpoint.http.DynamicController;
 import com.aio.portable.park.service.master.UserMasterBatchBaseService;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.parkdb.dao.master.mapper.UserMasterBaseMapper;
 import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -27,14 +26,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AutoRunner implements ApplicationRunner {
-    @Autowired
+    @Autowired(required = false)
     MyDatabaseTest myDatabaseTest;
     @Autowired
     UserMasterBatchBaseService userMasterBatchBaseService;
     @Autowired
     UserMasterBaseMapper userMasterBaseMapper;
-
-    LogHub log = AppLogHubFactory.staticBuild();
 
     @Autowired
     public ApplicationConfig rootConfig;
@@ -52,11 +49,7 @@ public class AutoRunner implements ApplicationRunner {
 //    HttpsProxyBean httpsProxyObject;
 
     @Autowired
-    JWTTemplateType jwtTemplate;
-
-
-    @Value("${config.abc}")
-    String config_abc;
+    JWTTemplate jwtTemplate;
 
 //    @Autowired
 //    Swagger3Properties swagger3Properties;
@@ -67,8 +60,11 @@ public class AutoRunner implements ApplicationRunner {
     @Autowired
     UserInfoEntity userInfoEntity;
 
+    LogHub log = AppLogHubFactory.staticBuild().setAsync(false);
 
     private static final Log commonLogging = LogFactory.getLog(AutoRunner.class);
+
+    private static final Logger slf4jLogger = LoggerFactory.getLogger(AutoRunner.class);
 
     @Bean
     public RetryTemplate retryTemplate() {
@@ -86,18 +82,17 @@ public class AutoRunner implements ApplicationRunner {
     @Override
     @LogMarker
     public void run(ApplicationArguments applicationArguments) throws Exception {
+        // \u000d System.out.println("coder Hydra");
+
 //        SpringContextHolder.restart();
 
 
-        commonLogging.info(UserInfoEntity.sample());
+        slf4jLogger.info(UserInfoEntity.sample().toString());
 
-        {
-            // https://www.yxgapp.com/
-            // https://www.facebook.com/
-            String url = "http://www.yxgapp.com00/";
-            ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, url, RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
-            myDatabaseTest.blah();
-        }
+        commonLogging.info(UserInfoEntity.sample().toString());
+//        log.info(UserInfoEntity.sample());
+
+
         myDatabaseTest.blah();
 
         System.out.println();

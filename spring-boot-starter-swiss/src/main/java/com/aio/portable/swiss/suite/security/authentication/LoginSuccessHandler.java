@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.security.authentication;
 
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTSugar;
-import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplateType;
+import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import com.auth0.jwt.JWTCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private static final String AUTHORIZATION_HEAD = JWTSugar.HEAD_VALUE_AUTHORIZATION;
 
     @Autowired
-    private JWTTemplateType jwtTemplate;
+    private JWTTemplate jwtTemplate;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {

@@ -2,6 +2,7 @@ package com.aio.portable.swiss.middleware.mq.rabbitmq;
 
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.RabbitMQProperties;
 import com.aio.portable.swiss.middleware.mq.rabbitmq.property.RabbitMQBindingProperty;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.rabbitmq.client.Channel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class RabbitBuilder {
-    private static final Log log = LogFactory.getLog(RabbitBuilder.class);
+//    private static final Log log = LogFactory.getLog(RabbitBuilder.class);
+    private static final LocalLog log = LocalLog.getLog(RabbitBuilder.class);
 
     private static class Exchange {
         public static final String DIRECT = "direct";

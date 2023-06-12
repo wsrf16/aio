@@ -17,7 +17,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = LogHubProperties.PREFIX)
 //    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public LogHubProperties logHubProperties() {
-        return LogHubProperties.singletonInstance();
+        return LogHubProperties.getSingleton();
     }
 
     @Bean
@@ -25,7 +25,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = RabbitMQLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate", "com.rabbitmq.client.Channel"})
     public RabbitMQLogProperties rabbitMQLogProperties() {
-        return RabbitMQLogProperties.singletonInstance();
+        return RabbitMQLogProperties.getSingleton();
     }
 
 
@@ -34,7 +34,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = KafkaLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public KafkaLogProperties kafkaLogProperties() {
-        return KafkaLogProperties.singletonInstance();
+        return KafkaLogProperties.getSingleton();
     }
 
     @Bean
@@ -42,7 +42,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = ConsoleLogProperties.PREFIX)
     @ConditionalOnClass(name = {"com.aio.portable.swiss.suite.log.solution.console.ConsoleLog"})
     public ConsoleLogProperties consoleLogProperties() {
-        return ConsoleLogProperties.singletonInstance();
+        return ConsoleLogProperties.getSingleton();
     }
 
     @Bean
@@ -50,7 +50,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = Slf4JLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.slf4j.LoggerFactory"})
     public Slf4JLogProperties slf4JLogProperties() {
-        return Slf4JLogProperties.singletonInstance();
+        return Slf4JLogProperties.getSingleton();
     }
 
 }

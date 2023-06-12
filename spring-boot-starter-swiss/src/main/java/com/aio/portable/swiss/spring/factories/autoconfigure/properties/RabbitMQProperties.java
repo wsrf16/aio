@@ -48,7 +48,7 @@ public class RabbitMQProperties extends RabbitProperties {
 
     private static RabbitMQProperties instance = new RabbitMQProperties();
 
-    public static RabbitMQProperties singletonInstance() {
+    public static RabbitMQProperties getSingleton() {
         return instance;
     }
 

@@ -1,7 +1,7 @@
 package com.aio.portable.park.config.swagger;
 
 import com.aio.portable.park.common.BizStatusEnum;
-import com.aio.portable.park.controller.RootController;
+import com.aio.portable.park.endpoint.http.RootController;
 import com.aio.portable.swiss.hamlet.swagger.Swagger3Builder;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger3Properties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

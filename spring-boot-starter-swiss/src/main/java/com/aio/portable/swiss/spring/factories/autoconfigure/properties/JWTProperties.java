@@ -8,7 +8,7 @@ public class JWTProperties {
 
     protected Boolean enabled = true;
     protected Boolean explicit = true;
-    protected String signAlgorithm = "HMAC256";
+    protected String algorithm = "HMAC256";
 //    protected String JWTId;
     protected String secret = SECRET;
     protected String privateKey;
@@ -37,12 +37,12 @@ public class JWTProperties {
         this.explicit = explicit;
     }
 
-    public String getSignAlgorithm() {
-        return signAlgorithm;
+    public String getAlgorithm() {
+        return algorithm;
     }
 
-    public void setSignAlgorithm(String signAlgorithm) {
-        this.signAlgorithm = signAlgorithm;
+    public void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
     }
 
 //    public String getJWTId() {

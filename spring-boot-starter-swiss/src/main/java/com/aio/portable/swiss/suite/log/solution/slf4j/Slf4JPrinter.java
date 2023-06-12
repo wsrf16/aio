@@ -11,13 +11,15 @@ public class Slf4JPrinter implements Printer {
     public Slf4JPrinter(String name) {
         this.name = name;
         this.logger = org.slf4j.LoggerFactory.getLogger(name);
+//        LoggerContext factory = new LoggerContext();
+//        this.logger = factory.getLogger(name);
     }
 
     @Override
     public void println(String text, LevelEnum level) {
         switch (level) {
-            case VERBOSE: {
-                Global.unsupportedOperationException(name + ": " + LevelEnum.VERBOSE.getName());
+            case VERB: {
+                Global.unsupportedOperationException(name + ": " + LevelEnum.VERB.getName());
             }
             break;
             case TRACE: {
@@ -28,11 +30,11 @@ public class Slf4JPrinter implements Printer {
                 logger.debug(text);
             }
             break;
-            case INFORMATION: {
+            case INFO: {
                 logger.info(text);
             }
             break;
-            case WARNING: {
+            case WARN: {
                 logger.warn(text);
             }
             break;

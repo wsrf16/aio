@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public abstract class BaseBizStatusEnum {
     protected static BaseBizStatusEnum instance;
 
-    public static BaseBizStatusEnum singletonInstance() {
+    public static BaseBizStatusEnum getSingleton() {
         return instance;
     }
 

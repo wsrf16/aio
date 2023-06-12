@@ -2,11 +2,12 @@ package com.aio.portable.swiss.spring.factories.listener;
 
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +38,8 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
             ContextRefreshedEvent.class,
             ApplicationContextInitializedEvent.class
     };
-    private static final Log log = LogFactory.getLog(SwissApplicationListener.class);
+//    private static final Log log = LogFactory.getLog(SwissApplicationListener.class);
+    private static final LocalLog log = LocalLog.getLog(SwissApplicationListener.class);
     private int order = DEFAULT_ORDER;
 
 

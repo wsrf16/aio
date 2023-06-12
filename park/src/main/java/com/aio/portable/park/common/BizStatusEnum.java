@@ -8,34 +8,28 @@ import org.springframework.stereotype.Component;
 public class BizStatusEnum extends BaseBizStatusEnum {
     private static final BizStatusEnum _ = new BizStatusEnum();
 
-//    protected static BizStatusEnum instance;
-//
-//    public static BizStatusNativeEnum singletonInstance() {
-//        return instance;
-//    }
-
     @Override
     public BizStatus succeed() {
-        return new BizStatus(0, "请求成功");
+        return super.succeed();
     }
 
     @Override
     public BizStatus failed() {
-        return new BizStatus(1, "请求失败");
+        return super.failed();
     }
 
     @Override
     public BizStatus exception() {
-        return new BizStatus(2, "请求异常");
+        return super.exception();
     }
 
     @Override
     public BizStatus invalid() {
-        return new BizStatus(3, "请求无效");
+        return super.invalid();
     }
 
     @Override
     public BizStatus unauthorized() {
-        return new BizStatus(4, "无效授权");
+        return super.unauthorized();
     }
 }

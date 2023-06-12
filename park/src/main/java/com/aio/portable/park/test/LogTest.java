@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class LogTest {
-//    LogHub logger = AppLogHubFactory.singletonInstance()
+//    LogHub logger = AppLogHubFactory.getSingleton()
 //            .build("随便写哒")
 //            .setBaseLevel(LevelEnum.DEBUG);
     LogHub log = AppLogHubFactory.staticBuild();

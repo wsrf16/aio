@@ -21,12 +21,12 @@ public class PagePocket<T> {
         return pageIndex;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getCurrentPageSize() {
+        return currentPageSize;
     }
 
-    public int getPageCapcity() {
-        return pageCapcity;
+    public int getPageCapacity() {
+        return pageCapacity;
     }
 
     public List<T> getCurrentPageItems() {
@@ -52,34 +52,34 @@ public class PagePocket<T> {
     /**
      * 当前页item数量
      */
-    private int pageSize;
+    private int currentPageSize;
     /**
      * 当前页item容量
      */
-    private int pageCapcity;
+    private int pageCapacity;
     /**
      * 当前页item
      */
     private List<T> currentPageItems;
 
     private List<T> currentPageItems() {
-        List<T> cutLeft = totalItems.subList((pageIndex - 1) * pageCapcity, totalItems.size());
-        if (cutLeft.size() < pageCapcity)
+        List<T> cutLeft = totalItems.subList((pageIndex - 1) * pageCapacity, totalItems.size());
+        if (cutLeft.size() < pageCapacity)
             return cutLeft;
         else
-            return cutLeft.subList(0, pageCapcity);
+            return cutLeft.subList(0, pageCapacity);
     }
 
     public static final <T> PagePocket<T> paging(List<T> list, int size, int index) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
-        instance.pageCapcity = size;
+        instance.pageCapacity = size;
         instance.pageIndex = index;
         int totalCount = list.size();
         instance.totalCount = totalCount;
 
         instance.totalPages = totalCount / size + (totalCount / size + totalCount % size == 0 ? 0 : 1);
-        instance.pageSize = instance.currentPageItems().size();
+        instance.currentPageSize = instance.currentPageItems().size();
         instance.currentPageItems = instance.currentPageItems();
         return instance;
     }
@@ -87,7 +87,7 @@ public class PagePocket<T> {
     public static final <T> PagePocket<T> paging(List<T> list, int size) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
-        instance.pageCapcity = size;
+        instance.pageCapacity = size;
         int totalCount = list.size();
         instance.totalCount = totalCount;
 
@@ -97,23 +97,10 @@ public class PagePocket<T> {
 
     public PagePocket<T> paging(int index) {
         this.pageIndex = index;
-        this.pageSize = this.currentPageItems().size();
+        this.currentPageSize = this.currentPageItems().size();
         this.currentPageItems = this.currentPageItems();
         return this;
     }
-
-//    public static final <T> void instance(List<T> list, int size) {
-//        class Transition<T> {
-//            private List<T> list;
-//            private int size;
-//            public PagePocket<T> index(int index) {
-//                return paging(list, size, index);
-//            }
-//        }
-//        Transition<T> transition = new Transition();
-//        transition.list = list;
-//        transition.size = size;
-//    }
 
     public <E> PagePocket<E> convert(Class<E> target) {
         BeanCopier beanCopier = BeanCopier.create(this.getClass(), target, false);
@@ -125,10 +112,9 @@ public class PagePocket<T> {
                 list.add(pojo);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return PagePocket.paging(list, this.pageIndex, this.pageSize);
+        return PagePocket.paging(list, this.pageIndex, this.currentPageSize);
     }
 
 

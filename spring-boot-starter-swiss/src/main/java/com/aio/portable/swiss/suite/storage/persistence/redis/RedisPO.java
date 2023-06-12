@@ -28,7 +28,7 @@ public class RedisPO implements NodePersistence {
     private static RedisPO instance;
 
 
-    public static final RedisPO singletonInstance(RedisTemplate redisTemplate, String database) {
+    public static final RedisPO getSingleton(RedisTemplate redisTemplate, String database) {
         return instance = instance == null ? new RedisPO(redisTemplate, database) : instance;
     }
 

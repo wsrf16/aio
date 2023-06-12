@@ -3,12 +3,10 @@ package com.aio.portable.swiss.suite.log.solution.elk.rabbit;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
-import com.aio.portable.swiss.suite.log.facade.Printer;
-import com.aio.portable.swiss.suite.log.solution.elk.ESLogBean;
+import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecord;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import com.aio.portable.swiss.suite.log.support.LogBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.aio.portable.swiss.suite.log.support.LogRecord;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -17,19 +15,14 @@ import java.util.Map;
  * Created by York on 2017/11/23.
  */
 public class RabbitMQLog extends LogSingle {
-    private static final Log log = LogFactory.getLog(RabbitMQLog.class);
+//    private static final Log log = LogFactory.getLog(RabbitMQLog.class);
+    private static final LocalLog log = LocalLog.getLog(RabbitMQLog.class);
 
     protected RabbitMQLogProperties properties;
 
     public RabbitMQLogProperties getProperties() {
         return properties;
     }
-
-    public RabbitMQLog setProperties(RabbitMQLogProperties properties) {
-        this.properties = properties;
-        return this;
-    }
-
 
 
     public RabbitMQLog(String name) {
@@ -46,35 +39,39 @@ public class RabbitMQLog extends LogSingle {
 
     @Override
     protected void initialPrinter() {
-        properties = RabbitMQLogProperties.singletonInstance();
-        printer = RabbitMQPrinter.instance(this.getName(), properties);
+        refreshPrinter(null);
+    }
+
+    public void refreshPrinter(RabbitMQLogProperties properties) {
+        this.properties =  properties == null ? RabbitMQLogProperties.getSingleton() : properties;
+        this.printer = RabbitMQPrinter.instance(this.getName(), this.properties);
     }
 
     @Override
-    protected void output(Printer printer, LogBean logBean) {
-        ESLogBean converted = convert(logBean);
+    protected void output(LogRecord logRecord) {
+        ESLogRecord converted = convert(logRecord);
         LevelEnum level = converted.getLevel();
         String esIndex = converted.getEsIndex();
         if (esIndex == null) {
             throw new NullPointerException("esIndex");
         } else if (esIndex.contains(":")) {
             String key = esIndex.split(":")[0];
-            String val = ESLogBean.formatIndex(esIndex.split(":")[1]);
+            String val = ESLogRecord.formatIndex(esIndex.split(":")[1]);
             Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(converted);
             map.remove("esIndex");
             map.put(key, val);
-            super.output(printer, map, level);
+            super.output(map, level);
         } else {
-            converted.setEsIndex(ESLogBean.formatIndex(esIndex));
-            super.output(printer, converted);
+            converted.setEsIndex(ESLogRecord.formatIndex(esIndex));
+            super.output(converted);
         }
     }
 
-    public ESLogBean convert(LogBean logBean) {
+    public ESLogRecord convert(LogRecord logRecord) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
         if (!StringUtils.hasText(esIndex))
             log.warn(new IllegalArgumentException("es-index is empty."));
-        return new ESLogBean(logBean, esIndex, ip);
+        return new ESLogRecord(logRecord, esIndex, ip);
     }
 }

@@ -1,4 +1,4 @@
-package com.aio.portable.parkdb.dao.slave.model;
+package com.aio.portable.park.dao.slave.model;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,11 +12,11 @@ import java.util.Date;
 @Table(name = "book")
 @EntityListeners(AuditingEntityListener.class)
 public class Book {
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -62,7 +62,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
     private String author;
     private String description;

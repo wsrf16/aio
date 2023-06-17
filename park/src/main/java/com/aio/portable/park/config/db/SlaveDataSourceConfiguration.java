@@ -24,14 +24,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {SlaveDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = SlaveDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = SlaveDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
+@ConditionalOnProperty(prefix = SlaveDataSourceConfiguration.DATA_SOURCE_PREFIX, name = "url")
 //@Import(HibernateJpaAutoConfiguration.class)
 public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
-    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.repository";
-    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.slave.model";
+    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.repository";
+    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.model";
     private static final String SPECIAL_NAME = "slave";
     private static final String PERSISTENCE_UNIT = "persistenceUnit";
 

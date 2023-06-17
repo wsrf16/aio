@@ -2,7 +2,7 @@ package com.aio.portable.park.endpoint.http;
 
 import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;

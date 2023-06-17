@@ -46,17 +46,17 @@ public abstract class ClassSugar {
         primitiveWrapperTypeMap.put(Short[].class, short[].class);
     }
 
-    public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
+    public static final boolean isPrimitiveOrWrapper(Class<?> clazz) {
         Assert.notNull(clazz, "Class must not be null");
         return clazz.isPrimitive() || isPrimitiveWrapper(clazz);
     }
 
-    public static boolean isPrimitiveWrapper(Class<?> clazz) {
+    public static final boolean isPrimitiveWrapper(Class<?> clazz) {
         Assert.notNull(clazz, "Class must not be null");
         return primitiveWrapperTypeMap.containsKey(clazz);
     }
 
-    public static boolean similarPrimitive(Class<?> clazz1, Class<?> clazz2) {
+    public static final boolean similarPrimitive(Class<?> clazz1, Class<?> clazz2) {
         boolean isPrimitiveOrWrapper = isPrimitiveOrWrapper(clazz1) && isPrimitiveOrWrapper(clazz2);
         if (!isPrimitiveOrWrapper)
             return false;

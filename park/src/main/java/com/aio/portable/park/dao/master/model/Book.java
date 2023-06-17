@@ -1,11 +1,11 @@
-package com.aio.portable.parkdb.dao.master.model;
+package com.aio.portable.park.dao.master.model;
 
 public class Book {
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,7 +33,7 @@ public class Book {
         this.description = description;
     }
 
-    private long id;
+    private Integer id;
     private String name;
     private String author;
     private String description;

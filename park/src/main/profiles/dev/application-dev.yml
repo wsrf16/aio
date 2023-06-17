@@ -6,7 +6,7 @@ spring:
   datasource:
     master:
       driver-class-name: org.h2.Driver
-      url: jdbc:h2:mem:test
+      url: jdbc:h2:mem:db_test
       username: root
       password: 1111
       connection-timeout: 2000
@@ -21,8 +21,10 @@ spring:
     slave:
       type: com.alibaba.druid.pool.DruidDataSource
 #      type: com.zaxxer.hikari.HikariDataSource
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
+      driver-class-name: org.h2.Driver
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:h2:mem:db_test
+#      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
       password: 1111
       connection-timeout: 2000
@@ -35,29 +37,29 @@ spring:
       jpa:
         database: mysql
         #启动时需要初始化的建表语句
-        schema: classpath:user.graphqls-mysql.sql
+        schema: classpath:db/schema-h2.sql
         #初始化的数据
-        data: classpath:data-mysql.sql
+        data: classpath:db/data-h2.sql
         show-sql: true
         open-in-view: false
-        generate-ddl: true
+        generate-ddl: false
         # hibernate entry to
 #        hibernate:
 #          ddl-auto: update
 #          naming:
-#    #        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-#    #        physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
-#            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-#    #        implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+###            physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy
+###            physical_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+###            implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         # spring entry one
         properties:
           hibernate:
-            hbm2ddl:
-              auto: update
+#            hbm2ddl:
+#              auto: update
             dialect: org.hibernate.dialect.MySQL5Dialect
             #dialect: org.hibernate.dialect.MySQL57Dialect
-            physical-naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-  #            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+            physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#            implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 
 
 
@@ -118,9 +120,9 @@ spring:
         compression-type: gzip
         acks: 1
     console:
-      enabled: true
-    slf4j:
       enabled: false
+    slf4j:
+      enabled: true
 
 #eureka:
 #  instance:

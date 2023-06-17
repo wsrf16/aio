@@ -1,13 +1,13 @@
 package com.aio.portable.park.test;
 
-import com.aio.portable.parkdb.dao.master.mapper.BookMasterMapper;
-import com.aio.portable.parkdb.dao.master.mapper.UserMasterBaseMapper;
-import com.aio.portable.parkdb.dao.master.model.User;
-import com.aio.portable.parkdb.dao.slave.model.Book;
-import com.aio.portable.parkdb.dao.slave.model.BookVO;
-import com.aio.portable.parkdb.dao.slave.repository.BookSlaveRepository;
+import com.aio.portable.park.dao.master.mapper.BookMasterMapper;
+import com.aio.portable.park.dao.master.model.Book;
+import com.aio.portable.park.dao.master.model.User;
+import com.aio.portable.park.dao.slave.model.BookVO;
+import com.aio.portable.park.dao.slave.repository.BookSlaveRepository;
 import com.aio.portable.park.service.master.BookMasterBaseService;
 import com.aio.portable.park.service.master.UserMasterBaseService;
+import com.aio.portable.park.service.master.UserMasterServiceImpl;
 import com.aio.portable.swiss.suite.storage.db.jpa.JPASugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +21,15 @@ import java.util.List;
 @Configuration
 public class MyDatabaseTest {
     @Autowired(required = false)
-    public BookMasterMapper bookMasterMapper;
+    BookMasterMapper bookMasterMapper;
     @Autowired(required = false)
-    public BookMasterBaseService bookMasterBaseService;
+    BookMasterBaseService bookMasterBaseService;
     @Autowired(required = false)
-    public UserMasterBaseService userMasterBaseService;
+    UserMasterBaseService userMasterBaseService;
     @Autowired(required = false)
-    public BookSlaveRepository bookSlaveRepository;
+    UserMasterServiceImpl userMasterServiceImpl;
+    @Autowired(required = false)
+    BookSlaveRepository bookSlaveRepository;
 
     public void blah() {
         master();
@@ -36,10 +38,10 @@ public class MyDatabaseTest {
 
     private BookVO condition() {
         BookVO vo = new BookVO();
-        vo.setIdGreaterThanEqual(5L);
+        vo.setIdGreaterThanEqual(5);
         vo.setNameLike("Shakespeare");
-        vo.setIdLessThanEqual(9L);
-        vo.setId(1L);
+        vo.setIdLessThanEqual(9);
+        vo.setId(1);
         ArrayList<String> ins = new ArrayList<>();
         ins.add("Shakespeare");
         vo.setAuthorIn(ins);
@@ -49,15 +51,15 @@ public class MyDatabaseTest {
 
     private void master() {
         if (bookMasterMapper != null) {
-            List<com.aio.portable.parkdb.dao.master.model.Book> all = bookMasterMapper.getAll();
-            com.aio.portable.parkdb.dao.master.model.Book book1 = bookMasterMapper.get(3);
+            List<Book> all = bookMasterMapper.getAll();
+            Book book1 = bookMasterMapper.get(3);
 
-            com.aio.portable.parkdb.dao.master.model.Book book = new com.aio.portable.parkdb.dao.master.model.Book();
+            Book book = new Book();
             book.setAuthor("author");
             book.setName("name");
             book.setDescription("description");
             if (bookMasterMapper != null) {
-//                bookMasterMapper.insert(book);
+                bookMasterMapper.insert(book);
             }
         }
 
@@ -76,15 +78,15 @@ public class MyDatabaseTest {
     private void slave() {
         BookVO vo = condition();
         if (bookSlaveRepository != null) {
-            Specification<Book> specification = JPASugar.<Book>buildSpecification(vo);
-            Sort sort = JPASugar.<Book>buildSort(BookVO.class);
-            List<Book> all = bookSlaveRepository.findAll(specification, sort);
-            List<Book> all1 = bookSlaveRepository.findAll();
+            Specification<com.aio.portable.park.dao.slave.model.Book> specification = JPASugar.<com.aio.portable.park.dao.slave.model.Book>buildSpecification(vo);
+            Sort sort = JPASugar.<com.aio.portable.park.dao.slave.model.Book>buildSort(BookVO.class);
+            List<com.aio.portable.park.dao.slave.model.Book> all1 = bookSlaveRepository.findAll();
 
-            Book book = new Book();
+            List<com.aio.portable.park.dao.slave.model.Book> all = bookSlaveRepository.findAll(specification, sort);
+            com.aio.portable.park.dao.slave.model.Book book = new com.aio.portable.park.dao.slave.model.Book();
             book.setDescription("abc");
             book.setAuthor("ooooo");
-//            bookThirdRepository.save(book);
+//            bookSlaveRepository.save(book);
         }
     }
 }

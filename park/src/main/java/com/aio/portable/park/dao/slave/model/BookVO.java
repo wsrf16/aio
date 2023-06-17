@@ -1,4 +1,4 @@
-package com.aio.portable.parkdb.dao.slave.model;
+package com.aio.portable.park.dao.slave.model;
 
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.order.OrderBy;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.*;
@@ -8,9 +8,9 @@ import java.util.List;
 
 public class BookVO extends Book {
     @GreaterThan(targetProperty = "id")
-    private Long idGreaterThanEqual;
+    private Integer idGreaterThanEqual;
     @LessThanOrEqualTo(targetProperty = "id")
-    private Long idLessThanEqual;
+    private Integer idLessThanEqual;
     @Equal(targetProperty = "name")
     private String nameLike;
     @In(targetProperty = "author")
@@ -20,19 +20,19 @@ public class BookVO extends Book {
     @OrderBy(targetProperty = "id", direction = Sort.Direction.DESC, priority = 1)
     private String idOrderBy;
 
-    public Long getIdGreaterThanEqual() {
+    public Integer getIdGreaterThanEqual() {
         return idGreaterThanEqual;
     }
 
-    public void setIdGreaterThanEqual(Long idGreaterThanEqual) {
+    public void setIdGreaterThanEqual(Integer idGreaterThanEqual) {
         this.idGreaterThanEqual = idGreaterThanEqual;
     }
 
-    public Long getIdLessThanEqual() {
+    public Integer getIdLessThanEqual() {
         return idLessThanEqual;
     }
 
-    public void setIdLessThanEqual(Long idLessThanEqual) {
+    public void setIdLessThanEqual(Integer idLessThanEqual) {
         this.idLessThanEqual = idLessThanEqual;
     }
 

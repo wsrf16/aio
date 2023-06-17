@@ -1,7 +1,6 @@
-package com.aio.portable.parkdb.dao.master.mapper;
+package com.aio.portable.park.dao.master.mapper;
 
-import com.aio.portable.parkdb.dao.master.model.Book;
-import com.aio.portable.parkdb.dao.master.model.User;
+import com.aio.portable.park.dao.master.model.Book;
 import com.aio.portable.swiss.suite.storage.db.mybatis.EnhanceBaseMapper;
 
 

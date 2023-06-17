@@ -20,14 +20,14 @@ public class LogHubUtils {
 
     public static class Kafka {
         public static final String DEPENDENCY = "org.springframework.kafka.core.KafkaTemplate";
-        public static boolean existDependency() {
+        public static final boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
 
     public static class RabbitMQ {
         public static final String DEPENDENCY = "org.springframework.amqp.rabbit.core.RabbitTemplate";
-        public static boolean existDependency() {
+        public static final boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
@@ -35,7 +35,7 @@ public class LogHubUtils {
     public static class Spring {
         public static final String DEPENDENCY = "org.springframework.beans.factory.InitializingBean";
 
-        public static boolean existDependency() {
+        public static final boolean existDependency() {
             return ClassLoaderSugar.isPresent(DEPENDENCY);
         }
     }
@@ -84,12 +84,12 @@ public class LogHubUtils {
         }
     }
 
-    public static void initLogHubFactory(BeanDefinitionRegistry registry) {
+    public static final void initLogHubFactory(BeanDefinitionRegistry registry) {
         if (!LogHubFactory.isInitial())
             LogHubUtils.initialSingletonLogFactory(registry);
     }
 
-    public static void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
+    public static final void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
         if (!LogHubFactory.isInitial())
             LogHubUtils.initialSingletonLogFactory(beanFactory);
     }

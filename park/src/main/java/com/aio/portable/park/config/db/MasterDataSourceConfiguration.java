@@ -23,11 +23,12 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = {MasterDataSourceConfiguration.BASE_PACKAGES}, sqlSessionTemplateRef = MasterDataSourceConfiguration.SQL_SESSION_TEMPLATE_BEAN)
+@ConditionalOnProperty(prefix = MasterDataSourceConfiguration.DATA_SOURCE_PREFIX, name = "url")
 public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfiguration {
-    public static final String BASE_PACKAGES = "com.aio.portable.parkdb.dao.master.mapper";
+    public static final String BASE_PACKAGES = "com.aio.portable.park.dao.master.mapper";
     private static final String SPECIAL_NAME = "master";
 
-    private static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
+    protected static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
     private static final String MYBATIS_PREFIX = DATA_SOURCE_PREFIX + ".mybatis";
 
     private static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";

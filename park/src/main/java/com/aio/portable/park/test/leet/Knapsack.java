@@ -1,4 +1,4 @@
-package com.aio.portable.park.test;
+package com.aio.portable.park.test.leet;
 
 public class Knapsack {
     static int n;           // 描述物品个数

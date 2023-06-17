@@ -9,9 +9,14 @@ import java.util.List;
 public class HttpsProxyBean implements ProxyBean {
     private String host;
 
+    // 443
     private Integer port;
 
     private List<String> nonProxyHosts;
+
+    private String userName;
+
+    private String password;
 
     private boolean automatically = true;
 
@@ -39,6 +44,22 @@ public class HttpsProxyBean implements ProxyBean {
         this.nonProxyHosts = nonProxyHosts;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean getAutomatically() {
         return automatically;
     }
@@ -55,6 +76,10 @@ public class HttpsProxyBean implements ProxyBean {
                 NetworkProxySugar.Https.setProxyPort(this.port);
             if (this.nonProxyHosts != null)
                 NetworkProxySugar.Https.setNonProxyHosts(this.nonProxyHosts);
+            if (this.userName != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.userName);
+            if (this.password != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.password);
         }
     }
 
@@ -65,9 +90,13 @@ public class HttpsProxyBean implements ProxyBean {
             NetworkProxySugar.Https.setProxyPort(this.port);
         if (this.nonProxyHosts != null)
             NetworkProxySugar.Https.setNonProxyHosts(this.nonProxyHosts);
+        if (this.userName != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.userName);
+        if (this.password != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.password);
     }
 
     public void off() {
-        NetworkProxySugar.Https.clear();
+        NetworkProxySugar.Https.unset();
     }
 }

@@ -1,6 +1,6 @@
 package com.aio.portable.park.test;
 
-import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.park.bean.UserInfoEntity;
 
 public class BeanOrder {
 

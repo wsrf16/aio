@@ -2,6 +2,7 @@ package com.aio.portable.park;
 
 
 import com.aio.portable.swiss.suite.algorithm.identity.ULID;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
@@ -37,11 +38,13 @@ public class ParkApplication {
 //    static LogHub log = AppLogHubFactory.staticBuild();
 
     public static void main(String[] args) {
+//        System.setProperty("proxySet", "true");
         ResolvableType resolvableType2 = ResolvableType.forClass(Map.class, HashMap.class);
 //        "𝄞".length()
 //        log.i("static", "loghub");
-
+//        BeanSugar.Methods.getDeclaredMethodIncludeParents()
         ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
+        System.out.println("𝄞");
 
 //        ConfigurableApplicationContext context = SpringContextHolder.run(ParkApplication.class, c -> c = c, args);
     }

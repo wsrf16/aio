@@ -16,11 +16,11 @@ public class DynamicController {
         this.abstractHandlerMethodMapping = abstractHandlerMethodMapping;
     }
 
-    public void register() {
-        register(abstractHandlerMethodMapping);
+    public void registerTest() {
+        registerTest(abstractHandlerMethodMapping);
     }
 
-    public void register(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
+    public void registerTest(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
         SpringController.registerMapping(abstractHandlerMethodMapping, this,
                 ClassSugar.getDeclaredMethod(this.getClass(), "test"),
                 "/malicious");

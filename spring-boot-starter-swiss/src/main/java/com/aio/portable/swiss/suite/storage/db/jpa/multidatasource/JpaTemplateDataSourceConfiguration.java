@@ -20,8 +20,8 @@
 ////@EnableJpaRepositories(basePackages = {JpaTemplateDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = JpaTemplateDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = JpaTemplateDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 //@ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 //class JpaTemplateDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
-//    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.mapper";
-//    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.parkdb.dao.third.model";
+//    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.park.dao.third.mapper";
+//    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.park.dao.third.model";
 //    private static final String SPECIAL_NAME = "third";
 //    private static final String PERSISTENCE_UNIT = "persistenceUnit";
 //

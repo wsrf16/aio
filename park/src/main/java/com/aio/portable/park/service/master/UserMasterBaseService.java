@@ -1,10 +1,9 @@
 package com.aio.portable.park.service.master;
 
-import com.aio.portable.parkdb.dao.master.mapper.UserMasterBaseMapper;
-import com.aio.portable.parkdb.dao.master.model.User;
-import com.aio.portable.parkdb.dao.master.model.UserDTO;
+import com.aio.portable.park.dao.master.mapper.UserMasterBaseMapper;
+import com.aio.portable.park.dao.master.model.User;
+import com.aio.portable.park.dao.master.model.UserDTO;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class UserMasterBaseService {
     UserMasterBaseMapper userMasterBaseMapper;
 
     @Autowired
-    UserMasterBatchBaseService userMasterBatchBaseService;
+    UserMasterServiceImpl userMasterServiceImpl;
 
     public User selectById(Integer id) {
         return userMasterBaseMapper.selectById(id);
@@ -34,9 +33,9 @@ public class UserMasterBaseService {
     }
 
     public List<User> selectList() {
-        Class<User> entityClass = userMasterBatchBaseService.getEntityClass();
+        Class<User> entityClass = userMasterServiceImpl.getEntityClass();
         Class<?> entityClass1 = userMasterBaseMapper.getEntityClass();
-        Object currentModelClass = ClassSugar.invoke(userMasterBatchBaseService, "currentModelClass");
+        Object currentModelClass = ClassSugar.invoke(userMasterServiceImpl, "currentModelClass");
         return userMasterBaseMapper.selectList();
     }
 

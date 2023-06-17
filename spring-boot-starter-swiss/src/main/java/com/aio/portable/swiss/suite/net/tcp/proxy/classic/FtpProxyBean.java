@@ -9,11 +9,16 @@ import java.util.List;
 public class FtpProxyBean implements ProxyBean {
     private String host;
 
+    // 80
     private Integer port;
 
     private List<String> nonProxyHosts;
 
-    private boolean automatically = true;
+    private String userName;
+
+    private String password;
+
+    private boolean automatic = true;
 
     public String getHost() {
         return host;
@@ -39,12 +44,28 @@ public class FtpProxyBean implements ProxyBean {
         this.nonProxyHosts = nonProxyHosts;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean getAutomatically() {
-        return automatically;
+        return automatic;
     }
 
     public void setAutomatically(boolean automatically) {
-        this.automatically = automatically;
+        this.automatic = automatically;
     }
 
     public void on() {
@@ -55,6 +76,10 @@ public class FtpProxyBean implements ProxyBean {
                 NetworkProxySugar.Ftp.setProxyPort(this.port);
             if (this.nonProxyHosts != null)
                 NetworkProxySugar.Ftp.setNonProxyHosts(this.nonProxyHosts);
+            if (this.userName != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.userName);
+            if (this.password != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.password);
         }
     }
 
@@ -65,9 +90,13 @@ public class FtpProxyBean implements ProxyBean {
             NetworkProxySugar.Ftp.setProxyPort(this.port);
         if (this.nonProxyHosts != null)
             NetworkProxySugar.Ftp.setNonProxyHosts(this.nonProxyHosts);
+        if (this.userName != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.userName);
+        if (this.password != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.password);
     }
 
     public void off() {
-        NetworkProxySugar.Ftp.clear();
+        NetworkProxySugar.Ftp.unset();
     }
 }

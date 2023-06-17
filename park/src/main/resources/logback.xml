@@ -47,5 +47,5 @@
         <appender-ref ref="ROLE_FILE_LOG"/>
     </root>
 
-    <logger name="com.aio.portable.parkdb.dao" level="debug"/>
+    <logger name="com.aio.portable.park.dao" level="info"/>
 </configuration>

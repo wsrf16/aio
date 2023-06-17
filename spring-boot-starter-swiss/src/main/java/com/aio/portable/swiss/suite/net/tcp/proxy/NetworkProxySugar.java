@@ -18,10 +18,20 @@ public abstract class NetworkProxySugar {
             System.setProperty("http.nonProxyHosts", CollectionSugar.join(nonProxyHosts, "|"));
         }
 
-        public static void clear() {
+        public static void setProxyUserName(String userName) {
+            System.setProperty("http.proxyUserName", userName);
+        }
+
+        public static void setProxyPassword(String password) {
+            System.setProperty("http.proxyPortPassword", password);
+        }
+
+        public static void unset() {
             System.clearProperty("http.proxyHost");
             System.clearProperty("http.proxyPort");
             System.clearProperty("http.nonProxyHosts");
+            System.clearProperty("http.proxyUserName");
+            System.clearProperty("http.proxyPortPassword");
         }
     }
 
@@ -38,10 +48,20 @@ public abstract class NetworkProxySugar {
             System.setProperty("https.nonProxyHosts", CollectionSugar.join(nonProxyHosts, "|"));
         }
 
-        public static void clear() {
+        public static void setProxyUserName(String userName) {
+            System.setProperty("https.proxyUserName", userName);
+        }
+
+        public static void setProxyPassword(String password) {
+            System.setProperty("https.proxyPortPassword", password);
+        }
+
+        public static void unset() {
             System.clearProperty("https.proxyHost");
             System.clearProperty("https.proxyPort");
             System.clearProperty("https.nonProxyHosts");
+            System.clearProperty("https.proxyUserName");
+            System.clearProperty("https.proxyPortPassword");
         }
     }
 
@@ -58,30 +78,50 @@ public abstract class NetworkProxySugar {
             System.setProperty("ftp.nonProxyHosts", CollectionSugar.join(nonProxyHosts, "|"));
         }
 
-        public static void clear() {
+        public static void setProxyUserName(String userName) {
+            System.setProperty("ftp.proxyUserName", userName);
+        }
+
+        public static void setProxyPassword(String password) {
+            System.setProperty("ftp.proxyPortPassword", password);
+        }
+
+        public static void unset() {
             System.clearProperty("ftp.proxyHost");
             System.clearProperty("ftp.proxyPort");
             System.clearProperty("ftp.nonProxyHosts");
+            System.clearProperty("ftp.proxyUserName");
+            System.clearProperty("ftp.proxyPortPassword");
         }
     }
 
     public static class Socks {
         public static void setProxyHost(String host) {
-            System.setProperty("socks.proxyHost", host);
+            System.setProperty("socksProxyHost", host);
         }
 
         public static void setProxyPort(int port) {
-            System.setProperty("socks.proxyPort", String.valueOf(port));
+            System.setProperty("socksProxyPort", String.valueOf(port));
         }
 
         public static void setNonProxyHosts(List<String> nonProxyHosts) {
-            System.setProperty("socks.nonProxyHosts", CollectionSugar.join(nonProxyHosts, "|"));
+            System.setProperty("socksNonProxyHosts", CollectionSugar.join(nonProxyHosts, "|"));
         }
 
-        public static void clear() {
-            System.clearProperty("socks.proxyHost");
-            System.clearProperty("socks.proxyPort");
-            System.clearProperty("socks.nonProxyHosts");
+        public static void setProxyUserName(String userName) {
+            System.setProperty("java.net.socks.username", userName);
+        }
+
+        public static void setProxyPassword(String password) {
+            System.setProperty("java.net.socks.password", password);
+        }
+
+        public static void unset() {
+            System.clearProperty("socksProxyHost");
+            System.clearProperty("socksProxyPort");
+            System.clearProperty("socksNonProxyHosts");
+            System.clearProperty("java.net.socks.username");
+            System.clearProperty("java.net.socks.password");
         }
     }
 }

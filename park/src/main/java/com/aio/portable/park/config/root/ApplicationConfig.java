@@ -3,21 +3,19 @@ package com.aio.portable.park.config.root;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @ConfigurationProperties(prefix = "config")
 //@PropertySource(value = "classpath:application.yml", factory = MixedPropertySourceFactory.class)
-@Data
 public class ApplicationConfig {
-    private String abc;
+    private String cron;
 
-    public String getAbc() {
-        return abc;
+    public String getCron() {
+        return cron;
     }
 
-    public void setAbc(String abc) {
-        this.abc = abc;
+    public void setCron(String cron) {
+        this.cron = cron;
     }
 }
 

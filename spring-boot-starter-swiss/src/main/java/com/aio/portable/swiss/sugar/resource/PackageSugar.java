@@ -149,7 +149,7 @@ public abstract class PackageSugar {
 
     /**
      * scan
-     * @param basePackages com.aio.portable.parkdb.dao.master.model
+     * @param basePackages com.aio.portable.park.dao.master.model
      * @param annotations
      * @return
      */

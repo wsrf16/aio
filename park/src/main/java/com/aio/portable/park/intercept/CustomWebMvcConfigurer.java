@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @Configuration
-public class CustomWebConfigurer extends HamletWebMvcConfigurer {
+public class CustomWebMvcConfigurer extends HamletWebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 //        super.addCorsMappings(registry);

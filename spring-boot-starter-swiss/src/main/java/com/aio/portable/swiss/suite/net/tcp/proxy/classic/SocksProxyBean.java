@@ -9,9 +9,14 @@ import java.util.List;
 public class SocksProxyBean implements ProxyBean {
     private String host;
 
+    // 1080
     private Integer port;
 
     private List<String> nonProxyHosts;
+
+    private String userName;
+
+    private String password;
 
     private boolean automatically = true;
 
@@ -39,6 +44,22 @@ public class SocksProxyBean implements ProxyBean {
         this.nonProxyHosts = nonProxyHosts;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean getAutomatically() {
         return automatically;
     }
@@ -55,6 +76,10 @@ public class SocksProxyBean implements ProxyBean {
                 NetworkProxySugar.Socks.setProxyPort(this.port);
             if (this.nonProxyHosts != null)
                 NetworkProxySugar.Socks.setNonProxyHosts(this.nonProxyHosts);
+            if (this.userName != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.userName);
+            if (this.password != null)
+                NetworkProxySugar.Ftp.setProxyHost(this.password);
         }
     }
 
@@ -65,9 +90,13 @@ public class SocksProxyBean implements ProxyBean {
             NetworkProxySugar.Socks.setProxyPort(this.port);
         if (this.nonProxyHosts != null)
             NetworkProxySugar.Socks.setNonProxyHosts(this.nonProxyHosts);
+        if (this.userName != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.userName);
+        if (this.password != null)
+            NetworkProxySugar.Ftp.setProxyHost(this.password);
     }
 
     public void off() {
-        NetworkProxySugar.Socks.clear();
+        NetworkProxySugar.Socks.unset();
     }
 }

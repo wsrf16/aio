@@ -20,8 +20,8 @@ import javax.sql.DataSource;
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 public abstract class JpaBaseDataSourceConfiguration extends AbstractDataSourceConfiguration {
     // custom
-    public static final String REPOSITORY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.mapper";
-    public static final String ENTITY_BASE_PACKAGES = null; //"com.aio.portable.parkdb.dao.third.model";
+    public static final String REPOSITORY_BASE_PACKAGES = null; //"com.aio.portable.park.dao.third.mapper";
+    public static final String ENTITY_BASE_PACKAGES = null; //"com.aio.portable.park.dao.third.model";
     private static final String SPECIAL_NAME = Constant.EMPTY; //"third";
 
     // constant

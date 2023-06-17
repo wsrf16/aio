@@ -1,6 +1,6 @@
 package com.aio.portable.park.test.batchrequest;
 
-import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
-import java.util.concurrent.*;
 
 public class BatchRequestTest {
     static class BatchRequest<T> {

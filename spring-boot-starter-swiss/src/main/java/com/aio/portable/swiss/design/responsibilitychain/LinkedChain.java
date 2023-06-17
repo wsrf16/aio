@@ -3,7 +3,7 @@ package com.aio.portable.swiss.design.responsibilitychain;
 public class LinkedChain {
     boolean isRunning = false;
 
-    public static LinkedChain newInstance(AbstractHandler handler) {
+    public static final LinkedChain newInstance(AbstractHandler handler) {
         return new LinkedChain(handler);
     }
 

@@ -19,11 +19,9 @@ public class NetworkProxyAutoConfiguration {//implements InitializingBean {
     )
     @ConfigurationProperties("proxy.http")
     @Bean
-    public HttpProxyBean httpProxyObject() {
+    public HttpProxyBean httpProxyBean() {
         return new HttpProxyBean();
     }
-
-
 
     @ConditionalOnProperty(
             prefix = "proxy.https",
@@ -31,11 +29,9 @@ public class NetworkProxyAutoConfiguration {//implements InitializingBean {
     )
     @ConfigurationProperties("proxy.https")
     @Bean
-    public HttpsProxyBean proxyHttps() {
+    public HttpsProxyBean httpsProxyBean() {
         return new HttpsProxyBean();
     }
-
-
 
     @ConditionalOnProperty(
             prefix = "proxy.socks",
@@ -43,7 +39,7 @@ public class NetworkProxyAutoConfiguration {//implements InitializingBean {
     )
     @ConfigurationProperties("proxy.socks")
     @Bean
-    public SocksProxyBean socksHttp() {
+    public SocksProxyBean socksProxyBean() {
         return new SocksProxyBean();
     }
 
@@ -52,8 +48,8 @@ public class NetworkProxyAutoConfiguration {//implements InitializingBean {
         return new NetworkProxyBean();
     }
 
-    @Autowired(required = false)
-    public NetworkProxyBean networkProxyBean;
+//    @Autowired(required = false)
+//    public NetworkProxyBean networkProxyBean;
 
 
 

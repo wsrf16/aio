@@ -42,11 +42,11 @@ public class NetworkProxyBean implements InitializingBean {
         }
     }
 
-    public static final boolean test(String host, Integer port) {
+    public static final boolean test(String host, int port) {
         return test(host, port, 5000);
     }
 
-    public static final boolean test(String host, Integer port, int timeout) {
+    public static final boolean test(String host, int port, int timeout) {
         boolean telnet = TcpSugar.telnet(host, port, timeout);
         if (telnet)
             log.info(MessageFormat.format("Test connection: {0}:{1} - Connection succeeded.", host, String.valueOf(port)));

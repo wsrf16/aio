@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit.tutorial;
 
-import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;

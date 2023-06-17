@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.park.common.UserInfoEntity;
+import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;

@@ -1,4 +1,4 @@
-package com.aio.portable.parkdb.dao.master.model;
+package com.aio.portable.park.dao.master.model;
 
 public class UserDTO {
     private Integer id;

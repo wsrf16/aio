@@ -1,4 +1,4 @@
-package com.aio.portable.park.common;
+package com.aio.portable.park.bean;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-//@Configuration
 public class SampleShiroConfig {
     @Bean
     public SessionManager sessionManager() {

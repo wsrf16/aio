@@ -1,7 +1,5 @@
 package com.aio.portable.swiss.suite.log.support;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by York on 2017/11/22.
  */

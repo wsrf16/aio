@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 //@PropertySource(value = "classpath:application.yml", factory = MixedPropertySourceFactory.class)
 public class ApplicationConfig {
     private String cron;
+    private String text;
 
     public String getCron() {
         return cron;
@@ -16,6 +17,14 @@ public class ApplicationConfig {
 
     public void setCron(String cron) {
         this.cron = cron;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
 

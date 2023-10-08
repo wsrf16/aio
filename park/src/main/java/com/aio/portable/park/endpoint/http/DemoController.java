@@ -1,22 +1,23 @@
 package com.aio.portable.park.endpoint.http;
 
-import com.aio.portable.park.common.BizStatusEnum;
-import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.park.bean.UserInfoEntity;
+import com.aio.portable.park.common.AppLogHubFactory;
+import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
+import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecord;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
-import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker;
-import com.aio.portable.swiss.sugar.type.DateTimeSugar;
-//import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-//import org.apache.http.conn.ssl.TrustStrategy;
-//import org.apache.http.impl.client.CloseableHttpClient;
-//import org.apache.http.impl.client.HttpClients;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("demo")
-@LogMarker
+@LogRecord
 public class DemoController {
     @Autowired
     private HttpServletRequest request;
@@ -79,7 +80,7 @@ public class DemoController {
     }
 
     @GetMapping("ok")
-    @LogMarker
+    @LogRecord
     public ResponseWrapper<Object> ok() {
         List<String> list = new ArrayList<>();
 //        for (int i = 0; i < 100000; i++) {
@@ -96,7 +97,7 @@ public class DemoController {
     }
 
     @GetMapping("echo")
-    public ResponseWrapper<String>  echo(String value) {
+    public ResponseWrapper<String> echo(String value) {
         return ResponseWrappers.succeed(value);
     }
 

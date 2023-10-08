@@ -19,7 +19,7 @@ public class SpringController {
     public static final MultiValueMap<String, Object> urlLookup(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
         Object mappingRegistry = ClassSugar.invoke(abstractHandlerMethodMapping, mappingClazz, "getMappingRegistry");
 
-        MultiValueMap<String, Object> urlLookup = ClassSugar.getDeclaredField(mappingRegistry, registryClazz, "urlLookup");
+        MultiValueMap<String, Object> urlLookup = ClassSugar.getDeclaredFieldValue(mappingRegistry, registryClazz, "urlLookup");
         return urlLookup;
     }
 

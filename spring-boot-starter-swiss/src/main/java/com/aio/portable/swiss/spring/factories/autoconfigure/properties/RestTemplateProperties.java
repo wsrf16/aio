@@ -1,6 +1,5 @@
 package com.aio.portable.swiss.spring.factories.autoconfigure.properties;
 
-//@Configuration
 public class RestTemplateProperties {
     private Agent agent;
 

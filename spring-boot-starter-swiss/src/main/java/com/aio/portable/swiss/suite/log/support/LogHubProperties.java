@@ -7,7 +7,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 
-//@Configuration
 //@ConfigurationProperties(prefix = "spring.log")
 public class LogHubProperties implements InitializingBean {
     public static final String PREFIX = "spring.log";

@@ -1,12 +1,10 @@
 package com.aio.portable.swiss.spring;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -17,15 +15,16 @@ import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.annotation.AnnotationConfigurationException;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertySource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.StandardServletEnvironment;
 
 import java.beans.Introspector;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -116,9 +115,9 @@ public class SpringContextHolder implements ApplicationContextAware {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
-    public static final ConfigurableApplicationContext run(Class<?> primarySource, Consumer<SpringApplication> otherAction, String[] args) {
+    public static final ConfigurableApplicationContext doBeforeRunning(Class<?> primarySource, Consumer<SpringApplication> consumer, String[] args) {
         SpringApplication springApplication = new SpringApplication(primarySource);
-        otherAction.accept(springApplication);
+        consumer.accept(springApplication);
         return springApplication.run(args);
     }
 
@@ -207,60 +206,9 @@ public class SpringContextHolder implements ApplicationContextAware {
      * getEnvironment
      * @return
      */
-    public static final ConfigurableEnvironment getEnvironment() {
-        return (ConfigurableEnvironment) applicationContext.getEnvironment();
+    public static final StandardServletEnvironment getStandardServletEnvironment() {
+        return (StandardServletEnvironment) applicationContext.getEnvironment();
     }
 
-    public static class PropertyBeanBound {
-        /**
-         * getPropertyBean
-         *
-         * @param environment
-         * @param name
-         * @param clazz
-         * @param <T>
-         * @return
-         */
-        public static final <T> T getPropertyBean(ConfigurableEnvironment environment, String name, Class<T> clazz) {
-            BindResult<T> bind = Binder.get(environment).bind(name, clazz);
-            T t = bind != null && bind.isBound() ? bind.get() : null;
-            return t;
-        }
-
-        /**
-         * getPropertyBean
-         *
-         * @param name
-         * @param clazz
-         * @param <T>
-         * @return
-         */
-        public static final <T> T getPropertyBean(String name, Class<T> clazz) {
-            ConfigurableEnvironment environment = getEnvironment();
-            return getPropertyBean(environment, name, clazz);
-        }
-
-
-        /**
-         * getPropertyBean
-         *
-         * @param clazz
-         * @param <T>
-         * @return
-         */
-        public static final <T> T getPropertyBean(Class<T> clazz) {
-            boolean present = clazz.isAnnotationPresent(ConfigurationProperties.class);
-            if (!present)
-                throw new AnnotationConfigurationException("Miss '@ConfigurationProperties' on " + clazz.getName() + ".");
-
-            ConfigurationProperties[] annotationsByType = clazz.getAnnotationsByType(ConfigurationProperties.class);
-            String name = StringSugar.getFirstHasText(null, annotationsByType[0].prefix(), annotationsByType[0].value());
-            if (name == null)
-                throw new AnnotationConfigurationException("'@ConfigurationProperties.class' prefix or value is null.");
-
-            T propertyBean = getPropertyBean(name, clazz);
-            return propertyBean;
-        }
-    }
 
 }

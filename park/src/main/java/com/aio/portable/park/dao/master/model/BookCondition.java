@@ -1,6 +1,6 @@
 package com.aio.portable.park.dao.master.model;
 
-public class BookDTO {
+public class BookCondition {
     public long getId() {
         return id;
     }

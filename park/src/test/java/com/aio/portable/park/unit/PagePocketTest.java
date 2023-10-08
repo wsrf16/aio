@@ -16,13 +16,13 @@ public class PagePocketTest {
     public void foobar() {
         List<Integer> ints = Stream.iterate(1, item -> item + 1).limit(101).collect(Collectors.toList());
         PagePocket<Integer> pocket = PagePocket.paging(ints, 3, 31);
-        Integer currentPage = pocket.getPageIndex();
-        List<Integer> currentPageItems = pocket.getCurrentPageItems();
-        Integer currentSize = pocket.getCurrentPageSize();
-        Integer currentSizeCapcity = pocket.getPageCapacity();
+        Integer currentPage = pocket.getCurrentIndex();
+        List<Integer> currentPageItems = pocket.getCurrentItems();
+        Integer currentSize = pocket.getCurrentAmount();
+        Integer currentSizeCapcity = pocket.getPageSize();
 //        List<Integer> totalItems = pocket.totalItems;
         Integer totalPages = pocket.getTotalPages();
-        Integer totalCount = pocket.getTotalCount();
+        Integer totalCount = pocket.getTotalItemCount();
 
 
 //        PagePocket<Integer> pock111 = CacheRoom.popByJson("A1", PagePocket.class);

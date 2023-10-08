@@ -1,15 +1,17 @@
-package com.aio.portable.swiss.spring.factories.processor.propertysource;
+package com.aio.portable.swiss.spring.factories.processor.propertysource.convert;
 
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 
 import java.util.stream.StreamSupport;
 
 public class PropertySourcesConverter {
+    private static final LocalLog log = LocalLog.getLog(PropertySourcesConverter.class);
 
     PropertySourceFilter filter;
     PropertySourceConvert propertySourceConvert;
-    PropertyValueConvert propertyValueConvert;
+    PropertyNameValueConvert propertyNameValueConvert;
 
     public void setFilter(PropertySourceFilter filter) {
         this.filter = filter;
@@ -19,8 +21,8 @@ public class PropertySourcesConverter {
         this.propertySourceConvert = convert;
     }
 
-    public void setPropertyValueConvert(PropertyValueConvert convert) {
-        this.propertyValueConvert = convert;
+    public void setPropertyNameValueConvert(PropertyNameValueConvert convert) {
+        this.propertyNameValueConvert = convert;
     }
 
     public boolean filter(PropertySource<?> propertySource) {
@@ -34,7 +36,6 @@ public class PropertySourcesConverter {
     }
 
     public void replace(MutablePropertySources propertySources) {
-//        propertySources.stream()
         StreamSupport.stream(propertySources.spliterator(), false)
                 .filter(c -> this.filter(c))
                 .map(this::convert)

@@ -14,7 +14,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import javax.activation.MimeType;
 import javax.mail.internet.MimeMessage;
 
-//@Configuration
 //@Import(JavaMailSenderImpl.class)
 @AutoConfigureAfter(MailSenderAutoConfiguration.class)
 @ConditionalOnClass({MimeMessage.class, MimeType.class, MailSender.class, JavaMailSender.class})

@@ -1,13 +1,29 @@
 package com.aio.portable.swiss.suite.algorithm.identity;
 
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.suite.algorithm.encode.HashConvert;
 import com.aio.portable.swiss.suite.algorithm.encode.HexConvert;
 
 import java.security.MessageDigest;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 // Time-based One-time Password RFC6238
-public class TOTP {
+public abstract class TOTP {
+    static {
+        hash = HashConvert.SHA1::encodeToHex;
+    }
+
+    private static Function<String, String> hash;
+
+    public static Function<String, String> getHash() {
+        return hash;
+    }
+
+    public static void setHash(Function<String, String> hash) {
+        TOTP.hash = hash;
+    }
+
     public static final String build(String secret) {
         return build(secret, 30);
     }
@@ -28,7 +44,7 @@ public class TOTP {
 
     private static final String hash(String text) {
 //        return JDKBase64Convert.encodeToString(text);
-        return hash("SHA-1", text);
+        return hash.apply(text);
     }
 
     private static final String afterHash(String TOTP, int digits) {
@@ -41,14 +57,6 @@ public class TOTP {
         return result;
     }
 
-    private static final String hash(String algorithm, String text) {
-        try {
-            MessageDigest md = MessageDigest.getInstance(algorithm);
-            byte[] bytes = md.digest(text.getBytes("utf-8"));
-            return HexConvert.encode(bytes);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }

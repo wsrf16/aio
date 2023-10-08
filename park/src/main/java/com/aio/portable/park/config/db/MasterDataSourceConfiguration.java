@@ -41,8 +41,8 @@ public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfigur
     private static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
 
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
-    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
     @Bean(DATA_SOURCE_PROPERTIES_BEAN)
+    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX)
     public DataSourceProperties dataSourceProperties() {
         return super.dataSourceProperties();
     }
@@ -72,7 +72,7 @@ public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfigur
     public SqlSessionFactory sqlSessionFactory(
             @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource,
             @Qualifier(MYBATIS_PROPERTIES_BEAN) MybatisProperties mybatisProperties) throws Exception {
-        return super.sqlSessionFactory(dataSource, mybatisProperties);
+        return super.sqlSessionFactory(dataSource, mybatisProperties, null);
     }
 
     @Bean(SQL_SESSION_FACTORY_BEAN)
@@ -80,7 +80,7 @@ public class MasterDataSourceConfiguration extends MybatisBaseDataSourceConfigur
     public SqlSessionFactory sqlSessionFactoryPlus(
             @Qualifier(DATA_SOURCE_BEAN)DataSource dataSource,
             @Qualifier(MYBATIS_PLUS_PROPERTIES_BEAN) MybatisPlusProperties mybatisPlusProperties) throws Exception {
-        return super.sqlSessionFactory(dataSource, mybatisPlusProperties);
+        return super.sqlSessionFactory(dataSource, mybatisPlusProperties, null);
     }
 
     @Bean(SQL_SESSION_TEMPLATE_BEAN)

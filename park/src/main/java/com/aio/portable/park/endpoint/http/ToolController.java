@@ -6,6 +6,7 @@ import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.spring.web.Base64MultipartFile;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.system.HostInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("tool")
+@Api(tags = "工具", consumes = "application/json")
 public class ToolController {
     private static final String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
     private static final String UPLOAD_DIRECTORY = "upload";

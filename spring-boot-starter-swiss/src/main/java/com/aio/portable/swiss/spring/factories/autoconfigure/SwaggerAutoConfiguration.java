@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.spring.web.plugins.Docket;
 
-//@Configuration
 @ConditionalOnClass(Docket.class)
 //@ConditionalOnClass({Docket.class, Swagger2Properties.class})
 //@EnableConfigurationProperties(Swagger3Properties.class)

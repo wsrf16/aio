@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-//@Configuration
 @ConditionalOnClass({RedisConnectionFactory.class})
 @ConditionalOnBean({RedisConnectionFactory.class})
 // org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration

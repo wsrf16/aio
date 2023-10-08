@@ -2,7 +2,6 @@ package com.aio.portable.park.postprocessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 public class CustomInstantiationAwareBeanPostProcessor implements InstantiationAwareBeanPostProcessor {

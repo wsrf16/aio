@@ -12,6 +12,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -328,6 +329,14 @@ public class JacksonSugar {
         }
     }
 
+    public static final HashMap<Object, Object> json2ObjectMap(String jsonStr) {
+        return json2T(jsonStr, new HashMap<Object, Object>().getClass());
+    }
+
+    public static final HashMap<String, Object> json2StringMap(String jsonStr) {
+        return json2T(jsonStr, new HashMap<String, Object>().getClass());
+    }
+
     /**
      * json2JsonNode
      * @param jsonStr
@@ -457,6 +466,33 @@ public class JacksonSugar {
     public static final <T> T deepCopy(T source) {
         T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
         return t;
+    }
+
+    /**
+     * formatLong
+     * @param source
+     * @return
+     */
+    public static final String formatLong(String source) {
+        return JacksonSugar.obj2LongJson(JacksonSugar.json2T(source, Object.class));
+    }
+
+    /**
+     * formatShort
+     * @param source
+     * @return
+     */
+    public static final String formatShort(String source) {
+        return JacksonSugar.obj2ShortJson(JacksonSugar.json2T(source, Object.class));
+    }
+
+    /**
+     * format
+     * @param source
+     * @return
+     */
+    public static final String format(String source) {
+        return JacksonSugar.obj2Json(JacksonSugar.json2T(source, Object.class));
     }
 
     /**

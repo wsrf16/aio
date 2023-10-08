@@ -1,9 +1,12 @@
 package com.aio.portable.park.unit;
 
+import com.aio.portable.park.bean.MenuEntity;
+import com.aio.portable.park.bean.Student;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +26,36 @@ public class CollectionTest {
         {
             List<String> arrayList = java.util.Collections.emptyList();
             Enumeration<String> enumeration = java.util.Collections.enumeration(arrayList);
+        }
+
+        {
+            List<Student> conditionInputList = new ArrayList<>();
+            Student add1 = new Student();
+            add1.setName("1");
+            Student add2 = new Student();
+            add2.setName("2");
+            Student add3 = new Student();
+            add3.setName("3");
+            conditionInputList.add(add1);
+            conditionInputList.add(add2);
+            conditionInputList.add(add3);
+
+            boolean repeatBy = CollectionSugar.beRepeatBy(conditionInputList, c -> c.getName());
+            List<Student> distinctBy = CollectionSugar.distinctBy(conditionInputList, c -> c.getName());
+            System.out.println();
+        }
+        {
+            MenuEntity m1 = new MenuEntity(1, null);
+            MenuEntity m2 = new MenuEntity(2, 1);
+            MenuEntity m3 = new MenuEntity(3, 1);
+            MenuEntity m4 = new MenuEntity(4, 3);
+            List<MenuEntity> list = new ArrayList<>();
+            list.add(m1);
+            list.add(m2);
+            list.add(m3);
+            list.add(m4);
+            List<MenuEntity> tree = CollectionSugar.flatToTree(list);
+            List<MenuEntity> flat = CollectionSugar.treeToFlat(tree);
         }
     }
 }

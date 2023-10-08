@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogThrowable {
+    private static final int LIMIT_DEEP = 30;
     public LogThrowable(Throwable e) {
         setException(e);
     }
@@ -15,6 +16,13 @@ public class LogThrowable {
 
     public void setException(Throwable e) {
         this.message = e.toString();
+        int deep = 0;
+        while (e.getCause() != null) {
+            e = e.getCause();
+            deep++;
+            if (deep > LIMIT_DEEP)
+                break;
+        }
         this.stackTrace = Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList());
     }
 

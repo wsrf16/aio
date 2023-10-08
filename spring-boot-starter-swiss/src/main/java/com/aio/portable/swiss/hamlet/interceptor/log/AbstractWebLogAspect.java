@@ -1,12 +1,12 @@
 package com.aio.portable.swiss.hamlet.interceptor.log;
 
+import com.aio.portable.swiss.hamlet.bean.RequestRecord;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
+import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.factory.LogHubPool;
-import com.aio.portable.swiss.hamlet.bean.RequestRecord;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,9 +26,9 @@ class AbstractWebLogAspect {
     }
 
     protected static LogHubPool logPool;
-    protected static String REQUEST_SUMMARY = "输入";
-    protected static String RESPONSE_SUMMARY = "输出";
-    protected static String EXCEPTION_SUMMARY = "异常";
+    protected static String REQUEST_SUMMARY = "Input Information";
+    protected static String RESPONSE_SUMMARY = "Output Information";
+    protected static String EXCEPTION_SUMMARY = "Exception Information";
 
     protected static final String POINTCUT_CONTROLLER = "" +
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
@@ -44,8 +44,8 @@ class AbstractWebLogAspect {
             " || @annotation(org.springframework.web.bind.annotation.Mapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected static final String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarker";
-    protected static final String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogMarkerExcept";
+    protected static final String LOG_MARKER_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecord";
+    protected static final String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecordExcept";
 
     protected static final String POINTCUT_SPECIAL_MAPPING = "" +
             "(@within(" + LOG_MARKER_TYPENAME + ")"

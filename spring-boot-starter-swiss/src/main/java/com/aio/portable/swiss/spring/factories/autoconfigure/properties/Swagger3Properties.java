@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 //@ConditionalOnProperty(prefix = "swagger.api-info", name = "title")
 //@ConfigurationProperties(prefix = "swagger")
 public class Swagger3Properties implements SwaggerProperties {
-    private boolean enabled = true;
+    private boolean enabled = false;
 
 //    private String version = "1.0";
 

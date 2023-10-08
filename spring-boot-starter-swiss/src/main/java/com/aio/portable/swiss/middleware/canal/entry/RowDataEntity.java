@@ -1,8 +1,7 @@
 package com.aio.portable.swiss.middleware.canal.entry;
 
-import com.aio.portable.swiss.middleware.canal.RowModel;
 import com.aio.portable.swiss.sugar.ThrowableSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 
 import java.util.List;
@@ -74,9 +73,9 @@ public class RowDataEntity<T> {
     }
 
     private static <T> T toRowModel(List<ColumnEntity> columnsList, Class<T> clazz) {
-        return ThrowableSugar.catchThenThrowRuntimeException(() -> {
+        return ThrowableSugar.throwRuntimeExceptionIfCatch(() -> {
             Map<String, Object> map = columnsList.stream().collect(Collectors.toMap(c -> c.getName(), c -> c.getValue()));
-            T t = JacksonSugar.deepCopy(map, clazz);
+            T t = DeepCloneSugar.Json.clone(map, clazz);
             return t;
         });
     }

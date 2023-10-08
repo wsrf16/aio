@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.sugar.location;
 
+import com.aio.portable.swiss.sugar.RegexSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.springframework.util.StringUtils;
@@ -12,14 +13,18 @@ import java.util.stream.Collectors;
 public abstract class UrlSugar {
 //    UriComponentsBuilder.fromHttpUrl()
 
-    public static final String addQueries(String uri, Object bean) {
+    public static final String appendQueries(String uri, Object bean) {
+        if (bean == null)
+            return uri;
+
         Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
         String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
 
         while (StringUtils.endsWithIgnoreCase(uri, "/")) {
             uri = StringSugar.trimEnd(uri, "/");
         }
-        return MessageFormat.format("{0}?{1}", uri, queryParams);
+        boolean match = RegexSugar.match("\\?.+=.+", uri);
+        return match ? MessageFormat.format("{0}&{1}", uri, queryParams) : MessageFormat.format("{0}?{1}", uri, queryParams);
     }
 
 

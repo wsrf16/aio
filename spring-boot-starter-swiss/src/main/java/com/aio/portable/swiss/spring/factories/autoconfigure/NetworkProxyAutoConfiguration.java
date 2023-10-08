@@ -4,12 +4,11 @@ import com.aio.portable.swiss.suite.net.tcp.proxy.NetworkProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpsProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SocksProxyBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SystemProxiesBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-//@Configuration
 public class NetworkProxyAutoConfiguration {//implements InitializingBean {
 //    Log log = LogFactory.getLog(NetworkProxyAutoConfiguration.class);
 
@@ -42,6 +41,16 @@ public class NetworkProxyAutoConfiguration {//implements InitializingBean {
     public SocksProxyBean socksProxyBean() {
         return new SocksProxyBean();
     }
+
+//    @ConditionalOnProperty(
+//            prefix = "proxy.system",
+//            name = "useSystemProxies"
+//    )
+//    @ConfigurationProperties("proxy.system")
+//    @Bean
+//    public SystemProxiesBean systemProxiesBean() {
+//        return new SystemProxiesBean();
+//    }
 
     @Bean
     public NetworkProxyBean networkProxyBean() {

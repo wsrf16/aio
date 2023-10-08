@@ -2,25 +2,33 @@ package com.aio.portable.swiss.sugar.resource;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.core.GenericTypeResolver;
-import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.Introspector;
 import java.io.File;
-import java.io.Serializable;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 public abstract class ClassSugar {
@@ -488,7 +496,7 @@ public abstract class ClassSugar {
         ReflectionUtils.makeAccessible(field);
     }
 
-    public static final HashMap<Field, ?> getDeclaredFields(Object obj, Class<?> clazz) {
+    public static final HashMap<Field, ?> getDeclaredFieldMaps(Object obj, Class<?> clazz) {
         Field[] declaredFields = clazz.getDeclaredFields();
         return (HashMap) Arrays.stream(declaredFields).collect(Collectors.toMap(field -> field, field -> {
             try {
@@ -502,7 +510,7 @@ public abstract class ClassSugar {
         }));
     }
 
-    public static final <R> R getDeclaredField(Object obj, Class<?> clazz, String name) {
+    public static final <R> R getDeclaredFieldValue(Object obj, Class<?> clazz, String name) {
         try {
             Field field = clazz.getDeclaredField(name);
             makeAccessible(field);
@@ -513,11 +521,11 @@ public abstract class ClassSugar {
         }
     }
 
-    public static final <R> R getDeclaredField(Object obj, String name) {
-        return getDeclaredField(obj, obj.getClass(), name);
+    public static final <R> R getDeclaredFieldValue(Object obj, String name) {
+        return getDeclaredFieldValue(obj, obj.getClass(), name);
     }
 
-    public static final HashMap<Field, ?> getFields(Object obj, Class<?> clazz) {
+    public static final HashMap<Field, ?> getFieldValues(Object obj, Class<?> clazz) {
         Field[] fields = clazz.getFields();
         return (HashMap) Arrays.stream(fields).collect(Collectors.toMap(field -> field, field -> {
             try {
@@ -531,7 +539,7 @@ public abstract class ClassSugar {
         }));
     }
 
-    public static final <R> R getField(Object obj, Class<?> clazz, String name) {
+    public static final <R> R getFieldValue(Object obj, Class<?> clazz, String name) {
         try {
             Field field = clazz.getField(name);
             makeAccessible(field);
@@ -542,8 +550,8 @@ public abstract class ClassSugar {
         }
     }
 
-    public static final <R> R getField(Object obj, String name) {
-        return getField(obj, obj.getClass(), name);
+    public static final <R> R getFieldValue(Object obj, String name) {
+        return getFieldValue(obj, obj.getClass(), name);
     }
 
     public static final Method getDeclaredMethod(Class<?> clazz, String methodName) {

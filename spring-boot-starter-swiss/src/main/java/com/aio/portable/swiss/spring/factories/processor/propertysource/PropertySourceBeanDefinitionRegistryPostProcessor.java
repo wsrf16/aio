@@ -1,30 +1,42 @@
 package com.aio.portable.swiss.spring.factories.processor.propertysource;
 
 import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.convert.PropertySourceFilter;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.convert.PropertySourcesConverter;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.EnumerablePropertySourceWrapper;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.MapPropertySourceWrapper;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.PropertySourceWrapper;
+import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.SystemEnvironmentPropertySourceWrapper;
+import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.elasticsearch.common.collect.Tuple;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.boot.env.OriginTrackedMapPropertySource;
-import org.springframework.core.env.*;
+import org.springframework.core.env.CommandLinePropertySource;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 
+import java.lang.reflect.Modifier;
 import java.util.stream.Stream;
 
 //@Configuration
 public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
-//    private static final Log log = LogFactory.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
+    //    private static final Log log = LogFactory.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
     private static final LocalLog log = LocalLog.getLog(PropertySourceBeanDefinitionRegistryPostProcessor.class);
 
     private ConfigurableEnvironment environment;
 
     public PropertySourceBeanDefinitionRegistryPostProcessor() {
-        this.environment = SpringContextHolder.getEnvironment();
+        this.environment = SpringContextHolder.getStandardServletEnvironment();
     }
 
     public PropertySourceBeanDefinitionRegistryPostProcessor(ConfigurableEnvironment environment) {
@@ -58,12 +70,8 @@ public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implemen
         PropertySourcesConverter converter = new PropertySourcesConverter();
         converter.setFilter(this::filter);
         converter.setPropertySourceConvert(this::propertySourceConvert);
-        converter.setPropertyValueConvert(this::notNullPropertyValueConvert);
-        try {
-            converter.replace(propertySources);
-        } catch (Exception e) {
-            log.warn(e);
-        }
+        converter.setPropertyNameValueConvert(this::propertyNameValueConvert);
+        converter.replace(propertySources);
     }
 
 
@@ -72,72 +80,52 @@ public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implemen
     }
 
     private PropertySource<?> propertySourceConvert(PropertySource<?> propertySource) {
-        PropertySource<?> proxyPropertySource = wrapPropertySource(propertySource);
-//        PropertySource<?> proxyPropertySource = proxyPropertySource(propertySource);
-        return proxyPropertySource;
+        PropertySource<?> propertySourceProxy = ofPropertySourceWrapper(propertySource);
+        return propertySourceProxy;
     }
 
+    private PropertySource<?> ofPropertySourceWrapper(PropertySource<?> propertySource) {
+        if (needsProxyAnyway(propertySource))
+            return ofPropertySourceProxy(propertySource);
 
-    private final Object notNullPropertyValueConvert(String key, Object value) {
-        return value == null ? null : propertyValueConvert(key, value);
-    }
-
-    public abstract Object propertyValueConvert(String key, Object value);
-//    public Object intercept(String key, Object value) {
-//        if (Objects.equals(value, "abc"))
-//            return ("v" + "111111");
-//        if (Objects.equals(key, "swagger.api-info.title"))
-//            return (value + "111111");
-//        if (Objects.equals(value, "对外接口在线文档"))
-//            return (value + "111111");
-//        return value;
-//    }
-
-    private PropertySource<?> wrapPropertySource(PropertySource<?> propertySource) {
-        PropertySource<?> proxyPropertySource;
-        if (needsProxyAnyway((propertySource.getClass()).getName())) {
-            proxyPropertySource = proxyPropertySource(propertySource);
-        } else if (propertySource instanceof EnumerablePropertySource) {
-            proxyPropertySource = new PropertySourceWrapper(propertySource, this::notNullPropertyValueConvert);
+        if (propertySource instanceof SystemEnvironmentPropertySource) {
+            return new SystemEnvironmentPropertySourceWrapper((SystemEnvironmentPropertySource) propertySource, this::propertyNameValueConvert);
         } else if (propertySource instanceof MapPropertySource) {
-            proxyPropertySource = new PropertySourceWrapper(propertySource, this::notNullPropertyValueConvert);
-        } else if (propertySource instanceof OriginTrackedMapPropertySource) {
-            proxyPropertySource = new PropertySourceWrapper(propertySource, this::notNullPropertyValueConvert);
+            return new MapPropertySourceWrapper((MapPropertySource) propertySource, this::propertyNameValueConvert);
+        } else  if (propertySource instanceof EnumerablePropertySourceWrapper) {
+            return new EnumerablePropertySourceWrapper((EnumerablePropertySource) propertySource, this::propertyNameValueConvert);
         } else {
-            proxyPropertySource = new PropertySourceWrapper(propertySource, this::notNullPropertyValueConvert);
-        }
-
-        return proxyPropertySource;
-    }
-
-    private PropertySource<?> proxyPropertySource(PropertySource<?> propertySource) {
-        if (CommandLinePropertySource.class.isAssignableFrom(propertySource.getClass())) {
-            return wrapPropertySource(propertySource);
-        } else {
-            return createProxyPropertySource(propertySource);
+            return new PropertySourceWrapper(propertySource, this::propertyNameValueConvert);
         }
     }
 
-    private PropertySource<?> createProxyPropertySource(PropertySource<?> propertySource) {
-        ProxyFactory proxyFactory = new ProxyFactory();
-        proxyFactory.setTargetClass(propertySource.getClass());
-        proxyFactory.setProxyTargetClass(true);
-//        proxyFactory.addInterface(PropertySource.class);
-        proxyFactory.setTarget(propertySource);
-        proxyFactory.addAdvice(new MethodInterceptor() {
-            @Override
-            public Object invoke(MethodInvocation invocation) throws Throwable {
-                Object proceed = invocation.proceed();
-                if (isGetPropertyCall(invocation)) {
-                    String name = (String) invocation.getArguments()[0];
-                    Object value = notNullPropertyValueConvert(name, proceed);
-                    return value;
+    private PropertySource<?> ofPropertySourceProxy(PropertySource<?> propertySource) {
+        if (!CommandLinePropertySource.class.isAssignableFrom(propertySource.getClass()) && !Modifier.isFinal(propertySource.getClass().getModifiers())) {
+            ProxyFactory proxyFactory = new ProxyFactory();
+            proxyFactory.setTargetClass(propertySource.getClass());
+            proxyFactory.setProxyTargetClass(true);
+            proxyFactory.setTarget(propertySource);
+            proxyFactory.addAdvice(new MethodInterceptor() {
+                @Override
+                public Object invoke(MethodInvocation invocation) throws Throwable {
+                    Object proceed = invocation.proceed();
+                    if (isGetPropertyCall(invocation)) {
+                        String name = (String) invocation.getArguments()[0];
+                        Object value = propertyNameValueConvert(propertySource, new KeyValuePair<>(name, proceed));
+                        return value;
+                    }
+                    return proceed;
                 }
-                return proceed;
-            }
-        });
-        PropertySource<?> proxy = (PropertySource<?>) proxyFactory.getProxy();
-        return proxy;
+            });
+            PropertySource<?> proxy = (PropertySource<?>) proxyFactory.getProxy();
+            return proxy;
+        } else {
+            return this.ofPropertySourceWrapper(propertySource);
+        }
+    }
+
+    private static boolean needsProxyAnyway(PropertySource<?> propertySource) {
+        return needsProxyAnyway(propertySource.getClass().getName());
     }
 
     private static boolean needsProxyAnyway(String className) {
@@ -152,5 +140,7 @@ public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implemen
                 && invocation.getMethod().getParameters().length == 1
                 && invocation.getMethod().getParameters()[0].getType() == String.class;
     }
+
+    protected abstract Object propertyNameValueConvert(PropertySource<?> propertySource, KeyValuePair<String, Object> nameValuePair);
 }
 

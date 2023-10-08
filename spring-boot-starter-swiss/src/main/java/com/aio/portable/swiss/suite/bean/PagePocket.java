@@ -13,24 +13,24 @@ public class PagePocket<T> {
         return totalPages;
     }
 
-    public int getTotalCount() {
-        return totalCount;
+    public int getTotalItemCount() {
+        return totalItemCount;
     }
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 
-    public int getCurrentPageSize() {
-        return currentPageSize;
+    public int getCurrentAmount() {
+        return currentAmount;
     }
 
-    public int getPageCapacity() {
-        return pageCapacity;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public List<T> getCurrentPageItems() {
-        return currentPageItems;
+    public List<T> getCurrentItems() {
+        return currentItems;
     }
 
     /**
@@ -40,65 +40,65 @@ public class PagePocket<T> {
     /**
      * 总数量
      */
-    private int totalCount;
+    private int totalItemCount;
     /**
      * 全部item
      */
     private List<T> totalItems;
     /**
-     * 当前页
+     * 当前页号
      */
-    private int pageIndex;
+    private int currentIndex;
     /**
      * 当前页item数量
      */
-    private int currentPageSize;
+    private int currentAmount;
     /**
-     * 当前页item容量
+     * 当前页item大小
      */
-    private int pageCapacity;
+    private int pageSize;
     /**
      * 当前页item
      */
-    private List<T> currentPageItems;
+    private List<T> currentItems;
 
-    private List<T> currentPageItems() {
-        List<T> cutLeft = totalItems.subList((pageIndex - 1) * pageCapacity, totalItems.size());
-        if (cutLeft.size() < pageCapacity)
+    private List<T> currentItems() {
+        List<T> cutLeft = totalItems.subList((currentIndex - 1) * pageSize, totalItems.size());
+        if (cutLeft.size() < pageSize)
             return cutLeft;
         else
-            return cutLeft.subList(0, pageCapacity);
+            return cutLeft.subList(0, pageSize);
     }
 
     public static final <T> PagePocket<T> paging(List<T> list, int size, int index) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
-        instance.pageCapacity = size;
-        instance.pageIndex = index;
+        instance.pageSize = size;
+        instance.currentIndex = index;
         int totalCount = list.size();
-        instance.totalCount = totalCount;
+        instance.totalItemCount = totalCount;
 
         instance.totalPages = totalCount / size + (totalCount / size + totalCount % size == 0 ? 0 : 1);
-        instance.currentPageSize = instance.currentPageItems().size();
-        instance.currentPageItems = instance.currentPageItems();
+        instance.currentAmount = instance.currentItems().size();
+        instance.currentItems = instance.currentItems();
         return instance;
     }
 
     public static final <T> PagePocket<T> paging(List<T> list, int size) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
-        instance.pageCapacity = size;
+        instance.pageSize = size;
         int totalCount = list.size();
-        instance.totalCount = totalCount;
+        instance.totalItemCount = totalCount;
 
         instance.totalPages = totalCount / size + (totalCount / size + totalCount % size == 0 ? 0 : 1);
         return instance;
     }
 
     public PagePocket<T> paging(int index) {
-        this.pageIndex = index;
-        this.currentPageSize = this.currentPageItems().size();
-        this.currentPageItems = this.currentPageItems();
+        this.currentIndex = index;
+        this.currentAmount = this.currentItems().size();
+        this.currentItems = this.currentItems();
         return this;
     }
 
@@ -114,7 +114,7 @@ public class PagePocket<T> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return PagePocket.paging(list, this.pageIndex, this.currentPageSize);
+        return PagePocket.paging(list, this.currentAmount, this.currentIndex);
     }
 
 

@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-//@Configuration
 @ConditionalOnClass({com.auth0.jwt.JWT.class})
 public class JWTAutoConfiguration {
 

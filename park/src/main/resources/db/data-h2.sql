@@ -1,5 +1,6 @@
--- DELETE FROM user;
---
+DELETE FROM user;
+DELETE FROM book;
+
 INSERT INTO user (id, name, age, email) VALUES
 (1, 'Jone', 18, 'test1@gmail.com'),
 (2, 'Jack', 21, 'test2@gmail.com'),

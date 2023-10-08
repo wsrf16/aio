@@ -33,11 +33,9 @@ public abstract class JWTAuthenticationInterceptor extends AuthenticationInterce
         }
 
         String token = StringSugar.trimStart(bearToken, BEARER).trim();
-        if (!this.jwtTemplate.validate(token)) {
-            if (this.jwtTemplate.isExpired(token))
-                throw new BizException(getBizStatusEnum().staticUnauthorized().getCode(), "授权已过期");
-            else
-                throw new BizException(getBizStatusEnum().staticUnauthorized().getCode(), getBizStatusEnum().staticUnauthorized().getMessage());
-        }
+        if (this.jwtTemplate.isExpired(token))
+            throw new BizException(getBizStatusEnum().staticUnauthorized().getCode(), "授权已过期");
+        if (!this.jwtTemplate.validate(token))
+            throw new BizException(getBizStatusEnum().staticUnauthorized().getCode(), getBizStatusEnum().staticUnauthorized().getMessage());
     }
 }

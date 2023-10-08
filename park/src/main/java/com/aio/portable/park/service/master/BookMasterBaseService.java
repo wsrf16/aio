@@ -2,7 +2,7 @@ package com.aio.portable.park.service.master;
 
 import com.aio.portable.park.dao.master.mapper.BookMasterBaseMapper;
 import com.aio.portable.park.dao.master.model.Book;
-import com.aio.portable.park.dao.master.model.BookDTO;
+import com.aio.portable.park.dao.master.model.BookCondition;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ public class BookMasterBaseService {
         return bookMasterBaseMapper.selectById(id);
     }
 
-    public BookDTO selectByIdToBookDTO(Integer id) {
-        return bookMasterBaseMapper.selectById(id, BookDTO.class);
+    public BookCondition selectByIdToBookDTO(Integer id) {
+        return bookMasterBaseMapper.selectById(id, BookCondition.class);
     }
 
     public List<Book> selectList(Book book) {
@@ -34,24 +34,24 @@ public class BookMasterBaseService {
         return bookMasterBaseMapper.selectList(c -> c.eq(Book::getAuthor, author));
     }
 
-    public List<BookDTO> selectListByAuthorToBookDTO(String author) {
-        return bookMasterBaseMapper.selectList(c -> c.eq(Book::getAuthor, author), BookDTO.class);
+    public List<BookCondition> selectListByAuthorToBookDTO(String author) {
+        return bookMasterBaseMapper.selectList(c -> c.eq(Book::getAuthor, author), BookCondition.class);
     }
 
-    public List<BookDTO> selectListToBookDTO(Book book) {
-        return bookMasterBaseMapper.selectList(book, BookDTO.class);
+    public List<BookCondition> selectListToBookDTO(Book book) {
+        return bookMasterBaseMapper.selectList(book, BookCondition.class);
     }
 
-    public List<BookDTO> selectBatchIdsToBookDTO(List<String> idList) {
-        return bookMasterBaseMapper.selectBatchIds(idList, BookDTO.class);
+    public List<BookCondition> selectBatchIdsToBookDTO(List<String> idList) {
+        return bookMasterBaseMapper.selectBatchIds(idList, BookCondition.class);
     }
 
-    public List<Book> selectListByAuthorOnlyDescription(String author) {
+    public List<Book> selectListByAuthorForDescription(String author) {
         return bookMasterBaseMapper.selectList(c -> c.eq(Book::getAuthor, author), Book::getDescription);
     }
 
     public Page<Book> selectPage(int page, int size, Book book) {
-        return bookMasterBaseMapper.selectPage(new Page<>(page, size), book);
+        return bookMasterBaseMapper.selectPage(new Page<>(page, size), book, c -> c.orderByAsc(Book::getName));
     }
 
     public Page<Book> selectPageByAuthor(int page, int size, String author) {

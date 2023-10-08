@@ -3,7 +3,7 @@ package com.aio.portable.swiss.suite.log.solution.elk;
 import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.aio.portable.swiss.suite.log.support.LogRecord;
 import com.aio.portable.swiss.suite.log.support.StandardLogRecord;
 
@@ -51,7 +51,7 @@ public class ESLogRecord extends StandardLogRecord {
     public ESLogRecord() {}
 
     public ESLogRecord(LogRecord logRecord, String esIndex, String serverIp) {
-        BeanSugar.Cloneable.deepCloneByCglib(logRecord, this);
+        DeepCloneSugar.Cglib.clone(logRecord, this);
 
         setEsIndex(esIndex);
         setServerIp(serverIp);
@@ -59,7 +59,6 @@ public class ESLogRecord extends StandardLogRecord {
     }
 
     public static final String formatIndex(String name) {
-
         String result = name;
         if (StringSugar.containUpperCase(result))
             result = NamingStrategySugar.kebab(name);

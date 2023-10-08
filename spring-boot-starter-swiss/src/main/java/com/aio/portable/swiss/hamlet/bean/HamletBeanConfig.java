@@ -15,7 +15,6 @@ import org.springframework.web.filter.CorsFilter;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-//@Configuration
 public abstract class HamletBeanConfig {
     public ObjectMapper objectMapper(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateTimeSugar.Format.FORMAT_NORMAL_LONG);

@@ -6,8 +6,11 @@ spring:
   datasource:
     master:
       driver-class-name: org.h2.Driver
+#      driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:h2:mem:db_test
+#      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
+#      password: "{cipher}CBuT0hQ+CsjbByL0DYW4zw=="
       password: 1111
       connection-timeout: 2000
       schema:
@@ -53,6 +56,7 @@ spring:
 ###            implicit_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         # spring entry one
         properties:
+          aaaa: 11111111111
           hibernate:
 #            hbm2ddl:
 #              auto: update
@@ -83,7 +87,9 @@ spring:
 
   log:
 #    enabled: false
-#    level: info
+#    async: false
+#    samplerRate: 0.5
+#    level: debug
     rabbitmq:
       enabled: false
       host: mecs.com
@@ -106,7 +112,7 @@ spring:
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       bootstrap-servers: 192.168.133.133:9092
 #      template:
-#        defaultTopic: appli10.124.163.9510.124.163.9510.124.163.9510.124.163.95cation-log
+#        defaultTopic: application-log
 #      producer:
 #        bootstrap-servers: mecs.com:9092
 #        bootstrap-servers: 192.168.133.133:9092
@@ -138,7 +144,8 @@ spring:
 #  redis:
 #    host: mecs.com
 #    port: 6379
-
+#    timeout: 10
+#    password: YYYYYYYY
 
 
 server:
@@ -151,3 +158,12 @@ org:
     boot:
       logging:
         LoggingSystem: 1111
+
+mybatis-plus:
+  configuration:
+    # 是否将sql打印到控制面板(该配置会将sql语句和查询的结果都打印到控制台)
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+swagger:
+  enabled: true

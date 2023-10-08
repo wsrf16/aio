@@ -42,9 +42,9 @@ public class ClassTest {
             System.out.println(GsonSugar.obj2Json(new KeyValuePair("a", "existGson")));
 
 
-        String fieldName1 = BeanSugar.PropertyDescriptors.getPropertyName(new UserInfoEntity()::getNextId);
-        String fieldName2 = BeanSugar.PropertyDescriptors.getPropertyName(new UserInfoEntity()::setNextId);
-        String fieldName3 = BeanSugar.PropertyDescriptors.getPropertyName(UserInfoEntity::getNextId);
+        String fieldName1 = BeanSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::getNextId);
+        String fieldName2 = BeanSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::setNextId);
+        String fieldName3 = BeanSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::getNextId);
 //        String fieldName4 = BeanSugar.PropertyDescriptors.getMethodPropertyName(UserInfoEntity::setNextId);
 
         LambdaSupplier<Integer> getNextId = new UserInfoEntity()::getNextId;
@@ -52,10 +52,10 @@ public class ClassTest {
         LambdaFunction<UserInfoEntity, Integer> staticGetNextId = UserInfoEntity::getNextId;
         LambdaBiConsumer<UserInfoEntity, Integer> staticSetNextId = UserInfoEntity::setNextId;
 
-        String fieldName1_ = BeanSugar.PropertyDescriptors.getPropertyName(getNextId);
-        String fieldName2_ = BeanSugar.PropertyDescriptors.getPropertyName(setNextId);
-        String fieldName3_ = BeanSugar.PropertyDescriptors.getPropertyName(staticGetNextId);
-        String fieldName4_ = BeanSugar.PropertyDescriptors.getPropertyName(staticSetNextId);
+        String fieldName1_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(getNextId);
+        String fieldName2_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(setNextId);
+        String fieldName3_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(staticGetNextId);
+        String fieldName4_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(staticSetNextId);
 
         UserInfoEntity userInfoEntity = new UserInfoEntity();
         userInfoEntity.setName("name1");

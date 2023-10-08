@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.22-SNAPSHOT</version>
+    <version>1.1.23-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>
@@ -15,8 +15,8 @@
 <!--        <groupId>com.aio.portable</groupId>-->
 <!--        <artifactId>all-in-one</artifactId>-->
 <!--        <version>1.1.4-SNAPSHOT</version>-->
-<!--&lt;!&ndash;        <relativePath/>&ndash;&gt;-->
-<!--&lt;!&ndash;        <relativePath>../pom.xml</relativePath>&ndash;&gt;-->
+<!--        <relativePath/>-->
+<!--        <relativePath>../pom.xml</relativePath>-->
 <!--    </parent>-->
 
     <parent>
@@ -799,17 +799,26 @@
 
 
         <!-- ladder-repository -->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>user release resp</name>-->
+<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <name>user snapshot resp</name>-->
+<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
         <repository>
-            <id>nexus-releases</id>
-            <name>user release resp</name>
-            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>
+            <id>sky-releases</id>
+            <name>sky-maven-virtual</name>
+            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-releases-local</url>
         </repository>
         <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>user snapshot resp</name>
-            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>
+            <id>sky-snapshots</id>
+            <name>sky-maven-virtual</name>
+            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-snapshots-local</url>
         </snapshotRepository>
-
 
         <!-- local-repository -->
 <!--        <repository>-->

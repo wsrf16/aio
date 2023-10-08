@@ -18,6 +18,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.util.function.Consumer;
 
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})
 public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSourceConfiguration {
@@ -39,7 +40,7 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 //        }
 //    }
 
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties, Consumer<SqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setVfs(SpringBootVFS.class);
@@ -76,10 +77,12 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
             factoryBean.setMapperLocations(properties.resolveMapperLocations());
         }
 
+        if (sqlSessionFactoryBeanInterceptor != null)
+            sqlSessionFactoryBeanInterceptor.accept(factoryBean);
         return factoryBean.getObject();
     }
 
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties, Consumer<MybatisSqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) throws Exception {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
 //        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
@@ -117,6 +120,8 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
             factoryBean.setMapperLocations(properties.resolveMapperLocations());
         }
 
+        if (sqlSessionFactoryBeanInterceptor != null)
+            sqlSessionFactoryBeanInterceptor.accept(factoryBean);
         return factoryBean.getObject();
     }
 

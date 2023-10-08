@@ -12,7 +12,7 @@ public class SocksProxyBean implements ProxyBean {
     // 1080
     private Integer port;
 
-    private List<String> nonProxyHosts;
+    private String nonProxyHosts;
 
     private String userName;
 
@@ -36,11 +36,11 @@ public class SocksProxyBean implements ProxyBean {
         this.port = port;
     }
 
-    public List<String> getNonProxyHosts() {
+    public String getNonProxyHosts() {
         return nonProxyHosts;
     }
 
-    public void setNonProxyHosts(List<String> nonProxyHosts) {
+    public void setNonProxyHosts(String nonProxyHosts) {
         this.nonProxyHosts = nonProxyHosts;
     }
 
@@ -68,22 +68,13 @@ public class SocksProxyBean implements ProxyBean {
         this.automatically = automatically;
     }
 
-    public void on() {
-        if (NetworkProxyBean.test(host, port)) {
-            if (this.host != null)
-                NetworkProxySugar.Socks.setProxyHost(this.host);
-            if (this.port != null)
-                NetworkProxySugar.Socks.setProxyPort(this.port);
-            if (this.nonProxyHosts != null)
-                NetworkProxySugar.Socks.setNonProxyHosts(this.nonProxyHosts);
-            if (this.userName != null)
-                NetworkProxySugar.Ftp.setProxyHost(this.userName);
-            if (this.password != null)
-                NetworkProxySugar.Ftp.setProxyHost(this.password);
-        }
+    public boolean on() {
+        return this.on(false);
     }
 
-    public void force() {
+    public boolean on(boolean force) {
+        if (!force && !NetworkProxyBean.test(host, port))
+            return false;
         if (this.host != null)
             NetworkProxySugar.Socks.setProxyHost(this.host);
         if (this.port != null)
@@ -91,9 +82,10 @@ public class SocksProxyBean implements ProxyBean {
         if (this.nonProxyHosts != null)
             NetworkProxySugar.Socks.setNonProxyHosts(this.nonProxyHosts);
         if (this.userName != null)
-            NetworkProxySugar.Ftp.setProxyHost(this.userName);
+            NetworkProxySugar.Socks.setProxyHost(this.userName);
         if (this.password != null)
-            NetworkProxySugar.Ftp.setProxyHost(this.password);
+            NetworkProxySugar.Socks.setProxyHost(this.password);
+        return true;
     }
 
     public void off() {

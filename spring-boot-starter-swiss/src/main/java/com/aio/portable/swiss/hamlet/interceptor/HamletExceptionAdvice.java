@@ -2,6 +2,7 @@ package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.exception.BusinessException;
 import com.aio.portable.swiss.hamlet.exception.HandOverException;
@@ -71,12 +72,12 @@ public abstract class HamletExceptionAdvice {
         if (getBusinessException().isInstance(e)) {
             BusinessException businessException = (BusinessException) e;
             log.e(GLOBAL_BUSINESS_EXCEPTION, e.getMessage(), e);
-            responseWrapper = ResponseWrapper.build(businessException.getCode(), businessException.getMessage());
+            responseWrapper = ResponseWrappers.build(businessException.getCode(), businessException.getMessage());
         } else if (e instanceof MethodArgumentNotValidException)
-            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+            responseWrapper = ResponseWrappers.build(getBizStatusEnum().staticInvalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
         else {
             log.e(GLOBAL_SYSTEM_EXCEPTION, e);
-            responseWrapper = ResponseWrapper.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
+            responseWrapper = ResponseWrappers.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
         }
         return responseWrapper;
     }
@@ -86,7 +87,7 @@ public abstract class HamletExceptionAdvice {
 //    public ResponseWrapper handleBizException(BizException e) {
 //        LogHub logger = loggerPool.putIfAbsent(e);
 //
-//        ResponseWrapper responseWrapper = ResponseWrapper.build(e.getCode(), e.getMessage());
+//        ResponseWrapper responseWrapper = ResponseWrappers.build(e.getCode(), e.getMessage());
 //        String traceId = responseWrapper.getTraceId();
 //
 //        if (logger != null) {
@@ -100,14 +101,14 @@ public abstract class HamletExceptionAdvice {
 //    public ResponseWrapper handleException(Exception e) {
 //        ResponseWrapper responseWrapper;
 ////        responseWrapper = e instanceof org.springframework.web.servlet.NoHandlerFoundException ?
-////                        ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage())
-////                        : ResponseWrapper.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
+////                        ResponseWrappers.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage())
+////                        : ResponseWrappers.build(BizStatusEnum.EXCEPTION.getCode(), e.getMessage());
 //        if (e instanceof NoHandlerFoundException)
-//            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), e.getMessage());
+//            responseWrapper = ResponseWrappers.build(httpResponseStatus.exception().getCode(), e.getMessage());
 //        else if (e instanceof MethodArgumentNotValidException)
-//            responseWrapper = ResponseWrapper.build(httpResponseStatus.invalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
+//            responseWrapper = ResponseWrappers.build(httpResponseStatus.invalid().getCode(), ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors());
 //        else
-//            responseWrapper = ResponseWrapper.build(httpResponseStatus.exception().getCode(), httpResponseStatus.exception());
+//            responseWrapper = ResponseWrappers.build(httpResponseStatus.exception().getCode(), httpResponseStatus.exception());
 //        String traceId = responseWrapper.getTraceId();
 //
 //        LogHub logger = loggerPool.putIfAbsent(e);

@@ -1,6 +1,8 @@
 package com.aio.portable.swiss.suite.algorithm.crypto.rsa;
 
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
+import sun.security.rsa.RSACore;
+import sun.security.rsa.RSAKeyFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -23,8 +26,7 @@ public class RSASugar {
 
     public static final RSAKeyPair generateRSAKeyPair() {
         try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(RSA);
-            KeyPair keyPair = generator.generateKeyPair();
+            KeyPair keyPair = KeyPairGenerator.getInstance(RSA).generateKeyPair();
             RSAPublicKey rsaPubKey = (RSAPublicKey) keyPair.getPublic();
             RSAPrivateKey rsaPriKey = (RSAPrivateKey) keyPair.getPrivate();
             RSAKeyPair rsaKeyPair = new RSAKeyPair(rsaPubKey, rsaPriKey);
@@ -151,6 +153,16 @@ public class RSASugar {
         return JDKBase64Convert.encodeToString(encrypt);
     }
 
+    private static final int getMaxDecryptLength(Key key) {
+        try {
+            RSAKey rsaKey = RSAKeyFactory.toRSAKey(key);
+            int byteLength = RSACore.getByteLength(rsaKey.getModulus());
+            return byteLength;
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static final byte[] decrypt(byte[] bytes, Key key) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Cipher cipher = Cipher.getInstance(RSA);
@@ -160,14 +172,17 @@ public class RSASugar {
             int length = bytes.length;
             int offset = 0;
             byte[] cache;
+            int maxDecryptLength = getMaxDecryptLength(key);
             while (length - offset > 0) {
-                if (length - offset > MAX_DECRYPT_LENGTH) {
-                    cache = cipher.doFinal(bytes, offset, MAX_DECRYPT_LENGTH);
+                // javax.crypto.BadPaddingException: Decryption error
+                // >256 or > 128: Data must not be longer than 256/128 bytes
+                if (length - offset > maxDecryptLength) {
+                    cache = cipher.doFinal(bytes, offset, maxDecryptLength);
                 } else {
                     cache = cipher.doFinal(bytes, offset, length - offset);
                 }
                 out.write(cache, 0, cache.length);
-                offset = offset + MAX_DECRYPT_LENGTH;
+                offset = offset + maxDecryptLength;
             }
             return out.toByteArray();
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | IOException e
@@ -188,6 +203,7 @@ public class RSASugar {
 //    }
 
     public static final String decrypt(String text, String privateKey) {
+
         byte[] bytes = JDKBase64Convert.decode(text);
         byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] decrypt = decrypt(bytes, privateKeyBytes);

@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.sugar.type;
 
+import com.aio.portable.swiss.suite.bean.node.tree.recursion.RecursiveTree;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -17,14 +18,40 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class CollectionSugar {
+    public static final boolean containsAny(String s, String... items) {
+        for (String item : items) {
+            if (s.contains(item))
+                return true;
+        }
+        return false;
+    }
+
+    public static final boolean containsAll(String s, String... items) {
+        for (String item : items) {
+            if (!s.contains(item))
+                return false;
+        }
+        return true;
+    }
+
     public static final <T> T[] removeEnd(T[] tables) {
         T[] remain = Arrays.copyOf(tables, tables.length - 1);
         return remain;
     }
 
-    public static final <T> T getEnd(T[] tables) {
+    public static final <T> T endOf(T[] tables) {
         T end = tables[tables.length - 1];
         return end;
+    }
+
+    /**
+     * endOf
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static final <T> T endOf(final List<T> list) {
+        return list.get(list.size() - 1);
     }
 
     public static final boolean isEmpty(Object[] array) {
@@ -262,18 +289,6 @@ public abstract class CollectionSugar {
     }
 
     /**
-     * repeatBy
-     * @param list
-     * @param getPropertyFunction T::getId
-     * @param <T>
-     * @return
-     */
-    public static  <T> boolean repeatBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
-        boolean b = list.parallelStream().anyMatch(falseIfRepeat(getPropertyFunction));
-        return b;
-    }
-
-    /**
      * falseIfRepeat
      *
      * @param getPropertyFunction User::getName
@@ -283,6 +298,30 @@ public abstract class CollectionSugar {
     private static <T> Predicate<T> falseIfRepeat(Function<? super T, ?> getPropertyFunction) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(getPropertyFunction.apply(t));
+    }
+
+    /**
+     * repeatBy
+     * @param list
+     * @param getPropertyFunction T::getId
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean beRepeatBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
+        boolean b = list.parallelStream().anyMatch(trueIfRepeat(getPropertyFunction));
+        return b;
+    }
+
+    /**
+     * beRepeat
+     *
+     * @param getPropertyFunction User::getName
+     * @param <T>
+     * @return
+     */
+    private static <T> Predicate<T> trueIfRepeat(Function<? super T, ?> getPropertyFunction) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> !seen.add(getPropertyFunction.apply(t));
     }
 
 
@@ -503,4 +542,50 @@ public abstract class CollectionSugar {
     }
 
 
+    public static final <T, ID extends Number> List<T> flatToTree(List<T> flat) {
+        List<RecursiveTree<T, ID>> recursiveFlat = flat.stream()
+                .map(c -> (RecursiveTree<T, ID>) c)
+                .peek(c -> c.setParentId(c.getParentId() == null ? (ID)Integer.valueOf(-1) : c.getParentId()))
+                .collect(Collectors.toList());
+
+        Map<ID, List<RecursiveTree<T, ID>>> map = recursiveFlat.stream()
+                .collect(Collectors.groupingBy(c -> c.getParentId()));
+
+        List<T> collect = recursiveFlat.stream()
+                .peek(node -> node.setItemList(toT(map.get(node.getId()))))
+                .filter(node -> node.getParentId() == null || (Integer)node.getParentId() < 1)
+                .map(c -> (T) c)
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    private static final <T, ID extends Number> List<T> toT(List<RecursiveTree<T, ID>> list) {
+        if (list == null)
+            return null;
+        else {
+            List<T> collect = list.stream().map(c -> (T) c).collect(Collectors.toList());
+            return collect;
+        }
+    }
+
+    public static final <T, ID extends Number> List<T> treeToFlat(List<T> treeList) {
+        List<RecursiveTree<T, ID>> recursiveFlatList = new ArrayList<>();
+        treeToFlatRecursively(treeList, recursiveFlatList);
+
+        List<T> collect = recursiveFlatList.stream()
+//                .peek(c -> c.setItemList(null))
+                .map(c -> (T) c).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    private static final  <T, ID extends Number> void treeToFlatRecursively(List<T> treeList, List<RecursiveTree<T, ID>> flatList) {
+        for (T t : treeList) {
+            RecursiveTree<T, ID> node = (RecursiveTree<T, ID>)t;
+            flatList.add(node);
+            if (node.getItemList() != null) {
+                treeToFlatRecursively(node.getItemList(), flatList);
+            }
+        }
+    }
 }

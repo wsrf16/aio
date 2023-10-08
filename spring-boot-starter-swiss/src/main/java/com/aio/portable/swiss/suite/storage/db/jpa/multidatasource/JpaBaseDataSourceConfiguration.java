@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-//@Configuration
 //@EnableJpaRepositories(basePackages = {TemplateDataSourceConfiguration.REPOSITORY_BASE_PACKAGES}, entityManagerFactoryRef = TemplateDataSourceConfiguration.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN, transactionManagerRef = TemplateDataSourceConfiguration.PLATFORM_TRANSACTION_MANAGER_BEAN)
 //@EntityScan(basePackages = {TemplateDataSourceConfiguration.ENTITY_BASE_PACKAGES})
 @ConditionalOnClass({DataSource.class, EmbeddedDatabaseType.class})

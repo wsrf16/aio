@@ -191,11 +191,15 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Calendar convertText2Calendar(String format, String text) throws ParseException {
-            Date date = new SimpleDateFormat(format).parse(text);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            return calendar;
+        public static Calendar convertText2Calendar(String format, String text) {
+            try {
+                Date date = new SimpleDateFormat(format).parse(text);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                return calendar;
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         /**

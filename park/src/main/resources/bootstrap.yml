@@ -1,7 +1,6 @@
 spring:
   profiles:
-    active:
-      @profiles.active@
+    active: @profiles.active@
 app:
   id: park
 apollo:

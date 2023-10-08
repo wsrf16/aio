@@ -4,9 +4,15 @@ import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.BizStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class BizStatusEnum extends BaseBizStatusEnum {
-    private static final BizStatusEnum _ = new BizStatusEnum();
+    public final static BizStatusEnum bizStatusEnum = new BizStatusEnum();
+
+    public static List<BizStatus> values() {
+        return BaseBizStatusEnum.values();
+    }
 
     @Override
     public BizStatus succeed() {

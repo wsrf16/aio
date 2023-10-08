@@ -2,6 +2,7 @@ package com.aio.portable.swiss.hamlet.interceptor;
 
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.MethodParameter;
@@ -40,7 +41,7 @@ public abstract class HamletResponseBodyAdvice implements ResponseBodyAdvice<Obj
         if (body == null || !(body instanceof ResponseWrapper)) {
 //            mediaType = MediaType.APPLICATION_JSON;
 //            convertClass = MappingJackson2HttpMessageConverter.class;
-            ResponseWrapper responseWrapper = ResponseWrapper.build(BaseBizStatusEnum.staticSucceed().getCode(), BaseBizStatusEnum.staticSucceed().getMessage(), body);
+            ResponseWrapper responseWrapper = ResponseWrappers.build(BaseBizStatusEnum.staticSucceed().getCode(), BaseBizStatusEnum.staticSucceed().getMessage(), body);
 
             HttpHeaders headers = serverHttpResponse.getHeaders();
             boolean containsKey = headers.containsKey(ResponseWrapper.SPAN_ID_HEADER);

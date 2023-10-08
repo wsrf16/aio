@@ -2,6 +2,7 @@ package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -35,7 +36,7 @@ public abstract class ShellSugar {
         return result;
     }
 
-    public static List<String> exec(String... scripts) {
+    public static final List<String> exec(String... scripts) {
         List<String> feedbackList = Arrays.stream(scripts).map(c -> {
             try {
                 Process process = Runtime.getRuntime().exec(c);
@@ -48,11 +49,56 @@ public abstract class ShellSugar {
                     throw new NullPointerException(error);
                 return feedback;
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
         return feedbackList;
+    }
+
+    private static final Echo getEcho(Process process) {
+        try {
+            InputStream inputStream = process.getInputStream();
+            InputStream errorStream = process.getErrorStream();
+            Echo echo = new Echo();
+            String cmdStd = org.springframework.util.StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            String errStd = org.springframework.util.StreamUtils.copyToString(errorStream, StandardCharsets.UTF_8);
+            echo.setCmdStd(cmdStd);
+            echo.setErrStd(errStd);
+            return echo;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final Process run(String... scripts) {
+        ProcessBuilder builder = new ProcessBuilder(scripts);
+        try {
+            Process process = builder.start();
+            return process;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static class Echo {
+        private String cmdStd;
+        private String errStd;
+
+        public String getCmdStd() {
+            return cmdStd;
+        }
+
+        public void setCmdStd(String cmdStd) {
+            this.cmdStd = cmdStd;
+        }
+
+        public String getErrStd() {
+            return errStd;
+        }
+
+        public void setErrStd(String errStd) {
+            this.errStd = errStd;
+        }
     }
 
     public static class Windows {
@@ -65,11 +111,5 @@ public abstract class ShellSugar {
 
 
 
-    public void print(String s) {
-        System.out.println(s);
-    }
 
-    public void clean() {
-        System.out.println("\r");
-    }
 }

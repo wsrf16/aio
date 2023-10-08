@@ -68,22 +68,13 @@ public class HttpsProxyBean implements ProxyBean {
         this.automatically = automatically;
     }
 
-    public void on() {
-        if (NetworkProxyBean.test(host, port)) {
-            if (this.host != null)
-                NetworkProxySugar.Https.setProxyHost(this.host);
-            if (this.port != null)
-                NetworkProxySugar.Https.setProxyPort(this.port);
-            if (this.nonProxyHosts != null)
-                NetworkProxySugar.Https.setNonProxyHosts(this.nonProxyHosts);
-            if (this.userName != null)
-                NetworkProxySugar.Ftp.setProxyHost(this.userName);
-            if (this.password != null)
-                NetworkProxySugar.Ftp.setProxyHost(this.password);
-        }
+    public boolean on() {
+        return this.on(false);
     }
 
-    public void force() {
+    public boolean on(boolean force) {
+        if (!force && !NetworkProxyBean.test(host, port))
+            return false;
         if (this.host != null)
             NetworkProxySugar.Https.setProxyHost(this.host);
         if (this.port != null)
@@ -91,9 +82,10 @@ public class HttpsProxyBean implements ProxyBean {
         if (this.nonProxyHosts != null)
             NetworkProxySugar.Https.setNonProxyHosts(this.nonProxyHosts);
         if (this.userName != null)
-            NetworkProxySugar.Ftp.setProxyHost(this.userName);
+            NetworkProxySugar.Https.setProxyHost(this.userName);
         if (this.password != null)
-            NetworkProxySugar.Ftp.setProxyHost(this.password);
+            NetworkProxySugar.Https.setProxyHost(this.password);
+        return true;
     }
 
     public void off() {

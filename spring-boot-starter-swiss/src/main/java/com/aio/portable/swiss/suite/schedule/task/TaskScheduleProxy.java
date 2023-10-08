@@ -5,38 +5,30 @@ import org.springframework.scheduling.support.CronTrigger;
 
 import java.text.MessageFormat;
 
-public class TaskScheduleProxy implements Task {
+public class TaskScheduleProxy {
 
     private ThreadPoolTaskScheduler scheduler;
 
     private String cron; // = "00 00 00 * * ?";
 
-    private AbstractTask abstractTask;
+    private Runnable abstractTask;
 
     private boolean runAtOnce = false;
 
-    public TaskScheduleProxy(AbstractTask abstractTask, String cron, ThreadPoolTaskScheduler scheduler, boolean runAtOnce) {
+    public TaskScheduleProxy(ThreadPoolTaskScheduler scheduler, Runnable abstractTask, String cron, boolean runAtOnce) {
+        if (abstractTask == null)
+            throw new NullPointerException(MessageFormat.format("{0} is null.Please specify a Entry class.", this));
+
         this.abstractTask = abstractTask;
         this.cron = cron;
         this.scheduler = scheduler;
         this.runAtOnce = runAtOnce;
     }
 
-    public void run() {
-        if (abstractTask == null)
-            throw new NullPointerException(MessageFormat.format("{0} is null.Please specify a Entry class."
-                    , this));
-        if (runAtOnce)
-            runAtOnce();
-        start();
-    }
-
-    private void runAtOnce() {
-        abstractTask.run();
-    }
-
     public void start() {
-        scheduler.schedule(() -> abstractTask.run(), new CronTrigger(cron));
+        if (runAtOnce)
+            abstractTask.run();
+        scheduler.schedule(abstractTask, new CronTrigger(cron));
     }
 
 }

@@ -75,7 +75,7 @@ public class RequestRecord {
     public static RequestRecord newInstance(HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
 
-        ThrowableSugar.catchThenPrintStackTrace(() -> {
+        ThrowableSugar.printStackTraceIfCatch(() -> {
             if (request != null) {
                 requestRecord.setRemoteAddress(request.getRemoteAddr());
                 String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY : "?" + request.getQueryString());

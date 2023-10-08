@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>ladder-log</contextName>
+    <contextName>swiss-log</contextName>
     <property name="LOG_HOME" value="log"/>
     <property name="LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}/log.%d{yyyy-MM-dd}.log"/>
     <property name="ROLE_FILE_LOG_FILENAME_PATTERN" value="${LOG_HOME}/%d{yyyy-MM-dd}-%i.log"/>
@@ -38,6 +38,9 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${NORMAL_PATTERN}</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
 
     <!-- 日志级别：OFF < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < ALL -->
@@ -47,5 +50,5 @@
         <appender-ref ref="ROLE_FILE_LOG"/>
     </root>
 
-    <logger name="com.aio.portable.park.dao" level="info"/>
+<!--    <logger name="com.aio.portable.park.dao.master.mapper" level="debug"/>-->
 </configuration>

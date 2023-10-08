@@ -5,12 +5,17 @@ import com.aio.portable.swiss.suite.net.tcp.TcpSugar;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpsProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SocksProxyBean;
+import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SystemProxiesBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
 import java.text.MessageFormat;
+import java.util.List;
 
 public class NetworkProxyBean implements InitializingBean {
 //    private static final Log log = LogFactory.getLog(NetworkProxyBean.class);
@@ -25,9 +30,12 @@ public class NetworkProxyBean implements InitializingBean {
     @Autowired(required = false)
     SocksProxyBean socksProxyBean;
 
+    @Autowired(required = false)
+    SystemProxiesBean systemProxiesBean;
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (httpProxyBean != null || httpsProxyBean != null || socksProxyBean != null) {
+        if (httpProxyBean != null || httpsProxyBean != null || socksProxyBean != null || systemProxiesBean != null) {
             if (httpProxyBean != null && httpProxyBean.getAutomatically()) {
                 httpProxyBean.on();
             }
@@ -38,6 +46,32 @@ public class NetworkProxyBean implements InitializingBean {
 
             if (socksProxyBean != null && socksProxyBean.getAutomatically()) {
                 socksProxyBean.on();
+            }
+
+            if (systemProxiesBean != null && systemProxiesBean.getAutomatically()) {
+                {
+                    System.setProperty("java.net.useSystemProxies", "true");
+                    List<Proxy> proxyList = null;
+                    proxyList = ProxySelector.getDefault().select(new URI("http://10.124.165.203:8060/Overview"));
+                    for (int j = 0; j < proxyList.size(); j++) {
+                        Proxy proxy = proxyList.get(j);
+                        if (proxy.type() != Proxy.Type.DIRECT) {
+                            System.out.println(proxy);
+                        }
+                    }
+                }
+                systemProxiesBean.on();
+                {
+                    System.setProperty("java.net.useSystemProxies", "true");
+                    List<Proxy> proxyList = null;
+                    proxyList = ProxySelector.getDefault().select(new URI("http://10.124.165.203:8060/Overview"));
+                    for (int j = 0; j < proxyList.size(); j++) {
+                        Proxy proxy = proxyList.get(j);
+                        if (proxy.type() != Proxy.Type.DIRECT) {
+                            System.out.println(proxy);
+                        }
+                    }
+                }
             }
         }
     }

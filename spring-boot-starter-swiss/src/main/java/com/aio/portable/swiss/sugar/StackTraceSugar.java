@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.sugar;
 
 public abstract class StackTraceSugar {
-    private static final int CURRENT_STACK_INDEX_THREAD = 3;
-    private static final int CURRENT_STACK_INDEX_EXCEPTION = 2;
+    private static final int CURRENT_STACK_DEPTH_THREAD = 3;
+    private static final int CURRENT_STACK_DEPTH_EXCEPTION = 2;
 
-    private static final int PREVIOUS_STACK_INDEX_THREAD = CURRENT_STACK_INDEX_THREAD + 1;
-    private static final int PREVIOUS_STACK_INDEX_EXCEPTION = CURRENT_STACK_INDEX_EXCEPTION + 1;
+    private static final int PREVIOUS_STACK_DEPTH_THREAD = CURRENT_STACK_DEPTH_THREAD + 1;
+    private static final int PREVIOUS_STACK_DEPTH_EXCEPTION = CURRENT_STACK_DEPTH_EXCEPTION + 1;
 
     public static StackTraceElement[] getStackTraceElementByThread() {
         return Thread.currentThread().getStackTrace();
@@ -33,19 +33,19 @@ public abstract class StackTraceSugar {
 
     public static class Current {
         private static StackTraceElement getStackTraceElementByThread() {
-            return Thread.currentThread().getStackTrace()[CURRENT_STACK_INDEX_THREAD];
+            return Thread.currentThread().getStackTrace()[CURRENT_STACK_DEPTH_THREAD];
         }
 
         private static StackTraceElement getStackTraceElementByThread(int previous) {
-            return Thread.currentThread().getStackTrace()[CURRENT_STACK_INDEX_THREAD + previous];
+            return Thread.currentThread().getStackTrace()[CURRENT_STACK_DEPTH_THREAD + previous];
         }
 
         private static StackTraceElement getStackTraceByException() {
-            return new RuntimeException().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION];
+            return new RuntimeException().getStackTrace()[CURRENT_STACK_DEPTH_EXCEPTION];
         }
 
         private static StackTraceElement getStackTraceByException(int previous) {
-            return new RuntimeException().getStackTrace()[CURRENT_STACK_INDEX_EXCEPTION + previous];
+            return new RuntimeException().getStackTrace()[CURRENT_STACK_DEPTH_EXCEPTION + previous];
         }
 
         public static String getFileName() {
@@ -83,19 +83,19 @@ public abstract class StackTraceSugar {
 
     public static class Previous {
         private static StackTraceElement getStackTraceElementByThread() {
-            return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_INDEX_THREAD];
+            return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_DEPTH_THREAD];
         }
 
         private static StackTraceElement getStackTraceElementByThread(int previous) {
-            return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_INDEX_THREAD + previous];
+            return Thread.currentThread().getStackTrace()[PREVIOUS_STACK_DEPTH_THREAD + previous];
         }
 
         private static StackTraceElement getStackTraceByException() {
-            return new Exception().getStackTrace()[PREVIOUS_STACK_INDEX_EXCEPTION];
+            return new Exception().getStackTrace()[PREVIOUS_STACK_DEPTH_EXCEPTION];
         }
 
         private static StackTraceElement getStackTraceByException(int previous) {
-            return new Exception().getStackTrace()[PREVIOUS_STACK_INDEX_EXCEPTION + previous];
+            return new Exception().getStackTrace()[PREVIOUS_STACK_DEPTH_EXCEPTION + previous];
         }
 
         public static String getFileName() {

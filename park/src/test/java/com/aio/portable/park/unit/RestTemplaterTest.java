@@ -1,18 +1,19 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @TestComponent
-public class RestTemplateTest {
+public class RestTemplaterTest {
 
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
@@ -25,15 +26,15 @@ public class RestTemplateTest {
 
     @Test
     public void foobar() {
-        ResponseEntity<String> stringResponseEntity1 = RestTemplater.get(restTemplate, "https://10.124.154.8/a/login", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
-        ResponseEntity<String> stringResponseEntity2 = RestTemplater.get(skipSSLRestTemplate, "https://10.124.154.8/a/login", RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
+        ResponseEntity<String> stringResponseEntity1 = RestTemplater.get(restTemplate, String.class, "https://10.124.154.8/a/login", RestTemplater.Headers.newContentTypeApplicationJson(), null);
+        ResponseEntity<String> stringResponseEntity2 = RestTemplater.get(skipSSLRestTemplate, String.class, "https://10.124.154.8/a/login", RestTemplater.Headers.newContentTypeApplicationJson(), null);
 
 
         {
             // https://www.yxgapp.com/
             // https://www.facebook.com/
             String url = "http://www.yxgapp.com/";
-            ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, url, RestTemplater.Headers.newContentTypeApplicationJson(), String.class);
+            ResponseEntity objectResponseEntity = RestTemplater.get(skipSSLRestTemplate, String.class, url, RestTemplater.Headers.newContentTypeApplicationJson(), null);
         }
 
 //        HttpClient httpClient = HttpClients.custom()
@@ -50,7 +51,14 @@ public class RestTemplateTest {
     }
 
 
+    @Test
     public void todo() {
+        ResponseEntity<Map<String, Object>> response = RestTemplater.client(restTemplate)
+                .url("http://localhost:8888/abc")
+                .addParam("k", 8)
+                .body("{k:0}")
+                .putFor(new ParameterizedTypeReference<HashMap<String, Object>>() {});
+        Map<String, Object> body = response.getBody();
 
     }
 }

@@ -5,18 +5,14 @@ server:
     min-response-size: 2048
     enabled: true
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+#  servlet:
+#    context-path: /permission
 #  tomcat:
 #    max-connections: 888
 
 
 
 spring:
-#  redis:
-#    host: mecs.com
-#    port: 6379
-#    timeout: 10
-#    password: YYYYYYYY
-
   application:
     name: @project.deploy.finalName@
 
@@ -31,8 +27,7 @@ spring:
     password: pppppppp
 
   profiles:
-    active:
-      @profiles.active@
+    active: @profiles.active@
 
 
   rest:
@@ -71,7 +66,7 @@ ribbon:
 
 
 swagger:
-  enabled: true
+  enabled: false
   api-info:
     title: 在线接口文档
     description: 文字描述
@@ -86,6 +81,7 @@ swagger:
 
 config:
   cron: "0 0 1 1 * ?"
+  text: "hello world."
 
 
 
@@ -116,4 +112,5 @@ proxy:
   socks:
     automatically: false
     host: 127.0.0.1
-    port: 58818
+    port: 1080
+

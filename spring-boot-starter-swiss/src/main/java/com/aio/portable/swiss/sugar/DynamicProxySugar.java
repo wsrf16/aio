@@ -1,8 +1,7 @@
 package com.aio.portable.swiss.sugar;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -14,7 +13,6 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.function.Consumer;
@@ -114,11 +112,11 @@ public class DynamicProxySugar {
     }
 
     public static final <T> T unpackCglib(Object source, Class<T> clazz) {
-        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepCloneByCglib(source), clazz);
+        return (T)DeepCloneSugar.Json.clone(DeepCloneSugar.Cglib.clone(source), clazz);
     }
 
     public static final <T> T unpackCglib(Object source) {
-        return (T)JacksonSugar.deepCopy(BeanSugar.Cloneable.deepCloneByCglib(source), ClassUtils.getUserClass(source));
+        return (T)DeepCloneSugar.Json.clone(DeepCloneSugar.Cglib.clone(source), ClassUtils.getUserClass(source));
     }
 
     public static final <T> T getAopTargetObject(T proxy) {
@@ -136,12 +134,12 @@ public class DynamicProxySugar {
 //            Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
 //            h.setAccessible(true);
 //            AopProxy aopProxy = (AopProxy) h.get(proxy);
-            AopProxy aopProxy = (AopProxy) ClassSugar.getDeclaredField(proxy, proxy.getClass().getSuperclass(), "h");
+            AopProxy aopProxy = (AopProxy) ClassSugar.getDeclaredFieldValue(proxy, proxy.getClass().getSuperclass(), "h");
 
 //            Field advised = aopProxy.getClass().getDeclaredField("advised");
 //            advised.setAccessible(true);
 //            T target = (T) ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
-            AdvisedSupport advisedSupport = ClassSugar.getDeclaredField(aopProxy, "advised");
+            AdvisedSupport advisedSupport = ClassSugar.getDeclaredFieldValue(aopProxy, "advised");
             T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {
@@ -154,13 +152,13 @@ public class DynamicProxySugar {
 //            Field h = beanInstance.getClass().getDeclaredField("CGLIB$CALLBACK_0");
 //            h.setAccessible(true);
 //            Object dynamicAdvisedInterceptor = h.get(beanInstance);
-            Object dynamicAdvisedInterceptor = ClassSugar.getDeclaredField(proxy, "CGLIB$CALLBACK_0");
+            Object dynamicAdvisedInterceptor = ClassSugar.getDeclaredFieldValue(proxy, "CGLIB$CALLBACK_0");
 
 //            Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
 //            advised.setAccessible(true);
 //
 //            T target = (T) ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
-            AdvisedSupport advisedSupport = ClassSugar.getDeclaredField(dynamicAdvisedInterceptor, "advised");
+            AdvisedSupport advisedSupport = ClassSugar.getDeclaredFieldValue(dynamicAdvisedInterceptor, "advised");
             T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {

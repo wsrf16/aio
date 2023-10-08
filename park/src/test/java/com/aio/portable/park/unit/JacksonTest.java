@@ -15,9 +15,16 @@ import java.util.Map;
 
 @TestComponent
 public class JacksonTest {
-    @Data
     static class AA {
         LevelEnum a;
+
+        public LevelEnum getA() {
+            return a;
+        }
+
+        public void setA(LevelEnum a) {
+            this.a = a;
+        }
     }
 
     @Test

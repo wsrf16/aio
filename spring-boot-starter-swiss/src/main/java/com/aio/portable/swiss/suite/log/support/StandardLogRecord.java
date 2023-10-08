@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.log.support;
 
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -7,23 +8,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class StandardLogRecord implements LogRecord {
     @JsonProperty("level")
-    public LevelEnum level;
+    protected LevelEnum level;
     @JsonProperty("name")
-    public String name;
+    protected String name;
     @JsonProperty("summary")
-    public String summary;
+    protected String summary;
     @JsonProperty("message")
-    public String message;
+    protected String message;
     @JsonProperty("data")
-    public Object data;
+    protected Object data;
     @JsonProperty("exception")
-    public LogThrowable exception;
+    protected LogThrowable exception;
     @JsonProperty("outputType")
-    public String outputType;
+    protected String outputType;
     @JsonProperty("threadId")
-    public Long threadId = Thread.currentThread().getId();
+    protected Long threadId = Thread.currentThread().getId();
     @JsonProperty("threadName")
-    public String threadName = Thread.currentThread().getName();
+    protected String threadName = Thread.currentThread().getName();
 
 
     public LevelEnum getLevel() {
@@ -97,5 +98,14 @@ public class StandardLogRecord implements LogRecord {
     public void setThreadName(String threadName) {
         this.threadName = threadName;
     }
+
+//    public static final synchronized String[] getPropertyNameArray() {
+//        if (propertyNameArray == null) {
+//            propertyNameArray = BeanSugar.PropertyDescriptors.getAllPropertyNames(StandardLogRecord.class);
+//        }
+//        return propertyNameArray;
+//    }
+//
+//    private static String[] propertyNameArray;
 }
 

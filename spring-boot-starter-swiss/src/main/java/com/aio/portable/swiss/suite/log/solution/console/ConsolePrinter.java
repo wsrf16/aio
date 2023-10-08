@@ -5,8 +5,10 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.Global;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.StandardLogRecord;
 
 import java.text.MessageFormat;
 import java.util.Date;
@@ -142,16 +144,31 @@ public class ConsolePrinter implements Printer {
 //                    .replace("\"message\"", "\"" + StringSugar.paint("message", ColorEnum.UNDERLINE) + "\"")
 //                    .replace("\"exception\"", "\"" + StringSugar.paint("exception", ColorEnum.UNDERLINE) + "\"")
 //            ;
-            output = formatOutput(output, "\"name\"", "\"summary\"" ,"\"message\"", "\"exception\"");
+//            output = formatOutput(output, "\"level\"", "\"name\"", "\"summary\"" ,"\"message\"", "\"data\"", "\"exception\"");
+            output = formatOutput(output, getPropertyNameArray());
+
             println(output);
         }
 
     }
 
+    private static String[] propertyNameArray;
+    private static final synchronized String[] getPropertyNameArray() {
+        if (propertyNameArray == null) {
+            propertyNameArray = BeanSugar.PropertyDescriptors.getAllPropertyNames(StandardLogRecord.class);
+            for (int i = 0; i < propertyNameArray.length; i++) {
+                propertyNameArray[i] = "\"" + propertyNameArray[i] + "\"";
+            }
+        }
+        return propertyNameArray;
+    }
+
+
+
     private String formatOutput(String output, String... texts) {
         String item = output;
         for (String text : texts) {
-            item = item.replace(text, StringSugar.paint(text, ColorEnum.UNDERLINE));
+            item = item.replaceAll(text + "(?=:)", StringSugar.paint(text, ColorEnum.UNDERLINE));
         }
         return item;
     }

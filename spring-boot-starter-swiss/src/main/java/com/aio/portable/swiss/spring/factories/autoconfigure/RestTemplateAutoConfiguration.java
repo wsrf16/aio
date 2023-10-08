@@ -11,9 +11,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-//@Configuration
+import java.io.IOException;
+
 @ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class})
 //@EnableConfigurationProperties(RestTemplateProperties.class)
 @ConditionalOnMissingBean({RestTemplate.class})
@@ -39,6 +44,7 @@ public class RestTemplateAutoConfiguration {
         RestTemplate restTemplate = restTemplateBuilder.build();
         if (enabled)
             RestTemplater.setProxyRequestFactory(restTemplate, agentHost, agentPort);
+        restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);
         return restTemplate;
     }
 
@@ -48,6 +54,7 @@ public class RestTemplateAutoConfiguration {
     @ConditionalOnMissingBean(RestTemplateProperties.class)
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
+        restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);
         return restTemplate;
     }
 
@@ -64,6 +71,7 @@ public class RestTemplateAutoConfiguration {
             RestTemplater.setSkipSSLRequestFactory(restTemplate, agentHost, agentPort);
         else
             RestTemplater.setSkipSSLRequestFactory(restTemplate);
+        restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);
         return restTemplate;
     }
 
@@ -73,8 +81,24 @@ public class RestTemplateAutoConfiguration {
     public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         RestTemplater.setSkipSSLRequestFactory(restTemplate);
+        restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);
         return restTemplate;
     }
 
 
+    private static final ResponseErrorHandler SILENCE_RESPONSE_ERROR_HANDLER = new DefaultResponseErrorHandler() {
+        @Override
+        public boolean hasError(ClientHttpResponse clientHttpResponse) throws IOException {
+            return false;
+        }
+
+        @Override
+        public void handleError(ClientHttpResponse clientHttpResponse) throws IOException {
+        }
+
+        @Override
+        protected boolean hasError(HttpStatus statusCode) {
+            return super.hasError(statusCode);
+        }
+    };
 }

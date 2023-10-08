@@ -2,7 +2,7 @@ package com.aio.portable.swiss.suite.storage.db.mybatis;
 
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -29,22 +29,22 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return resultList.stream().reduce(0, (x, y) -> x + y);
     }
 
-    default int delete(S entity) {
-        return this.delete(entity, null);
+    default int delete(S predicate) {
+        return this.delete(predicate, null);
     }
 
-    default int delete(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.delete(null, condition);
+    default int delete(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.delete(null, predicateExpression);
     }
 
-    default int delete(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default int delete(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return this.delete(next);
     }
 
-    static <X> LambdaQueryWrapper<X> buildLambdaQueryWrapper(X entity) {
-        return entity == null ? Wrappers.lambdaQuery() : Wrappers.lambdaQuery(entity);
+    static <X> LambdaQueryWrapper<X> buildLambdaQueryWrapper(X predicate) {
+        return predicate == null ? Wrappers.lambdaQuery() : Wrappers.lambdaQuery(predicate);
     }
 
     static <X> LambdaQueryWrapper<X> buildLambdaQueryWrapper() {
@@ -55,31 +55,31 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return Wrappers.lambdaUpdate();
     }
 
-    default int update(S updated, S condition) {
-        return this.update(updated, Wrappers.lambdaUpdate(condition));
+    default int update(S assignment, S predicateExpression) {
+        return this.update(assignment, Wrappers.lambdaUpdate(predicateExpression));
     }
 
-    default int update(S updated, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> condition) {
+    default int update(S assignment, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
         LambdaUpdateWrapper<S> wrapper = buildLambdaUpdateWrapper();
-        LambdaUpdateWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
-        return this.update(updated, next);
+        LambdaUpdateWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
+        return this.update(assignment, next);
     }
 
-    default int update(Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> updated, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> condition) {
+    default int update(Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> assignment, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
         LambdaUpdateWrapper<S> wrapper = buildLambdaUpdateWrapper();
-        LambdaUpdateWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
-        next = updated == null ? next : updated.apply(next);
+        LambdaUpdateWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
+        next = assignment == null ? next : assignment.apply(next);
         return this.update(null, next);
     }
 
-    default int updateBatchById(Collection<S> updatedList) {
-        List<Integer> resultList = updatedList.stream().map(c -> this.updateById(c)).collect(Collectors.toList());
+    default int updateBatchById(Collection<S> assignmentList) {
+        List<Integer> resultList = assignmentList.stream().map(c -> this.updateById(c)).collect(Collectors.toList());
         return resultList.stream().reduce(0, (x, y) -> x + y);
     }
 
     default <T> T selectById(Serializable id, Class<T> target) {
         S entity = selectById(id);
-        return BeanSugar.Cloneable.deepCloneByProperties(entity, target);
+        return DeepCloneSugar.Properties.clone(entity, target);
     }
 
     default <T> List<T> selectBatchIds(Collection<? extends Serializable> idList, Class<T> target) {
@@ -87,48 +87,48 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return CollectionSugar.cloneByProperties(list, target);
     }
 
-    default S selectOne(S entity) {
-        return this.selectOne(entity, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
+    default S selectOne(S predicate) {
+        return this.selectOne(predicate, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
     }
 
-    default S selectOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.selectOne(null, condition);
+    default S selectOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectOne(null, predicateExpression);
     }
 
-    default S selectOne(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default S selectOne(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return selectOne(next);
     }
 
 
-    default <T> T selectOne(S entity, Class<T> target) {
-        return this.selectOne(entity, null, target);
+    default <T> T selectOne(S predicate, Class<T> target) {
+        return this.selectOne(predicate, null, target);
     }
 
-    default <T> T selectOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        return this.selectOne(null, condition, target);
+    default <T> T selectOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        return this.selectOne(null, predicateExpression, target);
     }
 
-    default <T> T selectOne(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default <T> T selectOne(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         S one = selectOne(next);
-        return BeanSugar.Cloneable.deepCloneByProperties(one, target);
+        return DeepCloneSugar.Properties.clone(one, target);
     }
 
 
-    default boolean exists(S entity) {
-        return this.exists(entity, null);
+    default boolean exists(S predicate) {
+        return this.exists(predicate, null);
     }
 
-    default boolean exists(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.exists(null, condition);
+    default boolean exists(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.exists(null, predicateExpression);
     }
 
-    default boolean exists(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default boolean exists(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return exists(next);
     }
 
@@ -137,17 +137,17 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return selectCount(wrapper);
     }
 
-    default Long selectCount(S entity) {
-        return this.selectCount(entity, null);
+    default Long selectCount(S predicate) {
+        return this.selectCount(predicate, null);
     }
 
-    default Long selectCount(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.selectCount( null, condition);
+    default Long selectCount(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectCount( null, predicateExpression);
     }
 
-    default Long selectCount(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default Long selectCount(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return selectCount(next);
     }
 
@@ -163,44 +163,44 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return CollectionSugar.cloneByProperties(list, target);
     }
 
-    default List<S> selectList(S entity) {
-        return this.selectList(entity, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
+    default List<S> selectList(S predicate) {
+        return this.selectList(predicate, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
     }
 
-    default List<S> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.selectList(null, condition);
+    default List<S> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectList(null, predicateExpression);
     }
 
-    default List<S> selectList(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default List<S> selectList(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return selectList(next);
     }
 
-    default <T> List<T> selectList(S entity, Class<T> target) {
-        return this.selectList(entity, null, target);
+    default <T> List<T> selectList(S predicate, Class<T> target) {
+        return this.selectList(predicate, null, target);
     }
 
-    default <T> List<T> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        return this.selectList(null, condition, target);
+    default <T> List<T> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        return this.selectList(null, predicateExpression, target);
     }
 
-    default <T> List<T> selectList(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        List<S> list = selectList(entity, condition);
+    default <T> List<T> selectList(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        List<S> list = selectList(predicate, predicateExpression);
         return CollectionSugar.cloneByProperties(list, target);
     }
 
-    default List<S> selectList(S entity, SFunction<S, ?>... selectArray) {
-        return this.selectList(entity, null, selectArray);
+    default List<S> selectList(S predicate, SFunction<S, ?>... selectArray) {
+        return this.selectList(predicate, null, selectArray);
     }
 
-    default List<S> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, SFunction<S, ?>... selectArray) {
-        return this.selectList(null, condition, selectArray);
+    default List<S> selectList(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, SFunction<S, ?>... selectArray) {
+        return this.selectList(null, predicateExpression, selectArray);
     }
 
-    default List<S> selectList(S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, SFunction<S, ?>... selectArray) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default List<S> selectList(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, SFunction<S, ?>... selectArray) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
 //        for (SFunction<S, ?> fun : selectArray) {
 //            next = next.select(fun);
 //        }
@@ -208,44 +208,44 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return selectList(next);
     }
 
-    default List<Map<String, Object>> selectMaps(S entity) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
+    default List<Map<String, Object>> selectMapList(S predicate) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
         return selectMaps(wrapper);
     }
 
-    default List<Object> selectObjs(S entity) {
-        return selectObjs(Wrappers.lambdaQuery(entity));
+    default List<Object> selectObjectList(S predicate) {
+        return selectObjs(Wrappers.lambdaQuery(predicate));
     }
 
     default <P extends IPage<S>> P selectPage(P page) {
         return selectPage(page, buildLambdaQueryWrapper());
     }
 
-    default <P extends IPage<S>> P selectPage(P page, S entity) {
-        return this.selectPage(page, entity, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
+    default <P extends IPage<S>> P selectPage(P page, S predicate) {
+        return this.selectPage(page, predicate, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
     }
 
-    default <P extends IPage<S>> P selectPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.selectPage(page, null, condition);
+    default <P extends IPage<S>> P selectPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectPage(page, null, predicateExpression);
     }
 
-    default <P extends IPage<S>> P selectPage(P page, S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default <P extends IPage<S>> P selectPage(P page, S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return selectPage(page, next);
     }
 
-    default <P extends IPage<S>, T> Page<T> selectPage(P page, S entity, Class<T> target) {
-        return this.selectPage(page, entity, null, target);
+    default <P extends IPage<S>, T> Page<T> selectPage(P page, S predicate, Class<T> target) {
+        return this.selectPage(page, predicate, null, target);
     }
 
-    default <P extends IPage<S>, T> Page<T> selectPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        return this.selectPage(page, null, condition, target);
+    default <P extends IPage<S>, T> Page<T> selectPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        return this.selectPage(page, null, predicateExpression, target);
     }
 
-    default <P extends IPage<S>, T> Page<T> selectPage(P page, S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition, Class<T> target) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default <P extends IPage<S>, T> Page<T> selectPage(P page, S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         P pIn = selectPage(page, next);
 
         List<S> sourceList = pIn.getRecords();
@@ -255,17 +255,17 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return pOut;
     }
 
-    default <P extends IPage<Map<String, Object>>> P selectMapsPage(P page, S entity) {
-        return this.selectMapsPage(page, entity, null);
+    default <P extends IPage<Map<String, Object>>> P selectMapPage(P page, S predicate) {
+        return this.selectMapPage(page, predicate, null);
     }
 
-    default <P extends IPage<Map<String, Object>>> P selectMapsPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        return this.selectMapsPage(page, null, condition);
+    default <P extends IPage<Map<String, Object>>> P selectMapPage(P page, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectMapPage(page, null, predicateExpression);
     }
 
-    default <P extends IPage<Map<String, Object>>> P selectMapsPage(P page, S entity, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> condition) {
-        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(entity);
-        LambdaQueryWrapper<S> next = condition == null ? wrapper : condition.apply(wrapper);
+    default <P extends IPage<Map<String, Object>>> P selectMapPage(P page, S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         return selectMapsPage(page, next);
     }
 }

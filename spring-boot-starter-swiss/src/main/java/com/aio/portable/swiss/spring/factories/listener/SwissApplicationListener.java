@@ -1,7 +1,9 @@
 package com.aio.portable.swiss.spring.factories.listener;
 
+import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
@@ -11,16 +13,20 @@ import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogPropertie
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.*;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 // GenericApplicationListener
 // SmartApplicationListener
@@ -51,7 +57,8 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        log.debug("LogHubApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
+        log.debug("SwissApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
+
         initializeLogHubProperties(environment);
     }
 
@@ -95,15 +102,43 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     @Override
     protected void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
+
+//        this.registerTextEncryptor(applicationContext);
         try {
             if (ClassLoaderSugar.isPresent("org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext")
                     && applicationContext.getClass().equals(AnnotationConfigServletWebServerApplicationContext.class)
                     && !SpringContextHolder.hasLoaded())
                 SpringContextHolder.setSingletonApplicationContext(applicationContext);
         } catch (Exception e) {
-            log.warn("LogHub onApplicationPreparedEvent", e);
+            log.warn("SwissApplicationListener#onApplicationPreparedEvent", e);
         }
     }
+
+//    private static void registerTextEncryptor(ConfigurableApplicationContext applicationContext) {
+//        if(applicationContext instanceof AnnotationConfigApplicationContext){
+//            ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+////            if(!beanFactory.containsBean("textEncryptor")){
+////                beanFactory.registerSingleton("textEncryptor",new TextEncryptor(){
+////
+////                    @Override
+////                    public String encrypt(String text) {
+////                        System.out.println("=====================================加密");
+////                        return "加密"+text;
+////                    }
+////
+////                    @Override
+////                    public String decrypt(String encryptedText) {
+////                        //这里解密就直接输出日志，然后直接解密返回
+////                        System.out.println("=====================================解密");
+//////                        return EncryptUtil.decrypt("work0", encryptedText);
+//////                        return StringSugar.trimStart(encryptedText, "加密");
+////                        return "解密" + encryptedText;
+////                    }
+////                });
+////            }
+//        }
+//
+//    }
 
     @Override
     public int getOrder() {

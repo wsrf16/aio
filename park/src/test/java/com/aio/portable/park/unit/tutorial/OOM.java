@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit.tutorial;
 
 import com.aio.portable.park.bean.UserInfoEntity;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.cglib.proxy.Callback;
@@ -78,7 +78,7 @@ public class OOM {
         int i = 1;
         Map<Integer, Object> map = new HashMap<>();
         while (i != 0)
-            map.put(i++, BeanSugar.Cloneable.deepCloneByCglib(userInfoEntity));
+            map.put(i++, DeepCloneSugar.Cglib.clone(userInfoEntity));
     }
 
     static long stack = 0;

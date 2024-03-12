@@ -1,18 +1,18 @@
 package com.aio.portable.swiss.spring.factories.autoconfigure.properties;
 
 public class RestTemplateProperties {
-    private Agent agent;
+    private Proxy proxy;
 
-    public Agent getAgent() {
-        return agent;
+    public Proxy getProxy() {
+        return proxy;
     }
 
-    public void setAgent(Agent agent) {
-        this.agent = agent;
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
     }
 
 
-    public static class Agent {
+    public static class Proxy {
         private boolean enabled = false;
         private String host = "127.0.0.1";
         private int port = 8888;

@@ -13,10 +13,9 @@ public abstract class SerialNumberWorker {
     private static final String DATETIME_FORMAT = DateTimeSugar.Format.FORMAT_TIGHT_LONG;
 
     public static final SerialNumberBuilder builder() {
-        String dateTimeFormat = DATETIME_FORMAT;
         int minCount = 1;
         int countDigit = 4;
-        return builder(dateTimeFormat, minCount, countDigit);
+        return builder(DATETIME_FORMAT, minCount, countDigit);
     }
 
     /**

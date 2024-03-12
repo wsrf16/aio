@@ -4,10 +4,8 @@ import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.global.ProtocolType;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.io.IOSugar;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

@@ -160,7 +160,7 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Date convertText2Date(String format, String text) {
+        public static final synchronized Date convertText2Date(String format, String text) {
             Date date = null;
             try {
                 date = new SimpleDateFormat(format).parse(text);
@@ -178,7 +178,7 @@ public abstract class DateTimeSugar {
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static String convertDate2Text(String format, Date date) {
+        public static final synchronized String convertDate2Text(String format, Date date) {
             String text = new SimpleDateFormat(format).format(date);
             return text;
         }
@@ -191,7 +191,7 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static Calendar convertText2Calendar(String format, String text) {
+        public static final synchronized Calendar convertText2Calendar(String format, String text) {
             try {
                 Date date = new SimpleDateFormat(format).parse(text);
                 Calendar calendar = Calendar.getInstance();
@@ -210,7 +210,7 @@ public abstract class DateTimeSugar {
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static String convertCalendar2Text(String format, Calendar calendar) {
+        public static final synchronized String convertCalendar2Text(String format, Calendar calendar) {
             Date date = calendar.getTime();
             String text = new SimpleDateFormat(format).format(date);
             return text;

@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.timer.RefreshCache;
+import com.aio.portable.swiss.suite.timer.TimerCache;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -9,20 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 
 @TestComponent
-public class RefreshCacheTest {
+public class TimerCacheTest {
     class OneHashMap extends HashMap<String, List<Integer>> {
     }
     public HashMap<String, List<Integer>> param = new HashMap<>();
 
     @Test
     public void todo() {
-        RefreshCache<Integer> refreshCache = RefreshCache.build(Duration.ofMinutes(30), () -> {
+        TimerCache<Integer> timerCache = TimerCache.build(Duration.ofMinutes(30), () -> {
             longTimeWork();
             return 8888;
         });
-        refreshCache.start();
-        Integer data1 = refreshCache.tryGetData(Duration.ofSeconds(2));
-        Integer data2 = refreshCache.tryGetData(Duration.ofSeconds(10));
+        timerCache.start();
+        Integer data1 = timerCache.tryGetData(Duration.ofSeconds(2));
+        Integer data2 = timerCache.tryGetData(Duration.ofSeconds(10));
         System.out.println();
     }
 

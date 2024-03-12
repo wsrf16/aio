@@ -28,15 +28,16 @@ public class Base64MultipartFile implements MultipartFile {
      * @return
      */
     public static Base64MultipartFile toMultipartFile(String base64) {
-        String[] charArray = base64.split(",");
+        String header = base64.split(",")[0];
+        String body = base64.split(",")[1];
 
-        byte[] bytes = JDKBase64Convert.decode(charArray[1]);
-        for (int i = 0; i < bytes.length; i++) {
-            if (bytes[i] < 0) {
-                bytes[i] += 256;
+        byte[] image = JDKBase64Convert.decode(body);
+        for (int i = 0; i < image.length; i++) {
+            if (image[i] < 0) {
+                image[i] += 256;
             }
         }
-        return Base64MultipartFile.toMultipartFile(charArray[0], bytes);
+        return Base64MultipartFile.toMultipartFile(header, image);
     }
 
     public String getExtension() {

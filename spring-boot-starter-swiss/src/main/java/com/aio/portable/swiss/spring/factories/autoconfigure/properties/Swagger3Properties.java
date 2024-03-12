@@ -35,6 +35,8 @@ public class Swagger3Properties implements SwaggerProperties {
 
     private String packageName;
 
+    private Predicate<RequestHandler> selector;
+
     private String host = "";
 
     private List<RequestParameter> requestParameters;
@@ -88,6 +90,14 @@ public class Swagger3Properties implements SwaggerProperties {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    public Predicate<RequestHandler> getSelector() {
+        return selector;
+    }
+
+    public void setSelector(Predicate<RequestHandler> selector) {
+        this.selector = selector;
     }
 
     public String getHost() {

@@ -17,6 +17,14 @@ public class Book {
         this.name = name;
     }
 
+    public String getNameLike() {
+        return nameLike;
+    }
+
+    public void setNameLike(String nameLike) {
+        this.nameLike = nameLike;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -35,6 +43,7 @@ public class Book {
 
     private Integer id;
     private String name;
+    private String nameLike;
     private String author;
     private String description;
 }

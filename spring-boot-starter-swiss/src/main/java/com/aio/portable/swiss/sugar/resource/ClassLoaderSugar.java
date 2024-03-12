@@ -28,12 +28,13 @@ public abstract class ClassLoaderSugar {
     public static KeyValuePair<Boolean, DiagnosticCollector> compileFiles(String outputPath, String... javaFiles) {
         return compileFiles(outputPath, Arrays.asList(javaFiles));
     }
-        /**
-         * compile
-         *
-         * @param javaFiles eg. d:/book.java
-         * @return
-         */
+
+    /**
+     * compile
+     *
+     * @param javaFiles eg. d:/book.java
+     * @return
+     */
     public static KeyValuePair<Boolean, DiagnosticCollector> compileFiles(String outputPath, Iterable<String> javaFiles) {
         DiagnosticCollector diagnostics = new DiagnosticCollector();
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -138,11 +139,15 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadFrom(URL[] urls, String className) throws ClassNotFoundException {
-        URLClassLoader classLoader = new URLClassLoader(urls);
+    public static final Class<?> loadFrom(URL[] urls, String className) {
+        try {
+            URLClassLoader classLoader = new URLClassLoader(urls);
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
-        Class<?> clazz = classLoader.loadClass(className);
-        return clazz;
+            Class<?> clazz = classLoader.loadClass(className);
+            return clazz;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -152,11 +157,15 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadFrom(List<URL> urls, String className) throws ClassNotFoundException {
-        URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+    public static final Class<?> loadFrom(List<URL> urls, String className) {
+        try {
+            URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 //        URLClassLoader classLoader = new URLClassLoader(new URL[]{urls});
-        Class<?> clazz = classLoader.loadClass(className);
-        return clazz;
+            Class<?> clazz = classLoader.loadClass(className);
+            return clazz;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -166,10 +175,14 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    private static final Class<?> loadFrom(URL url, String className) throws ClassNotFoundException {
-        URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        Class<?> clazz = classLoader.loadClass(className);
-        return clazz;
+    private static final Class<?> loadFrom(URL url, String className) {
+        try {
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+            Class<?> clazz = classLoader.loadClass(className);
+            return clazz;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -178,11 +191,15 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadFrom(URL url) throws ClassNotFoundException {
-        URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        String className = ResourceSugar.convertURLToClassName(url.toString());
-        Class<?> clazz = classLoader.loadClass(className);
-        return clazz;
+    public static final Class<?> loadFrom(URL url) {
+        try {
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+            String className = ResourceSugar.convertURLToClassName(url.toString());
+            Class<?> clazz = classLoader.loadClass(className);
+            return clazz;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static final <T> Class<T> load(String className, ClassLoader classLoader, boolean link) {

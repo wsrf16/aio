@@ -59,6 +59,10 @@ public abstract class StringSugar {
         return obj == null ? "" : obj.toString();
     }
 
+//    public static final <T> T getDefaultIfNull(T source, T def) {
+//        return source != null ? source : def;
+//    }
+
     public static final String changeFirstCharacterCase(String str, boolean toUpperCase) {
         if (!StringUtils.hasLength(str)) {
             return str;

@@ -1,15 +1,23 @@
 package com.aio.portable.park;
 
 
-import com.aio.portable.park.bean.MenuEntity;
+import com.aio.portable.park.bean.Student;
+import com.aio.portable.park.bean.UserInfoEntity;
+import com.aio.portable.park.dao.master.model.Book;
+import com.aio.portable.swiss.global.ColorEnum;
 import com.aio.portable.swiss.hamlet.interceptor.log.annotation.NetworkProxy;
+import com.aio.portable.swiss.spring.SpringContextHolder;
+import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.NumberSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
-import com.aio.portable.swiss.suite.bean.node.tree.recursion.RecursiveTree;
+import com.aio.portable.swiss.suite.bean.serializer.json.ByteSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.net.tcp.proxy.NetworkProxySugar;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,9 +26,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.util.ClassUtils;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -44,9 +55,17 @@ public class ParkApplication {
 //    static LogHub log = AppLogHubFactory.staticBuild();
 
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
+//        boolean primitiveOrWrapper = ClassUtils.isPrimitiveOrWrapper(String.class);
         NetworkProxySugar.SystemProxies.setUseSystemProxies(true);
+        // flattened Nested
+        System.out.println(ClassSugar.getPath(String.class));
+        System.out.println(ClassSugar.getPath(Student.class));
+        Book book = new Book();
+        book.setAuthor("aaa");
+        byte[] bytes = ByteSugar.objToByte(book);
+        Book book1 = ByteSugar.byteToObj(bytes, Book.class);
+
 //        log.i("static", "loghub");
-//        BeanSugar.Methods.getDeclaredMethodIncludeParents()
         System.out.println("𝄞" + "𝄞".length());
         ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
     }

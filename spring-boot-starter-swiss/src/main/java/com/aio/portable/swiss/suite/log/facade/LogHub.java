@@ -134,15 +134,15 @@ public class LogHub extends LogBundle implements LogBase {
         return this;
     }
 
-    public LogHub setSerializerAdapter(StringSerializerAdapter adapter) {
-        getLogList().forEach(c -> c.setSerializerAdapter(adapter));
-        return this;
-    }
-
-    public LogHub setLooseSerializerAdapter(StringSerializerAdapter adapter) {
-        getLogList().forEach(c -> c.setLooseSerializerAdapter(adapter));
-        return this;
-    }
+//    public LogHub setSerializerAdapter(StringSerializerAdapter adapter) {
+//        getLogList().forEach(c -> c.printer.setSerializerAdapter(adapter));
+//        return this;
+//    }
+//
+//    public LogHub setLooseSerializerAdapter(StringSerializerAdapter adapter) {
+//        getLogList().forEach(c -> c.setLooseSerializerAdapter(adapter));
+//        return this;
+//    }
 
     static class Proxy {
         public static LogHub toProxy(LogHub logHub) {

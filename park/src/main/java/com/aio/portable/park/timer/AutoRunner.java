@@ -6,8 +6,9 @@ import com.aio.portable.park.config.root.ApplicationConfig;
 import com.aio.portable.park.endpoint.http.DynamicController;
 import com.aio.portable.park.test.MyDatabaseTest;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecord;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.sugar.ThrowableSugar;
+import com.aio.portable.swiss.sugar.concurrent.ThreadSugar;
+import com.aio.portable.swiss.suite.io.NIOSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
@@ -18,17 +19,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.SpringVersion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.util.HashMap;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 public class AutoRunner implements ApplicationRunner {
@@ -71,42 +74,55 @@ public class AutoRunner implements ApplicationRunner {
     @Override
 //    @LogRecord
     public void run(ApplicationArguments applicationArguments) throws Exception {
-//        ResponseEntity<String> stringResponseEntity = RestTemplater.get(skipSSLRestTemplate, String.class, "http://198.18.0.24", RestTemplater.Headers.newContentTypeApplicationJson(), null);
-        // \u000d System.out.println("coder Hydra");
+//        // \u000d System.out.println("coder Hydra");
 
-//        SpringContextHolder.restart();
-        System.out.println(config.getText());
-//        int i = 1;
-//        if (i == 1)
-//            return;
+//        while (true) {
+//            ThreadSugar.sleepSeconds(10);
+//            log.e("1111111111111", "mmmmmmm", new RuntimeException("eeeeeee"));
+//        }
 
 
-        ResponseEntity<Map> kkkkk = RestTemplater.client(restTemplate)
-                .url("http://localhost:7777/abc")
-                .addParam("k", 8)
-                .body("{k:0}")
-                .putFor(new ParameterizedTypeReference<HashMap>() {
-                });
-
-        slf4jLogger.info(UserInfoEntity.sample().toString());
-        commonLogging.info(UserInfoEntity.sample().toString());
-//        log.info(UserInfoEntity.sample());
-
-
+////        String s = "https://clc.test.tg.unicom.local/lcdp/user/search";
+//        String s = "https://clc.test.tg.unicom.local/lcdp/manager/user/info";
+////        String s = "https://meta.appinn.net/";
+//
+////        HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLHttpComponentsClientHttpRequestFactory();
+////        RestTemplate rest = new RestTemplate(factory);
+////        rest.setRequestFactory(factory);
+//
+//        ResponseEntity<String> responseEntity = RestTemplater.client(skipSSLRestTemplate)
+//                .addHeaderContentTypeApplicationJson()
+//                .addHeader("Cookie", "lcdpAccessToken=882a4e58ec914ea682ef6bf3a3f74d3b")
+//                .url(s)
+////                .body(null)
+////                .postFor(Object.class)
+//                .getFor(String.class)
+//                ;
+//        System.out.println();
+//
+//
+//        log.info("aaaaaaaaaaaaaaaaaaaaaa");
+//
+////        SpringContextHolder.restart();
+//        System.out.println(config.getText());
+//
+//
+//        slf4jLogger.info(UserInfoEntity.sample().toString());
+//        commonLogging.info(UserInfoEntity.sample().toString());
+////        log.info(UserInfoEntity.sample());
+//
+//
         if (myDatabaseTest != null)
             myDatabaseTest.blah();
-
-        dynamicController.registerTest();
-        System.out.println();
+//
+//        dynamicController.registerTest();
+//        System.out.println();
     }
 
 
-
-//    @EventListener({ApplicationReadyEvent.class})
+    //    @EventListener({ApplicationReadyEvent.class})
     void applicationReadyEvent() {
-
     }
-
 
 
 }

@@ -7,7 +7,7 @@ import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import java.time.Duration;
 import java.util.function.Supplier;
 
-public class RefreshCache<T> {
+public class TimerCache<T> {
     private static final LocalLog log = LocalLog.getLog(LogHubProperties.class);
 
     private T data;
@@ -31,13 +31,13 @@ public class RefreshCache<T> {
 
     private boolean loop = false;
 
-    private RefreshCache(Supplier<T> refresh) {
+    private TimerCache(Supplier<T> refresh) {
         this.refresh = refresh;
     }
 
-    public static final <T> RefreshCache<T> build(Duration interval, Supplier<T> refresh) {
-        RefreshCache<T> instance = new RefreshCache<>(refresh);
-        instance.setInterval(interval);
+    public static final <T> TimerCache<T> build(Duration expire, Supplier<T> refresh) {
+        TimerCache<T> instance = new TimerCache<>(refresh);
+        instance.setInterval(expire);
         return instance;
     }
 

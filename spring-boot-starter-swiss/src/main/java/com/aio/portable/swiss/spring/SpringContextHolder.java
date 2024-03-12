@@ -1,30 +1,25 @@
 package com.aio.portable.swiss.spring;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.annotation.AnnotationConfigurationException;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.PropertySource;
+import org.springframework.core.SpringVersion;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
 import java.beans.Introspector;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -35,6 +30,22 @@ public class SpringContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext = null;
 
+    private static Class<?> mainApplicationClass;
+
+    public static Class<?> getMainApplicationClass() {
+        return mainApplicationClass;
+    }
+
+    public static String[] getMainApplicationClassArgs() {
+        final ConfigurableApplicationContext context = SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
+        ApplicationArguments applicationArguments = context.getBean(ApplicationArguments.class);
+        String[] args = applicationArguments.getSourceArgs();
+        return args;
+    }
+
+    public static void importMainApplicationClass(Class<?> mainApplicationClass) {
+        SpringContextHolder.mainApplicationClass = mainApplicationClass;
+    }
 
     public static final boolean hasLoaded() {
         return applicationContext != null;
@@ -78,12 +89,16 @@ public class SpringContextHolder implements ApplicationContextAware {
 
     /**
      * restart
-     * @param primarySource
-     * @param args
      */
-    public static final void restart(Class<?> primarySource, String[] args) {
-        SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
-        SpringApplication.run(primarySource, args);
+    public synchronized static final void restart() {
+        Thread thread = new Thread(() -> {
+            final ConfigurableApplicationContext context = SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
+            String[] args = getMainApplicationClassArgs();
+            context.close();
+            applicationContext = SpringApplication.run(mainApplicationClass, args);
+        });
+        thread.setDaemon(false);
+        thread.start();
     }
 
     /**
@@ -210,5 +225,12 @@ public class SpringContextHolder implements ApplicationContextAware {
         return (StandardServletEnvironment) applicationContext.getEnvironment();
     }
 
+    public static final String getSpringVersion() {
+        return SpringVersion.getVersion();
+    }
+
+    public static final String getSpringBootVersion() {
+        return SpringBootVersion.getVersion();
+    }
 
 }

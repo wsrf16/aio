@@ -1,9 +1,12 @@
 package com.aio.portable.park.config.db;
 
 import com.aio.portable.swiss.suite.storage.db.jpa.multidatasource.JpaBaseDataSourceConfiguration;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
@@ -20,6 +23,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -31,10 +35,10 @@ import javax.sql.DataSource;
 @ConditionalOnProperty(prefix = SlaveDataSourceConfiguration.DATA_SOURCE_PREFIX, name = "url")
 //@Import(HibernateJpaAutoConfiguration.class)
 public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration {
-    public static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.repository";
-    public static final String ENTITY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.model";
-    private static final String SPECIAL_NAME = "slave";
-    private static final String PERSISTENCE_UNIT = "persistenceUnit";
+    protected static final String REPOSITORY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.repository";
+    protected static final String ENTITY_BASE_PACKAGES = "com.aio.portable.park.dao.slave.model";
+    protected static final String SPECIAL_NAME = "slave";
+    protected static final String PERSISTENCE_UNIT = "persistenceUnit";
 
     protected static final String DATA_SOURCE_PREFIX = "spring.datasource." + SPECIAL_NAME;
     protected static final String JPA_PREFIX = DATA_SOURCE_PREFIX + ".jpa";
@@ -49,7 +53,7 @@ public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration
     protected static final String DATA_SOURCE_PROPERTIES_BEAN = SPECIAL_NAME + "DataSourceProperties";
     protected static final String JPA_PROPERTIES_BEAN = SPECIAL_NAME + "JpaProperties";
     protected static final String ENTITY_MANAGER_BEAN = SPECIAL_NAME + "EntityManager";
-    private static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
+    protected static final String DATA_SOURCE_INITIALIZER_BEAN = SPECIAL_NAME + "DataSourceInitializer";
 
 
     @ConditionalOnProperty(prefix = DATA_SOURCE_PREFIX, value = "url")
@@ -65,11 +69,74 @@ public class SlaveDataSourceConfiguration extends JpaBaseDataSourceConfiguration
         return super.jpaProperties();
     }
 
-    @Bean(DATA_SOURCE_BEAN)
-    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX + ".hikari")
-    public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
-        return super.dataSource(properties);
+    @Configuration
+    @ConditionalOnMissingBean(value = {DataSource.class}, name = DATA_SOURCE_BEAN)
+    @ConditionalOnProperty(
+            prefix = DATA_SOURCE_PREFIX,
+            name = {"type"}
+    )
+    static class Generic {
+        Generic() {
+        }
+
+        @Bean
+        public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
+            return createDataSource(properties);
+        }
     }
+
+    @Configuration
+    @ConditionalOnClass({HikariDataSource.class})
+    @ConditionalOnProperty(
+            prefix = DATA_SOURCE_PREFIX,
+            name = {"type"},
+            havingValue = "com.zaxxer.hikari.HikariDataSource",
+            matchIfMissing = true
+    )
+    static class Hikari {
+        Hikari() {
+        }
+
+        @Bean(DATA_SOURCE_BEAN)
+        @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX + ".hikari")
+        public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
+            HikariDataSource dataSource = createDataSource(properties, HikariDataSource.class);
+            if (StringUtils.hasText(properties.getName())) {
+                dataSource.setPoolName(properties.getName());
+            }
+
+            return dataSource;
+        }
+    }
+
+    @Configuration
+    @ConditionalOnClass({DruidDataSource.class})
+    @ConditionalOnMissingBean(value = {DruidDataSource.class}, name = DATA_SOURCE_BEAN)
+    @ConditionalOnProperty(
+            prefix = DATA_SOURCE_PREFIX,
+            name = {"type"},
+            havingValue = "com.alibaba.druid.pool.DruidDataSource"
+    )
+    static class Druid {
+        Druid() {
+        }
+
+        @Bean(DATA_SOURCE_BEAN)
+        public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
+            DruidDataSource dataSource = createDataSource(properties, DruidDataSource.class);
+            if (StringUtils.hasText(properties.getName())) {
+                dataSource.setName(properties.getName());
+            }
+
+            return dataSource;
+        }
+    }
+
+//    @Bean(DATA_SOURCE_BEAN)
+//    @ConfigurationProperties(prefix = DATA_SOURCE_PREFIX + ".hikari")
+//    public DataSource dataSource(@Qualifier(DATA_SOURCE_PROPERTIES_BEAN)DataSourceProperties properties) {
+//        return super.dataSource(properties);
+//    }
 
     @Bean(JPA_VENDOR_ADAPTER_BEAN)
     public JpaVendorAdapter jpaVendorAdapter(

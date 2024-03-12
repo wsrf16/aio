@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.algorithm.encode;
 
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 
@@ -13,10 +14,20 @@ public abstract class SpringMD5Convert {
         return md5Password;
     }
 
+    public static final String encodeToHex(Object obj) {
+        String json = JacksonSugar.obj2Json(obj);
+        return encodeToHex(json);
+    }
+
     public static final String encodeToBase64(String text) {
         byte[] bytes = DigestUtils.md5Digest(text.getBytes());
         String base64 = Base64Utils.encodeToString(bytes);
         return base64;
+    }
+
+    public static final String encodeToBase64(Object obj) {
+        String json = JacksonSugar.obj2Json(obj);
+        return  encodeToBase64(json);
     }
 
     public static final String convertHexToBase64(String text) {

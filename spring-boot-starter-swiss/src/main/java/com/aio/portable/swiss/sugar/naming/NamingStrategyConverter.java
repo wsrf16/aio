@@ -26,8 +26,8 @@ public abstract class NamingStrategyConverter {
             if (Character.isUpperCase(current) && onlyCase) {
                 sb.append(convert(current));
                 i++;
-            } else if ((Objects.equals(current, UNDER_LINE) || (Objects.equals(current, DASH))
-            ) && (i + 1) < name.length() && Character.isLetter(name.charAt(i + 1))) {
+            } else if ((Objects.equals(current, UNDER_LINE) || (Objects.equals(current, DASH)))
+                    && (i + 1) < name.length() && Character.isLetter(name.charAt(i + 1))) {
                 char after = name.charAt(i + 1);
                 sb.append(convert(after));
                 i += 2;

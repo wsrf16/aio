@@ -18,4 +18,12 @@ public class ThreadSugar extends Thread {
             throw new RuntimeException(e);
         }
     }
+
+    public static final void sleepSeconds(long s) {
+        try {
+            Thread.sleep(Duration.ofSeconds(s).toMillis());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

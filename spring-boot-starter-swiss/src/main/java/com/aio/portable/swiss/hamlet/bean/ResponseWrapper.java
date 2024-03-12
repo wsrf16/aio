@@ -3,7 +3,7 @@ package com.aio.portable.swiss.hamlet.bean;
 import java.util.Date;
 
 public interface ResponseWrapper<T> {
-    String SPAN_ID_HEADER = "span-id";
+    String SPAN_ID_HEADER = "Span-Id";
 
     String getSpanId();
     int getCode();

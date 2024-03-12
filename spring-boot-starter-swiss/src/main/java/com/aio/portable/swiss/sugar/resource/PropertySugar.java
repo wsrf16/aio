@@ -14,8 +14,6 @@ import org.springframework.boot.origin.PropertySourceOrigin;
 import org.springframework.core.annotation.AnnotationConfigurationException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.util.List;

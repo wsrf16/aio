@@ -13,16 +13,29 @@ public abstract class AbstractDataSourceConfiguration {
         return new DataSourceProperties();
     }
 
-    protected DataSource dataSource(DataSourceProperties properties) {
-//        return DruidDataSourceBuilder.create().build();
-        // jdbc-url
-//        return DataSourceBuilder.create().build();
-        // url
+    protected static final <T extends DataSource> T createDataSource(DataSourceProperties properties, Class<T> clazz) {
         return properties
                 .initializeDataSourceBuilder()
-                .type(HikariDataSource.class)
+                .type(clazz)
                 .build();
     }
+
+    protected static final DataSource createDataSource(DataSourceProperties properties) {
+        return properties
+                .initializeDataSourceBuilder()
+                .build();
+    }
+
+//    protected DataSource dataSource(DataSourceProperties properties) {
+////        return DruidDataSourceBuilder.create().build();
+//        // jdbc-url
+////        return DataSourceBuilder.create().build();
+//        // url
+//        return properties
+//                .initializeDataSourceBuilder()
+//                .type(HikariDataSource.class)
+//                .build();
+//    }
 
     protected DataSourceTransactionManager dataPlatformTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);

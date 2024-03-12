@@ -2,233 +2,248 @@ package com.aio.portable.swiss.suite.net.tcp.http;
 
 import com.aio.portable.swiss.sugar.location.UrlSugar;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
+import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import com.aio.portable.swiss.suite.log.facade.LogBase;
-import com.aio.portable.swiss.suite.log.facade.LogHub;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RestTemplater<T, R> {
     private RestTemplate restTemplate;
+    private HttpMethod method;
     private HttpHeaders headers = new HttpHeaders();
-    private String url;
-    private Map<String, Object> params = new HashMap<>();
+    private String uri;
+    private Map<String, Object> queryParams = new HashMap<>();
+    private Map<String, Object> uriParams = new HashMap<>();
     private T body;
-    private Class<R> responseClazz;
-    private ParameterizedTypeReference<R> responseTypeReference;
     private LogBase log;
 
-    public static final RestTemplater client(RestTemplate restTemplate) {
+    public static final RestTemplater create(RestTemplate restTemplate) {
         RestTemplater restTemplater = new RestTemplater();
         restTemplater.restTemplate = restTemplate;
         return restTemplater;
     }
 
-    public static final RestTemplater client(RestTemplate restTemplate, LogBase log) {
+    public static final RestTemplater create(RestTemplate restTemplate, LogBase log) {
         RestTemplater restTemplater = new RestTemplater();
         restTemplater.restTemplate = restTemplate;
         restTemplater.log = log;
         return restTemplater;
     }
 
-    public RestTemplater headerContentTypeApplicationJson() {
-        this.headers = Headers.newContentTypeApplicationJson();
+    public RestTemplater method(HttpMethod method) {
+        this.method = method;
         return this;
     }
 
-    public RestTemplater headerContentTypeApplicationForm() {
-        this.headers = Headers.newContentTypeApplicationForm();
+    public RestTemplater clearHeaders() {
+        this.headers = new HttpHeaders();
         return this;
     }
 
-    public RestTemplater headerContentTypeApplicationXml() {
-        this.headers = Headers.newContentTypeApplicationXml();
+    public RestTemplater header(String name, String value) {
+        if (this.headers == null)
+            this.headers = new HttpHeaders();
+        this.headers.set(name, value);
         return this;
     }
 
-    public RestTemplater header(HttpHeaders headers) {
-        this.headers = headers;
+    public RestTemplater headers(HttpHeaders headers) {
+        if (this.headers == null)
+            this.headers = new HttpHeaders();
+        this.headers.setAll(headers.toSingleValueMap());
         return this;
     }
 
-    public RestTemplater addHeader(String name, String value) {
-        this.headers.add(name, value);
+    public RestTemplater header(Map<String, Object> headers) {
+        if (this.headers == null)
+            this.headers = new HttpHeaders();
+        headers.entrySet().forEach(c -> {
+            String key = c.getKey();
+            String value = c.getValue() == null ? null : (String) c.getValue();
+            this.headers.set(key, value);
+        });
         return this;
     }
 
-    public RestTemplater addHeaders(HttpHeaders headers) {
-        this.headers.addAll(headers);
+
+    public RestTemplater contentTypeApplicationJson() {
+        header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         return this;
     }
 
-    public RestTemplater url(String url) {
-        this.url = url;
+    public RestTemplater contentTypeApplicationForm() {
+        header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         return this;
     }
+
+    public RestTemplater contentTypeApplicationXml() {
+        header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE);
+        return this;
+    }
+
+    public RestTemplater uri(String uri) {
+        this.uri = uri;
+        return this;
+    }
+
     public RestTemplater body(T body) {
         this.body = body;
         return this;
     }
-//    public RestTemplater responseFor(Class<R> responseClazz) {
-//        this.responseClazz = responseClazz;
-//        return this;
-//    }
-    public RestTemplater responseFor(ParameterizedTypeReference<R> responseTypeReference) {
-        this.responseTypeReference = responseTypeReference;
-        return this;
-    }
-    public RestTemplater params(Map<String, Object> params) {
-        this.params = params;
-        return this;
-    }
-    public RestTemplater addParam(String key, Object value) {
-        this.params.put(key, value);
+
+    public RestTemplater clearQueryParams() {
+        this.queryParams.clear();
         return this;
     }
 
-    public RestTemplater addParams(Map<String, Object> params) {
-        this.params.putAll(params);
+    public RestTemplater queryParam(String key, Object value) {
+        this.queryParams.put(key, value);
         return this;
     }
 
-    public ResponseEntity<R> exchangeFor(HttpMethod method, Class<R> responseClazz) {
+    public RestTemplater queryParams(Map<String, Object> params) {
+        this.queryParams.putAll(params);
+        return this;
+    }
+
+
+    public RestTemplater clearURIParams() {
+        this.uriParams.clear();
+        return this;
+    }
+
+    public RestTemplater uriParam(String key, Object value) {
+        this.uriParams.put(key, value);
+        return this;
+    }
+
+    public RestTemplater uriParams(Map<String, Object> params) {
+        this.uriParams.putAll(params);
+        return this;
+    }
+
+
+    public ResponseEntity<R> retrieve(Class<R> responseClazz) {
+        String uuid = IDS.uuid();
         if (log != null) {
             HashMap<String, Object> req = new HashMap(8);
-            req.put("url", this.url);
+            req.put("url", this.uri);
+            req.put("uriParams", this.uriParams);
+            req.put("queryParams", this.queryParams);
             req.put("headers", this.headers);
-            req.put("method", method.name());
+            req.put("method", this.method);
             req.put("body", this.body);
-            log.i("", req);
+            log.i(MessageFormat.format("{0}({1})", "api-call-request", uuid), req);
         }
 
         ResponseEntity<R> responseEntity;
         try {
             responseEntity = RestTemplater.exchangeFor(this.restTemplate,
                     responseClazz,
-                    this.url,
-                    method,
+                    this.uri,
+                    this.method,
                     this.headers,
-                    this.body,
-                    this.params);
+                    this.body == null ? new HashMap<String, Object>() : body,
+                    this.queryParams,
+                    this.uriParams);
+            if (log != null) {
+                log.i(MessageFormat.format("{0}({1})", "api-call-response", uuid), responseEntity);
+            }
             return responseEntity;
         } catch (Exception e) {
             HttpHeaders httpHeaders = Headers.newHttpHeaders();
-            httpHeaders.add("Reason", e.getMessage());
+            httpHeaders.add("reason", e.getMessage());
             responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-            log.e(e);
+            if (log != null)
+                log.e(MessageFormat.format("{0}({1})", "api-call-error", uuid), e);
         }
         return responseEntity;
     }
 
-    public ResponseEntity<R> exchangeFor(HttpMethod method, ParameterizedTypeReference<R> responseTypeReference) {
+    public ResponseEntity<R> retrieve(ParameterizedTypeReference<R> responseTypeReference) {
+        String uuid = IDS.uuid();
         if (log != null) {
             HashMap<String, Object> req = new HashMap(8);
-            req.put("url", this.url);
+            req.put("url", this.uri);
+            req.put("uriParams", this.uriParams);
+            req.put("queryParams", this.queryParams);
             req.put("headers", this.headers);
-            req.put("method", method.name());
+            req.put("method", this.method);
             req.put("body", this.body);
-            log.i("", req);
+            log.i(MessageFormat.format("{0}({1})", "api-call-request", uuid), req);
         }
 
         ResponseEntity<R> responseEntity;
         try {
             responseEntity = RestTemplater.exchangeFor(this.restTemplate,
                     responseTypeReference,
-                    this.url,
-                    method,
+                    this.uri,
+                    this.method,
                     this.headers,
-                    this.body,
-                    this.params);
+                    this.body == null ? new HashMap<String, Object>() : body,
+                    this.queryParams,
+                    this.uriParams);
+            if (log != null) {
+                log.i(MessageFormat.format("{0}({1})", "api-call-response", uuid), responseEntity);
+            }
         } catch (Exception e) {
             HttpHeaders httpHeaders = Headers.newHttpHeaders();
-            httpHeaders.add("Reason", e.getMessage());
+            httpHeaders.add("reason", e.getMessage());
             responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-            log.e(e);
+            if (log != null)
+                log.e(MessageFormat.format("{0}({1})", "api-call-error", uuid), e);
         }
         return responseEntity;
     }
 
-    public ResponseEntity<R> getFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.GET, responseClazz);
-    }
 
-    public ResponseEntity<R> postFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.POST, responseClazz);
-    }
 
-    public ResponseEntity<R> deleteFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.DELETE, responseClazz);
-    }
+    public <T> ResponseEntity<T> forward(HttpServletRequest request, String removedContextPath, Class<T> clazz) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
 
-    public ResponseEntity<R> headFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.HEAD, responseClazz);
-    }
+        String requestURI = request.getRequestURI().replaceAll(removedContextPath, "");
+        String requestURL = request.getRequestURL().toString().replaceAll(removedContextPath, "");
 
-    public ResponseEntity<R> optionsFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.OPTIONS, responseClazz);
-    }
+        String queryString = request.getQueryString();
+        String uri = StringUtils.isEmpty(queryString) ? requestURI : requestURI + "?" + queryString;
+        String url = StringUtils.isEmpty(queryString) ? requestURL : requestURL + "?" + queryString;
+        HttpMethod httpMethod = RestTemplater.getHttpMethodFrom(request);
+        HttpHeaders httpHeaders = RestTemplater.getRequestHeadersFrom(request);
+        String body = RestTemplater.getRequestBody(request);
 
-    public ResponseEntity<R> patchFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.PATCH, responseClazz);
-    }
+        if (httpHeaders.containsKey("special-host-port")) {
+            String localHostPort = httpHeaders.getFirst("special-host-port");
+            url = MessageFormat.format("{0}{1}", localHostPort, uri);
+        }
 
-    public ResponseEntity<R> putFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.PUT, responseClazz);
-    }
-
-    public ResponseEntity<R> traceFor(Class<R> responseClazz) {
-        return exchangeFor(HttpMethod.TRACE, responseClazz);
-    }
-
-    public ResponseEntity<R> getFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.GET, responseClazz);
-    }
-
-    public ResponseEntity<R> postFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.POST, responseClazz);
-    }
-
-    public ResponseEntity<R> deleteFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.DELETE, responseClazz);
-    }
-
-    public ResponseEntity<R> headFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.HEAD, responseClazz);
-    }
-
-    public ResponseEntity<R> optionsFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.OPTIONS, responseClazz);
-    }
-
-    public ResponseEntity<R> patchFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.PATCH, responseClazz);
-    }
-
-    public ResponseEntity<R> putFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.PUT, responseClazz);
-    }
-
-    public ResponseEntity<R> traceFor(ParameterizedTypeReference<R> responseClazz) {
-        return exchangeFor(HttpMethod.TRACE, responseClazz);
+        ResponseEntity<T> responseEntity = RestTemplater.create(restTemplate)
+                .uri(url)
+                .headers(httpHeaders)
+                .method(httpMethod)
+                .body(body)
+                .retrieve(clazz);
+        return responseEntity;
     }
 
     public static final class Headers {
@@ -292,76 +307,43 @@ public class RestTemplater<T, R> {
         }
     }
 
-    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
-        SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
-        restTemplate.setRequestFactory(factory);
-    }
+//    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
+//        SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
+//        restTemplate.setRequestFactory(factory);
+//    }
+//
+//    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
+//        HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
+//        restTemplate.setRequestFactory(factory);
+//    }
 
-    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
-        HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
-        restTemplate.setRequestFactory(factory);
-    }
-
-    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate) {
-        SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory();
-        restTemplate.setRequestFactory(factory);
-    }
-
-    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
-        SkipSSLSimpleClientHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLSimpleClientHttpRequestFactory(host, port);
-        restTemplate.setRequestFactory(factory);
-    }
-
-    public static final class HttpRequestFactory {
-        // http://www.it1352.com/215149.html
-        public static HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
-            HttpHost httpHost = new HttpHost(host, port);
-
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(
-                    new AuthScope(host, port),
-                    new UsernamePasswordCredentials(username, password));
-
-            HttpClient httpClient = HttpClientBuilder.create()
-                    .setProxy(httpHost)
-                    .setDefaultCredentialsProvider(credentialsProvider)
-                    .disableCookieManagement()
-                    .build();
-
-            HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
-            factory.setHttpClient(httpClient);
-
-            return factory;
+    public static final boolean setHttpProxy(RestTemplate restTemplate, Proxy proxy) {
+        if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
+            ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setProxy(proxy);
+            return true;
         }
+        return false;
+    }
 
-        public static SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
+    public static final boolean setHttpProxy(RestTemplate restTemplate, String host, int port) {
+        if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
-
-            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-            factory.setProxy(proxy);
-
-            return factory;
+            ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setProxy(proxy);
+            return true;
         }
-
-        public static SkipSSLSimpleClientHttpRequestFactory buildSkipSSLSimpleClientHttpRequestFactory() {
-            SkipSSLSimpleClientHttpRequestFactory factory = new SkipSSLSimpleClientHttpRequestFactory();
-            factory.setReadTimeout(5000);
-            factory.setConnectTimeout(15000);
-            return factory;
-        }
-
-        public static SkipSSLSimpleClientHttpRequestFactory buildSkipSSLSimpleClientHttpRequestFactory(String host, int port) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
-
-            SkipSSLSimpleClientHttpRequestFactory factory = new SkipSSLSimpleClientHttpRequestFactory();
-            factory.setProxy(proxy);
-            factory.setReadTimeout(5000);
-            factory.setConnectTimeout(15000);
-
-            return factory;
-        }
-
+        return false;
     }
+
+//    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate) {
+//        SkipSSLHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLHttpRequestFactory();
+//        restTemplate.setRequestFactory(factory);
+//    }
+//
+//    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
+//        SkipSSLHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLHttpRequestFactory(host, port);
+//        restTemplate.setRequestFactory(factory);
+//    }
+
 
     private static <T> HttpEntity<T> httpEntity(T body, HttpHeaders headers) {
         HttpEntity<T> httpEntity;
@@ -376,14 +358,18 @@ public class RestTemplater<T, R> {
         return httpEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, Object body, Map<String, ?> params, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, Object body, Map<String, ?> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
+
         String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, method, httpEntity, responseClazz, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP, REQ> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, REQ body, Map<String, ?> params, Object... uriVariables) {
+    public static <RESP, REQ> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, REQ body, Map<String, ?> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
+
         String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, method, httpEntity, responseClazz, uriVariables);
@@ -391,36 +377,41 @@ public class RestTemplater<T, R> {
     }
 
 //        restTemplate.getForObject("http://example.com/hotels/{hotel}/bookings/{booking}", String.class, new HashMap<>());
-    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
+
         String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(null, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.GET, httpEntity, responseClazz, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Object... uriVariables) {
-        String u = UrlSugar.appendQueries(url, params);
+    public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
+        String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(null, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.GET, httpEntity, responseClazz, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Object body, Map<String, Object> params, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Object body, Map<String, Object> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
+
         String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.POST, httpEntity, responseClazz, uriVariables);
         return responseEntity;
     }
 
-    public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpHeaders headers, Object body, Map<String, Object> params, Object... uriVariables) {
+    public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseTypeReference, String url, HttpHeaders headers, Object body, Map<String, Object> params, Map<String, ?> uriVariables) {
+        uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
+
         String u = UrlSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
-        ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.POST, httpEntity, responseClazz, uriVariables);
+        ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.POST, httpEntity, responseTypeReference, uriVariables);
         return responseEntity;
     }
-
-
 
     public final static RetryTemplate newRetryTemplate(int maxAttempts) {
         RetryTemplate retryTemplate = new RetryTemplate();
@@ -433,16 +424,30 @@ public class RestTemplater<T, R> {
         return retryTemplate;
     }
 
+    public static HttpHeaders getRequestHeadersFrom(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            List<String> headerValues = Collections.list(request.getHeaders(headerName));
+            headers.put(headerName, headerValues);
+        }
+        return headers;
+    }
 
+    public static HttpMethod getHttpMethodFrom(HttpServletRequest request) {
+        String method = request.getMethod();
+        HttpMethod httpMethod = HttpMethod.resolve(method);
+        return httpMethod;
+    }
 
-
-
-
-
-
-
-
-
+    public static String getRequestBody(HttpServletRequest request) {
+        try {
+            return request.getReader().lines().reduce("", (accumulator, actual) -> accumulator + actual);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 
@@ -457,39 +462,39 @@ public class RestTemplater<T, R> {
 
 
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
 //        return responseEntity;
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
 //        return responseEntity;
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body , Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body , Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
@@ -501,7 +506,7 @@ public class RestTemplater<T, R> {
 //
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
@@ -509,7 +514,7 @@ public class RestTemplater<T, R> {
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, responseClazz, uriVariables);
@@ -517,14 +522,14 @@ public class RestTemplater<T, R> {
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
@@ -532,14 +537,14 @@ public class RestTemplater<T, R> {
 //
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseClazz, Object... uriVariables) {
+//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);

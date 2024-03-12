@@ -13,13 +13,15 @@ public class Student {
 
     public String name;
 
+    public String nameLike;
+
     @ForeignKey(table = "Teacher", column = "id")
     public int teacherId;
 
     @Unique
     public String email;
 
-    public Date birthDate;
+    public Date birthDate = new Date();
 
     public BigDecimal salary;
 
@@ -37,6 +39,14 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameLike() {
+        return nameLike;
+    }
+
+    public void setNameLike(String nameLike) {
+        this.nameLike = nameLike;
     }
 
     public int getTeacherId() {

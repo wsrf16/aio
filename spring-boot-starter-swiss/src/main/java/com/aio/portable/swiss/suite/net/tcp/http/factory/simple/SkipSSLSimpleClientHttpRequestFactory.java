@@ -1,10 +1,12 @@
-package com.aio.portable.swiss.suite.net.tcp.http;
+package com.aio.portable.swiss.suite.net.tcp.http.factory.simple;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 

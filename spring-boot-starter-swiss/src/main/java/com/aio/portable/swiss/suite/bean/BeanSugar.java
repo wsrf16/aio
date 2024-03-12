@@ -82,7 +82,7 @@ public abstract class BeanSugar {
                 b = false;
             else {
                 Class<SUB> subClazz = (Class<SUB>) subMatch.getClass();
-                if (ClassSugar.isSimpleValueType(subClazz))
+                if (ClassSugar.isPrimitiveOrWrapper(subClazz))
                     b = Objects.equals(subMatch, subBean);
                 else if ((List.class).isAssignableFrom(subClazz))
                     b = matchList((List) subMatch, (List) subBean);
@@ -196,6 +196,22 @@ public abstract class BeanSugar {
                     propertyDescriptorList.addAll(parentPropertyDescriptorList);
             }
             return propertyDescriptorList;
+        }
+
+        public static final boolean allIsNull(Object bean) {
+            Map<String, Object> stringObjectMap = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
+            Set<Map.Entry<String, Object>> entries = stringObjectMap.entrySet();
+            boolean b = entries.stream().allMatch(c -> c.getValue() == null);
+            return b;
+        }
+
+        public static final boolean allReferenceIsNull(Object bean) {
+            Map<String, PropertyDescriptor> namePropertyMap = BeanSugar.PropertyDescriptors.toNamePropertyMap(bean);
+            Set<Map.Entry<String, PropertyDescriptor>> entries = namePropertyMap.entrySet();
+            boolean b = entries.stream()
+                    .filter(c -> Object.class.isAssignableFrom(c.getValue().getPropertyType()))
+                    .allMatch(c -> BeanSugar.PropertyDescriptors.getValue(bean, c.getValue()) == null);
+            return b;
         }
 
         private static final boolean isBuiltIn(PropertyDescriptor propertyDescriptor, Object bean) {
@@ -372,7 +388,7 @@ public abstract class BeanSugar {
             return fieldName;
         }
 
-        private static <T> String getMethodNameOf (LambdaSupplier<T> fn) {
+        private static <T> String getMethodNameOf(LambdaSupplier<T> fn) {
             SerializedLambda serializedLambda = ClassSugar.invoke(fn, "writeReplace");
             return serializedLambda.getImplMethodName();
         }

@@ -1,9 +1,7 @@
 package com.aio.portable.swiss.spring.factories.listener;
 
-import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
-import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
@@ -11,22 +9,16 @@ import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.*;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 // GenericApplicationListener
 // SmartApplicationListener
@@ -52,6 +44,16 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
     // step 2: An ApplicationEnvironmentPreparedEvent is sent when the Environment to be used in the context is known, but before the context is created.
     @Override
     protected void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
+        try {
+            Class<?> mainApplicationClass = event.getSpringApplication().getMainApplicationClass();
+            if (mainApplicationClass == null)
+                return;
+            Class<?> clazz = ClassLoaderSugar.forName(mainApplicationClass.getName());
+            SpringContextHolder.importMainApplicationClass(clazz);
+        } catch (Exception e) {
+            log.warn("Initial SpringContextHolder MainApplicationClass singleton instance failed.", e);
+        }
+
         this.postProcessEnvironment(event.getEnvironment(), event.getSpringApplication());
     }
 

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.algorithm.encode;
 
-public class UnicodeConvert {
+public abstract class UnicodeConvert {
     public static String decode(String unicode) {
         /** 以 \ u 分割，因为java注释也能识别unicode，因此中间加了一个空格*/
         String[] strs = unicode.split("\\\\u");

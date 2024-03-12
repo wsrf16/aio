@@ -27,4 +27,9 @@ public class Base64Test {
         GeoPoint wx4g2jw = GeoHash.decode("wx4g2jw");
         GeoPoint wx4g2jw1 = GeoHash.decodeToGeoHash("wx4g2jw").getBoundingBoxCenterPoint();
     }
+
+    @Test
+    public void foobar1() {
+
+    }
 }

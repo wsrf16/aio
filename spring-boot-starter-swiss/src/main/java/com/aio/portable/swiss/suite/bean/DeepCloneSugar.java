@@ -8,6 +8,7 @@ import org.springframework.cglib.core.Converter;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -49,6 +50,24 @@ public abstract class DeepCloneSugar {
             T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
             return t;
         }
+
+        public static final HashMap<Object, Object> clone2ObjectMap(Object source) {
+            HashMap<Object, Object> map = JacksonSugar.deepCopy(source, new HashMap<Object, Object>().getClass());
+            return map;
+        }
+
+        public static final HashMap<String, Object> clone2StringMap(Object source) {
+            HashMap<String, Object> map = JacksonSugar.deepCopy(source, new HashMap<String, Object>().getClass());
+            return map;
+        }
+
+//        public static final HashMap<Object, Object> json2ObjectMap(String jsonStr) {
+//            return JacksonSugar.json2ObjectMap(jsonStr);
+//        }
+//
+//        public static final HashMap<String, Object> json2StringMap(String jsonStr) {
+//            return JacksonSugar.json2StringMap(jsonStr);
+//        }
     }
 
     public abstract static class Properties {

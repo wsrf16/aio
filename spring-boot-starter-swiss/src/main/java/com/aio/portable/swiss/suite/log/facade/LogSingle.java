@@ -44,26 +44,6 @@ public abstract class LogSingle implements LogAction {
 //        this.prefixSupplier = EMPTY_PREFIX;
 //    }
 
-    private StringSerializerAdapter serializerAdapter = SerializerAdapterFactory.buildSilentJackson();
-
-    private StringSerializerAdapter looseSerializerAdapter = SerializerAdapterFactory.buildSilentLongJackson();
-
-    protected StringSerializerAdapter getSerializerAdapter() {
-         return serializerAdapter;
-    }
-
-    public void setSerializerAdapter(StringSerializerAdapter serializerAdapter) {
-        this.serializerAdapter = serializerAdapter;
-    }
-
-    protected StringSerializerAdapter getLooseSerializerAdapter() {
-        return looseSerializerAdapter;
-    }
-
-    public void setLooseSerializerAdapter(StringSerializerAdapter looseSerializerAdapter) {
-        this.looseSerializerAdapter = looseSerializerAdapter;
-    }
-
     protected boolean async = true;
 
     public boolean isAsync() {
@@ -96,41 +76,26 @@ public abstract class LogSingle implements LogAction {
 
     protected abstract void initialPrinter();
 
+    protected void output(LogRecord logRecord) {
+        try {
+            output(logRecord, logRecord.getLevel());
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.warn(e);
+        }
+    }
 
-
-    protected void output(String text, LevelEnum level) {
+    protected <T> void output(T record, LevelEnum level) {
         try {
             if (async) {
                 executor.execute(() ->
-                        printer.println(text, level)
+                        printer.println(record, level)
                 );
             } else {
-                printer.println(text, level);
+                printer.println(record, level);
             }
         } catch (Exception e) {
             log.warn("logSingle output failed.", e);
-        }
-    }
-
-    protected void output(LogRecord logRecord) {
-        try {
-            String text = logRecord.getLevel().getPriority() < LevelEnum.WARN.getPriority() ?
-                    getSerializerAdapter().serialize(logRecord) : getLooseSerializerAdapter().serialize(logRecord);
-            output(text, logRecord.getLevel());
-        } catch (Exception e) {
-//            e.printStackTrace();
-            log.warn(e);
-        }
-    }
-
-    protected void output(Map<String, Object> logBean, LevelEnum level) {
-        try {
-            String text = level.getPriority() < LevelEnum.WARN.getPriority() ?
-                    getSerializerAdapter().serialize(logBean) : getLooseSerializerAdapter().serialize(logBean);
-            output(text, level);
-        } catch (Exception e) {
-//            e.printStackTrace();
-            log.warn(e);
         }
     }
 
@@ -1098,8 +1063,8 @@ public abstract class LogSingle implements LogAction {
 
     static class LogSingleThreadExecutor {
         private static final int QUEUE_CAPACITY = 1024 * 128;
-        private static final int CORE_POOL_SIZE = 2;
-        private static final int MAX_POOL_SIZE = 3;
+        private static final int CORE_POOL_SIZE = 10;
+        private static final int MAX_POOL_SIZE = 20;
         private static final long KEEP_ALIVE_TIME = 1000 * 10;
     }
 

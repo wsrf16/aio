@@ -71,6 +71,9 @@ public interface LogError {
     }
 
     default <T> void e(String summary, T t) {
-        error(summary, t);
+        if (t instanceof Throwable)
+            error(summary, (Throwable) t);
+        else
+            error(summary, t);
     }
 }

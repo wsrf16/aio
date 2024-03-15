@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.global.Constant;
+import com.aio.portable.swiss.hamlet.interceptor.log.Slf4JLogHubFactory;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 
 import java.util.Map;
@@ -24,7 +25,13 @@ public class LogHubPool {
     private LogHubPool() {
     }
 
-    public static final LogHubPool importLogHubFactory(LogHubFactory logHubFactory) {
+    public static final LogHubPool buildLogHubPool() {
+        LogHubPool pool = LogHubFactory.isInitial() ?
+                LogHubPool.buildLogHubPool(LogHubFactory.getSingleton()) : LogHubPool.buildLogHubPool(new Slf4JLogHubFactory());
+        return pool;
+    }
+
+    public static final LogHubPool buildLogHubPool(LogHubFactory logHubFactory) {
         if (instance.getLogHubFactory() == null)
             synchronized (LogHubPool.class) {
                 if (instance.getLogHubFactory() == null) {

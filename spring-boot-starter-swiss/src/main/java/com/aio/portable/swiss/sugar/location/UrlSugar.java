@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,21 @@ public abstract class UrlSugar {
         return match ? MessageFormat.format("{0}&{1}", uri, queryParams) : MessageFormat.format("{0}?{1}", uri, queryParams);
     }
 
+    public static final String convertBeanToQueries(Object bean) {
+        Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(bean);
+        String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
+        return queryParams;
+    }
+
+    public static final Map<String, Object> convertQueriesToBean(String queries) {
+        String[] split = queries.split("&");
+        Map<String, Object> map = new HashMap<>();
+        Arrays.stream(split).forEach(c -> {
+            String[] query = c.split("=");
+            map.put(query[0], query[1]);
+        });
+        return map;
+    }
 
     public static final String concat(String first, String... urls) {
         String reduce = Arrays.stream(urls).reduce(first, (sum, element) -> {

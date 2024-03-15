@@ -63,7 +63,10 @@ public interface LogFatal {
     }
 
     default <T> void f(String summary, T t) {
-        fatal(summary, t);
+        if (t instanceof Throwable)
+            fatal(summary, (Throwable) t);
+        else
+            fatal(summary, t);
     }
 
     default <T> void f(String summary, T t, Throwable e) {

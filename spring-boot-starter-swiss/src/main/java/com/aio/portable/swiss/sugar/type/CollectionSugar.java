@@ -8,7 +8,17 @@ import org.springframework.util.ObjectUtils;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -54,7 +64,7 @@ public abstract class CollectionSugar {
         return list.get(list.size() - 1);
     }
 
-    public static final boolean isEmpty(Object[] array) {
+    public static final boolean isEmpty(Object... array) {
         return array == null || array.length == 0;
 //        return ObjectUtils.isEmpty(array);
     }
@@ -71,7 +81,7 @@ public abstract class CollectionSugar {
     }
 
 
-    public static final long longOf(Object[] array) {
+    public static final long lengthOf(Object[] array) {
         return array == null ? 0 : array.length;
     }
 
@@ -99,32 +109,32 @@ public abstract class CollectionSugar {
     /**
      * 差集，从集合1去除集合2
      *
-     * @param collection1
-     * @param collection2
+     * @param total
+     * @param sub
      * @return
      */
-    public static final <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2) {
-        Stream<T> stream = collection1.stream().filter(item -> !collection2.contains(item));
+    public static final <T> List<T> except(final Collection<T> total, final Collection<T> sub) {
+        Stream<T> stream = total.stream().filter(item -> !sub.contains(item));
         return stream.collect(Collectors.toList());
     }
 
 
     /**
      * except
-     * @param collection1
-     * @param collection2
+     * @param total
+     * @param sub
      * @param equalFunction
      * @param <T>
      * @return
      */
-    public static final <T> List<T> except(final Collection<T> collection1, final Collection<T> collection2, BiFunction<T, T, Boolean> equalFunction) {
-        Stream<T> stream = collection1.stream().filter(src -> !collection2.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
+    public static final <T> List<T> except(final Collection<T> total, final Collection<T> sub, BiFunction<T, T, Boolean> equalFunction) {
+        Stream<T> stream = total.stream().filter(src -> !sub.stream().anyMatch(tgt -> equalFunction.apply(src, tgt)));
         return stream.collect(Collectors.toList());
     }
 
 
     /**
-     * intersect
+     * intersect 交集
      * @param collection1
      * @param collection2
      * @param <T>
@@ -136,7 +146,7 @@ public abstract class CollectionSugar {
     }
 
     /**
-     * intersect
+     * intersect 交集
      * @param collection1
      * @param collection2
      * @param equalFunction
@@ -222,6 +232,23 @@ public abstract class CollectionSugar {
         return segments;
     }
 
+    public static final <T> List<T> split(String sequence, String delimiter, Function<String, T> convert) {
+        if (sequence == null)
+            return null;
+
+        String[] array = sequence.split(delimiter);
+        List<T> collect = Arrays.stream(array).map(c -> convert.apply(c)).collect(Collectors.toList());
+        return collect;
+    }
+
+    public static final List<String> split(String sequence, String delimiter) {
+        return split(sequence, delimiter, c -> c);
+    }
+
+    public static final List<Integer> splitToInteger(String sequence, String delimiter) {
+        Function<String, Integer> convert = Integer::valueOf;
+        return split(sequence, delimiter, convert);
+    }
 
     public static <T> T[] clone(T[] array) {
         return array == null ? null : array.clone();
@@ -279,23 +306,36 @@ public abstract class CollectionSugar {
     /**
      * distinctBy
      * @param list
-     * @param getPropertyFunction T::getId
+     * @param by T::getId
      * @param <T>
      * @return
      */
-    public static  <T> List<T> distinctBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
-        List<T> collect = list.parallelStream().filter(falseIfRepeat(getPropertyFunction)).collect(Collectors.toList());
+    public static final <T> List<T> distinctBy(List<T> list, Function<? super T, ?> by) {
+        List<T> collect = list.parallelStream().filter(buildUniquePredicate(by)).collect(Collectors.toList());
         return collect;
     }
 
     /**
-     * falseIfRepeat
+     * distinctBy
+     * @param list
+     * @param by T::getId
+     * @param <T>
+     * @param <U>
+     * @return
+     */
+    public static final <T, U extends Comparable<? super U>> List<T> distinctByComparable(List<T> list, Function<? super T, ? extends U> by) {
+        return list.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(
+                () -> new TreeSet<>(Comparator.comparing(by))), ArrayList::new));
+    }
+
+    /**
+     * buildUniquePredicate
      *
      * @param getPropertyFunction User::getName
      * @param <T>
      * @return
      */
-    private static <T> Predicate<T> falseIfRepeat(Function<? super T, ?> getPropertyFunction) {
+    private static final <T> Predicate<T> buildUniquePredicate(Function<? super T, ?> getPropertyFunction) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(getPropertyFunction.apply(t));
     }
@@ -303,12 +343,12 @@ public abstract class CollectionSugar {
     /**
      * repeatBy
      * @param list
-     * @param getPropertyFunction T::getId
+     * @param itemFunction T::getId
      * @param <T>
      * @return
      */
-    public static <T> boolean beRepeatBy(List<T> list, Function<? super T, ?> getPropertyFunction) {
-        boolean b = list.parallelStream().anyMatch(trueIfRepeat(getPropertyFunction));
+    public static final <T> boolean beRepeatBy(List<T> list, Function<? super T, ?> itemFunction) {
+        boolean b = list.parallelStream().anyMatch(buildRepeatPredicate(itemFunction));
         return b;
     }
 
@@ -319,7 +359,7 @@ public abstract class CollectionSugar {
      * @param <T>
      * @return
      */
-    private static <T> Predicate<T> trueIfRepeat(Function<? super T, ?> getPropertyFunction) {
+    private static final <T> Predicate<T> buildRepeatPredicate(Function<? super T, ?> getPropertyFunction) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> !seen.add(getPropertyFunction.apply(t));
     }
@@ -542,7 +582,7 @@ public abstract class CollectionSugar {
     }
 
 
-    public static final <T, ID extends Number> List<T> flatToTree(List<T> flat) {
+    public static final <T, ID extends Number> List<T> flatToNested(List<T> flat) {
         List<RecursiveTree<T, ID>> recursiveFlat = flat.stream()
                 .map(c -> (RecursiveTree<T, ID>) c)
                 .peek(c -> c.setParentId(c.getParentId() == null ? (ID)Integer.valueOf(-1) : c.getParentId()))
@@ -568,9 +608,9 @@ public abstract class CollectionSugar {
         }
     }
 
-    public static final <T, ID extends Number> List<T> treeToFlat(List<T> treeList) {
+    public static final <T, ID extends Number> List<T> nestedToFlat(List<T> nested) {
         List<RecursiveTree<T, ID>> recursiveFlatList = new ArrayList<>();
-        treeToFlatRecursively(treeList, recursiveFlatList);
+        treeToFlatRecursively(nested, recursiveFlatList);
 
         List<T> collect = recursiveFlatList.stream()
 //                .peek(c -> c.setItemList(null))
@@ -579,8 +619,8 @@ public abstract class CollectionSugar {
         return collect;
     }
 
-    private static final  <T, ID extends Number> void treeToFlatRecursively(List<T> treeList, List<RecursiveTree<T, ID>> flatList) {
-        for (T t : treeList) {
+    private static final  <T, ID extends Number> void treeToFlatRecursively(List<T> nestedList, List<RecursiveTree<T, ID>> flatList) {
+        for (T t : nestedList) {
             RecursiveTree<T, ID> node = (RecursiveTree<T, ID>)t;
             flatList.add(node);
             if (node.getItemList() != null) {

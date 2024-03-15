@@ -36,6 +36,15 @@ public class YamlSugar {
         return t;
     }
 
+    public static boolean beYaml(String yaml) {
+        try {
+            YamlSugar.YAML.loadAs(yaml, Object.class);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static final <T> T file2T(String path, Class<T> clazz) {
         File file = new File(path);
         if (!file.exists())

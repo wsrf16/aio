@@ -31,10 +31,10 @@ spring:
 
 
   rest:
-    agent:
-      enabled: false
+    proxy:
+      enabled: true
       host: 127.0.0.1
-      port: 8888
+      port: 17890
 
   jwt:
     enabled: true

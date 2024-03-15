@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>spring-boot-starter-swiss</artifactId>
-    <version>1.1.23-SNAPSHOT</version>
+    <version>1.1.26-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-starter-swiss</name>
@@ -36,8 +36,8 @@
         <knife4j.version>3.0.2</knife4j.version>
         <cron-utils.version>7.0.6</cron-utils.version>
         <druid.version>1.1.18</druid.version>
-        <mybatis.version>2.1.1</mybatis.version>
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis.version>2.2.2</mybatis.version>
+        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
         <java-jwt.version>3.15.0</java-jwt.version>

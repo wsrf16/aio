@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.hamlet.bean;
 
+import com.aio.portable.swiss.hamlet.exception.BizException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -61,6 +63,17 @@ public abstract class BaseBizStatusEnum {
         return instance.unauthorized();
     }
 
+    public static BizException failedBizException() {
+        return new BizException(staticUnauthorized().getCode(), staticUnauthorized().getMessage());
+    }
+
+    public static BizException exceptionBizException() {
+        return new BizException(staticException().getCode(), staticException().getMessage());
+    }
+
+    public static BizException unauthorizedBizException() {
+        return new BizException(staticUnauthorized().getCode(), staticUnauthorized().getMessage());
+    }
 
 
 

@@ -38,12 +38,10 @@ public abstract class JDKBase64Convert {
     }
 
     public static final String convertHexToBase64(String hex) {
-        String base64 = JDKBase64Convert.encodeToString(HexConvert.decode(hex));
-        return base64;
+        return JDKBase64Convert.encodeToString(HexConvert.decode(hex));
     }
 
     public static final String convertBase64ToHex(String encoded) {
-        String hex = HexConvert.encode(JDKBase64Convert.decode(encoded));
-        return hex;
+        return HexConvert.encode(JDKBase64Convert.decode(encoded));
     }
 }

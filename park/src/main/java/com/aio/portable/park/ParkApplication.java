@@ -1,15 +1,12 @@
 package com.aio.portable.park;
 
-
-import com.aio.portable.park.bean.MenuEntity;
+import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.interceptor.log.annotation.NetworkProxy;
-import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
-import com.aio.portable.swiss.suite.bean.node.tree.recursion.RecursiveTree;
+import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.net.tcp.proxy.NetworkProxySugar;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,8 +17,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @SpringBootApplication(exclude = {
@@ -35,7 +30,6 @@ import java.util.List;
 //        LoggingApplicationListener.class
 //        RedissonAutoConfiguration.class,
 //        RedisAutoConfiguration.class,
-//        SpringContextHolder.class
 })
 // VMoptions: -javaagent:./jagent/target/jagent-1.1.4-SNAPSHOT.jar=Hello
 // VMoptions: -Xlog:gc*:file=/log.txt -Xloggc:/log2.txt -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/gc.txt
@@ -44,11 +38,21 @@ public class ParkApplication {
 //    static LogHub log = AppLogHubFactory.staticBuild();
 
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
-        NetworkProxySugar.SystemProxies.setUseSystemProxies(true);
 //        log.i("static", "loghub");
-//        BeanSugar.Methods.getDeclaredMethodIncludeParents()
+//        boolean primitiveOrWrapper = ClassUtils.isPrimitiveOrWrapper(String.class);
+
+
+//        // \u000d System.out.println("coder Hydra");
+        NetworkProxySugar.SystemProxies.setUseSystemProxies(true);
         System.out.println("𝄞" + "𝄞".length());
         ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
+
+//        LogHubFactory.setSingleton(new LogHubFactory() {});
+        boolean initialized = LogHubProperties.initialized();
+        boolean initial = LogHubFactory.isInitial();
+        LogHubFactory singleton = LogHubFactory.getSingleton();
+
+        System.out.println();
     }
 
 

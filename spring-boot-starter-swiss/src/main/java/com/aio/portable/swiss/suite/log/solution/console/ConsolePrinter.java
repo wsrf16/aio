@@ -29,10 +29,6 @@ public class ConsolePrinter implements Printer {
 
     private String emptyLines = String.join(Constant.EMPTY, Stream.of(Constant.LINE_SEPARATOR).limit(EMPTY_LINES).collect(Collectors.toList()));
 
-//    private ConsolePrinter() throws Exception {
-//        throw new Exception("This is a invalid construction method.");
-//    }
-
     private String name;
     private String prefix;
     private ConsoleLogProperties properties;
@@ -66,7 +62,6 @@ public class ConsolePrinter implements Printer {
     }
 
 
-    //    static final String prefixTimePattern = "yyyy/MM/dd HH:mm:ss.SSS";
     protected String nowTime() {
         String dateTime = DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_NORMAL_LONGEST, new Date());
 //        String dateTime = new SimpleDateFormat(prefixTimePattern).format(Calendar.getInstance().getTime());
@@ -83,22 +78,13 @@ public class ConsolePrinter implements Printer {
     }
 
     /**
-     * 记录文字
-     *
-     * @param word
-     */
-//    public void print(String word) {
-//        System.out.print(word);
-//        System.out.print(emptyLines);
-//    }
-
-    /**
      * 记录一行文字
      *
-     * @param line
+     * @param record
      */
     @Override
-    public void println(String line, LevelEnum level) {
+    public void println(Object record, LevelEnum level) {
+        String line = getSmartSerializerAdapter(level).serialize(record);
         if (properties.getEnabled()) {
             String coloredLevel;
             switch (level) {
@@ -127,7 +113,7 @@ public class ConsolePrinter implements Printer {
                 }
                 break;
                 case FATAL: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH, ColorEnum.STRIKETHROUGH);
+                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH);
                 }
                 break;
                 default: {
@@ -176,19 +162,5 @@ public class ConsolePrinter implements Printer {
     private static final void println(String output) {
         System.out.println(output);
     }
-
-    /**
-     * 记录多行文字
-     *
-     * @param lines
-     */
-//    public void println(List<String> lines) {
-//        System.out.println(LINEPRIFIX() + LINE_SEPARATOR);
-//        for (String line : lines) {
-//            System.out.println(line);
-//        }
-//        System.out.print(emptyLines);
-//    }
-
 
 }

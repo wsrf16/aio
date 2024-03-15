@@ -21,7 +21,7 @@ import java.util.Objects;
 @Configuration
 public class CustomHandlerInterceptor implements HandlerInterceptor {
     static LogHub log = AppLogHubFactory.staticBuild();
-    @Autowired
+    @Autowired(required = false)
     Swagger3Properties swagger3Properties;
 
     @Override

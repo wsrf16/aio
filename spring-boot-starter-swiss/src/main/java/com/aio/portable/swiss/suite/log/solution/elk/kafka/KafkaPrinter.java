@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.log.solution.elk.kafka;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.middleware.mq.kafka.KafkaBuilder;
 import com.aio.portable.swiss.suite.log.facade.Printer;
+import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecord;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.apache.commons.logging.Log;
@@ -19,11 +20,14 @@ public class KafkaPrinter implements Printer {
 
     String logName;
     KafkaLogProperties properties;
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public KafkaPrinter(String logName, KafkaLogProperties properties) {
         this.logName = logName;
         this.properties = properties;
+        this.properties.getProducer().setValueSerializer(org.apache.kafka.common.serialization.StringSerializer.class);
+        this.properties.getProducer().setValueSerializer(org.springframework.kafka.support.serializer.JsonSerializer.class);
+
         this.kafkaTemplate = KafkaBuilder.buildTemplate(properties);
     }
 
@@ -50,11 +54,11 @@ public class KafkaPrinter implements Printer {
     }
 
     @Override
-    public void println(String line, LevelEnum level) {
+    public void println(Object record, LevelEnum level) {
         if (properties.getEnabled()) {
             properties.getBindingList().forEach(c -> {
                 try {
-                    kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), line);
+                    kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), record);
                 } catch (Exception e) {
 //                    e.printStackTrace();
                     log.warn("kafka println error", e);

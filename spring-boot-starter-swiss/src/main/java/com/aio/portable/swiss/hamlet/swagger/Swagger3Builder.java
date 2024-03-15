@@ -19,6 +19,7 @@ import springfox.documentation.spi.service.contexts.ApiSelector;
 import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -36,9 +37,9 @@ public class Swagger3Builder {
         return codes;
     }
 
-    public static Swagger3Properties buildProperties(String packageName, List<Response> responseList) {
+    public static Swagger3Properties buildProperties(Predicate<RequestHandler> selector, List<Response> responseList) {
         Swagger3Properties swagger3Properties = new Swagger3Properties();
-        swagger3Properties.setPackageName(packageName);
+        swagger3Properties.setSelector(selector);
         swagger3Properties.setResponseList(responseList);
         return swagger3Properties;
     }
@@ -66,7 +67,8 @@ public class Swagger3Builder {
         springfox.documentation.service.ApiInfo apiInfo = swagger3Properties.getApiInfo().toSwaggerApiInfo();
         boolean enable = swagger3Properties.getEnabled();
         List<Response> responseList = swagger3Properties.getResponseList();
-        String packageName = swagger3Properties.getPackageName();
+//        String packageName = swagger3Properties.getPackageName();
+        Predicate<RequestHandler> selector = swagger3Properties.getSelector();
         String host = swagger3Properties.getHost();
         List<RequestParameter> requestParameters = swagger3Properties.getRequestParameters() != null ?
                 swagger3Properties.getRequestParameters() :
@@ -86,13 +88,33 @@ public class Swagger3Builder {
                 .host(host)
                 .globalRequestParameters(requestParameters);
 
-        Predicate<RequestHandler> selector = StringUtils.hasText(packageName) ? RequestHandlerSelectors.basePackage(packageName) : RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class);
-
         ApiSelectorBuilder builder = docket
                 .select()
                 .paths(ApiSelector.DEFAULT.getPathSelector())
                 .apis(selector);
 
         return builder.build();
+    }
+
+    public static class Selector {
+        public static final Predicate<RequestHandler> withPackageName(String packageName) {
+            return RequestHandlerSelectors.basePackage(packageName);
+        }
+
+        public static final Predicate<RequestHandler> withMethodAnnotation() {
+            return RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class);
+        }
+
+        public static final Predicate<RequestHandler> withClassAnnotation() {
+            return RequestHandlerSelectors.withClassAnnotation(ApiOperation.class);
+        }
+
+        public static final Predicate<RequestHandler> withMethodAnnotation(final Class<? extends Annotation> annotation) {
+            return RequestHandlerSelectors.withMethodAnnotation(annotation);
+        }
+
+        public static final Predicate<RequestHandler> withClassAnnotation(final Class<? extends Annotation> annotation) {
+            return RequestHandlerSelectors.withClassAnnotation(annotation);
+        }
     }
 }

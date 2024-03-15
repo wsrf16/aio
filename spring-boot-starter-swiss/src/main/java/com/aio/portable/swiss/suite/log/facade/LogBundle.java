@@ -37,7 +37,7 @@ public abstract class LogBundle implements LogAction {
     }
 
     public static void silence(Runnable runnable) {
-        ThrowableSugar.handleIfCatch(runnable, e -> log.warn(e));
+        ThrowableSugar.runIfCatch(runnable, e -> log.warn(e));
     }
 
     public void verb(String message) {

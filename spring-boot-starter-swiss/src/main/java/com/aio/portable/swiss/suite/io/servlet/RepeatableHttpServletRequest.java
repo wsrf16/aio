@@ -36,7 +36,7 @@ public class RepeatableHttpServletRequest extends HttpServletRequestWrapper {
         if (body != null) {
             this.body = body;
         }
-        this.convert = _body -> _body;
+        this.convert = b -> b;
     }
 
     public static final RepeatableHttpServletRequest repeatable(HttpServletRequest servletRequest) {

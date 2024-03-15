@@ -39,8 +39,12 @@ public abstract class LogHubFactory {
         return new LogHubFactory(){};
     }
 
-    protected static LogHubFactory singleton = defaultLogHubFactory();
-    protected static boolean initialized = false;
+    static  {
+        singleton = defaultLogHubFactory();
+    }
+
+    protected static LogHubFactory singleton; // = defaultLogHubFactory();;
+    protected static boolean initialized;
     boolean enabled = true;
     protected LevelEnum level = LevelEnum.ALL;
 
@@ -75,6 +79,10 @@ public abstract class LogHubFactory {
             LogHubFactory.singleton = singleton;
             initialized = true;
         }
+    }
+
+    public static final LogHubFactory getSingleton() {
+        return LogHubFactory.singleton;
     }
 
     public LogHub build(String name) {

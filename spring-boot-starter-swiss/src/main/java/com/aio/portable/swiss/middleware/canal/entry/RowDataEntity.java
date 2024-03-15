@@ -73,7 +73,7 @@ public class RowDataEntity<T> {
     }
 
     private static <T> T toRowModel(List<ColumnEntity> columnsList, Class<T> clazz) {
-        return ThrowableSugar.throwRuntimeExceptionIfCatch(() -> {
+        return ThrowableSugar.runThrowRuntimeExceptionIfCatch(() -> {
             Map<String, Object> map = columnsList.stream().collect(Collectors.toMap(c -> c.getName(), c -> c.getValue()));
             T t = DeepCloneSugar.Json.clone(map, clazz);
             return t;

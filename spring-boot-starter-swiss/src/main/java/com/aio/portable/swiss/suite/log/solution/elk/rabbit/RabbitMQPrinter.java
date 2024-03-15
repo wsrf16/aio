@@ -6,8 +6,6 @@ import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import com.aio.portable.swiss.suite.log.facade.Printer;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
@@ -61,7 +59,8 @@ public class RabbitMQPrinter implements Printer {
     }
 
     @Override
-    public void println(String line, LevelEnum level) {
+    public void println(Object record, LevelEnum level) {
+        String line = getSmartSerializerAdapter(level).serialize(record);
         if (rabbitMQLogProperties.getEnabled()) {
             rabbitMQLogProperties.getBindingList().forEach(c -> {
                 Message msg = MessageBuilder

@@ -11,7 +11,6 @@ public abstract class HashConvert {
             try {
                 return MessageDigest.getInstance("MD5").digest(bytes);
             } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -22,7 +21,6 @@ public abstract class HashConvert {
                 byte[] bytes = encode(input);
                 return HexConvert.encode(bytes);
             } catch (Exception e) {
-//            e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

@@ -14,7 +14,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements LogProp
     private static final boolean DEFAULT_ENABLED = true;
 
     //    private static final Log log = LogFactory.getLog(RabbitMQLogProperties.class);
-    private static final LocalLog log = new LocalLog(RabbitMQLogProperties.class);
+    private static final LocalLog log = LocalLog.getLog(RabbitMQLogProperties.class);
     public static final String PREFIX = "spring.log.rabbitmq";
 
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();

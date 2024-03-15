@@ -11,35 +11,34 @@ public class Slf4JPrinter implements Printer {
     public Slf4JPrinter(String name) {
         this.name = name;
         this.logger = org.slf4j.LoggerFactory.getLogger(name);
-//        LoggerContext factory = new LoggerContext();
-//        this.logger = factory.getLogger(name);
     }
 
     @Override
-    public void println(String text, LevelEnum level) {
+    public void println(Object record, LevelEnum level) {
+        String line = getSmartSerializerAdapter(level).serialize(record);
         switch (level) {
             case VERB: {
                 Global.unsupportedOperationException(name + ": " + LevelEnum.VERB.getName());
             }
             break;
             case TRACE: {
-                logger.trace(text);
+                logger.trace(line);
             }
             break;
             case DEBUG: {
-                logger.debug(text);
+                logger.debug(line);
             }
             break;
             case INFO: {
-                logger.info(text);
+                logger.info(line);
             }
             break;
             case WARN: {
-                logger.warn(text);
+                logger.warn(line);
             }
             break;
             case ERROR: {
-                logger.error(text);
+                logger.error(line);
             }
             break;
             case FATAL: {

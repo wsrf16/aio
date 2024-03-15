@@ -62,6 +62,7 @@ public abstract class PropertySourceBeanDefinitionRegistryPostProcessor implemen
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // MutablePropertySources：当前环境下的所有properties、yaml、yml文件
         MutablePropertySources propertySources = environment.getPropertySources();
         convertPropertySource(propertySources);
     }

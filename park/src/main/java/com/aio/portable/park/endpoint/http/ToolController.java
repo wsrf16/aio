@@ -5,14 +5,19 @@ import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.spring.web.Base64MultipartFile;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
+import com.aio.portable.swiss.suite.security.authorization.jwt.annotation.JWTAuth;
 import com.aio.portable.swiss.suite.system.HostInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +28,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("tool")
@@ -31,10 +38,13 @@ public class ToolController {
     private static final String UPLOADS_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE + "=" + MediaType.MULTIPART_FORM_DATA_VALUE;
     private static final String UPLOAD_DIRECTORY = "upload";
 
-    private LogHub log = AppLogHubFactory.staticBuild();
+    private LogHub log = AppLogHubFactory.staticBuild().setAsync(false);
 
     @Autowired
     private HttpServletRequest request;
+
+    @Autowired
+    RestTemplate skipSSLRestTemplate;
 
 //    @ApiOperation(value = "upload接口")
     @PostMapping("/upload")
@@ -102,9 +112,81 @@ public class ToolController {
         return ResponseWrappers.succeed(uploadLocation);
     }
 
+    @GetMapping("aaa")
+    public ResponseWrapper<Object> aaa() {
+//        List<Integer> list = Stream.iterate(0, i -> i + 1).limit(10000).collect(Collectors.toList());
+////        list.parallelStream().forEach(c -> log.w(c.toString()));
+//        list.parallelStream().forEach(c -> ff());
+//        System.out.println("1111111111111111111111");
+        return ResponseWrappers.succeed();
+    }
 
+    public final void ff() {
+        {
+            String s = "http://localhost:8084/permission/ingress/grant";
+            String body = "{\n" +
+                    "  \"id\":null,\n" +
+                    "  \"orgId\":\"d96ad332f33242099a60397ee99b9b8b\",\n" +
+                    "  \"appId\":3211001,\n" +
+                    "  \"action\":null,\n" +
+                    "  \"resourceCategory\":\"engine\",\n" +
+                    "  \"resourceId\":\"1674343025399779329\",\n" +
+                    "  \"resourceIdList\":null,\n" +
+                    "  \"principleType\":null,\n" +
+                    "  \"principleIdList\":null,\n" +
+                    "  \"createId\":null,\n" +
+                    "  \"createTime\":null,\n" +
+                    "  \"updateId\":null,\n" +
+                    "  \"updateTime\":null,\n" +
+                    "  \"permissionIngressConditionList\":[\n" +
+                    "    {\n" +
+                    "      \"id\":null,\n" +
+                    "      \"permissionId\":null,\n" +
+                    "      \"name\":\"v\",\n" +
+                    "      \"operator\":\"=\",\n" +
+                    "      \"value\":\"394642012\",\n" +
+                    "      \"sort\":0,\n" +
+                    "      \"createId\":null,\n" +
+                    "      \"createTime\":null,\n" +
+                    "      \"updateId\":null,\n" +
+                    "      \"updateTime\":null\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\":null,\n" +
+                    "      \"permissionId\":null,\n" +
+                    "      \"name\":\"name\",\n" +
+                    "      \"operator\":\"=\",\n" +
+                    "      \"value\":\"22\",\n" +
+                    "      \"sort\":0,\n" +
+                    "      \"createId\":null,\n" +
+                    "      \"createTime\":null,\n" +
+                    "      \"updateId\":null,\n" +
+                    "      \"updateTime\":null\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\":null,\n" +
+                    "      \"permissionId\":null,\n" +
+                    "      \"name\":\"name\",\n" +
+                    "      \"operator\":\"=\",\n" +
+                    "      \"value\":\"1\",\n" +
+                    "      \"sort\":0,\n" +
+                    "      \"createId\":null,\n" +
+                    "      \"createTime\":null,\n" +
+                    "      \"updateId\":null,\n" +
+                    "      \"updateTime\":null\n" +
+                    "    }],\n" +
+                    "  \"enabled\":null\n" +
+                    "}";
+            ResponseEntity<String> responseEntity = RestTemplater.create(skipSSLRestTemplate)
+                    .contentTypeApplicationJson()
+                    .header("Cookie", "lcdpAccessToken=882a4e58ec914ea682ef6bf3a3f74d3b")
+                    .uri(s)
+                    .body(body)
+                    .method(HttpMethod.GET)
+                    .retrieve(String.class);
+        }
 
-
+    }
 
 
 

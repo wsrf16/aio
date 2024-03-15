@@ -20,9 +20,9 @@ public enum ColorEnum {
     FG_GREEN("32"),
     FG_YELLOW("33"),
     FG_BLUE("34"),
-    FG_MAGENTA("35"),
+    FG_PURPLE("35"),
     FG_CYAN("36"),
-    FG_WHITE("37"),
+    FG_GRAY("37"),
     FG_DEFAULT("39"),
     BG_BLACK("40"),
     BG_RED("41"),
@@ -31,7 +31,7 @@ public enum ColorEnum {
     BG_BLUE("44"),
     BG_PURPLE("45"),
     BG_CYAN("46"),
-    BG_WHITE("47"),
+    BG_GRAY("47"),
     ;
 
     private final String code;
@@ -50,11 +50,13 @@ public enum ColorEnum {
     }
 
     private static final String end() {
-        return MessageFormat.format("{0}{1}", ESC_START.getCode(), ESC_END.getCode());
+        return MessageFormat.format("{0}0{1}", ESC_START.getCode(), ESC_END.getCode());
     }
 
     public static final String print(String content, ColorEnum... colors) {
 //        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
         return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
     }
+
+
 }

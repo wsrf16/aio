@@ -3,12 +3,9 @@ package com.aio.portable.swiss.suite.algorithm.encode;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class Base32 {
+abstract class Base32 {
     private static final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     private static final int[] base32Lookup = new int[]{255, 255, 26, 27, 28, 29, 30, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 255, 255, 255, 255, 255};
-
-    private Base32() {
-    }
 
     public static String encode(byte[] bytes) {
         int i = 0;

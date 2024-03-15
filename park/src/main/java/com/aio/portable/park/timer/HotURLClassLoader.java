@@ -7,6 +7,7 @@ import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+// LaunchedURLClassLoader
 public class HotURLClassLoader extends URLClassLoader {
     private native Class<?> findBootstrapClass(String name);
 

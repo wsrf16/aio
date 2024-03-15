@@ -1,8 +1,12 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis.multidatasource;
 
 import com.aio.portable.swiss.suite.storage.db.AbstractDataSourceConfiguration;
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
@@ -40,7 +44,20 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 //        }
 //    }
 
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties, Consumer<SqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) throws Exception {
+    public MybatisPlusInterceptor mysqlInterceptor() {
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+        paginationInnerInterceptor.setOptimizeJoin(false);
+        paginationInnerInterceptor.setDbType(DbType.MYSQL);
+        paginationInnerInterceptor.setOverflow(true);
+        OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor = new OptimisticLockerInnerInterceptor();
+
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(paginationInnerInterceptor);
+        interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor);
+        return interceptor;
+    }
+
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties, Consumer<SqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setVfs(SpringBootVFS.class);
@@ -79,10 +96,15 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 
         if (sqlSessionFactoryBeanInterceptor != null)
             sqlSessionFactoryBeanInterceptor.accept(factoryBean);
-        return factoryBean.getObject();
+
+        try {
+            return factoryBean.getObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties, Consumer<MybatisSqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties, Consumer<MybatisSqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
 //        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
@@ -122,16 +144,21 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 
         if (sqlSessionFactoryBeanInterceptor != null)
             sqlSessionFactoryBeanInterceptor.accept(factoryBean);
-        return factoryBean.getObject();
+
+        try {
+            return factoryBean.getObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisProperties properties) throws Exception {
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisProperties properties) {
         ExecutorType executorType = properties.getExecutorType();
         return executorType == null ?
                 new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);
     }
 
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisPlusProperties properties) throws Exception {
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisPlusProperties properties) {
         ExecutorType executorType = properties.getExecutorType();
         return executorType == null ?
                 new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);

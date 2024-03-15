@@ -1,8 +1,13 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis;
 
+import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
+import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -10,11 +15,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.catalina.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -43,8 +53,58 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return this.delete(next);
     }
 
+    static <T, DTO extends T> LambdaQueryWrapper<T> lambdaQuery(DTO dto) {
+        LambdaQueryWrapper<T> wrapper = new LambdaQueryWrapper(dto);
+        try {
+            Map<String, ?> nameValueMap = BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(dto);
+            nameValueMap.forEach((k, v) -> {
+                if (k.endsWith("Like")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "Like");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.like(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("LikeLeft")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LikeLeft");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.likeLeft(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("LikeRight")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LikeRight");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.likeRight(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("NotIn")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotIn");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Collection<?>) {
+                        wrapper.notIn(v != null, lambdaSFunction, (Collection<?>)v);
+                    }
+                } else if (k.endsWith("In")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "In");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Collection<?>) {
+                        wrapper.in(v != null, lambdaSFunction, (Collection<?>)v);
+                    }
+                } else if (k.endsWith("OrderByASC")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "OrderByASC");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Boolean) {
+                        wrapper.orderByAsc(Objects.equals(v, true), lambdaSFunction);
+                    }
+                } else if (k.endsWith("OrderByDESC")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "OrderByDESC");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Boolean) {
+                        wrapper.orderByDesc(Objects.equals(v, true), lambdaSFunction);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return wrapper;
+    }
+
     static <X> LambdaQueryWrapper<X> buildLambdaQueryWrapper(X predicate) {
-        return predicate == null ? Wrappers.lambdaQuery() : Wrappers.lambdaQuery(predicate);
+        return predicate == null ? Wrappers.lambdaQuery() : lambdaQuery(predicate);
     }
 
     static <X> LambdaQueryWrapper<X> buildLambdaQueryWrapper() {
@@ -115,6 +175,41 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
         S one = selectOne(next);
         return DeepCloneSugar.Properties.clone(one, target);
+    }
+
+    default S selectFirstOne(S predicate) {
+        return this.selectFirstOne(predicate, (Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>>)null);
+    }
+
+    default S selectFirstOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        return this.selectFirstOne(null, predicateExpression);
+    }
+
+    default S selectFirstOne(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
+        return selectFirstOne(next);
+    }
+
+
+    default <T> T selectFirstOne(S predicate, Class<T> target) {
+        return this.selectFirstOne(predicate, null, target);
+    }
+
+    default <T> T selectFirstOne(Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        return this.selectFirstOne(null, predicateExpression, target);
+    }
+
+    default <T> T selectFirstOne(S predicate, Function<LambdaQueryWrapper<S>, LambdaQueryWrapper<S>> predicateExpression, Class<T> target) {
+        LambdaQueryWrapper<S> wrapper = buildLambdaQueryWrapper(predicate);
+        LambdaQueryWrapper<S> next = predicateExpression == null ? wrapper : predicateExpression.apply(wrapper);
+        S one = selectFirstOne(next);
+        return DeepCloneSugar.Properties.clone(one, target);
+    }
+    
+    default S selectFirstOne(Wrapper<S> queryWrapper) {
+        List<S> list = selectList(queryWrapper);
+        return CollectionSugar.isEmpty(list) ? null : list.get(0);
     }
 
 

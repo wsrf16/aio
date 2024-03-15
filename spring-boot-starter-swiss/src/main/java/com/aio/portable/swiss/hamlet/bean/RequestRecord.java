@@ -15,6 +15,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RequestRecord {
+    public String getSpanId() {
+        return spanId;
+    }
+
+    public void setSpanId(String spanId) {
+        this.spanId = spanId;
+    }
+
     public String getRequestURL() {
         return requestURL;
     }
@@ -23,12 +31,12 @@ public class RequestRecord {
         this.requestURL = requestURL;
     }
 
-    public String getHttpMethod() {
-        return httpMethod;
+    public String getRequestMethod() {
+        return requestMethod;
     }
 
-    public void setHttpMethod(String httpMethod) {
-        this.httpMethod = httpMethod;
+    public void setRequestMethod(String requestMethod) {
+        this.requestMethod = requestMethod;
     }
 
     public String getRemoteAddress() {
@@ -55,39 +63,43 @@ public class RequestRecord {
         this.arguments = arguments;
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
+    public Map<String, String> getRequestHeaders() {
+        return requestHeaders;
     }
 
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
+    public void setRequestHeaders(Map<String, String> requestHeaders) {
+        this.requestHeaders = requestHeaders;
     }
 
+    private String spanId;
     private String requestURL;
-    private String httpMethod;
+    private String requestMethod;
     private String remoteAddress;
     private String classMethod;
     private Object[] arguments;
-    private Map<String, String> headers;
+    private Map<String, String> requestHeaders;
 
 
 
-    public static RequestRecord newInstance(HttpServletRequest request, JoinPoint joinPoint) {
+    public static RequestRecord newInstance(String spanId, HttpServletRequest request, JoinPoint joinPoint) {
         RequestRecord requestRecord = new RequestRecord();
+        requestRecord.setSpanId(spanId);
 
-        ThrowableSugar.printStackTraceIfCatch(() -> {
+        ThrowableSugar.runIfCatch(() -> {
             if (request != null) {
                 requestRecord.setRemoteAddress(request.getRemoteAddr());
                 String url = request.getRequestURL().toString() + (!StringUtils.hasText(request.getQueryString()) ? Constant.EMPTY : "?" + request.getQueryString());
                 requestRecord.setRequestURL(url);
-                requestRecord.setHttpMethod(request.getMethod());
-                requestRecord.setHeaders(parseHeader(request));
+                requestRecord.setRequestMethod(request.getMethod());
+                requestRecord.setRequestHeaders(parseHeader(request));
             }
-            requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            if (joinPoint != null) {
+                requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "::" + joinPoint.getSignature().getName());
 
-            Object[] args = filterArguments(joinPoint.getArgs());
-            requestRecord.setArguments(args);
-        });
+                Object[] args = filterArguments(joinPoint.getArgs());
+                requestRecord.setArguments(args);
+            }
+        }, true);
         return requestRecord;
     }
 

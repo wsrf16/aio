@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -34,8 +35,9 @@ import java.util.stream.Collectors;
 public abstract class ClassSugar {
 
     private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap();
-
+//isPrimitiveWrapper
     static {
+        primitiveWrapperTypeMap.put(Boolean.class, boolean.class);
         primitiveWrapperTypeMap.put(Byte.class, Byte.TYPE);
         primitiveWrapperTypeMap.put(Character.class, Character.TYPE);
         primitiveWrapperTypeMap.put(Double.class, Double.TYPE);
@@ -45,6 +47,7 @@ public abstract class ClassSugar {
         primitiveWrapperTypeMap.put(Short.class, Short.TYPE);
         primitiveWrapperTypeMap.put(Void.class, Void.TYPE);
 
+        primitiveWrapperTypeMap.put(Boolean[].class, boolean[].class);
         primitiveWrapperTypeMap.put(Byte[].class, byte[].class);
         primitiveWrapperTypeMap.put(Character[].class, char[].class);
         primitiveWrapperTypeMap.put(Double[].class, double[].class);
@@ -52,6 +55,11 @@ public abstract class ClassSugar {
         primitiveWrapperTypeMap.put(Integer[].class, int[].class);
         primitiveWrapperTypeMap.put(Long[].class, long[].class);
         primitiveWrapperTypeMap.put(Short[].class, short[].class);
+    }
+
+    public static final boolean isPrimitive(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        return clazz.isPrimitive();
     }
 
     public static final boolean isPrimitiveOrWrapper(Class<?> clazz) {
@@ -64,7 +72,7 @@ public abstract class ClassSugar {
         return primitiveWrapperTypeMap.containsKey(clazz);
     }
 
-    public static final boolean similarPrimitive(Class<?> clazz1, Class<?> clazz2) {
+    public static final boolean isSimilarPrimitiveOrWrapper(Class<?> clazz1, Class<?> clazz2) {
         boolean isPrimitiveOrWrapper = isPrimitiveOrWrapper(clazz1) && isPrimitiveOrWrapper(clazz2);
         if (!isPrimitiveOrWrapper)
             return false;
@@ -74,11 +82,30 @@ public abstract class ClassSugar {
 
     }
 
+//    /**
+//     * isSimpleValueType
+//     *
+//     * @param clazz
+//     * @return
+//     */
+//    public static final boolean isSimpleValueType(Class<?> clazz) {
+//        return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
+//    }
+
+    /**
+     * isReference
+     * @param clazz
+     * @return
+     */
+    public static final boolean isReference(Class<?> clazz) {
+        return Object.class.isAssignableFrom(clazz);
+    }
+
     /**
      * 获取类所有的路径
      *
      * @param clazz
-     * @return
+     * @return eg. file:/D:/.../all-in-one/park/target/classes/com/aio/portable/park/bean/Student.class
      */
     public static final String getPath(final Class<?> clazz) {
         String clazzFile = convertClassNameToResourceLocation(clazz.getTypeName());
@@ -120,9 +147,9 @@ public abstract class ClassSugar {
             }
         }
         if (location == null) {
-            ClassLoader clsLoader = clazz.getClassLoader();
-            location = clsLoader != null ?
-                    clsLoader.getResource(clazzFile) :
+            ClassLoader classLoader = clazz.getClassLoader();
+            location = classLoader != null ?
+                    classLoader.getResource(clazzFile) :
                     ClassLoader.getSystemResource(clazzFile);
         }
         return location.toString();
@@ -325,15 +352,6 @@ public abstract class ClassSugar {
         }
     }
 
-    /**
-     * isSimpleValueType
-     *
-     * @param clazz
-     * @return
-     */
-    public static final boolean isSimpleValueType(Class<?> clazz) {
-        return org.springframework.util.ClassUtils.isPrimitiveOrWrapper(clazz) || Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz) || URI.class == clazz || URL.class == clazz || Locale.class == clazz || Class.class == clazz;
-    }
 
     /**
      * isSuper
@@ -469,7 +487,7 @@ public abstract class ClassSugar {
         else {
             for (int i = 0; i < parameters.length; i++) {
                 if (parameterTypes[i].isPrimitive()) {
-                    if (similarPrimitive(parameterTypes[i], parameters[i].getClass()))
+                    if (isSimilarPrimitiveOrWrapper(parameterTypes[i], parameters[i].getClass()))
                         match = true;
                     else
                         match = false;
@@ -642,9 +660,15 @@ public abstract class ClassSugar {
         return GenericTypeResolver.resolveTypeArguments(clazz, genericIfc);
     }
 
-    public static final <T> List<T> getSPIList(Class<T> interfaze) {
-        Iterator<T> iterator = ServiceLoader.load(interfaze).iterator();
+    public static final <T> List<T> getSPIList(Class<T> iface) {
+        Iterator<T> iterator = ServiceLoader.load(iface).iterator();
         List<T> list = CollectionSugar.toList(iterator);
         return list;
+    }
+
+    public static boolean isMemberClass(Class<?> clazz) {
+//        return (clazz.isMemberClass() && !Modifier.isStatic(clazz.getModifiers()));
+//        return org.springframework.util.ClassUtils.isInnerClass(clazz);
+        return clazz.isMemberClass();
     }
 }

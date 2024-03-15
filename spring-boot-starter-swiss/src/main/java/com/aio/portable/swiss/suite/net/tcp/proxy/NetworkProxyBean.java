@@ -89,7 +89,4 @@ public class NetworkProxyBean implements InitializingBean {
         return telnet;
     }
 
-//    public static final String info(ProxyBean proxyObject) {
-//        return MessageFormat.format("set proxy: host-{0} port-{1}", proxyObject.getHost(), String.valueOf(proxyObject.getPort()));
-//    }
 }

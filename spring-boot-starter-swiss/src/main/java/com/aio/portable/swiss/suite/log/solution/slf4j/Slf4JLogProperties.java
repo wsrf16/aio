@@ -3,6 +3,7 @@ package com.aio.portable.swiss.suite.log.solution.slf4j;
 import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.solution.console.ConsoleLog;
+import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.bind.BindResult;
@@ -12,7 +13,7 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
     public static final String PREFIX = "spring.log.slf4j";
 
 //    private static final Log log = LogFactory.getLog(Slf4JLogProperties.class);
-    private static final ConsoleLog log = new ConsoleLog();
+    private static final LocalLog log = LocalLog.getLog(Slf4JLogProperties.class);
 
     private static final boolean DEFAULT_ENABLED = true;
 
@@ -55,7 +56,7 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
 
     public static final void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
-        log.info("Slf4jLogProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.info("Slf4jLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

@@ -18,20 +18,20 @@ public class ESLogRecord extends StandardLogRecord {
         this.esIndex = esIndex;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getServerIp() {
-        return serverIp;
+    public String getHost() {
+        return host;
     }
 
-    public void setServerIp(String serverIp) {
-        this.serverIp = serverIp;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getOutputType() {
@@ -44,18 +44,18 @@ public class ESLogRecord extends StandardLogRecord {
 
     private String esIndex;
 
-    private String timeStamp;
+    private String timestamp;
 
-    private String serverIp;
+    private String host;
 
     public ESLogRecord() {}
 
-    public ESLogRecord(LogRecord logRecord, String esIndex, String serverIp) {
+    public ESLogRecord(LogRecord logRecord, String esIndex, String host) {
         DeepCloneSugar.Cglib.clone(logRecord, this);
 
         setEsIndex(esIndex);
-        setServerIp(serverIp);
-        setTimeStamp(DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
+        setHost(host);
+        setTimestamp(DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
     }
 
     public static final String formatIndex(String name) {

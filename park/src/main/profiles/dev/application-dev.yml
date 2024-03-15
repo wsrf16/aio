@@ -5,14 +5,22 @@ spring:
       enabled: true #开启h2 web界面
   datasource:
     master:
+#      type: com.zaxxer.hikari.HikariDataSource
+      type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: org.h2.Driver
-#      driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:h2:mem:db_test
-#      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
       username: root
-#      password: "{cipher}CBuT0hQ+CsjbByL0DYW4zw=="
       password: 1111
+#      password: "{cipher}CBuT0hQ+CsjbByL0DYW4zw=="
+
+
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://mecs.com:3306/tdatabase?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=false&allowMultiQueries=true&useCursorFetch=true
+#      username: root
+#      password: 1111
       connection-timeout: 2000
+      hikari:
+        maximum-pool-size: 60
       schema:
         - classpath:db/schema-h2.sql
       data:
@@ -22,7 +30,7 @@ spring:
         mapper-locations: classpath:mapper/*.xml, classpath:config/mapper/*.xml
 
     slave:
-      type: com.alibaba.druid.pool.DruidDataSource
+#      type: com.alibaba.druid.pool.DruidDataSource
 #      type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: org.h2.Driver
 #      driver-class-name: com.mysql.cj.jdbc.Driver
@@ -34,7 +42,7 @@ spring:
       hikari:
         connection-timeout: 30000
         minimum-idle: 100
-        maximum-pool-size: 100
+        maximum-pool-size: 99
         maxLifetime: 0
         idle-timeout: 88888
       jpa:
@@ -100,7 +108,7 @@ spring:
       es-index: @project.deploy.finalName@-@profiles.active@-log
       publisher-confirms: true
       publisher-returns: true
-      auto-declare: false
+      auto-declare: true
       binding-list:
       - type: direct
         routing-key: application-log-queue
@@ -110,7 +118,7 @@ spring:
     kafka:
       enabled: false
       esIndex: @project.deploy.finalName@-@profiles.active@-log
-      bootstrap-servers: 192.168.133.133:9092
+      bootstrap-servers: 192.168.0.133:9092
 #      template:
 #        defaultTopic: application-log
 #      producer:

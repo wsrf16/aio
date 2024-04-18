@@ -9,27 +9,16 @@ import com.aio.portable.park.dao.slave.repository.BookSlaveRepository;
 import com.aio.portable.park.service.master.BookMasterBaseService;
 import com.aio.portable.park.service.master.UserMasterBaseService;
 import com.aio.portable.park.service.master.UserMasterServiceImpl;
-import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecord;
-import com.aio.portable.swiss.sugar.resource.function.LambdaConsumer;
-import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.storage.db.jpa.JPASugar;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Configuration
 public class MyDatabaseTest {
@@ -61,7 +50,24 @@ public class MyDatabaseTest {
         return vo;
     }
 
-
+//    public <T> void increase(LambdaFunction<T, ?> idName, Object id, LambdaFunction<T, ?> propertyName) {
+//        String idNameOf = BeanSugar.PropertyDescriptors.getPropertyNameOf(idName);
+//        String idNameSnake = NamingStrategySugar.snake(idNameOf);
+//
+//        String propertyNameOf = BeanSugar.PropertyDescriptors.getPropertyNameOf(propertyName);
+//        String propertyNameSnake = NamingStrategySugar.snake(propertyNameOf);
+//        UpdateWrapper updateWrapper = new UpdateWrapper();
+//        updateWrapper.eq(idNameSnake, id);
+//        String sql = MessageFormat.format("{0} = {0} + 1", propertyNameSnake);
+//        updateWrapper.setSql(sql);
+//        userMasterBaseService.ge
+//
+//
+//        List<User> all = userMasterBaseService.selectList();
+//        List<User> all1 = userMasterBaseService.selectList();
+////        this.update(updateWrapper);
+////        SqlHelper.retBool(this.update((Object)null, updateWrapper));
+//    }
     private void master() {
         if (bookMasterMapper != null) {
             List<Book> all = bookMasterMapper.getAll();
@@ -75,10 +81,17 @@ public class MyDatabaseTest {
             }
         }
 
+
+
         if (userMasterBaseService != null) {
             Page<User> userPage = userMasterBaseService.selectPage(2, 2, new User());
 
             List<User> all = userMasterBaseService.selectList();
+            int increased = userMasterBaseService.increase(User::getAge, c -> c.eq(User::getId, 2));
+            all = userMasterBaseService.selectList();
+            int decreased = userMasterBaseService.decrease(User::getAge, c -> c.eq(User::getId, 2));
+            all = userMasterBaseService.selectList();
+
             Iterator aa = all.iterator();
             userMasterBaseService.updateByAge(c -> c.set(User::getName, "abcdefg"), 21);
             User user = userMasterBaseService.selectById(1);

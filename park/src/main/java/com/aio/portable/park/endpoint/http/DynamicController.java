@@ -1,10 +1,14 @@
 package com.aio.portable.park.endpoint.http;
 
+import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.spring.SpringController;
 import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
+
+import java.lang.reflect.Method;
 
 
 @Component
@@ -21,15 +25,16 @@ public class DynamicController {
     }
 
     public void registerTest(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
+        Method method = ClassSugar.getDeclaredMethod(this.getClass(), "test");
         SpringController.registerMapping(abstractHandlerMethodMapping, this,
-                ClassSugar.getDeclaredMethod(this.getClass(), "test"),
-                "/malicious");
+                method,
+                "/test");
     }
 
 
     @ResponseBody
-    public void test() throws Exception {
-        System.out.println("testtttttt");
+    public ResponseWrapper<String> test() throws Exception {
+        return ResponseWrappers.succeed("testtttttt");
     }
 
 }

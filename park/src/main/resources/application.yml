@@ -1,5 +1,5 @@
 server:
-  port: 7777
+  port: 17777
   # 700,656 -> 1,232
   compression:
     min-response-size: 2048
@@ -34,15 +34,13 @@ spring:
     proxy:
       enabled: true
       host: 127.0.0.1
-      port: 17890
+      port: 8888
 
   jwt:
     enabled: true
     secret: 123456
     expiredMinutes: 12
     issuer: ladder
-    basePackages:
-      - com.aio.portable.park.controller
     explicit: true
 
   ldap:

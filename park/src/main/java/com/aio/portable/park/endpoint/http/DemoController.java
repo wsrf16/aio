@@ -6,10 +6,10 @@ import com.aio.portable.park.common.BizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
-import com.aio.portable.swiss.hamlet.interceptor.log.annotation.LogRecord;
+import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.LogRecord;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.suite.security.authorization.jwt.annotation.JWTAuth;
+import com.aio.portable.swiss.hamlet.interceptor.classic.annotation.jwt.RequiredJWTAuth;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("demo")
-@LogRecord
+@LogRecord(ignore = false)
 public class DemoController {
     @Autowired
     private HttpServletRequest request;
@@ -113,7 +113,7 @@ public class DemoController {
     }
 
     @GetMapping("auth")
-    @JWTAuth
+    @RequiredJWTAuth
     public Date auth() {
         return new Date();
     }

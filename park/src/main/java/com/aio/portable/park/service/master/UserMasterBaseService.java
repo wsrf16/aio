@@ -62,6 +62,14 @@ public class UserMasterBaseService {
         return (LambdaFunction<T, ?>)this.func;
     }
 
+    public int increase(LambdaFunction<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
+        return userMasterBaseMapper.increase(propertyName, predicateExpression);
+    }
+
+    public int decrease(LambdaFunction<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
+        return userMasterBaseMapper.decrease(propertyName, predicateExpression);
+    }
+
     public List<User> selectList() {
         Class<User> entityClass = userMasterServiceImpl.getEntityClass();
         Class<?> entityClass1 = userMasterBaseMapper.getEntityClass();

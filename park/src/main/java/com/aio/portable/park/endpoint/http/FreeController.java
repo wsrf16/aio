@@ -32,7 +32,7 @@ public class FreeController {
     public ResponseEntity<Object> handleRequest(HttpServletRequest request) {
         String contextPath = request.getContextPath();
         String shimContextPath = contextPath + FREE_CONTEXT + PROXY_CONTEXT;
-        ResponseEntity<Object> responseEntity = SpringController.forward(skipSSLRestTemplate, request, shimContextPath);
+        ResponseEntity<Object> responseEntity = SpringController.forward(request, shimContextPath, skipSSLRestTemplate);
         return responseEntity;
     }
 

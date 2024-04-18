@@ -1,6 +1,6 @@
 package com.aio.portable.park.intercept;
 
-import com.aio.portable.swiss.hamlet.interceptor.log.HamletWebLogAspect;
+import com.aio.portable.swiss.hamlet.interceptor.classic.log.HamletWebLogAspect;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
@@ -14,5 +14,10 @@ public class CustomWebLogAspect extends HamletWebLogAspect {
 
     @Pointcut(POINTCUT_SPECIAL)
     public void webLog() {
+    }
+
+    @Override
+    public boolean enableAroundLog() {
+        return true;
     }
 }

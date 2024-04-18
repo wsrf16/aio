@@ -6,7 +6,6 @@ import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.spring.web.Base64MultipartFile;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
-import com.aio.portable.swiss.suite.security.authorization.jwt.annotation.JWTAuth;
 import com.aio.portable.swiss.suite.system.HostInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,8 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("tool")

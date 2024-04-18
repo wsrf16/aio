@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 //@EnableOpenApi
 //@EnableSwagger2
 public class Swagger3Config {
+    // http://localhost:7777/v3/api-docs
     @Bean
     @ConditionalOnClass({ApiInfo.class, EnableOpenApi.class})
 //    @ConditionalOnProperty(prefix = "swagger.api-info", name = "title")

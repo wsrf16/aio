@@ -15,7 +15,9 @@ import javax.servlet.http.HttpSessionListener;
 public class BeanConfig extends HamletBeanConfig {
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
-        return super.threadPoolTaskScheduler();
+        ThreadPoolTaskScheduler scheduler = super.threadPoolTaskScheduler();
+        scheduler.setPoolSize(10);
+        return scheduler;
     }
 
     @Bean

@@ -8,34 +8,27 @@ import java.util.List;
 
 @Component
 public class BizStatusEnum extends BaseBizStatusEnum {
-    public final static BizStatusEnum bizStatusEnum = new BizStatusEnum();
-
     public static List<BizStatus> values() {
         return BaseBizStatusEnum.values();
     }
 
-    @Override
     public BizStatus succeed() {
-        return super.succeed();
+        return new BizStatus(0, "请求成功");
     }
 
-    @Override
     public BizStatus failed() {
-        return super.failed();
+        return new BizStatus(1, "请求失败");
     }
 
-    @Override
     public BizStatus exception() {
-        return super.exception();
+        return new BizStatus(2, "请求异常");
     }
 
-    @Override
     public BizStatus invalid() {
-        return super.invalid();
+        return new BizStatus(3, "请求无效");
     }
 
-    @Override
     public BizStatus unauthorized() {
-        return super.unauthorized();
+        return new BizStatus(4, "无效授权");
     }
 }

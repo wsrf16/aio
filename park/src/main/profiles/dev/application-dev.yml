@@ -134,9 +134,9 @@ spring:
         compression-type: gzip
         acks: 1
     console:
-      enabled: false
-    slf4j:
       enabled: true
+    slf4j:
+      enabled: false
 
 #eureka:
 #  instance:

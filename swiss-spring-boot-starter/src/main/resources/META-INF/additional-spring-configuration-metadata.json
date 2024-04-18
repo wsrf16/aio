@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "spring.log.level",
+      "type": "com.aio.portable.swiss.suite.log.support.LevelEnum",
+      "sourceType": "com.aio.portable.swiss.suite.log.support.LevelEnum"
+    },
+    {
+      "name": "abc.def",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.boot.autoconfigure.web.ServerProperties"
+    }
+  ]
+}

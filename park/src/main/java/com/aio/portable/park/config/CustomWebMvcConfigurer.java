@@ -1,6 +1,6 @@
 package com.aio.portable.park.config;
 
-import com.aio.portable.swiss.hamlet.interceptor.HamletWebMvcConfigurer;
+import com.aio.portable.swiss.hamlet.interceptor.classic.HamletWebMvcConfigurer;
 import com.aio.portable.swiss.spring.SpringContextHolder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,11 +11,6 @@ import java.util.Map;
 
 @Configuration
 public class CustomWebMvcConfigurer extends HamletWebMvcConfigurer {
-//    @Autowired
-//    CustomHandlerInterceptor customHandlerInterceptor;
-//
-//    @Autowired
-//    CustomAuthenticationInterceptor customAuthenticationInterceptor;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -27,9 +22,6 @@ public class CustomWebMvcConfigurer extends HamletWebMvcConfigurer {
         super.addInterceptors(registry);
 
         Map<String, HandlerInterceptor> interceptors = SpringContextHolder.getApplicationContext().getBeansOfType(HandlerInterceptor.class);
-
         interceptors.values().forEach(c -> registry.addInterceptor(c));
-//        registry.addInterceptor(customHandlerInterceptor);
-//        registry.addInterceptor(customAuthenticationInterceptor);
     }
 }

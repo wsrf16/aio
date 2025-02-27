@@ -1,8 +1,7 @@
 package com.aio.portable.swiss.suite.log.solution.elk.kafka;
 
 import com.aio.portable.swiss.design.clone.DeepCloneable;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
@@ -59,7 +58,7 @@ public class KafkaLogProperties extends KafkaProperties implements LogProperties
 
     public static final void initialSingletonInstance(KafkaLogProperties kafkaLogHubProperties) {
         instance = kafkaLogHubProperties;
-        log.info("KafkaLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
+        log.debug("KafkaLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
 
     }
 

@@ -71,28 +71,28 @@
             </snapshots>
         </repository>
 
-        <repository>
-            <id>central</id>
-            <url>http://central.maven.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:30</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>repo</id>
-            <url>https://repo1.maven.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:30</updatePolicy>
-            </snapshots>
-        </repository>
+<!--        <repository>-->
+<!--            <id>central</id>-->
+<!--            <url>http://central.maven.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>interval:30</updatePolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>repo</id>-->
+<!--            <url>https://repo1.maven.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>interval:30</updatePolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
 
 <!--        <repository>-->
 <!--            <id>sonatype-maven</id>-->
@@ -133,6 +133,22 @@
 <!--            </snapshots>-->
 <!--        </repository>-->
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ali-maven</id>
+            <!--http://maven.aliyun.com/mvn/view-->
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>

@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>swiss-spring-boot-starter</artifactId>
-    <version>1.1.26-SNAPSHOT</version>
+    <version>1.1.27-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>swiss-spring-boot-starter</name>
@@ -757,28 +757,28 @@
             </snapshots>
         </repository>
 
-        <repository>
-            <id>maven-central</id>
-            <url>http://central.maven.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:30</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maven-repo1</id>
-            <url>http://repo1.maven.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:30</updatePolicy>
-            </snapshots>
-        </repository>
+<!--        <repository>-->
+<!--            <id>maven-central</id>-->
+<!--            <url>http://central.maven.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>interval:30</updatePolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>maven-repo1</id>-->
+<!--            <url>http://repo1.maven.org/maven2/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>interval:30</updatePolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
 
 <!--        <repository>-->
 <!--            <id>github-mvn-snapshot-repo</id>-->
@@ -799,26 +799,26 @@
 
 
         <!-- ladder-repository -->
-<!--        <repository>-->
-<!--            <id>nexus-releases</id>-->
-<!--            <name>user release resp</name>-->
-<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshots</id>-->
-<!--            <name>user snapshot resp</name>-->
-<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
         <repository>
-            <id>sky-releases</id>
-            <name>sky-maven-virtual</name>
-            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-releases-local</url>
+            <id>nexus-releases</id>
+            <name>user release resp</name>
+            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>sky-snapshots</id>
-            <name>sky-maven-virtual</name>
-            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-snapshots-local</url>
+            <id>nexus-snapshots</id>
+            <name>user snapshot resp</name>
+            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
+<!--        <repository>-->
+<!--            <id>sky-releases</id>-->
+<!--            <name>sky-maven-virtual</name>-->
+<!--            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-releases-local</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>sky-snapshots</id>-->
+<!--            <name>sky-maven-virtual</name>-->
+<!--            <url>http://ccp.tianti.tg.unicom.local/artifactory/sky-maven-snapshots-local</url>-->
+<!--        </snapshotRepository>-->
 
         <!-- local-repository -->
 <!--        <repository>-->

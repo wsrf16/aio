@@ -1,30 +1,22 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis;
 
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
 import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
-import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import org.apache.catalina.User;
-import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +26,16 @@ import java.util.stream.Collectors;
 
 public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
     static <T> String getPropertySnakeNameOf(LambdaFunction<T, ?> propertyName) {
-        String propertyNameOf = BeanSugar.PropertyDescriptors.getPropertyNameOf(propertyName);
+        String propertyNameOf = ClassSugar.PropertyDescriptors.getPropertyNameOf(propertyName);
         String propertyNameSnake = NamingStrategySugar.snake(propertyNameOf);
         return propertyNameSnake;
     }
 
     default Class<?> getEntityClass() {
-        return ClassSugar.resolveSuperClassArgumentType(this.getClass(), BaseMapper.class)[0];
+//        return ReflectionKit.getSuperClassGenericType(this.getClass(), BaseMapper.class, 2);
+
+        Class<?>[] typeArguments = ClassSugar.resolveTypeArguments(this.getClass(), BaseMapper.class);
+        return null == typeArguments ? null : typeArguments[0];
     }
 
     default int insertBatch(Collection<S> list) {
@@ -65,12 +60,16 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
     static <T, DTO extends T> LambdaQueryWrapper<T> lambdaQuery(DTO dto) {
         LambdaQueryWrapper<T> wrapper = new LambdaQueryWrapper(dto);
         try {
-            Map<String, ?> nameValueMap = BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(dto);
+            Map<String, ?> nameValueMap = ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(dto);
             nameValueMap.forEach((k, v) -> {
                 if (k.endsWith("Like")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "Like");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
                     wrapper.like(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("NotLike")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotLike");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.notLike(v != null, lambdaSFunction, v);
                 } else if (k.endsWith("LikeLeft")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LikeLeft");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
@@ -79,17 +78,17 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LikeRight");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
                     wrapper.likeRight(v != null, lambdaSFunction, v);
-                } else if (k.endsWith("NotIn")) {
-                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotIn");
-                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
-                    if (v instanceof Collection<?>) {
-                        wrapper.notIn(v != null, lambdaSFunction, (Collection<?>)v);
-                    }
                 } else if (k.endsWith("In")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "In");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
                     if (v instanceof Collection<?>) {
                         wrapper.in(v != null, lambdaSFunction, (Collection<?>)v);
+                    }
+                } else if (k.endsWith("NotIn")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotIn");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Collection<?>) {
+                        wrapper.notIn(v != null, lambdaSFunction, (Collection<?>)v);
                     }
                 } else if (k.endsWith("OrderByASC")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "OrderByASC");
@@ -242,7 +241,7 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
     }
     
     default S selectFirstOne(Wrapper<S> queryWrapper) {
-        List<S> list = selectList(queryWrapper);
+        List<S> list = this.selectList(queryWrapper);
         return CollectionSugar.isEmpty(list) ? null : list.get(0);
     }
 
@@ -335,6 +334,11 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
 //        }
         next = next.select(selectArray);
         return selectList(next);
+    }
+
+    default List<S> selectListAnyMatch(List<S> predicateList) {
+        List<S> list = predicateList.stream().flatMap(c -> this.selectList(c).stream()).collect(Collectors.toList());
+        return list;
     }
 
     default List<Map<String, Object>> selectMapList(S predicate) {

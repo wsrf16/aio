@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.hamlet.bean;
 
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+
 import java.util.function.Supplier;
 
 public abstract class ResponseWrappers {
@@ -14,9 +16,10 @@ public abstract class ResponseWrappers {
 //        return responseWrapper;
 //    }
 //
-//    public static final void SetResponseWrapper(Class<? extends ResponseWrapper> clazz) {
+    public static final void SetResponseWrapper(Class<? extends ResponseWrapper> clazz) {
 //        ResponseWrappers.clazz = clazz;
-//    }
+        ResponseWrappers.setBuilder(() -> ClassSugar.newInstance(clazz));
+    }
 
     private static Supplier<ResponseWrapper> builder = ClassicResponseWrapper::new;
 

@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.spring.factories.listener;
 
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
 import com.aio.portable.swiss.spring.SpringContextHolder;
 import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;

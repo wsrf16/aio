@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.design.singleton;
 
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

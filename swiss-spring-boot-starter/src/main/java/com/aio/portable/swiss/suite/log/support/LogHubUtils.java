@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.suite.log.support;
 
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -85,12 +85,12 @@ public class LogHubUtils {
     }
 
     public static final void initLogHubFactory(BeanDefinitionRegistry registry) {
-        if (!LogHubFactory.isInitial())
+        if (!LogHubFactory.isInitialized())
             LogHubUtils.initialSingletonLogFactory(registry);
     }
 
     public static final void initLogHubFactory(ConfigurableListableBeanFactory beanFactory) {
-        if (!LogHubFactory.isInitial())
+        if (!LogHubFactory.isInitialized())
             LogHubUtils.initialSingletonLogFactory(beanFactory);
     }
 

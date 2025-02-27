@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic;
 
+import com.aio.portable.swiss.spring.SpringContextHolder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.Ordered;
@@ -8,12 +9,15 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
     @Override
@@ -24,6 +28,12 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        Map<String, HandlerInterceptor> interceptors = SpringContextHolder.getApplicationContext().getBeansOfType(HandlerInterceptor.class);
+        interceptors.values().forEach(c -> registry.addInterceptor(c));
     }
 
 //    @Override

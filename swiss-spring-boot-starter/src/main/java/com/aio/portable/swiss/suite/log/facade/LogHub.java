@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.BiFunction;
 
 /**
  * Created by York on 2017/11/23.
@@ -145,6 +146,62 @@ public class LogHub extends LogBundle implements LogBase {
 //    }
 
     static class Proxy {
+        private final static InterceptMethod INTERCEPT_METHOD = (logHub, _proxy, _method, _args) -> {
+            LogHub hub = logHub;
+            hub.validate();
+            Object invoke = null;
+
+            switch (_method.getName().toLowerCase()) {
+                case "verb":
+                case "v": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.VERB))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "info":
+                case "i": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.INFO))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "trace":
+                case "t": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.TRACE))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "debug":
+                case "d": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.DEBUG))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "warn":
+                case "w": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.WARN))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "error":
+                case "e": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.ERROR))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                case "fatal":
+                case "f": {
+                    if (hub.allow() && hub.level.beMatched(LevelEnum.FATAL))
+                        invoke = _method.invoke(hub, _args);
+                }
+                break;
+                default: {
+                    invoke = _method.invoke(hub, _args);
+                }
+                break;
+            }
+            return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
+        };
+
         public static LogHub toProxy(LogHub logHub) {
             return toCGLIBProxy(logHub);
         }
@@ -153,59 +210,7 @@ public class LogHub extends LogBundle implements LogBase {
             LogHub proxy = DynamicProxySugar.cglibProxy(LogHub.class, new MethodInterceptor() {
                 @Override
                 public Object intercept(Object _proxy, Method _method, Object[] _args, MethodProxy _methodProxy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    LogHub hub = logHub;
-                    hub.validate();
-                    Object invoke = null;
-
-                    switch (_method.getName()) {
-                        case "verb":
-                        case "v": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.VERB))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "info":
-                        case "i": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.INFO))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "trace":
-                        case "t": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.TRACE))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "debug":
-                        case "d": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.DEBUG))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "warn":
-                        case "w": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.WARN))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "error":
-                        case "e": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.ERROR))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        case "fatal":
-                        case "f": {
-                            if (hub.allow() && hub.level.beMatched(LevelEnum.FATAL))
-                                invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                        default: {
-                            invoke = _method.invoke(hub, _args);
-                        }
-                        break;
-                    }
-                    return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
+                    return INTERCEPT_METHOD.intercept(logHub, _proxy, _method, _args);
                 }
 
             });
@@ -216,54 +221,7 @@ public class LogHub extends LogBundle implements LogBase {
             LogBase proxy = DynamicProxySugar.jdkProxy(LogHub.class, new InvocationHandler() {
                         @Override
                         public Object invoke(Object _proxy, Method _method, Object[] _args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                            LogHub hub = logHub;
-                            hub.validate();
-                            Object invoke = null;
-                            switch (_method.getName().toLowerCase()) {
-                                case "verbose":
-                                case "v": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.VERB))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "info":
-                                case "i": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.INFO))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "trace":
-                                case "t": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.TRACE))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "debug":
-                                case "d": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.DEBUG))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "warn":
-                                case "w": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.WARN))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "error":
-                                case "e": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.ERROR))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                                case "fatal":
-                                case "f": {
-                                    if (hub.allow() && hub.level.beMatched(LevelEnum.FATAL))
-                                        invoke = _method.invoke(hub, _args);
-                                }
-                                break;
-                            }
-                            return LogHub.class.isAssignableFrom(_method.getReturnType()) ? _proxy : invoke;
+                            return INTERCEPT_METHOD.intercept(logHub, _proxy, _method, _args);
                         }
                     });
             return proxy;

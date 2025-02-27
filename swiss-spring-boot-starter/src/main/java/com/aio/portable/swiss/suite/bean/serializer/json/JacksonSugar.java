@@ -1,17 +1,20 @@
 package com.aio.portable.swiss.suite.bean.serializer.json;
 
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.util.Base64Utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -204,7 +207,7 @@ public class JacksonSugar {
         } catch (Exception e) {
 //            e.printStackTrace();
             if (e.getCause() instanceof StackOverflowError) {
-                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
+                Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
                 json = obj2ShortJson(map);
             }
             else
@@ -248,7 +251,7 @@ public class JacksonSugar {
         } catch (Exception e) {
 //            e.printStackTrace();
             if (e.getCause() instanceof StackOverflowError) {
-                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(obj);
+                Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMap(obj);
                 json = obj2LongJson(map);
             }
             else
@@ -291,7 +294,7 @@ public class JacksonSugar {
         } catch (Exception e) {
 //            e.printStackTrace();
             if (e.getCause() instanceof StackOverflowError) {
-                Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(obj);
+                Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMap(obj);
                 json = obj2Json(map);
             }
             else
@@ -352,7 +355,7 @@ public class JacksonSugar {
         } catch (Exception e) {
 //            e.printStackTrace();
             if (e.getCause() instanceof StackOverflowError) {
-                Map<String, Object> map = includeNullAndEmpty ? BeanSugar.PropertyDescriptors.toNameValueMap(obj) : BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
+                Map<String, Object> map = includeNullAndEmpty ? ClassSugar.PropertyDescriptors.toNameValueMap(obj) : ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(obj);
                 json = obj2LongJson(map);
             }
             else

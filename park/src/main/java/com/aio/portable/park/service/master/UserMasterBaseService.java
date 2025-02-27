@@ -4,32 +4,14 @@ import com.aio.portable.park.dao.master.mapper.UserMasterBaseMapper;
 import com.aio.portable.park.dao.master.model.User;
 import com.aio.portable.park.dao.master.model.UserConditionDTO;
 import com.aio.portable.park.dao.master.model.UserDTO;
-import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
-import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
-import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.algorithm.identity.IDS;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.storage.db.mybatis.EnhanceBaseMapper;
-import com.aio.portable.swiss.suite.storage.db.mybatis.LambdaSFunction;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.core.toolkit.support.ReflectLambdaMeta;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -73,7 +55,7 @@ public class UserMasterBaseService {
     public List<User> selectList() {
         Class<User> entityClass = userMasterServiceImpl.getEntityClass();
         Class<?> entityClass1 = userMasterBaseMapper.getEntityClass();
-        Object currentModelClass = ClassSugar.invoke(userMasterServiceImpl, "currentModelClass");
+        Object currentModelClass = ClassSugar.Methods.invoke(userMasterServiceImpl, "currentModelClass");
         return userMasterBaseMapper.selectList();
     }
 

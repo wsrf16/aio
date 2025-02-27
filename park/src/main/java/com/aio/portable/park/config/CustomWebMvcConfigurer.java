@@ -20,8 +20,5 @@ public class CustomWebMvcConfigurer extends HamletWebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
-
-        Map<String, HandlerInterceptor> interceptors = SpringContextHolder.getApplicationContext().getBeansOfType(HandlerInterceptor.class);
-        interceptors.values().forEach(c -> registry.addInterceptor(c));
     }
 }

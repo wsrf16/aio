@@ -48,7 +48,7 @@ public abstract class LogHubFactory {
     boolean enabled = true;
     protected LevelEnum level = LevelEnum.ALL;
 
-    public static boolean isInitial() {
+    public static boolean isInitialized() {
         return initialized;
     }
 
@@ -127,7 +127,7 @@ public abstract class LogHubFactory {
         ArrayList<LogSingle> list = new ArrayList<>(127);
         LogHub log = LogHub.build(list);
 
-        if (LogHubProperties.initialized()) {
+        if (LogHubProperties.isInitialized()) {
             if (LogHubUtils.Spring.existDependency()) {
                 if (ConsoleLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
                     list.add(new ConsoleLog(name));
@@ -144,12 +144,12 @@ public abstract class LogHubFactory {
                         list.add(new KafkaLog(name));
                 }
 
-                LogHubProperties properties = LogHubProperties.getSingleton();
-                log.setEnabled(properties.getDefaultEnabledIfAbsent());
-                log.setSamplerRate(properties.getDefaultSamplerRateIfAbsent());
-                log.setAsync(properties.getDefaultAsyncIfAbsent());
-                log.setLevel(properties.getDefaultLevelIfAbsent());
             }
+            LogHubProperties properties = LogHubProperties.getSingleton();
+            log.setEnabled(properties.getDefaultEnabledIfAbsent());
+            log.setSamplerRate(properties.getDefaultSamplerRateIfAbsent());
+            log.setAsync(properties.getDefaultAsyncIfAbsent());
+            log.setLevel(properties.getDefaultLevelIfAbsent());
         } else {
             if (ConsoleLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
                 list.add(new ConsoleLog(name));

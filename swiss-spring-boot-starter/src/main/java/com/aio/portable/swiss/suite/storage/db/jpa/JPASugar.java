@@ -1,17 +1,33 @@
 package com.aio.portable.swiss.suite.storage.db.jpa;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.IgnoreSQL;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.order.OrderBy;
-import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.*;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Between;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Equal;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.GreaterThan;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.GreaterThanOrEqualTo;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.In;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.LessThan;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.LessThanOrEqualTo;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Like;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotEqual;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotLike;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -46,7 +62,7 @@ public class JPASugar {
         T target;
         if (optional.isPresent()) {
             target = optional.get();
-            BeanUtils.copyProperties(t, target, BeanSugar.PropertyDescriptors.getNullPropertyNames(t));
+            BeanUtils.copyProperties(t, target, ClassSugar.PropertyDescriptors.getNullPropertyNames(t));
         } else {
             target = t;
         }
@@ -76,7 +92,7 @@ public class JPASugar {
     }
 
     public static final Sort buildSort(Class<?> clazz) {
-        List<Field> fieldList = BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(OrderBy.class)).collect(Collectors.toList());
+        List<Field> fieldList = ClassSugar.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(OrderBy.class)).collect(Collectors.toList());
         fieldList.stream().sorted(Comparator.comparing((Field c) -> c.getAnnotation(OrderBy.class).priority()));
         List<Sort.Order> orderList = fieldList.stream().map(c -> {
             OrderBy annotation = c.getAnnotation(OrderBy.class);

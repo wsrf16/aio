@@ -31,46 +31,46 @@ public abstract class RequestRecordSession {
 //        }
     }
 
-    private static ThreadLocal<RequestSession> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<RequestSession> CURRENT_THREAD_LOCAL = new ThreadLocal<>();
 
     public static final String getSpanId() {
         synchronized (Thread.currentThread()) {
-            if (threadLocal.get() == null)
-                threadLocal.set(new RequestSession());
-            return threadLocal.get().getRequestRecord().getSpanId();
+            if (CURRENT_THREAD_LOCAL.get() == null)
+                CURRENT_THREAD_LOCAL.set(new RequestSession());
+            return CURRENT_THREAD_LOCAL.get().getRequestRecord().getSpanId();
         }
     }
 
     public static final synchronized void setRequestRecord(RequestRecord requestRecord) {
         synchronized(Thread.currentThread()) {
-            if (threadLocal.get() == null)
-                threadLocal.set(new RequestSession());
-            threadLocal.get().setRequestRecord(requestRecord);
+            if (CURRENT_THREAD_LOCAL.get() == null)
+                CURRENT_THREAD_LOCAL.set(new RequestSession());
+            CURRENT_THREAD_LOCAL.get().setRequestRecord(requestRecord);
         }
     }
 
     public static final synchronized RequestRecord getRequestRecord() {
         synchronized(Thread.currentThread()) {
-            if (threadLocal.get() == null)
-                threadLocal.set(new RequestSession());
-            return threadLocal.get().getRequestRecord();
+            if (CURRENT_THREAD_LOCAL.get() == null)
+                CURRENT_THREAD_LOCAL.set(new RequestSession());
+            return CURRENT_THREAD_LOCAL.get().getRequestRecord();
         }
     }
 
 
     public static final synchronized void setException(Exception e) {
         synchronized(Thread.currentThread()) {
-            if (threadLocal.get() == null)
-                threadLocal.set(new RequestSession());
-            threadLocal.get().setException(e);
+            if (CURRENT_THREAD_LOCAL.get() == null)
+                CURRENT_THREAD_LOCAL.set(new RequestSession());
+            CURRENT_THREAD_LOCAL.get().setException(e);
         }
     }
 
     public static final synchronized Exception getException() {
         synchronized(Thread.currentThread()) {
-            if (threadLocal.get() == null)
-                threadLocal.set(new RequestSession());
-            return threadLocal.get().getException();
+            if (CURRENT_THREAD_LOCAL.get() == null)
+                CURRENT_THREAD_LOCAL.set(new RequestSession());
+            return CURRENT_THREAD_LOCAL.get().getException();
         }
     }
 
@@ -90,7 +90,7 @@ public abstract class RequestRecordSession {
 //        }
 //    }
     public static final void remove() {
-        threadLocal.remove();
+        CURRENT_THREAD_LOCAL.remove();
     }
 
 //    private static ThreadLocal<String> SpanIdThreadLocal = new ThreadLocal<>();

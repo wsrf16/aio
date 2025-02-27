@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.sugar.type;
 
 import com.aio.portable.swiss.global.ColorEnum;
+import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.RegexSugar;
 import org.springframework.util.StringUtils;
 
@@ -8,7 +9,9 @@ import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
 public abstract class StringSugar {
-    public static final String EMPTY = "";
+    public static final String emptyIfNull(String str) {
+        return str == null ? Constant.EMPTY : str;
+    }
 
     public static final String trim(String str, String removed) {
         str = trimStart(str, removed);
@@ -276,6 +279,16 @@ public abstract class StringSugar {
 
     public static final String wrap(String input, String boundary) {
         String s = MessageFormat.format("{1}{0}{1}", input, boundary);
+        return s;
+    }
+
+    public static final String wrapStartIfNotExists(String input, String boundary) {
+        String s = input.startsWith(boundary) ? input : MessageFormat.format("{1}{0}", input, boundary);
+        return s;
+    }
+
+    public static final String wrapEndIfNotExists(String input, String boundary) {
+        String s = input.endsWith(boundary) ? input : MessageFormat.format("{0}{1}", input, boundary);
         return s;
     }
 

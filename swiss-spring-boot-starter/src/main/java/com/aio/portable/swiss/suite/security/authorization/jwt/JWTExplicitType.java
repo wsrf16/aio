@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.security.authorization.jwt;
 
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
@@ -38,7 +38,7 @@ public interface JWTExplicitType {
 
 
     default <T> Class<T> loadClass(String className) {
-        Class<T> clazz = (Class<T>) ClassLoaderSugar.load(className);
+        Class<T> clazz = (Class<T>) ClassLoaderSugar.loadClass(className);
         return clazz;
     }
 

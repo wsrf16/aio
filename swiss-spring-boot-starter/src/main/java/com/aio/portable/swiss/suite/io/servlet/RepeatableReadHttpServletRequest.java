@@ -8,11 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Function;
 
-public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper {
+// ContentCachingRequestWrapper
+public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper implements HttpServletRequest {
 
 //    private final HttpServletRequestImpl request;
     private byte[] body;
@@ -22,7 +25,7 @@ public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper 
     public RepeatableReadHttpServletRequest(HttpServletRequest request, Function<byte[], byte[]> convert) {
         super(request);
 
-        this.body = readInputStream(request);
+        this.body = IOSugar.Streams.toByteArray(request);
         this.convert = convert;
     }
 
@@ -32,16 +35,6 @@ public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper 
 
     public static final RepeatableReadHttpServletRequest repeatable(HttpServletRequest servletRequest) {
         return new RepeatableReadHttpServletRequest(servletRequest);
-    }
-
-    private byte[] readInputStream(HttpServletRequest request) {
-        try {
-            byte[] body = IOSugar.Streams.toByteArray(request.getInputStream());
-            return body;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -55,16 +48,17 @@ public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper 
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
-                return false;
+                return inputStream.available() == 0;
             }
 
             @Override
             public boolean isReady() {
-                return false;
+                return true;
             }
 
             @Override
             public void setReadListener(ReadListener listener) {
+                throw new UnsupportedOperationException();
             }
 
             @Override

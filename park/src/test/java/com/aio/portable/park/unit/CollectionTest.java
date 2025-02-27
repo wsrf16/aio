@@ -46,7 +46,7 @@ public class CollectionTest {
             while (i++ < 1000000)
                 conditionInputList.add(add4);
 
-            boolean repeatBy = CollectionSugar.beRepeatBy(conditionInputList, c -> c.getName());
+            boolean repeatBy = CollectionSugar.beRepeatBy(conditionInputList, Student::getName);
             System.out.println(DateTimeSugar.UnixTime.nowUnix());
             List<Student> distinctBy = CollectionSugar.distinctBy(conditionInputList, c -> c.getName());
             System.out.println(DateTimeSugar.UnixTime.nowUnix());

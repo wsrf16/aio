@@ -98,25 +98,25 @@ spring:
 #    async: false
 #    samplerRate: 0.5
 #    level: debug
-    rabbitmq:
-      enabled: false
-      host: mecs.com
-      port: 5672
-      username: admin
-      password: admin
-      virtual-host: /
-      es-index: @project.deploy.finalName@-@profiles.active@-log
-      publisher-confirms: true
-      publisher-returns: true
-      auto-declare: true
-      binding-list:
-      - type: direct
-        routing-key: application-log-queue
-        queue: application-log-queue
-        exchange: application-log-exchange
+#    rabbitmq:
+#      enabled: false
+#      host: mecs.com
+#      port: 5672
+#      username: admin
+#      password: admin
+#      virtual-host: /
+#      es-index: @project.deploy.finalName@-@profiles.active@-log
+#      publisher-confirms: true
+#      publisher-returns: true
+#      auto-declare: true
+#      binding-list:
+#      - type: direct
+#        routing-key: application-log-queue
+#        queue: application-log-queue
+#        exchange: application-log-exchange
 
     kafka:
-      enabled: false
+      enabled: true
       esIndex: @project.deploy.finalName@-@profiles.active@-log
       bootstrap-servers: 192.168.0.133:9092
 #      template:

@@ -8,6 +8,89 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ThrowableSugar {
+    public static class Result<T> {
+        private RuntimeException e;
+        private T value;
+
+        public RuntimeException getE() {
+            return e;
+        }
+
+        void setE(RuntimeException e) {
+            this.e = e;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        void setValue(T value) {
+            this.value = value;
+        }
+
+        public boolean succeed() {
+            return e == null;
+        }
+    }
+
+    public static <R> Supplier<Result<R>> guard(Supplier<R> supplier) {
+        return () -> {
+            Result<R> result = new Result<>();
+            try {
+                R r = supplier.get();
+                result.setValue(r);
+                return result;
+            } catch (Throwable e) {
+                result.setE(new RuntimeException(e));
+            }
+            return result;
+        };
+    }
+
+    public static <R> Supplier<Result<R>> guard(Runnable runnable) {
+        return () -> {
+            Result<R> result = new Result<>();
+            try {
+                runnable.run();
+                return result;
+            } catch (Throwable e) {
+                result.setE(new RuntimeException(e));
+            }
+            return result;
+        };
+    }
+
+    public static <R> Supplier<R> toRuntimeExceptionThrower(Supplier<R> supplier) {
+        return () -> {
+            try {
+                R r = supplier.get();
+                return r;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    public static Runnable toRuntimeExceptionThrower(Runnable runnable) {
+        return () -> {
+            try {
+                runnable.run();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+//    public static ThrowExceptionRunnable returnRuntimeExceptionIfCatch(Runnable runnable) {
+//        return () -> {
+//            try {
+//                runnable.run();
+//            } catch (Throwable e) {
+//                return new RuntimeException(e);
+//            }
+//        };
+//    }
+
     public static final String getStackTraceAsString(Throwable throwable) {
         if (throwable == null)
             return null;

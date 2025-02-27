@@ -2,6 +2,7 @@ package com.aio.portable.swiss.suite.log.solution.elk;
 
 import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
+import com.aio.portable.swiss.sugar.type.NumberSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
@@ -56,6 +57,8 @@ public class ESLogRecordItem extends StandardLogRecordItem {
         setEsIndex(esIndex);
         setHost(host);
         setTimestamp(DateTimeSugar.Format.convertDate2Text(DateTimeSugar.Format.FORMAT_ISO8601, new Date()));
+        if (logRecordItem.getData() != null && logRecordItem.getData() instanceof Number)
+            this.setData(logRecordItem.getData().toString());
     }
 
     public static final String formatIndex(String name) {

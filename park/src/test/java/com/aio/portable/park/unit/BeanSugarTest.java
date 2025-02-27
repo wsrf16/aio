@@ -1,7 +1,7 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.park.bean.Student;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.lang.Object;
 import java.util.List;
 
 @TestComponent
@@ -55,7 +54,7 @@ public class BeanSugarTest {
 
         String typeName = People.class.getTypeName();
         Class<?> clazz = Class.forName(typeName);
-        Object people = clazz.getDeclaredConstructor().newInstance();
+        People people = (People) ClassSugar.newInstance(clazz);
         ConvertUtils.register(new DateLocaleConverter(), java.util.Date.class);
 
         ConvertUtils.register(
@@ -72,10 +71,12 @@ public class BeanSugarTest {
                     }
                 }
                 , java.util.Date.class);
-        BeanUtils.setProperty(people, "age", 111);
-        BeanUtils.setProperty(people, "name", "aio");
-        BeanUtils.setProperty(people, "birthday", "2018-08-08");
+        ClassSugar.PropertyDescriptors.setValue(people, "age", 111);
+        ClassSugar.PropertyDescriptors.setValue(people, "name", "aio");
+        ClassSugar.PropertyDescriptors.setValue(people, "birthday", "2018-08-08");
 
+        Student student = new Student();
+        ClassSugar.PropertyDescriptors.copyPropertiesOnly(people, student, People::getName);
         System.out.println(people);
     }
 
@@ -83,9 +84,9 @@ public class BeanSugarTest {
     public void ff() {
         Student student = new Student();
         boolean b = false;
-        boolean b1 = BeanSugar.PropertyDescriptors.allIsNull(student);
-        boolean b2 = BeanSugar.PropertyDescriptors.allReferenceIsNull(student);
-        List<PropertyDescriptor> list = BeanSugar.PropertyDescriptors.getDeclaredPropertyDescriptorIncludeParents(Student.class);
+        boolean b1 = ClassSugar.PropertyDescriptors.allIsNull(student);
+        boolean b2 = ClassSugar.PropertyDescriptors.allReferenceIsNull(student);
+        List<PropertyDescriptor> list = ClassSugar.PropertyDescriptors.getDeclaredPropertyDescriptorIncludeParents(Student.class);
         PropertyDescriptor propertyDescriptor = list.get(0);
 
     }

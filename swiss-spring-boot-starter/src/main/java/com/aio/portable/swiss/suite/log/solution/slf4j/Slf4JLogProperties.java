@@ -1,8 +1,6 @@
 package com.aio.portable.swiss.suite.log.solution.slf4j;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
-import com.aio.portable.swiss.suite.log.solution.console.ConsoleLog;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
@@ -56,7 +54,7 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
 
     public static final void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
-        log.info("Slf4jLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
+        log.debug("Slf4jLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

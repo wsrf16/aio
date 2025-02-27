@@ -64,7 +64,8 @@ public class RestTemplateAutoConfiguration {
 
     @Bean("skipSSLRestTemplate")
     @ConditionalOnBean({RestTemplateBuilder.class, RestTemplateProperties.class})
-    @ConditionalOnClass({org.springframework.retry.backoff.BackOffPolicy.class})
+//    @ConditionalOnClass({org.springframework.retry.backoff.BackOffPolicy.class})
+//    @ConditionalOnClass(name = {"org.springframework.retry.backoff.BackOffPolicy"})
     public RestTemplate proxySkipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder, RestTemplateProperties restTemplateProperties) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);
@@ -75,7 +76,6 @@ public class RestTemplateAutoConfiguration {
         int proxyPort = proxy.getPort();
         HttpComponentsClientHttpRequestFactory requestFactory = enabled ?
                 HttpRequestFactory.buildHttpComponentsClientHttpRequestFactory(true, proxyHost, proxyPort, null, null) : HttpRequestFactory.buildSkipSSLHttpComponentsClientHttpRequestFactory();
-                ;
         restTemplate.setRequestFactory(requestFactory);
 
         return restTemplate;
@@ -84,7 +84,8 @@ public class RestTemplateAutoConfiguration {
     @Bean("skipSSLRestTemplate")
     @ConditionalOnBean({RestTemplateBuilder.class})
     @ConditionalOnMissingBean(RestTemplateProperties.class)
-    @ConditionalOnClass({org.springframework.retry.backoff.BackOffPolicy.class})
+//    @ConditionalOnClass({org.springframework.retry.backoff.BackOffPolicy.class})
+//    @ConditionalOnClass(name = {"org.springframework.retry.backoff.BackOffPolicy"})
     public RestTemplate skipSSLRestTemplate(RestTemplateBuilder restTemplateBuilder) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         restTemplate.setErrorHandler(SILENCE_RESPONSE_ERROR_HANDLER);

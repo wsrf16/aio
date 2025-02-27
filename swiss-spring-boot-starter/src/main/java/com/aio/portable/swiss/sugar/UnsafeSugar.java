@@ -2,7 +2,10 @@ package com.aio.portable.swiss.sugar;
 
 import sun.misc.Unsafe;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URLClassLoader;
+import java.util.List;
 
 public abstract class UnsafeSugar {
 
@@ -62,6 +65,15 @@ public abstract class UnsafeSugar {
         try {
             return unsafe.getLong(o, 8L);
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final void releaseClassLoader(URLClassLoader urlClassLoader) {
+        sun.misc.ClassLoaderUtil.releaseLoader(urlClassLoader, (List)null);
+        try {
+            urlClassLoader.close();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

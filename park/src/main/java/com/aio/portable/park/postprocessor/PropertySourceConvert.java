@@ -14,13 +14,12 @@ public class PropertySourceConvert extends PropertySourceBeanDefinitionRegistryP
         Object value = nameValuePair.getValue();
         if (value != null) {
             if (Objects.equals(value, "hello world"))
-                return (value + "222222");
+                return (value + " plus");
             if (Objects.equals(key, "swagger.api-info.title"))
-                return (value + "222222");
-            if (Objects.equals(value, "对外接口在线文档"))
-                return (value + "222222");
+                return (value + " plus");
+            if (Objects.equals(value, "文字描述"))
+                return (value + " plus");
         }
         return value;
     }
-
 }

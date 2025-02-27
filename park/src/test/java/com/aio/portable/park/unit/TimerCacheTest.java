@@ -1,5 +1,6 @@
 package com.aio.portable.park.unit;
 
+import com.aio.portable.swiss.sugar.type.NumberSugar;
 import com.aio.portable.swiss.suite.timer.TimerCache;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,11 @@ public class TimerCacheTest {
     public void todo() {
         TimerCache<Integer> timerCache = TimerCache.build(scheduler, () -> {
             longTimeWork();
-            return 8888;
+            int x = NumberSugar.randomInt(0, 999);
+            return x;
         });
-        timerCache.start(Duration.ofMinutes(30), true);
+        String cron = "0/7 * * * * ?";
+        timerCache.start(cron, true);
         Integer data1 = timerCache.tryGetData(Duration.ofSeconds(2));
         Integer data2 = timerCache.tryGetData(Duration.ofSeconds(10));
         System.out.println();

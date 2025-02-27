@@ -5,13 +5,19 @@ import org.springframework.data.util.Streamable;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,7 +47,7 @@ public abstract class StreamSugar {
         return stream;
     }
 
-    public static <T> Stream<T> intersect(final Stream<T> stream1, final Stream<T> stream2) {
+    public static final <T> Stream<T> intersect(final Stream<T> stream1, final Stream<T> stream2) {
         final List<T> collection2 = stream2.collect(Collectors.toList());
         Stream<T> stream = stream1.filter(c -> collection2.contains(c));
         return stream;
@@ -53,13 +59,13 @@ public abstract class StreamSugar {
      * @param <T>
      * @return
      */
-    public static <T> Optional<T> tail(final Stream<T> stream) {
+    public static final <T> Optional<T> tail(final Stream<T> stream) {
         long count = stream.count();
         Optional<T> optional = stream.skip(count-1).findFirst();
         return optional;
     }
 
-    public static <T> boolean anyEquals(final Stream<T> source, final Stream<T> target) {
+    public static final <T> boolean anyEquals(final Stream<T> source, final Stream<T> target) {
         final List<T> targetCollection = target.collect(Collectors.toList());
         boolean anyMatch = source.anyMatch(src -> targetCollection.contains(src));
         return anyMatch;
@@ -84,7 +90,7 @@ public abstract class StreamSugar {
      * @param stream Streamable to repeat
      * @return New cycling stream
      */
-    public static <T> Stream<T> repeat(final Streamable<T> stream, final int times) {
+    public static final <T> Stream<T> repeat(final Streamable<T> stream, final int times) {
         return Stream.iterate(stream.stream(), s1 -> stream.stream())
                 .limit(times)
                 .flatMap(Function.identity());
@@ -97,7 +103,7 @@ public abstract class StreamSugar {
      * @param limit 1000
      * @param <T> {1, 2, 3, 4, ..., 1000}
      */
-    public static <T> Stream<T> increase(final T seed, final UnaryOperator<T> f, long limit) {
+    public static final <T> Stream<T> increase(final T seed, final UnaryOperator<T> f, long limit) {
         return Stream.iterate(seed, f).limit(limit);
     }
 
@@ -242,8 +248,51 @@ public abstract class StreamSugar {
         };
     }
 
+//    public static final <T, K, U> Collector<T, ?, Map<K, U>> toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper, K replaced) {
+//        Function<? super T, ? extends K> newKeyMapper = (k -> k == null ? replaced : keyMapper.apply(k));
+//        return Collectors.toMap(newKeyMapper, valueMapper);
+//    }
 
+//    public static final  <T, K, U> Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper, BinaryOperator<U> mergeFunction, K replaced) {
+//        Function<? super T, ? extends K> newKeyMapper = (k -> k == null ? replaced : keyMapper.apply(k));
+//        return Collectors.toMap(newKeyMapper, valueMapper, mergeFunction);
+//    }
 
+//    public static final  <T, K, U, M extends Map<K, U>>
+//    Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
+//                             Function<? super T, ? extends U> valueMapper,
+//                             BinaryOperator<U> mergeFunction,
+//                             Supplier<M> mapSupplier,
+//                             K replaced) {
+//        Function<? super T, ? extends K> newKeyMapper = (k -> k == null ? replaced : keyMapper.apply(k));
+//        return Collectors.toMap(newKeyMapper, valueMapper, mergeFunction, mapSupplier);
+//    }
 
+    public static final <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+        HashMap<K, V> target = stream.filter(c -> c != null)
+                .collect(HashMap::new,
+                (map, entity) -> map.put(keyMapper.apply(entity), valueMapper.apply(entity)),
+                HashMap::putAll);
+        return target;
+    }
 
+    /**
+     * groupingByWithNullKeys: .collect(StreamGroupByUtil.groupingByWithNullKeys(Dto::getFlowId));
+     * @param classifier
+     * @param <T>
+     * @param <A>
+     * @return
+     */
+    public static <T, A> Collector<T, ?, Map<A, List<T>>> groupingByWithNullKeys(Function<? super T, ? extends A> classifier) {
+        return Collectors.toMap(
+                classifier,
+                Collections::singletonList,
+                (List<T> oldList, List<T> newEl) -> {
+                    List<T> newList = new ArrayList<>(oldList.size() + 1);
+                    newList.addAll(oldList);
+                    newList.addAll(newEl);
+                    return newList;
+                }
+        );
+    }
 }

@@ -2,8 +2,7 @@ package com.aio.portable.swiss.suite.log.solution.elk.rabbit;
 
 import com.aio.portable.swiss.design.clone.DeepCloneable;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.RabbitMQProperties;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LogProperties;
 import org.springframework.beans.factory.InitializingBean;
@@ -53,7 +52,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements LogProp
 
     public static final void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
-        log.info("RabbitMQLogProperties InitialSingletonInstance", null, BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
+        log.debug("RabbitMQLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

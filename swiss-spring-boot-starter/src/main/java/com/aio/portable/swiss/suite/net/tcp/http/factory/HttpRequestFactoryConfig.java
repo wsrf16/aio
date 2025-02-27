@@ -13,7 +13,7 @@ public class HttpRequestFactoryConfig {
     private Integer connectTimeout = 10000;
     private Integer connectionRequestTimeout = 300;
 
-    private Boolean skipSSL;
+    private Boolean skipSSL = false;
     private Integer maxTotal = 300;
     private Integer defaultMaxPerRoute = 50;
 

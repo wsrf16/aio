@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.sugar;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public abstract class ShellSugar {
     }
 
     public static final String setVariable(String input, Object bean) {
-        Map<String, Object> map = bean instanceof Map ? (Map<String, Object>) bean : BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(bean);
+        Map<String, Object> map = bean instanceof Map ? (Map<String, Object>) bean : ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(bean);
         String result = input;
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String name = entry.getKey();

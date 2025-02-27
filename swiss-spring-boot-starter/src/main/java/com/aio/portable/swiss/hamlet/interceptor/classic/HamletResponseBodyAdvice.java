@@ -3,7 +3,8 @@ package com.aio.portable.swiss.hamlet.interceptor.classic;
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -60,28 +61,9 @@ public abstract class HamletResponseBodyAdvice implements ResponseBodyAdvice<Obj
         setPriorityHighest();
     }
 
-    private void setPriorityHighest() throws Exception {
-        List<HttpMessageConverter<?>> converters = parseHttpMessageConverters();
-        List<HttpMessageConverter<?>> jacksonHttpMessageConverters = parseJacksonHttpMessageConverters(converters);
-        setPriorityHighest(converters, jacksonHttpMessageConverters);
+    private void setPriorityHighest() {
+        List<HttpMessageConverter<?>> converters = ClassSugar.Methods.invoke(webMvcConfigurationSupport, "getMessageConverters");
+        CollectionSugar.moveTo(converters, 0, c -> c instanceof MappingJackson2HttpMessageConverter);
     }
 
-    private void setPriorityHighest(List<HttpMessageConverter<?>> converters, List<HttpMessageConverter<?>> highest) throws Exception {
-        if (!highest.contains(converters.get(0))) {
-            converters.removeAll(highest);
-            converters.addAll(0, highest);
-        }
-    }
-
-    private List<HttpMessageConverter<?>> parseHttpMessageConverters() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Method method = BeanSugar.Methods.getDeclaredMethodIncludeParents(WebMvcConfigurationSupport.class, "getMessageConverters");
-        method.setAccessible(true);
-        List<HttpMessageConverter<?>> converters = (List<HttpMessageConverter<?>>) method.invoke(webMvcConfigurationSupport);
-        return converters;
-    }
-
-    private List<HttpMessageConverter<?>> parseJacksonHttpMessageConverters(List<HttpMessageConverter<?>> converters) {
-        List<HttpMessageConverter<?>> converterList = converters.stream().filter(c -> c instanceof MappingJackson2HttpMessageConverter).collect(Collectors.toList());
-        return converterList;
-    }
 }

@@ -1,9 +1,12 @@
 package com.aio.portable.swiss.suite.log.solution.elk.kafka;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecordItem;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
@@ -38,13 +41,9 @@ public class KafkaLog extends LogSingle {
 
 
     @Override
-    protected void initialPrinter() {
-        refreshPrinter(null);
-    }
-
-    public void refreshPrinter(KafkaLogProperties properties) {
-        this.properties = properties == null ? KafkaLogProperties.getSingleton() : properties;
-        this.printer = KafkaPrinter.instance(this.getName(), this.properties);
+    protected LogPrinter buildPrinter() {
+        this.properties = this.properties == null ? KafkaLogProperties.getSingleton() : this.properties;
+        return KafkaLogPrinter.instance(this.getName(), this.properties);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class KafkaLog extends LogSingle {
         } else if (esIndex.contains(":")) {
             String key = esIndex.split(":")[0];
             String val = ESLogRecordItem.formatIndex(esIndex.split(":")[1]);
-            Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(converted);
+            Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMap(converted);
             map.remove("esIndex");
             map.put(key, val);
             super.output(map, level);

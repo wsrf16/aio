@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.spring.factories.processor.propertysource;
 
 import com.aio.portable.swiss.spring.SpringContextHolder;
-import com.aio.portable.swiss.spring.factories.processor.propertysource.convert.PropertySourceFilter;
 import com.aio.portable.swiss.spring.factories.processor.propertysource.convert.PropertySourcesConverter;
 import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.EnumerablePropertySourceWrapper;
 import com.aio.portable.swiss.spring.factories.processor.propertysource.wrapper.MapPropertySourceWrapper;
@@ -11,7 +10,6 @@ import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.elasticsearch.common.collect.Tuple;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

@@ -1,5 +1,5 @@
 server:
-  port: 17777
+  port: 9999
   # 700,656 -> 1,232
   compression:
     min-response-size: 2048
@@ -76,6 +76,15 @@ swagger:
       name: XX
       url: www.taobudaoche.com
       email: xxxx@taobudaoche.com
+
+# springfox.boot.starter.autoconfigure.SpringfoxConfigurationProperties
+springfox:
+  documentation:
+    # 总开关（同时设置auto-startup=false，否则/v3/api-docs等接口仍能继续访问）
+    enabled: false
+    auto-startup: false
+    swagger-ui:
+      enabled: false
 
 config:
   cron: "0 0 1 1 * ?"

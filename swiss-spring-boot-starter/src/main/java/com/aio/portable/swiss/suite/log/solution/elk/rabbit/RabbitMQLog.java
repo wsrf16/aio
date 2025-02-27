@@ -1,10 +1,13 @@
 package com.aio.portable.swiss.suite.log.solution.elk.rabbit;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecordItem;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
 import org.springframework.util.StringUtils;
@@ -38,13 +41,9 @@ public class RabbitMQLog extends LogSingle {
     }
 
     @Override
-    protected void initialPrinter() {
-        refreshPrinter(null);
-    }
-
-    public void refreshPrinter(RabbitMQLogProperties properties) {
-        this.properties =  properties == null ? RabbitMQLogProperties.getSingleton() : properties;
-        this.printer = RabbitMQPrinter.instance(this.getName(), this.properties);
+    protected LogPrinter buildPrinter() {
+        this.properties = this.properties == null ? RabbitMQLogProperties.getSingleton() : this.properties;
+        return RabbitMQLogPrinter.instance(this.getName(), this.properties);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class RabbitMQLog extends LogSingle {
         } else if (esIndex.contains(":")) {
             String key = esIndex.split(":")[0];
             String val = ESLogRecordItem.formatIndex(esIndex.split(":")[1]);
-            Map<String, Object> map = BeanSugar.PropertyDescriptors.toNameValueMap(converted);
+            Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMap(converted);
             map.remove("esIndex");
             map.put(key, val);
             super.output(map, level);
@@ -72,6 +71,8 @@ public class RabbitMQLog extends LogSingle {
         String esIndex = properties.getEsIndex();
         if (!StringUtils.hasText(esIndex))
             log.warn(new IllegalArgumentException("es-index is empty."));
+        else
+            esIndex = esIndex.toLowerCase();
         return new ESLogRecordItem(logRecordItem, esIndex, ip);
     }
 }

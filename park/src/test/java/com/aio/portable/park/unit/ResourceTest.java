@@ -2,8 +2,9 @@ package com.aio.portable.park.unit;
 
 import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.global.Global;
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import com.aio.portable.swiss.sugar.resource.StreamClassLoader;
+import com.aio.portable.swiss.sugar.meta.ResourceSugar;
+import com.aio.portable.swiss.sugar.meta.StreamClassLoader;
+import com.aio.portable.swiss.sugar.meta.classloader.SpringHotURLClassLoader;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import org.springframework.core.io.ClassPathResource;
@@ -18,6 +19,14 @@ public class ResourceTest {
     LogHub log = AppLogHubFactory.staticBuild();
 
     {
+        {
+            String filePath = "_jar/jagent-1.0.0-SNAPSHOT.jar";
+            List<URL> urlList = ResourceSugar.getJarResourceList(filePath);
+            URL url = ResourceSugar.getJarResource("META-INF/MANIFEST.MF", filePath);
+            String text = ResourceSugar.getResourceAsString("META-INF/MANIFEST.MF", filePath);
+
+            System.out.println();
+        }
         {
             // 只能用于从非jar包中获取资源
             // jar:file:/data1/services/park/lib/swiss-1.1.4-SNAPSHOT.jar!/1.properties
@@ -122,7 +131,7 @@ public class ResourceTest {
 
         try {
             System.out.println(resourceLocation);
-            List<URL> r1 = ResourceSugar.ByClassLoader.getResourceURLs(resourceLocation);
+            List<URL> r1 = ResourceSugar.getClassLoaderResourceList(resourceLocation);
             log.i("r1！！！！！", r1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,14 +139,14 @@ public class ResourceTest {
 
         try {
             System.out.println(classname);
-            List<URL> r2 = ResourceSugar.ByClassLoader.getClassURLs(classname);
+            List<URL> r2 = ResourceSugar.getClassLoaderResourceListByClassName(classname);
             log.i("r2！！！！！", r2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            List<URL> r3 = ResourceSugar.ByClassLoader.getClassURLs(clazz);
+            List<URL> r3 = ResourceSugar.getClassLoaderResourceListByClass(clazz);
             log.i("r3！！！！！", r3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,8 +155,8 @@ public class ResourceTest {
         try {
             System.out.println(jarPath);
             System.out.println(resourceLocation);
-            URL url = ResourceSugar.getJarResourceURL(jarPath, resourceLocation);
-            List<URL> r4 = ResourceSugar.getAllJarResourceURLs(jarPath);
+            URL url = ResourceSugar.getJarResource(resourceLocation, jarPath);
+            List<URL> r4 = ResourceSugar.getJarResourceList(jarPath);
             log.i("r4！！！！！", url);
             log.i("r4！！！！！", r4);
         } catch (Exception e) {

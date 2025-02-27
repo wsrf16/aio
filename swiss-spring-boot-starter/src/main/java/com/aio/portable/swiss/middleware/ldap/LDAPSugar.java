@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.middleware.ldap;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import org.springframework.beans.BeanUtils;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
@@ -53,7 +52,7 @@ public abstract class LDAPSugar {
      */
     public static final <T> List<T> search(LdapTemplate ldapTemplate, ContainerCriteria containerCriteria, Class<T> clazz, T t) {
         List<T> list = ldapTemplate.search(containerCriteria, (AttributesMapper<T>) mapper -> {
-            Map<String, Class<?>> nameClass = BeanSugar.PropertyDescriptors.toNameClassMap(clazz);
+            Map<String, Class<?>> nameClass = ClassSugar.PropertyDescriptors.toNameClassMap(clazz);
             nameClass.entrySet().forEach(prop -> {
                 try {
                     String name = prop.getKey();

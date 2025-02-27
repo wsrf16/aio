@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.storage.db.jpa;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -62,10 +62,10 @@ class PropertyItem {
 //                .collect(Collectors.toMap(c -> c.getName(), c -> getKeyValue(bean, c)));
                 .collect(HashMap::new, (_map, _property) -> {
                     String name = _property.getName();
-                    Object value = BeanSugar.PropertyDescriptors.getValue(bean, _property);
+                    Object value = ClassSugar.PropertyDescriptors.getValue(bean, _property);
                     Field field = null;
                     try {
-                        field = BeanSugar.Fields.getDeclaredFieldIncludeParents(clazz, name);
+                        field = ClassSugar.Fields.getDeclaredFieldIncludeParents(clazz, name);
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);

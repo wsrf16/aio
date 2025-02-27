@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis;
 
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 
@@ -60,7 +60,7 @@ public class LambdaSFunction<T, R> implements SFunction<T, R> {
         this.functionalInterfaceMethodName = "apply";
         this.implMethodName = implMethodName;
         this.instantiatedMethodType = "(Lcom/aio/portable/park/dao/master/model/UserConditionDTO;)Ljava/lang/Object;";
-        String instantiatedMethodType = StringSugar.trimEnd(ClassSugar.convertClassNameToResourceLocation(instantiatedClazz.getName()), ".class");
+        String instantiatedMethodType = StringSugar.trimEnd(ClassSugar.convertClassNameToResourcePath(instantiatedClazz.getName()), ".class");
         this.instantiatedMethodType = "(L" + instantiatedMethodType + ";)Ljava/lang/Object;";
 //        String instantiatedMethodType1 = "com/aio/portable/park/dao/master/model/UserConditionDTO";
 //        this.instantiatedMethodType = "(L" + instantiatedMethodType1 + ";)Ljava/lang/Object;";

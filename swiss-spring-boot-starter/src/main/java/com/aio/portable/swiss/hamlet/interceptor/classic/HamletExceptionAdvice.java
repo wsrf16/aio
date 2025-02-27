@@ -1,16 +1,15 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic;
 
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
-import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecord;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
 import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.exception.BusinessException;
-import com.aio.portable.swiss.hamlet.interceptor.classic.log.Slf4JLogHubFactory;
+import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecord;
+import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecordSession;
 import com.aio.portable.swiss.sugar.ThrowableSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecordSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,8 +36,7 @@ public abstract class HamletExceptionAdvice {
     }
 
     public HamletExceptionAdvice() {
-        log = LogHubFactory.isInitial() ?
-                LogHubFactory.staticBuild(this.getClass()) : Slf4JLogHubFactory.staticBuild(this.getClass());
+        log = LogHubFactory.staticBuild(this.getClass());
 //        this.setLogEnabled(false);
     }
 

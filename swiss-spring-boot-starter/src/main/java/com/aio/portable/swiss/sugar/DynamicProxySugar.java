@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
@@ -134,12 +134,12 @@ public class DynamicProxySugar {
 //            Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
 //            h.setAccessible(true);
 //            AopProxy aopProxy = (AopProxy) h.get(proxy);
-            AopProxy aopProxy = (AopProxy) ClassSugar.getDeclaredFieldValue(proxy, proxy.getClass().getSuperclass(), "h");
+            AopProxy aopProxy = (AopProxy) ClassSugar.Fields.getDeclaredFieldValue(proxy, proxy.getClass().getSuperclass(), "h");
 
 //            Field advised = aopProxy.getClass().getDeclaredField("advised");
 //            advised.setAccessible(true);
 //            T target = (T) ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
-            AdvisedSupport advisedSupport = ClassSugar.getDeclaredFieldValue(aopProxy, "advised");
+            AdvisedSupport advisedSupport = ClassSugar.Fields.getDeclaredFieldValue(aopProxy, "advised");
             T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {
@@ -152,13 +152,13 @@ public class DynamicProxySugar {
 //            Field h = beanInstance.getClass().getDeclaredField("CGLIB$CALLBACK_0");
 //            h.setAccessible(true);
 //            Object dynamicAdvisedInterceptor = h.get(beanInstance);
-            Object dynamicAdvisedInterceptor = ClassSugar.getDeclaredFieldValue(proxy, "CGLIB$CALLBACK_0");
+            Object dynamicAdvisedInterceptor = ClassSugar.Fields.getDeclaredFieldValue(proxy, "CGLIB$CALLBACK_0");
 
 //            Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
 //            advised.setAccessible(true);
 //
 //            T target = (T) ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
-            AdvisedSupport advisedSupport = ClassSugar.getDeclaredFieldValue(dynamicAdvisedInterceptor, "advised");
+            AdvisedSupport advisedSupport = ClassSugar.Fields.getDeclaredFieldValue(dynamicAdvisedInterceptor, "advised");
             T target = (T) advisedSupport.getTargetSource().getTarget();
             return target;
         } catch (Exception e) {

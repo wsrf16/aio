@@ -1,7 +1,9 @@
 package com.aio.portable.swiss.suite.io;
 
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
+import com.aio.portable.swiss.sugar.meta.ResourceSugar;
+import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,9 +14,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
@@ -62,8 +66,8 @@ public abstract class IOSugar {
                 File f = new File(path);
                 if (f.isFile() && f.exists()) {
                     text = IOSugar.Streams.toString(f);
-                } else if (ResourceSugar.ByClassLoader.existResource(path)) {
-                    text = ResourceSugar.ByClassLoader.getResourceAsString(path);
+                } else if (ResourceSugar.existClassLoaderResource(path)) {
+                    text = ResourceSugar.getResourceAsString(path);
                 } else {
                     throw new FileNotFoundException(f.getAbsolutePath());
                 }
@@ -266,17 +270,33 @@ public abstract class IOSugar {
             return toString(inputStream, StandardCharsets.UTF_8);
         }
 
-        public static final String toString(InputStream inputStream, Charset charset) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length;
+        public static final String toString(Reader reader) {
             try {
-                while ((length = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, length);
-                }
-                return outputStream.toString(charset.displayName());
+                return FileCopyUtils.copyToString(reader);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        public static final String toString(InputStream inputStream, Charset charset) {
+//            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+//                byte[] buffer = new byte[1024];
+//                int length;
+//                try {
+//                    while ((length = inputStream.read(buffer)) != -1) {
+//                        outputStream.write(buffer, 0, length);
+//                    }
+//                    return outputStream.toString(charset.displayName());
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+            try (Reader reader = new InputStreamReader(inputStream, charset)) {
+                return FileCopyUtils.copyToString(reader);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
             }
         }
 
@@ -308,6 +328,14 @@ public abstract class IOSugar {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             copy(input, output);
             return output.toByteArray();
+        }
+
+        public static byte[] toByteArray(HttpServletRequest request) {
+            try {
+                return Streams.toByteArray(request.getInputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public static byte[] toByteArray(InputStream input, int size) {

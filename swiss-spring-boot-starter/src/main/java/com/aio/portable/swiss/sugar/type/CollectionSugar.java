@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.sugar.type;
 
+import com.aio.portable.swiss.sugar.meta.function.LambdaSupplier;
+import com.aio.portable.swiss.suite.bean.BeanSugar;
 import com.aio.portable.swiss.suite.bean.node.tree.recursion.RecursiveTree;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -15,11 +17,11 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -28,6 +30,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class CollectionSugar {
+    public static final <T> List<T> filter(Collection<T> source, T condition) {
+        List<T> collect = source.stream()
+                .filter(item -> BeanSugar.match(item, condition))
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    public static final <T> List<T> filter(Collection<T> source, LambdaSupplier<?>... condition) {
+        List<T> collect = source.stream()
+                .filter(item -> BeanSugar.match(item, condition))
+                .collect(Collectors.toList());
+        return collect;
+    }
+
     public static final boolean containsAny(String s, String... items) {
         for (String item : items) {
             if (s.contains(item))
@@ -80,6 +96,31 @@ public abstract class CollectionSugar {
 //        return org.springframework.util.CollectionUtils.isEmpty(collection);
     }
 
+    /**
+     * 判断Map为空
+     *
+     * @param map
+     * @return
+     */
+    public static final boolean isEmpty(Map<?, ?> map) {
+        return map == null || map.isEmpty();
+//        return org.springframework.util.CollectionUtils.isEmpty(collection);
+    }
+
+    public static final <T> List<T> emptyIfNull(Collection<T> collection) {
+        if (isEmpty(collection))
+            return new ArrayList<T>();
+        else
+            return ArrayList.class.isInstance(collection) ? (ArrayList<T>)collection : new ArrayList<T>(collection);
+    }
+
+    public static final <K, V> HashMap<K, V> emptyIfNull(Map<K, V> map) {
+        if (isEmpty(map))
+            return new HashMap<>();
+        else
+            return HashMap.class.isInstance(map) ? (HashMap<K, V>) map : new HashMap<K, V>(map);
+    }
+
 
     public static final long lengthOf(Object[] array) {
         return array == null ? 0 : array.length;
@@ -107,7 +148,7 @@ public abstract class CollectionSugar {
 
 
     /**
-     * 差集，从集合1去除集合2
+     * except 差集，从集合1去除集合2
      *
      * @param total
      * @param sub
@@ -120,7 +161,7 @@ public abstract class CollectionSugar {
 
 
     /**
-     * except
+     * except 差集
      * @param total
      * @param sub
      * @param equalFunction
@@ -141,7 +182,7 @@ public abstract class CollectionSugar {
      * @return
      */
     public static final <T> List<T> intersect(final Collection<T> collection1, final Collection<T> collection2) {
-        Stream<T> stream = collection1.stream().filter(c -> collection2.contains(c));
+        Stream<T> stream = collection1.stream().filter(collection2::contains);
         return stream.collect(Collectors.toList());
     }
 
@@ -202,7 +243,7 @@ public abstract class CollectionSugar {
     public static final <T> List<T> concat(Collection<T>... collections) {
         List<T> list = new ArrayList<>();
         for (Collection<T> collection : collections) {
-            list.addAll(collection);
+            list.addAll(CollectionSugar.emptyIfNull(collection));
         }
         return list;
     }
@@ -311,7 +352,7 @@ public abstract class CollectionSugar {
      * @return
      */
     public static final <T> List<T> distinctBy(List<T> list, Function<? super T, ?> by) {
-        List<T> collect = list.parallelStream().filter(buildUniquePredicate(by)).collect(Collectors.toList());
+        List<T> collect = list.stream().filter(buildUniquePredicate(by)).collect(Collectors.toList());
         return collect;
     }
 
@@ -336,19 +377,20 @@ public abstract class CollectionSugar {
      * @return
      */
     private static final <T> Predicate<T> buildUniquePredicate(Function<? super T, ?> getPropertyFunction) {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
+//        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        Set<Object> seen = new LinkedHashSet();
         return t -> seen.add(getPropertyFunction.apply(t));
     }
 
     /**
-     * repeatBy
+     * beRepeatBy
      * @param list
      * @param itemFunction T::getId
      * @param <T>
      * @return
      */
     public static final <T> boolean beRepeatBy(List<T> list, Function<? super T, ?> itemFunction) {
-        boolean b = list.parallelStream().anyMatch(buildRepeatPredicate(itemFunction));
+        boolean b = list.stream().anyMatch(buildRepeatPredicate(itemFunction));
         return b;
     }
 
@@ -360,7 +402,8 @@ public abstract class CollectionSugar {
      * @return
      */
     private static final <T> Predicate<T> buildRepeatPredicate(Function<? super T, ?> getPropertyFunction) {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
+//        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        Set<Object> seen = new LinkedHashSet();
         return t -> !seen.add(getPropertyFunction.apply(t));
     }
 
@@ -557,11 +600,6 @@ public abstract class CollectionSugar {
         return list.toArray(t);
     }
 
-    public static final <T, K, V> HashMap<K, V> toMap(Stream<T> stream, Function<T, K> keyMapper, Function<T, V> valueMapper) {
-        HashMap<K, V> map = stream.collect(HashMap::new, (_map, _entity) -> _map.put(keyMapper.apply(_entity), valueMapper.apply(_entity)), HashMap::putAll);
-        return map;
-    }
-
     public static final <T> List<T> flatNextToList(T t, Function<T, T> getNextFunction) {
         List<T> list = new ArrayList<>();
         while (t != null) {
@@ -628,4 +666,12 @@ public abstract class CollectionSugar {
             }
         }
     }
+
+    public static final <T> void moveTo(List<T> list, int to, Predicate<? super T> which) {
+        List<T> purpose = list.stream().filter(which).collect(Collectors.toList());
+        list.removeAll(purpose);
+        list.addAll(to, purpose);
+    }
+
+
 }

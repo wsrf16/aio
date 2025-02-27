@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.net.tcp.http;
 
-import com.aio.portable.swiss.sugar.location.UrlSugar;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.location.URLSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
@@ -29,7 +29,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RestTemplater<T, R> {
     private RestTemplate restTemplate;
@@ -239,7 +238,7 @@ public class RestTemplater<T, R> {
             throw new RuntimeException("Please special header: Scheme-Server-Port.");
         }
         String schemeServerPort = httpHeaders.getFirst("Scheme-Server-Port");
-        String url = UrlSugar.concat(schemeServerPort, requestURI + queryString);
+        String url = URLSugar.concat(schemeServerPort, requestURI + queryString);
 
         ResponseEntity<T> responseEntity = RestTemplater.create(restTemplate)
                 .uri(url)
@@ -262,7 +261,7 @@ public class RestTemplater<T, R> {
         String methodValue = methodAnnotation.value()[0];
         RequestMapping clazzAnnotation = apiClazz.getAnnotation(RequestMapping.class);
         String clazzValue = clazzAnnotation.value()[0];
-        String shimContextPath = StringSugar.trimEnd(UrlSugar.concat(clazzValue, methodValue), "/**");
+        String shimContextPath = StringSugar.trimEnd(URLSugar.concat(clazzValue, methodValue), "/**");
         return this.forward(request, shimContextPath, clazz);
     }
 
@@ -388,7 +387,7 @@ public class RestTemplater<T, R> {
     public static <RESP> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, Object body, Map<String, ?> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, method, httpEntity, responseClazz, uriVariables);
         return responseEntity;
@@ -397,7 +396,7 @@ public class RestTemplater<T, R> {
     public static <RESP, REQ> ResponseEntity<RESP> exchangeFor(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpMethod method, HttpHeaders headers, REQ body, Map<String, ?> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, method, httpEntity, responseClazz, uriVariables);
         return responseEntity;
@@ -407,7 +406,7 @@ public class RestTemplater<T, R> {
     public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(null, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.GET, httpEntity, responseClazz, uriVariables);
         return responseEntity;
@@ -416,7 +415,7 @@ public class RestTemplater<T, R> {
     public static <RESP> ResponseEntity<RESP> get(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseClazz, String url, HttpHeaders headers, Map<String, Object> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(null, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.GET, httpEntity, responseClazz, uriVariables);
         return responseEntity;
@@ -425,7 +424,7 @@ public class RestTemplater<T, R> {
     public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, Class<RESP> responseClazz, String url, HttpHeaders headers, Object body, Map<String, Object> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.POST, httpEntity, responseClazz, uriVariables);
         return responseEntity;
@@ -434,7 +433,7 @@ public class RestTemplater<T, R> {
     public static <RESP> ResponseEntity<RESP> post(RestTemplate restTemplate, ParameterizedTypeReference<RESP> responseTypeReference, String url, HttpHeaders headers, Object body, Map<String, Object> params, Map<String, ?> uriVariables) {
         uriVariables = uriVariables == null ? new HashMap<>() : uriVariables;
 
-        String u = UrlSugar.appendQueries(url, params);
+        String u = URLSugar.appendQueries(url, params);
         HttpEntity<?> httpEntity = httpEntity(body, headers);
         ResponseEntity<RESP> responseEntity = restTemplate.exchange(u, HttpMethod.POST, httpEntity, responseTypeReference, uriVariables);
         return responseEntity;

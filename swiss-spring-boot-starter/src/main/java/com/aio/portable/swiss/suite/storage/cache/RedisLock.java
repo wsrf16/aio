@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.suite.storage.cache;
 
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
-import org.checkerframework.checker.units.qual.K;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;

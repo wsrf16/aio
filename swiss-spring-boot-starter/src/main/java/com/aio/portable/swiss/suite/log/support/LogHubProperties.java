@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.log.support;
 
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import org.springframework.beans.factory.InitializingBean;
@@ -83,7 +83,7 @@ public class LogHubProperties implements InitializingBean {
 
     private static boolean initialized = false;
 
-    public static boolean initialized() {
+    public static boolean isInitialized() {
         return initialized;
     }
 
@@ -94,7 +94,7 @@ public class LogHubProperties implements InitializingBean {
 
     public static final void initialSingletonInstance(LogHubProperties properties) {
         instance = properties;
-        log.info("LogHubProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
+        log.info("LogHubProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
     public static final void initialSingletonInstance(Binder binder) {

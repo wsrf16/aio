@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.log.solution.slf4j;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.solution.slf4j.origin.CustomizeSlf4JFactory;
 import org.slf4j.LoggerFactory;
@@ -31,14 +32,12 @@ public class Slf4JLog extends LogSingle {
     }
 
     @Override
-    protected void initialPrinter() {
-        refreshPrinter(null);
+    protected LogPrinter buildPrinter() {
+        this.properties = this.properties == null ? Slf4JLogProperties.getSingleton() : this.properties;
+        return new Slf4JLogPrinter(this.getName());
     }
 
-    public void refreshPrinter(Slf4JLogProperties properties) {
-        this.properties = properties == null ? Slf4JLogProperties.getSingleton() : properties;
-        this.printer = new Slf4JPrinter(this.getName());
-    }
+
 
 //    private class Slf4jPrinter implements Printer {
 //        final String name;

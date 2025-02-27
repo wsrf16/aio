@@ -2,7 +2,7 @@ package com.aio.portable.park.postprocessor;
 
 import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

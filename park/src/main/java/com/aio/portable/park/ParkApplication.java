@@ -1,9 +1,11 @@
 package com.aio.portable.park;
 
-import com.aio.portable.park.dao.master.model.Book;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.park.bean.friend.BestFriend;
+import com.aio.portable.park.bean.friend.Person;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.NetworkProxy;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.ThrowableSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.net.tcp.proxy.NetworkProxySugar;
@@ -18,10 +20,12 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @SpringBootApplication(exclude = {
@@ -42,29 +46,17 @@ import java.net.URISyntaxException;
 public class ParkApplication {
 //    static LogHub log = AppLogHubFactory.staticBuild();
 
-    public ResponseWrapper<Book> ff() {
-        return null;
-    }
-
-    public static void main(String[] args) throws URISyntaxException, InterruptedException {
-//        log.i("static", "loghub");
-//        boolean primitiveOrWrapper = ClassUtils.isPrimitiveOrWrapper(String.class);
-
-
-//        // \u000d System.out.println("coder Hydra");
+    public static void main(String[] args) throws URISyntaxException, InterruptedException, MalformedURLException {
+        // \u000d System.out.println("coder Hydra");
         NetworkProxySugar.SystemProxies.setUseSystemProxies(true);
         System.out.println("𝄞" + "𝄞".length());
         ConfigurableApplicationContext context = SpringApplication.run(ParkApplication.class, args);
 
 //        LogHubFactory.setSingleton(new LogHubFactory() {});
-        boolean initialized = LogHubProperties.initialized();
-        boolean initial = LogHubFactory.isInitial();
+        boolean initialized = LogHubProperties.isInitialized();
+        boolean initial = LogHubFactory.isInitialized();
         LogHubFactory singleton = LogHubFactory.getSingleton();
-
-        System.out.println();
     }
-
-
 
 
 }

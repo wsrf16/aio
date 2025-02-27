@@ -3,14 +3,14 @@ package com.aio.portable.swiss.hamlet.interceptor.classic.annotation.sign;
 import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.interceptor.AnnotationInterceptor;
-import com.aio.portable.swiss.sugar.location.UrlSugar;
+import com.aio.portable.swiss.sugar.location.URLSugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.algorithm.encode.HashConvert;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.io.IOSugar;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ import java.util.Objects;
 @Component
 public class HamletSignatureAnnotationInterceptor extends AnnotationInterceptor {
     @Override
-    public List<Class<? extends Annotation>> annotations() {
+    protected List<Class<? extends Annotation>> annotations() {
         return Arrays.asList(RequiredSign.class);
     }
 
@@ -61,17 +61,17 @@ public class HamletSignatureAnnotationInterceptor extends AnnotationInterceptor 
 
         StringBuffer sb = new StringBuffer();
         boolean hasTimestamp = false;
-        if (!Strings.isNullOrEmpty(queryString)) {
+        if (StringUtils.hasText(queryString)) {
             sb.append(queryString);
 
-            Map<String, Object> map = UrlSugar.convertQueryStringToMap(queryString);
+            Map<String, Object> map = URLSugar.convertQueryStringToMap(queryString);
             if (map.containsKey("timestamp")) {
                 hasTimestamp = true;
                 int timestamp = Integer.valueOf((String) map.get("timestamp"));
                 validTimestamp(timestamp);
             }
         }
-        if (!Strings.isNullOrEmpty(body)) {
+        if (StringUtils.hasText(body)) {
             sb.append(body);
 
             JsonNode parser = JacksonSugar.parse(body).get("timestamp");

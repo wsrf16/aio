@@ -1,5 +1,7 @@
 package com.aio.portable.swiss.sugar.type;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -34,24 +36,24 @@ public abstract class NumberSugar {
         return buffer.getLong();
     }
 
-    public static final double format(double number) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        String s = df.format(number);
-        Double value = Double.valueOf(s);
-        return value;
-    }
+//    public static final double format(double number) {
+//        DecimalFormat df = new DecimalFormat("#.##");
+//        String s = df.format(number);
+//        Double value = Double.valueOf(s);
+//        return value;
+//    }
 
-    public static final long format(long number) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        String s =  df.format(number);
-        return Long.valueOf(s);
-    }
+//    public static final long format(long number) {
+//        DecimalFormat df = new DecimalFormat("#.##");
+//        String s =  df.format(number);
+//        return Long.valueOf(s);
+//    }
 
-    public static final String format(Object number) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        String s =  df.format(number);
-        return s;
-    }
+//    public static final String format(Object number) {
+//        DecimalFormat df = new DecimalFormat("#.##");
+//        String s =  df.format(number);
+//        return s;
+//    }
 
     public static final double format(double number, String pattern) {
         DecimalFormat df = new DecimalFormat(pattern);
@@ -69,5 +71,18 @@ public abstract class NumberSugar {
         DecimalFormat df = new DecimalFormat(pattern);
         String s =  df.format(number);
         return s;
+    }
+
+    public static final double around(double number) {
+        int scale = 2;
+        BigDecimal bd = new BigDecimal(number);
+        double d = bd.setScale(scale, RoundingMode.HALF_UP).doubleValue();
+        return d;
+    }
+
+    public static final double around(double number, int scale) {
+        BigDecimal bd = new BigDecimal(number);
+        double d = bd.setScale(scale, RoundingMode.HALF_UP).doubleValue();
+        return d;
     }
 }

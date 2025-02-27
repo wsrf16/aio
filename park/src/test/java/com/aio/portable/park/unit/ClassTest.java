@@ -2,15 +2,14 @@ package com.aio.portable.park.unit;
 
 import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
-import com.aio.portable.swiss.sugar.resource.ClassLoaderSugar;
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
-import com.aio.portable.swiss.sugar.resource.PackageSugar;
-import com.aio.portable.swiss.sugar.resource.ResourceSugar;
-import com.aio.portable.swiss.sugar.resource.function.LambdaBiConsumer;
-import com.aio.portable.swiss.sugar.resource.function.LambdaConsumer;
-import com.aio.portable.swiss.sugar.resource.function.LambdaFunction;
-import com.aio.portable.swiss.sugar.resource.function.LambdaSupplier;
-import com.aio.portable.swiss.suite.bean.BeanSugar;
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.PackageSugar;
+import com.aio.portable.swiss.sugar.meta.ResourceSugar;
+import com.aio.portable.swiss.sugar.meta.function.LambdaBiConsumer;
+import com.aio.portable.swiss.sugar.meta.function.LambdaConsumer;
+import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
+import com.aio.portable.swiss.sugar.meta.function.LambdaSupplier;
 import com.aio.portable.swiss.suite.bean.serializer.json.GsonSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
@@ -29,8 +28,8 @@ public class ClassTest {
         boolean b2 = ClassLoaderSugar.isPresent("Wood");
 
         String s2 = ClassUtils.convertClassNameToResourcePath("com.company.biz.Book");
-        String s = ClassSugar.convertClassNameToResourceLocation("com.company.biz.Book");
-        String s1 = ResourceSugar.convertResourceLocationToClassName("/com/company/biz/Book.class");
+        String s = ClassSugar.convertClassNameToResourcePath("com.company.biz.Book");
+        String s1 = ResourceSugar.convertResourcePathToClassName("/com/company/biz/Book.class");
 
 
         if (existJackson())
@@ -42,9 +41,9 @@ public class ClassTest {
             System.out.println(GsonSugar.obj2Json(new KeyValuePair("a", "existGson")));
 
 
-        String fieldName1 = BeanSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::getNextId);
-        String fieldName2 = BeanSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::setNextId);
-        String fieldName3 = BeanSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::getNextId);
+        String fieldName1 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::getNextId);
+        String fieldName2 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::setNextId);
+        String fieldName3 = ClassSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::getNextId);
 //        String fieldName4 = BeanSugar.PropertyDescriptors.getMethodPropertyName(UserInfoEntity::setNextId);
 
         LambdaSupplier<Integer> getNextId = new UserInfoEntity()::getNextId;
@@ -52,16 +51,16 @@ public class ClassTest {
         LambdaFunction<UserInfoEntity, Integer> staticGetNextId = UserInfoEntity::getNextId;
         LambdaBiConsumer<UserInfoEntity, Integer> staticSetNextId = UserInfoEntity::setNextId;
 
-        String fieldName1_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(getNextId);
-        String fieldName2_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(setNextId);
-        String fieldName3_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(staticGetNextId);
-        String fieldName4_ = BeanSugar.PropertyDescriptors.getPropertyNameOf(staticSetNextId);
+        String fieldName1_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(getNextId);
+        String fieldName2_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(setNextId);
+        String fieldName3_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(staticGetNextId);
+        String fieldName4_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(staticSetNextId);
 
         UserInfoEntity userInfoEntity = new UserInfoEntity();
         userInfoEntity.setName("name1");
         userInfoEntity.setId(1);
         UserInfoEntity userInfoEntity2 = new UserInfoEntity();
-        BeanSugar.PropertyDescriptors.copyPropertiesOnly(userInfoEntity, userInfoEntity2, UserInfoEntity::getName, UserInfoEntity::getId);
+        ClassSugar.PropertyDescriptors.copyPropertiesOnly(userInfoEntity, userInfoEntity2, UserInfoEntity::getName, UserInfoEntity::getId);
 
 
         System.out.println();

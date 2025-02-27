@@ -63,15 +63,15 @@ public abstract class LogSingle implements LogAction {
         new ThreadPoolExecutor.DiscardOldestPolicy()
     );
 
-    protected Printer printer;
+    protected LogPrinter printer;
 
     public LogSingle(String name) {
         setName(name);
 //        clearPrefix();
-        initialPrinter();
+        this.printer = buildPrinter();
     }
 
-    protected abstract void initialPrinter();
+    protected abstract LogPrinter buildPrinter();
 
     protected void output(LogRecordItem logRecordItem) {
         try {

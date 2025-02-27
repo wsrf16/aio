@@ -1,7 +1,9 @@
 package com.aio.portable.swiss.suite.log.solution.console;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 
 /**
  * Created by York on 2017/11/23.
@@ -27,12 +29,8 @@ public class ConsoleLog extends LogSingle {
 
 
     @Override
-    protected void initialPrinter() {
-        refreshPrinter(null);
-    }
-
-    public void refreshPrinter(ConsoleLogProperties properties) {
-        this.properties = properties == null ? ConsoleLogProperties.getSingleton() : properties;
-        this.printer = ConsolePrinter.instance(this.getName(), "", this.properties);
+    protected LogPrinter buildPrinter() {
+        this.properties = this.properties == null ? ConsoleLogProperties.getSingleton() : this.properties;
+        return ConsoleLogPrinter.instance(this.getName(), this.properties);
     }
 }

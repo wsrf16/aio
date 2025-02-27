@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.suite.bean.node.linked;
 
-import com.aio.portable.swiss.sugar.resource.ClassSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 
 public class ReferenceLinkedNode<T> implements NextNode<ReferenceLinkedNode<T>>, PrevNode<ReferenceLinkedNode<T>> {
     private T data;

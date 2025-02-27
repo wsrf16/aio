@@ -9,6 +9,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.aio.portable.swiss.spring.factories.processor.LogHubFactoryBeanDefinitionRegistryPostProcessor
 
 org.springframework.context.ApplicationListener=\
-  com.aio.portable.swiss.spring.factories.listener.SwissApplicationListener,\
-  com.aio.portable.swiss.spring.factories.listener.RegisterTextEncryptorListener
+  com.aio.portable.swiss.spring.factories.listener.SwissApplicationListener
 

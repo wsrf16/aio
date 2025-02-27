@@ -1,13 +1,9 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.park.ParkApplication;
-import com.aio.portable.swiss.spring.factories.listener.RegisterTextEncryptorListener;
-import com.aio.portable.swiss.suite.algorithm.crypto.aes.AESSugar;
 import com.aio.portable.swiss.suite.bean.GenericSugar;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.core.ResolvableType;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

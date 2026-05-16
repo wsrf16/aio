@@ -12,7 +12,7 @@ import java.util.Date;
 public abstract class SerialNumberWorker {
     private static final String DATETIME_FORMAT = DateTimeSugar.Format.FORMAT_TIGHT_LONG;
 
-    public static final SerialNumberBuilder builder() {
+    public static SerialNumberBuilder builder() {
         int minCount = 1;
         int countDigit = 4;
         return builder(DATETIME_FORMAT, minCount, countDigit);
@@ -25,7 +25,7 @@ public abstract class SerialNumberWorker {
      * @param countDigit 最大位数（默认值：4）
      * @return
      */
-    public static final SerialNumberBuilder builder(String dateTimeFormat, int minCount, int countDigit) {
+    public static SerialNumberBuilder builder(String dateTimeFormat, int minCount, int countDigit) {
         return new SerialNumberBuilder(dateTimeFormat, minCount, countDigit);
     }
 
@@ -59,7 +59,7 @@ public abstract class SerialNumberWorker {
     }
 
 
-    //public static final <T> Class<T> T2Class(T)
+    //public static <T> Class<T> T2Class(T)
      //(Class < T > ) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[ 0 ]
 }
 

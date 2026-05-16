@@ -11,7 +11,7 @@ public interface LogPrinter {
     default void dispose(){}
 
     default StringSerializerAdapter getSmartSerializerAdapter(LevelEnum level) {
-        StringSerializerAdapter serializer = level.getPriority() < LevelEnum.WARN.getPriority() ?
+        StringSerializerAdapter serializer = level.getPriority() < LevelEnum.ERROR.getPriority() ?
                 SerializerAdapterFactory.buildSilentJackson() : SerializerAdapterFactory.buildSilentLongJackson();
         return serializer;
     }

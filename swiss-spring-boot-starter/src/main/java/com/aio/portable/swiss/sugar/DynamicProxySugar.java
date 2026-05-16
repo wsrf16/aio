@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 public class DynamicProxySugar {
     // JdkDynamicAopProxy
     // DefaultAopProxyFactory
-    public static final <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor) {
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
         enhancer.setSuperclass(clazz);
@@ -31,7 +31,7 @@ public class DynamicProxySugar {
         return (T) enhancer.create();
     }
 
-    public static final <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor, Consumer<Enhancer> enhancerProcess) {
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor methodInterceptor, Consumer<Enhancer> enhancerProcess) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
         enhancer.setSuperclass(clazz);
@@ -40,7 +40,7 @@ public class DynamicProxySugar {
         return (T) enhancer.create();
     }
 
-    public static final <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors) {
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
         enhancer.setSuperclass(clazz);
@@ -48,7 +48,7 @@ public class DynamicProxySugar {
         return (T) enhancer.create();
     }
 
-    public static final <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors, Consumer<Enhancer> enhancerProcess) {
+    public static <T> T cglibProxy(Class<T> clazz, MethodInterceptor[] methodInterceptors, Consumer<Enhancer> enhancerProcess) {
         Enhancer enhancer = new Enhancer();
         enhancer.setInterceptDuringConstruction(false);
         enhancer.setSuperclass(clazz);
@@ -58,7 +58,7 @@ public class DynamicProxySugar {
     }
 
 
-    public static final <T> T jdkProxy(Class<T> clazz, InvocationHandler handler) {
+    public static <T> T jdkProxy(Class<T> clazz, InvocationHandler handler) {
         ClassLoader classLoader = clazz.getClassLoader();
         Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(clazz);
         T proxy = (T) Proxy.newProxyInstance(
@@ -68,7 +68,7 @@ public class DynamicProxySugar {
         return proxy;
     }
 
-    public static final <T> T proxyFactory(Object target, Advice... advices) {
+    public static <T> T proxyFactory(Object target, Advice... advices) {
         ProxyFactory proxyFactory = new ProxyFactory(target);
 //        Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(target.getClass());
 //        proxyFactory.setInterfaces(interfaces);
@@ -82,7 +82,7 @@ public class DynamicProxySugar {
         return (T) proxyFactory.getProxy();
     }
 
-    public static final <T> T proxyFactory(Object target, Class<T> interfaceClazz, Advice... advices) {
+    public static <T> T proxyFactory(Object target, Class<T> interfaceClazz, Advice... advices) {
         ProxyFactory proxyFactory = new ProxyFactory(target);
         Class<?>[] interfaces = ClassSugar.collectSuperInterfaces(interfaceClazz);
         // 只有设置了interfaces和optimize=true时，才会生成jdkProxy，否则cglibProxy
@@ -97,29 +97,29 @@ public class DynamicProxySugar {
         return (T) proxyFactory.getProxy();
     }
 
-    public static final boolean isJdkProxy(@Nullable Object object) {
+    public static boolean isJdkProxy(@Nullable Object object) {
 //        return object instanceof SpringProxy && Proxy.isProxyClass(object.getClass());
         return Proxy.isProxyClass(object.getClass());
     }
 
-    public static final boolean isCglibProxy(@Nullable Object object) {
+    public static boolean isCglibProxy(@Nullable Object object) {
 //        return object instanceof SpringProxy && ClassUtils.isCglibProxy(object);
         return ClassUtils.isCglibProxy(object);
     }
 
-    public static final Class<?> getUserClass(Class<?> clazz) {
+    public static Class<?> getUserClass(Class<?> clazz) {
         return ClassUtils.getUserClass(clazz);
     }
 
-    public static final <T> T unpackCglib(Object source, Class<T> clazz) {
+    public static <T> T unpackCglib(Object source, Class<T> clazz) {
         return (T)DeepCloneSugar.Json.clone(DeepCloneSugar.Cglib.clone(source), clazz);
     }
 
-    public static final <T> T unpackCglib(Object source) {
+    public static <T> T unpackCglib(Object source) {
         return (T)DeepCloneSugar.Json.clone(DeepCloneSugar.Cglib.clone(source), ClassUtils.getUserClass(source));
     }
 
-    public static final <T> T getAopTargetObject(T proxy) {
+    public static <T> T getAopTargetObject(T proxy) {
         T t = null;
         if (AopUtils.isJdkDynamicProxy(proxy)) {
             t = getAopJdkTargetObject(proxy);
@@ -129,7 +129,7 @@ public class DynamicProxySugar {
         return t;
     }
 
-    private static final <T> T getAopJdkTargetObject(T proxy)  {
+    private static <T> T getAopJdkTargetObject(T proxy)  {
         try {
 //            Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
 //            h.setAccessible(true);

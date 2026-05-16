@@ -1,8 +1,8 @@
 package com.aio.portable.park.endpoint.http;
 
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.spring.web.Base64MultipartFile;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
@@ -45,7 +45,7 @@ public class ToolController {
 
 //    @ApiOperation(value = "upload接口")
     @PostMapping("/upload")
-    public ResponseWrapper<String> upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+    public ResponseBean<String> upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
@@ -56,7 +56,7 @@ public class ToolController {
         String realIP = HostInfo.getClientIpAddress(request);
         String uploadLocation = MessageFormat.format("{0}:{1}", realIP, targetFile.toAbsolutePath());
         log.info(UPLOAD_DIRECTORY, uploadLocation);
-        return ResponseWrappers.succeed(uploadLocation);
+        return ResponseBeans.succeed(uploadLocation);
     }
 
 //    @ApiOperation(value = "上传文件接口",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -72,7 +72,7 @@ public class ToolController {
                     @ApiImplicitParam(name = "file", dataType = "__File", value = "文件流对象,接收数组格式", required = true)
             }
     )
-    public ResponseWrapper<List<String>> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
+    public ResponseBean<List<String>> uploads(@RequestPart(value = "files") MultipartFile[] multipartFiles) throws IOException {
         Path targetDirectory = new File(UPLOAD_DIRECTORY).toPath();
         Files.createDirectories(targetDirectory);
 
@@ -92,11 +92,11 @@ public class ToolController {
             }
         });
         log.info(UPLOAD_DIRECTORY, uploadLocationList);
-        return ResponseWrappers.succeed(uploadLocationList);
+        return ResponseBeans.succeed(uploadLocationList);
     }
 
     @PostMapping(value = "/uploadBase64")
-    public ResponseWrapper<String> uploadBase64(String base64) throws IOException {
+    public ResponseBean<String> uploadBase64(String base64) throws IOException {
         Base64MultipartFile multipartFile = Base64MultipartFile.toMultipartFile(base64);
 
         String originalFilename = multipartFile.getOriginalFilename();
@@ -106,19 +106,19 @@ public class ToolController {
         String realIP = HostInfo.getClientIpAddress(request);
         String uploadLocation = MessageFormat.format("{0}:{1}", realIP, targetFile.toAbsolutePath());
         log.info(UPLOAD_DIRECTORY, uploadLocation);
-        return ResponseWrappers.succeed(uploadLocation);
+        return ResponseBeans.succeed(uploadLocation);
     }
 
     @GetMapping("aaa")
-    public ResponseWrapper<Object> aaa() {
+    public ResponseBean<Object> aaa() {
 //        List<Integer> list = Stream.iterate(0, i -> i + 1).limit(10000).collect(Collectors.toList());
 ////        list.parallelStream().forEach(c -> log.w(c.toString()));
 //        list.parallelStream().forEach(c -> ff());
 //        System.out.println("1111111111111111111111");
-        return ResponseWrappers.succeed();
+        return ResponseBeans.succeed();
     }
 
-    public final void ff() {
+    public void ff() {
         {
             String s = "http://localhost:8084/permission/ingress/grant";
             String body = "{\n" +

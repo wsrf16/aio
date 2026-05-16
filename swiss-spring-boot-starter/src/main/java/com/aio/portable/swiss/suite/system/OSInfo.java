@@ -6,82 +6,82 @@ import java.lang.management.RuntimeMXBean;
 public abstract class OSInfo {
     private static String OS = System.getProperty("os.name").toLowerCase();
 
-    public static final boolean isLinux() {
+    public static boolean isLinux() {
         return OS.indexOf("linux") >= 0;
     }
 
-    public static final boolean isMacOS() {
+    public static boolean isMacOS() {
         return OS.indexOf("mac") >= 0 && OS.indexOf("os") > 0 && OS.indexOf("x") < 0;
     }
 
-    public static final boolean isMacOSX() {
+    public static boolean isMacOSX() {
         return OS.indexOf("mac") >= 0 && OS.indexOf("os") > 0 && OS.indexOf("x") > 0;
     }
 
-    public static final boolean isWindows() {
+    public static boolean isWindows() {
         return OS.indexOf("windows") >= 0;
     }
 
-    public static final boolean isOS2() {
+    public static boolean isOS2() {
         return OS.indexOf("os/2") >= 0;
     }
 
-    public static final boolean isSolaris() {
+    public static boolean isSolaris() {
         return OS.indexOf("solaris") >= 0;
     }
 
-    public static final boolean isSunOS() {
+    public static boolean isSunOS() {
         return OS.indexOf("sunos") >= 0;
     }
 
-    public static final boolean isMPEiX() {
+    public static boolean isMPEiX() {
         return OS.indexOf("mpe/ix") >= 0;
     }
 
-    public static final boolean isHPUX() {
+    public static boolean isHPUX() {
         return OS.indexOf("hp-ux") >= 0;
     }
 
-    public static final boolean isAix() {
+    public static boolean isAix() {
         return OS.indexOf("aix") >= 0;
     }
 
-    public static final boolean isOS390() {
+    public static boolean isOS390() {
         return OS.indexOf("os/390") >= 0;
     }
 
-    public static final boolean isFreeBSD() {
+    public static boolean isFreeBSD() {
         return OS.indexOf("freebsd") >= 0;
     }
 
-    public static final boolean isIrix() {
+    public static boolean isIrix() {
         return OS.indexOf("irix") >= 0;
     }
 
-    public static final boolean isDigitalUnix() {
+    public static boolean isDigitalUnix() {
         return OS.indexOf("digital") >= 0 && OS.indexOf("unix") > 0;
     }
 
-    public static final boolean isNetWare() {
+    public static boolean isNetWare() {
         return OS.indexOf("netware") >= 0;
     }
 
-    public static final boolean isOSF1() {
+    public static boolean isOSF1() {
         return OS.indexOf("osf1") >= 0;
     }
 
-    public static final boolean isOpenVMS() {
+    public static boolean isOpenVMS() {
         return OS.indexOf("openvms") >= 0;
     }
 
 
 
 
-    public static final int getAvailableProcessors() {
+    public static int getAvailableProcessors() {
         return Runtime.getRuntime().availableProcessors();
     }
 
-    public static final int getProcessID() {
+    public static int getProcessID() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Integer.valueOf(runtimeMXBean.getName().split("@")[0])
                 .intValue();

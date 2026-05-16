@@ -6,8 +6,6 @@ import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.HttpsProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SocksProxyBean;
 import com.aio.portable.swiss.suite.net.tcp.proxy.classic.SystemProxiesBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -76,11 +74,11 @@ public class NetworkProxyBean implements InitializingBean {
         }
     }
 
-    public static final boolean test(String host, int port) {
+    public static boolean test(String host, int port) {
         return test(host, port, 5000);
     }
 
-    public static final boolean test(String host, int port, int timeout) {
+    public static boolean test(String host, int port, int timeout) {
         boolean telnet = TcpSugar.telnet(host, port, timeout);
         if (telnet)
             log.info(MessageFormat.format("Test connection: {0}:{1} - Connection succeeded.", host, String.valueOf(port)));

@@ -1,8 +1,12 @@
 package com.aio.portable.park.unit;
 
 import com.aio.portable.park.bean.Student;
+import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
-import org.apache.commons.beanutils.BeanUtils;
+import com.aio.portable.swiss.sugar.meta.function.ClassGetter;
+import com.aio.portable.swiss.sugar.meta.function.ClassSetter;
+import com.aio.portable.swiss.sugar.meta.function.InstanceGetter;
+import com.aio.portable.swiss.sugar.meta.function.InstanceSetter;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
@@ -78,6 +82,30 @@ public class BeanSugarTest {
         Student student = new Student();
         ClassSugar.PropertyDescriptors.copyPropertiesOnly(people, student, People::getName);
         System.out.println(people);
+
+
+
+
+
+        {
+            String fieldName1 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::getNextId);
+            String fieldName2 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::setNextId);
+            String fieldName3 = ClassSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::getNextId);
+//        String fieldName4 = ClassSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::setNextId);
+        }
+        {
+            InstanceGetter<Integer> getNextId = new UserInfoEntity()::getNextId;
+            InstanceSetter<Integer> setNextId = new UserInfoEntity()::setNextId;
+            ClassGetter<UserInfoEntity, Integer> staticGetNextId = UserInfoEntity::getNextId;
+            ClassSetter<UserInfoEntity, Integer> staticSetNextId = UserInfoEntity::setNextId;
+
+            String fieldName1 = ClassSugar.PropertyDescriptors.getPropertyNameOf(getNextId);
+            String fieldName2 = ClassSugar.PropertyDescriptors.getPropertyNameOf(setNextId);
+            String fieldName3 = ClassSugar.PropertyDescriptors.getPropertyNameOf(staticGetNextId);
+            String fieldName4 = ClassSugar.PropertyDescriptors.getPropertyNameOf(staticSetNextId);
+        }
+        System.out.println();
+
     }
 
     @Test

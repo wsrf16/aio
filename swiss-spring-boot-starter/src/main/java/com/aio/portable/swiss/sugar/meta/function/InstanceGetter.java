@@ -4,5 +4,5 @@ import java.io.Serializable;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface LambdaSupplier<T> extends Supplier<T>, Serializable {
+public interface InstanceGetter<T> extends Supplier<T>, Serializable {
 }

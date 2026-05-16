@@ -99,17 +99,17 @@ public abstract class RabbitBuilder {
         }
     }
 
-    private static final List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
+    private static List<Binding> binding(RabbitAdmin rabbitAdmin, List<RabbitMQBindingProperty> rabbitMQBindingPropertyList) {
         List<Binding> bindingList = rabbitMQBindingPropertyList.stream().map(c -> binding(rabbitAdmin, c)).collect(Collectors.toList());
         return bindingList;
     }
 
-    public static final List<Binding> binding(RabbitAdmin rabbitAdmin, RabbitMQProperties rabbitMQProperties) {
+    public static List<Binding> binding(RabbitAdmin rabbitAdmin, RabbitMQProperties rabbitMQProperties) {
         List<Binding> bindingList = rabbitMQProperties.getBindingList() == null ? null : binding(rabbitAdmin, rabbitMQProperties.getBindingList());
         return bindingList;
     }
 
-    public static final SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
+    public static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue, MessageListener messageListener) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -125,7 +125,7 @@ public abstract class RabbitBuilder {
         return container;
     }
 
-    public static final SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
+    public static SimpleMessageListenerContainer buildMessageListenerContainer(ConnectionFactory connectionFactory, Queue queue) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setQueues(queue);
@@ -140,7 +140,7 @@ public abstract class RabbitBuilder {
         return container;
     }
 
-//    public static final AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
+//    public static AmqpTemplate buildRabbitTemplate(ConnectionFactory connectionFactory) {
 //        ExponentialBackOffPolicy policy = new ExponentialBackOffPolicy();
 //        policy.setInitialInterval(500);
 //        policy.setMultiplier(10.0);
@@ -158,7 +158,7 @@ public abstract class RabbitBuilder {
 //    }
 
 
-    public static final ConnectionFactory buildConnectionFactory(RabbitMQProperties properties) {
+    public static ConnectionFactory buildConnectionFactory(RabbitMQProperties properties) {
         CachingConnectionFactory connectionFactory = null;
         if (connectionFactory == null) {
 //                    validProperties();
@@ -193,12 +193,12 @@ public abstract class RabbitBuilder {
     }
 
 
-    private static final boolean determineMandatoryFlag(RabbitMQProperties properties) {
+    private static boolean determineMandatoryFlag(RabbitMQProperties properties) {
         Boolean mandatory = properties.getTemplate().getMandatory();
         return mandatory != null ? mandatory : properties.isPublisherReturns();
     }
 
-    public static final RabbitTemplate buildTemplate(RabbitMQProperties properties) {
+    public static RabbitTemplate buildTemplate(RabbitMQProperties properties) {
         RabbitTemplate rabbitTemplate = null;
         if (rabbitTemplate == null) {
             synchronized (RabbitBuilder.class) {

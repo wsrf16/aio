@@ -25,7 +25,7 @@ public interface LogTrace {
         trace(summary, message);
     }
 
-    <T> void trace(String summary, T t);
+    <T> void trace(String message, T t);
 
     <T> void trace(String summary, String message, T t);
 
@@ -49,8 +49,8 @@ public interface LogTrace {
         trace(summary, message, arguments);
     }
 
-    default <T> void t(String summary, T t) {
-        trace(summary, t);
+    default <T> void t(String message, T t) {
+        trace(message, t);
     }
 
     default <T> void t(String summary, String message, T t) {

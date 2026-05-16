@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.swagger;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatus;
+import com.aio.portable.swiss.hamlet.bean.ResponseStatus;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger2Properties;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Swagger2Builder {
-    public static List<ResponseMessage> toResponseMessageList(List<BizStatus> bizStatusList) {
+    public static List<ResponseMessage> toResponseMessageList(List<ResponseStatus> bizStatusList) {
         List<ResponseMessage> codes = new ArrayList<>();
         ResponseMessageBuilder builder = new ResponseMessageBuilder();
-        for (BizStatus status : bizStatusList) {
+        for (ResponseStatus status : bizStatusList) {
             codes.add(builder
                     .code(status.getCode())
                     .message(status.getMessage())

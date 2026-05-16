@@ -24,7 +24,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 // SmartApplicationListener
 // ConfigFileApplicationListener
 public class SwissApplicationListener extends AbstractGenericApplicationListener implements EnvironmentPostProcessor, Ordered {
-    public static final int DEFAULT_ORDER = Integer.MIN_VALUE + 20;
+    public static final int DEFAULT_ORDER = Ordered.HIGHEST_PRECEDENCE + 19;
+
     private static final Class<?>[] EVENT_TYPES = {
             ApplicationStartingEvent.class,
             ApplicationEnvironmentPreparedEvent.class,
@@ -59,7 +60,7 @@ public class SwissApplicationListener extends AbstractGenericApplicationListener
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        log.debug("SwissApplicationListener.postProcessEnvironment ConfigurableEnvironment: " + environment);
+        log.debug("SwissApplicationListener.postProcessEnvironment ConfigurableEnvironment", environment);
 
         initializeLogHubProperties(environment);
     }

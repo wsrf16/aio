@@ -1,25 +1,32 @@
-package com.aio.portable.swiss.suite.log.solution.slf4j.origin;
+package com.aio.portable.swiss.suite.log.slfj4jadaptor;
 
 import com.aio.portable.swiss.sugar.ThrowableSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-public class CustomizeLogHub implements Logger {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Slf4JAdaptorLogger implements Logger {
     private String name;
 
-    private LogHub log;
+    private LogHub logHub;
 
-    public CustomizeLogHub(String name) {
+    public Slf4JAdaptorLogger(String name) {
         this.name = name;
-        this.log = LogHubFactory.staticBuild(name);
+        this.logHub = LogHubFactory.staticBuild(name);
+        List<LogSingle> list = this.logHub.getLogList();
+        this.logHub.setLogList(list.stream().filter(d -> !(d instanceof Slf4JLog)).collect(Collectors.toList()));
     }
 
-    public LevelEnum level() {
-        return LogHubProperties.getSingleton().getDefaultLevelIfAbsent();
+    public LevelEnum getLevel() {
+        return LogHubProperties.getSingleton() == null ? LevelEnum.INFO : LogHubProperties.getSingleton().getLevelOrDefault();
     }
 
     @Override
@@ -29,13 +36,13 @@ public class CustomizeLogHub implements Logger {
 
     @Override
     public boolean isTraceEnabled() {
-        return level().beMatched(LevelEnum.TRACE);
+        return getLevel().beMatched(LevelEnum.TRACE);
     }
 
     @Override
     public void trace(String msg) {
         if (isTraceEnabled())
-            log.trace(msg);
+            logHub.trace(msg);
     }
 
     @Override
@@ -47,24 +54,24 @@ public class CustomizeLogHub implements Logger {
     @Override
     public void trace(String format, Object arg1, Object arg2) {
         if (isTraceEnabled())
-            log.trace(format, new Object[]{arg1, arg2});
+            logHub.trace(format, new Object[]{arg1, arg2});
     }
 
     @Override
     public void trace(String format, Object... arguments) {
         if (isTraceEnabled())
-            log.trace(format, (Object[]) arguments);
+            logHub.trace(format, (Object[]) arguments);
     }
 
     @Override
     public void trace(String msg, Throwable t) {
         if (isTraceEnabled())
-            log.trace(msg, ThrowableSugar.getStackTraceAsString(t));
+            logHub.trace(msg, ThrowableSugar.getStackTraceAsString(t));
     }
 
     @Override
     public boolean isTraceEnabled(Marker marker) {
-        return level().beMatched(LevelEnum.TRACE);
+        return getLevel().beMatched(LevelEnum.TRACE);
     }
 
     @Override
@@ -94,13 +101,13 @@ public class CustomizeLogHub implements Logger {
 
     @Override
     public boolean isDebugEnabled() {
-        return level().beMatched(LevelEnum.DEBUG);
+        return getLevel().beMatched(LevelEnum.DEBUG);
     }
 
     @Override
     public void debug(String msg) {
         if (isDebugEnabled())
-            log.debug(msg);
+            logHub.debug(msg);
     }
 
     @Override
@@ -112,24 +119,24 @@ public class CustomizeLogHub implements Logger {
     @Override
     public void debug(String format, Object arg1, Object arg2) {
         if (isDebugEnabled())
-            log.debug(format, new Object[]{arg1, arg2});
+            logHub.debug(format, new Object[]{arg1, arg2});
     }
 
     @Override
     public void debug(String format, Object... arguments) {
         if (isDebugEnabled())
-            log.debug(format, (Object[]) arguments);
+            logHub.debug(format, (Object[]) arguments);
     }
 
     @Override
     public void debug(String msg, Throwable t) {
         if (isDebugEnabled())
-            log.debug(msg, ThrowableSugar.getStackTraceAsString(t));
+            logHub.debug(msg, ThrowableSugar.getStackTraceAsString(t));
     }
 
     @Override
     public boolean isDebugEnabled(Marker marker) {
-        return level().beMatched(LevelEnum.DEBUG);
+        return getLevel().beMatched(LevelEnum.DEBUG);
     }
 
     @Override
@@ -159,37 +166,41 @@ public class CustomizeLogHub implements Logger {
 
     @Override
     public boolean isInfoEnabled() {
-        return level().beMatched(LevelEnum.INFO);
+        return getLevel().beMatched(LevelEnum.INFO);
     }
 
     @Override
     public void info(String msg) {
-        log.info(msg);
+        if (isInfoEnabled())
+            logHub.info(msg);
     }
 
     @Override
     public void info(String format, Object arg) {
-        this.info(format, new Object[]{arg});
+        if (isInfoEnabled())
+            this.info(format, new Object[]{arg});
     }
 
     @Override
     public void info(String format, Object arg1, Object arg2) {
-        log.info(format, new Object[]{arg1, arg2});
+        logHub.info(format, new Object[]{arg1, arg2});
     }
 
     @Override
     public void info(String format, Object... arguments) {
-        log.info(format, (Object[]) arguments);
+        if (isInfoEnabled())
+            logHub.info(format, (Object[]) arguments);
     }
 
     @Override
     public void info(String msg, Throwable t) {
-        log.info(msg, ThrowableSugar.getStackTraceAsString(t));
+        if (isInfoEnabled())
+            logHub.info(msg, ThrowableSugar.getStackTraceAsString(t));
     }
 
     @Override
     public boolean isInfoEnabled(Marker marker) {
-        return level().beMatched(LevelEnum.INFO);
+        return getLevel().beMatched(LevelEnum.INFO);
     }
 
     @Override
@@ -219,37 +230,42 @@ public class CustomizeLogHub implements Logger {
 
     @Override
     public boolean isWarnEnabled() {
-        return level().beMatched(LevelEnum.WARN);
+        return getLevel().beMatched(LevelEnum.WARN);
     }
 
     @Override
     public void warn(String msg) {
-        log.warn(msg);
+        if (isWarnEnabled())
+            logHub.warn(msg);
     }
 
     @Override
     public void warn(String format, Object arg) {
-        this.warn(format, new Object[]{arg});
+        if (isWarnEnabled())
+            this.warn(format, new Object[]{arg});
     }
 
     @Override
     public void warn(String format, Object arg1, Object arg2) {
-        log.warn(format, new Object[]{arg1, arg2});
+        if (isWarnEnabled())
+            logHub.warn(format, new Object[]{arg1, arg2});
     }
 
     @Override
     public void warn(String format, Object... arguments) {
-        log.warn(format, (Object[]) arguments);
+        if (isWarnEnabled())
+            logHub.warn(format, (Object[]) arguments);
     }
 
     @Override
     public void warn(String msg, Throwable t) {
-        log.warn(msg, ThrowableSugar.getStackTraceAsString(t));
+        if (isWarnEnabled())
+            logHub.warn(msg, ThrowableSugar.getStackTraceAsString(t));
     }
 
     @Override
     public boolean isWarnEnabled(Marker marker) {
-        return level().beMatched(LevelEnum.WARN);
+        return getLevel().beMatched(LevelEnum.WARN);
     }
 
     @Override
@@ -279,13 +295,13 @@ public class CustomizeLogHub implements Logger {
 
     @Override
     public boolean isErrorEnabled() {
-        return level().beMatched(LevelEnum.ERROR);
+        return getLevel().beMatched(LevelEnum.ERROR);
     }
 
     @Override
     public void error(String msg) {
         if (isErrorEnabled())
-            log.error(msg);
+            logHub.error(msg);
     }
 
     @Override
@@ -297,24 +313,24 @@ public class CustomizeLogHub implements Logger {
     @Override
     public void error(String format, Object arg1, Object arg2) {
         if (isErrorEnabled())
-            log.error(format, new Object[]{arg1, arg2});
+            logHub.error(format, new Object[]{arg1, arg2});
     }
 
     @Override
     public void error(String format, Object... arguments) {
         if (isErrorEnabled())
-            log.error(format, (Object[]) arguments);
+            logHub.error(format, (Object[]) arguments);
     }
 
     @Override
     public void error(String msg, Throwable t) {
         if (isErrorEnabled())
-            log.error(msg, ThrowableSugar.getStackTraceAsString(t));
+            logHub.error(msg, ThrowableSugar.getStackTraceAsString(t));
     }
 
     @Override
     public boolean isErrorEnabled(Marker marker) {
-        return level().beMatched(LevelEnum.ERROR);
+        return getLevel().beMatched(LevelEnum.ERROR);
     }
 
     @Override

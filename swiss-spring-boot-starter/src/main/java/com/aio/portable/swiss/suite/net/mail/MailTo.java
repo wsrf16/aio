@@ -111,16 +111,20 @@ public class MailTo {
      * @param content
      * @throws MessagingException
      */
-    public void sendHtmlMail(String from, String to, String subject, String content, String... cc) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom(from);
-        helper.setTo(to);
-        helper.setCc(cc);
-        helper.setSubject(subject);
-        helper.setText(content, true);
+    public void sendHtmlMail(String from, String to, String subject, String content, String... cc) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setCc(cc);
+            helper.setSubject(subject);
+            helper.setText(content, true);
 
-        javaMailSender.send(message);
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

@@ -16,15 +16,15 @@ public abstract class ShellSugar {
     private static final String VARIABLE_SHORT = "\\${0}";
     private static final List<String> VARIABLE_LIST = Arrays.asList(VARIABLE_LONG, VARIABLE_SHORT);
 
-    public static final String spellLongVariable(String name) {
+    public static String spellLongVariable(String name) {
         return MessageFormat.format(VARIABLE_LONG, name);
     }
 
-    public static final String spellShortVariable(String name) {
+    public static String spellShortVariable(String name) {
         return MessageFormat.format(VARIABLE_SHORT, name);
     }
 
-    public static final String setVariable(String input, Object bean) {
+    public static String setVariable(String input, Object bean) {
         Map<String, Object> map = bean instanceof Map ? (Map<String, Object>) bean : ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(bean);
         String result = input;
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -36,7 +36,7 @@ public abstract class ShellSugar {
         return result;
     }
 
-    public static final List<String> exec(String... scripts) {
+    public static List<String> exec(String... scripts) {
         List<String> feedbackList = Arrays.stream(scripts).map(c -> {
             try {
                 Process process = Runtime.getRuntime().exec(c);
@@ -55,7 +55,7 @@ public abstract class ShellSugar {
         return feedbackList;
     }
 
-    private static final Echo getEcho(Process process) {
+    private static Echo getEcho(Process process) {
         try {
             InputStream inputStream = process.getInputStream();
             InputStream errorStream = process.getErrorStream();
@@ -70,7 +70,7 @@ public abstract class ShellSugar {
         }
     }
 
-    public static final Process run(String... scripts) {
+    public static Process run(String... scripts) {
         ProcessBuilder builder = new ProcessBuilder(scripts);
         try {
             Process process = builder.start();

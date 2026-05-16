@@ -11,15 +11,15 @@ import java.net.URLStreamHandlerFactory;
 
 public class HotURLClassLoader extends URLClassLoader {
 
-    public static final HotURLClassLoader newInstance(String file) {
+    public static HotURLClassLoader newInstance(String file) {
         return newInstance(new File(file));
     }
 
-    public static final HotURLClassLoader newInstance(File file) {
+    public static HotURLClassLoader newInstance(File file) {
         return newInstance(URLSugar.toURL(file));
     }
 
-    public static final HotURLClassLoader newInstance(URL url) {
+    public static HotURLClassLoader newInstance(URL url) {
         return new HotURLClassLoader(url);
     }
 
@@ -40,7 +40,7 @@ public class HotURLClassLoader extends URLClassLoader {
     }
 
 
-    public final void addURL(URL url) {
+    public void addURL(URL url) {
         ClassLoaderSugar.addURL(this, url);
     }
 

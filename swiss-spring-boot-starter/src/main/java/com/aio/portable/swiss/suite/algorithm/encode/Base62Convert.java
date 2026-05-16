@@ -3,7 +3,7 @@ package com.aio.portable.swiss.suite.algorithm.encode;
 public abstract class Base62Convert {
     private static final String BASE62_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static final String encode(long number) {
+    public static String encode(long number) {
         StringBuilder sb = new StringBuilder();
         while (number > 0) {
             int remainder = (int) (number % 62);
@@ -13,7 +13,7 @@ public abstract class Base62Convert {
         return sb.toString();
     }
 
-    public static final long decode(String base62) {
+    public static long decode(String base62) {
         long number = 0;
         for (int i = 0; i < base62.length(); i++) {
             char c = base62.charAt(i);

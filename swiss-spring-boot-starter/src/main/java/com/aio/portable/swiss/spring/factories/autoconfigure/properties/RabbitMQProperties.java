@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RabbitMQProperties extends RabbitProperties {
-    private int port = 5672;
+    private Integer port = 5672;
     private Boolean enabled = true;
     private Boolean autoDeclare = true;
     private List<RabbitMQBindingProperty> bindingList = new ArrayList<>();

@@ -4,6 +4,11 @@ spring:
       path: /h2-console #进入h2 web操作界面的路径
       enabled: true #开启h2 web界面
   datasource:
+    schema:
+      - classpath:db/schema-h2.sql
+    data:
+      - classpath:db/data-h2.sql
+    initialization-mode: always
     master:
 #      type: com.zaxxer.hikari.HikariDataSource
       type: com.alibaba.druid.pool.DruidDataSource
@@ -48,9 +53,11 @@ spring:
       jpa:
         database: mysql
         #启动时需要初始化的建表语句
-        schema: classpath:db/schema-h2.sql
+        schema:
+          - classpath:db/schema-h2.sql
         #初始化的数据
-        data: classpath:db/data-h2.sql
+        data:
+          - classpath:db/data-h2.sql
         show-sql: true
         open-in-view: false
         generate-ddl: false
@@ -88,10 +95,15 @@ spring:
 #          queue: application-log-queue
 #          exchange: application-log-exchange
 #
-#  redis:
-#    host: 192.168.155.150
-#    port: 6379
+  redis:
+    host: 127.0.0.1
+    port: 6379
 #    password: YYYYYYYY
+    database: 0
+#    cluster:
+#      nodes:
+#        - 127.0.0.1: 6379
+#        - 127.0.0.1: 6379
 
   log:
 #    enabled: false
@@ -105,7 +117,7 @@ spring:
 #      username: admin
 #      password: admin
 #      virtual-host: /
-#      es-index: @project.deploy.finalName@-@profiles.active@-log
+#      es-index: @project.artifactId@-@profiles.active@-log
 #      publisher-confirms: true
 #      publisher-returns: true
 #      auto-declare: true
@@ -116,8 +128,8 @@ spring:
 #        exchange: application-log-exchange
 
     kafka:
-      enabled: true
-      esIndex: @project.deploy.finalName@-@profiles.active@-log
+      enabled: false
+      esIndex: @project.artifactId@-@profiles.active@-log
       bootstrap-servers: 192.168.0.133:9092
 #      template:
 #        defaultTopic: application-log

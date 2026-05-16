@@ -1,8 +1,8 @@
 package com.aio.portable.park.test.batchrequest;
 
 import com.aio.portable.park.bean.UserInfoEntity;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -99,11 +99,11 @@ public class BatchRequestTest {
         return future;
     }
 
-    public ResponseWrapper<BatchResponse> batch(UserInfoEntity userInfo) {
+    public ResponseBean<BatchResponse> batch(UserInfoEntity userInfo) {
 
         try {
             BatchResponse<UserInfoEntity> batchResponse = handle(userInfo).get();
-            return ResponseWrappers.build(0, batchResponse);
+            return ResponseBeans.build(0, batchResponse);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

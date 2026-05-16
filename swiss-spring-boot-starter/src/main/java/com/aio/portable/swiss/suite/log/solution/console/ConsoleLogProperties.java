@@ -10,9 +10,9 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
 
 //    private static final Log log = LogFactory.getLog(ConsoleLogProperties.class);
 
-    private static final boolean DEFAULT_ENABLED = false;
+    private static final boolean DEFAULT_ENABLED = true;
 
-    private Boolean enabled = true;
+    private Boolean enabled;
 
     public Boolean getEnabled() {
         return enabled;
@@ -22,14 +22,28 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
         this.enabled = enabled;
     }
 
-    public final Boolean getDefaultEnabledIfAbsent() {
+    public final Boolean getEnabledOrDefault() {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
     }
 
-    private static ConsoleLogProperties instance = new ConsoleLogProperties();
+    public Boolean getEnabledIsTrue() {
+        return enabled != null && enabled;
+    }
+
+    public Boolean getEnabledIsFalse() {
+        return enabled != null && !enabled;
+    }
+
+
+
+    private static ConsoleLogProperties instance;
 
     public synchronized static ConsoleLogProperties getSingleton() {
         return instance;
+    }
+
+    public synchronized static boolean exist() {
+        return instance != null;
     }
 
     private static boolean initialized = false;
@@ -38,7 +52,7 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
         return initialized;
     }
 
-    protected ConsoleLogProperties() {
+    public ConsoleLogProperties() {
     }
 
     @Override
@@ -46,12 +60,12 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
         initialSingletonInstance(this);
     }
 
-    public static final void initialSingletonInstance(ConsoleLogProperties properties) {
+    public static void initialSingletonInstance(ConsoleLogProperties properties) {
         instance = properties;
 //        log.info("ConsoleLogProperties InitialSingletonInstance: " + JacksonSugar.obj2ShortJson(BeanSugar.PropertyDescriptors.toNameValueMapExceptNull(instance)));
     }
 
-    public static final void initialSingletonInstance(Binder binder) {
+    public static void initialSingletonInstance(Binder binder) {
         BindResult<ConsoleLogProperties> bindResult = binder.bind(ConsoleLogProperties.PREFIX, ConsoleLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             ConsoleLogProperties.initialSingletonInstance(bindResult.get());

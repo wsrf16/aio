@@ -2,14 +2,14 @@ package com.aio.portable.park.endpoint.http;
 
 import com.aio.portable.park.bean.UserInfoEntity;
 import com.aio.portable.park.common.AppLogHubFactory;
-import com.aio.portable.park.common.BizStatusEnum;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.park.common.BizResponseStatuses;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.hamlet.exception.BizException;
+import com.aio.portable.swiss.hamlet.interceptor.classic.annotation.jwt.RequiredJWTAuth;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.LogRecord;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
-import com.aio.portable.swiss.hamlet.interceptor.classic.annotation.jwt.RequiredJWTAuth;
 import com.aio.portable.swiss.suite.storage.cache.RedisLock;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("demo")
-@LogRecord(ignore = false)
+@LogRecord(enabled = false)
 public class DemoController {
     @Autowired
     private HttpServletRequest request;
@@ -86,7 +86,7 @@ public class DemoController {
             throw new RuntimeException("system exception");
         } else {
             System.out.println("222222222");
-            throw new BizException(BizStatusEnum.staticInvalid().getCode(), "business exception");
+            throw new BizException(BizResponseStatuses.staticInvalid().getCode(), "business exception");
         }
     }
 
@@ -98,7 +98,7 @@ public class DemoController {
             throw new RuntimeException("system exception");
         } else {
             System.out.println("222222222");
-            throw new BizException(BizStatusEnum.staticInvalid().getCode(), "business exception");
+            throw new BizException(BizResponseStatuses.staticInvalid().getCode(), "business exception");
         }
     }
 
@@ -120,12 +120,12 @@ public class DemoController {
 
     @GetMapping("ok")
     @LogRecord
-    public ResponseWrapper<Object> ok() {
+    public ResponseBean<Object> ok() {
         List<String> list = new ArrayList<>();
 //        for (int i = 0; i < 100000; i++) {
 //            list.add("aaa");
 //        }
-        return ResponseWrappers.succeed(list);
+        return ResponseBeans.succeed(list);
 
 //        return ResponseWrapperUtils.build(0, list);
     }
@@ -136,8 +136,8 @@ public class DemoController {
     }
 
     @GetMapping("echo")
-    public ResponseWrapper<String> echo(String value) {
-        return ResponseWrappers.succeed(value);
+    public ResponseBean<String> echo(String value) {
+        return ResponseBeans.succeed(value);
     }
 
     @GetMapping("lock")
@@ -178,7 +178,7 @@ public class DemoController {
 
         return MessageFormat.format("lock : {0}", identify);
     }
-
+    
 
 //    @Bean
 //    public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

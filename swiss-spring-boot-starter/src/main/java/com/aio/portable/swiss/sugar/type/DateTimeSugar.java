@@ -17,11 +17,19 @@ import java.util.TimeZone;
 public abstract class DateTimeSugar {
     public static class CalendarUtils {
         public static Calendar getFirstDayOfWeek(Calendar calendar) {
-            return getFirstDayOf(calendar, Calendar.DAY_OF_WEEK);
+            Calendar first = (Calendar) calendar.clone();
+            first.setFirstDayOfWeek(Calendar.MONDAY);
+            first.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+            return first;
         }
 
         public static Calendar getLastDayOfWeek(Calendar calendar) {
-            return getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
+            Calendar last = (Calendar) calendar.clone();
+            last.setFirstDayOfWeek(Calendar.MONDAY);
+            last.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//            Calendar last = getLastDayOf(calendar, Calendar.DAY_OF_WEEK);
+            return last;
         }
 
         public static Calendar getFirstDayOfMonth(Calendar calendar) {
@@ -30,6 +38,24 @@ public abstract class DateTimeSugar {
 
         public static Calendar getLastDayOfMonth(Calendar calendar) {
             return getLastDayOf(calendar, Calendar.DAY_OF_MONTH);
+        }
+
+        public static Calendar getFirstDayOfQuarter(Calendar calendar) {
+            int month = calendar.get(Calendar.MONTH);
+            int quarterStartMonth = (month / 3) * 3;
+
+            Calendar clone = (Calendar) calendar.clone();
+            clone.set(Calendar.MONTH, quarterStartMonth);
+            return getFirstDayOf(clone, Calendar.DAY_OF_MONTH);
+        }
+
+        public static Calendar getLastDayOfQuarter(Calendar calendar) {
+            int month = calendar.get(Calendar.MONTH);
+            int quarterEndMonth = (month / 3) * 3 + 2;
+
+            Calendar clone = (Calendar) calendar.clone();
+            clone.set(Calendar.MONTH, quarterEndMonth);
+            return getLastDayOf(clone, Calendar.DAY_OF_MONTH);
         }
 
         public static Calendar getFirstDayOfYear(Calendar calendar) {
@@ -41,14 +67,63 @@ public abstract class DateTimeSugar {
         }
 
         public static Calendar getFirstDayOf(Calendar calendar, int field) {
-            calendar.set(field, calendar.getActualMinimum(field));
-            return calendar;
+            Calendar first = (Calendar) calendar.clone();
+            first.set(field, calendar.getActualMinimum(field));
+
+            first.set(Calendar.HOUR_OF_DAY, 0);
+            first.set(Calendar.MINUTE, 0);
+            first.set(Calendar.SECOND, 0);
+            first.set(Calendar.MILLISECOND, 0);
+            return first;
         }
 
         public static Calendar getLastDayOf(Calendar calendar, int field) {
-            calendar.set(field, calendar.getActualMaximum(field));
-            return calendar;
+            Calendar last = (Calendar) calendar.clone();
+            last.set(field, calendar.getActualMaximum(field));
+
+            last.set(Calendar.HOUR_OF_DAY, 23);
+            last.set(Calendar.MINUTE, 59);
+            last.set(Calendar.SECOND, 59);
+            last.set(Calendar.MILLISECOND, 999);
+            return last;
         }
+
+        public static Calendar getPreviousWeek(Calendar calendar) {
+            Calendar previous = (Calendar) calendar.clone();
+            previous.add(Calendar.DAY_OF_WEEK, -1);
+            return previous;
+        }
+
+        public static Calendar getNextWeek(Calendar calendar) {
+            Calendar next = (Calendar) calendar.clone();
+            next.add(Calendar.DAY_OF_WEEK, 1);
+            return next;
+        }
+
+        public static Calendar getPreviousMonth(Calendar calendar) {
+            Calendar previous = (Calendar) calendar.clone();
+            previous.add(Calendar.MONTH, -1);
+            return previous;
+        }
+
+        public static Calendar getNextMonth(Calendar calendar) {
+            Calendar next = (Calendar) calendar.clone();
+            next.add(Calendar.MONTH, 1);
+            return next;
+        }
+
+        public static Calendar getPreviousYear(Calendar calendar) {
+            Calendar previous = (Calendar) calendar.clone();
+            previous.add(Calendar.YEAR, -1);
+            return previous;
+        }
+
+        public static Calendar getNextYear(Calendar calendar) {
+            Calendar next = (Calendar) calendar.clone();
+            next.add(Calendar.YEAR, 1);
+            return next;
+        }
+
 
         /**
          * add
@@ -78,6 +153,14 @@ public abstract class DateTimeSugar {
             return date;
         }
 
+        public static Calendar fromText(String format, String text) {
+            return DateTimeSugar.Format.convertText2Calendar(format, text);
+        }
+
+        public static String toText(String format, Calendar calendar) {
+            return DateTimeSugar.Format.convertCalendar2Text(format, calendar);
+        }
+
 //        public static Date calendarToUTC(Calendar calendar) {
 //            Calendar newCalendar = Calendar.getInstance();
 //            newCalendar.add(Calendar.MILLISECOND, -calendar.getTimeZone().getRawOffset());
@@ -103,46 +186,46 @@ public abstract class DateTimeSugar {
             return localDateTime.plusDays(daysToAdd);
         }
 
-        public static final long nowEpochMillli() {
+        public static long nowEpochMillli() {
             long epochMilli = Instant.now().toEpochMilli();
             return epochMilli;
         }
 
-        public static final LocalDateTime parse(@NotNull String text, String format) {
+        public static LocalDateTime parse(@NotNull String text, String format) {
             LocalDateTime localDateTime = LocalDateTime.parse(text, DateTimeFormatter.ofPattern(format));
             return localDateTime;
         }
 
-        public static final String format(@NotNull LocalDateTime localDateTime, String format) {
+        public static String format(@NotNull LocalDateTime localDateTime, String format) {
             String text = localDateTime.format(DateTimeFormatter.ofPattern(format));
             return text;
         }
 
-        public static final Duration between(LocalDateTime start, LocalDateTime end) {
+        public static Duration between(LocalDateTime start, LocalDateTime end) {
             return Duration.between(start, end);
         }
 
-        public static final Date toDate(@NotNull LocalDateTime localDateTime, ZoneId zoneId) {
+        public static Date toDate(@NotNull LocalDateTime localDateTime, ZoneId zoneId) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public static final Date toDate(@NotNull LocalDateTime localDateTime) {
+        public static Date toDate(@NotNull LocalDateTime localDateTime) {
             ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
             return Date.from(zonedDateTime.toInstant());
         }
 
-        public static final LocalDateTime fromDate(Date date, ZoneId zoneId) {
+        public static LocalDateTime fromDate(Date date, ZoneId zoneId) {
             Instant instant = date.toInstant();
             return instant.atZone(zoneId).toLocalDateTime();
         }
 
-        public static final LocalDateTime fromDate(Date date) {
+        public static LocalDateTime fromDate(Date date) {
             Instant instant = date.toInstant();
             return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
 
-        public static final LocalDateTime now() {
+        public static LocalDateTime now() {
             return LocalDateTime.now();
         }
     }
@@ -168,8 +251,8 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static final synchronized Date convertText2Date(String format, String text) {
-            Date date = null;
+        public static synchronized Date convertText2Date(String format, String text) {
+            Date date;
             try {
                 date = new SimpleDateFormat(format).parse(text);
             } catch (ParseException e) {
@@ -186,7 +269,7 @@ public abstract class DateTimeSugar {
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static final synchronized String convertDate2Text(String format, Date date) {
+        public static synchronized String convertDate2Text(String format, Date date) {
             String text = new SimpleDateFormat(format).format(date);
             return text;
         }
@@ -199,7 +282,7 @@ public abstract class DateTimeSugar {
          * @return Date
          * @throws ParseException
          */
-        public static final synchronized Calendar convertText2Calendar(String format, String text) {
+        public static synchronized Calendar convertText2Calendar(String format, String text) {
             try {
                 Date date = new SimpleDateFormat(format).parse(text);
                 Calendar calendar = Calendar.getInstance();
@@ -218,7 +301,7 @@ public abstract class DateTimeSugar {
          * @return String "1987-06-05T44:33:22.111+0800"
          * @throws ParseException
          */
-        public static final synchronized String convertCalendar2Text(String format, Calendar calendar) {
+        public static synchronized String convertCalendar2Text(String format, Calendar calendar) {
             Date date = calendar.getTime();
             String text = new SimpleDateFormat(format).format(date);
             return text;

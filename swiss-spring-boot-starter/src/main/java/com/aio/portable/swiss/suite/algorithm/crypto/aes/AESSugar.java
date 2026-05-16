@@ -13,7 +13,7 @@ public class AESSugar {
     private static final String AES = "AES";
 
 
-    public static final SecretKeySpec generateSecretKey(byte[] secretKeyBytes) {
+    public static SecretKeySpec generateSecretKey(byte[] secretKeyBytes) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
             // 加密没关系，SecureRandom是生成安全随机数序列，password.getBytes()是种子，只要种子相同，序列就一样，所以解密只要有password就行
@@ -30,7 +30,7 @@ public class AESSugar {
         }
     }
 
-    public static final byte[] encrypt(byte[] bytes, byte[] secretKeyBytes) {
+    public static byte[] encrypt(byte[] bytes, byte[] secretKeyBytes) {
         try {
             SecretKeySpec secretKey = generateSecretKey(secretKeyBytes);
 
@@ -47,7 +47,7 @@ public class AESSugar {
         }
     }
 
-    public static final String encrypt(String plain, String password) {
+    public static String encrypt(String plain, String password) {
         byte[] bytes = plain.getBytes();
         byte[] passwordBytes = password.getBytes();
         byte[] cipher = encrypt(bytes, passwordBytes);
@@ -55,7 +55,7 @@ public class AESSugar {
     }
 
 
-    public static final byte[] decrypt(byte[] bytes, byte[] secretKeyBytes) {
+    public static byte[] decrypt(byte[] bytes, byte[] secretKeyBytes) {
         try {
             SecretKeySpec secretKey = generateSecretKey(secretKeyBytes);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -71,7 +71,7 @@ public class AESSugar {
         }
     }
 
-    public static final String decrypt(String cipherBase64, String password) {
+    public static String decrypt(String cipherBase64, String password) {
         byte[] bytes = JDKBase64Convert.decode(cipherBase64);
         byte[] passwordBytes = password.getBytes();
         byte[] plain = decrypt(bytes, passwordBytes);

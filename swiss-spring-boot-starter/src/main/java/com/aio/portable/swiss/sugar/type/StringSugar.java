@@ -3,29 +3,30 @@ package com.aio.portable.swiss.sugar.type;
 import com.aio.portable.swiss.global.ColorEnum;
 import com.aio.portable.swiss.global.Constant;
 import com.aio.portable.swiss.sugar.RegexSugar;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
 public abstract class StringSugar {
-    public static final String emptyIfNull(String str) {
+    public static String emptyIfNull(String str) {
         return str == null ? Constant.EMPTY : str;
     }
 
-    public static final String trim(String str, String removed) {
+    public static String trim(String str, String removed) {
         str = trimStart(str, removed);
         str = trimEnd(str, removed);
         return str;
     }
 
-    public static final String trim(String str, String start, String end) {
+    public static String trim(String str, String start, String end) {
         String result = trimStart(str, start);
         result = trimEnd(result, end);
         return result;
     }
 
-    public static final String trimStart(String str, String removedStart) {
+    public static String trimStart(String str, String removedStart) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedStart)) {
             return str.startsWith(removedStart) ? str.substring(removedStart.length()) : str;
         } else {
@@ -33,7 +34,7 @@ public abstract class StringSugar {
         }
     }
 
-    public static final String trimEnd(String str, String removedEnd) {
+    public static String trimEnd(String str, String removedEnd) {
         if (org.springframework.util.StringUtils.hasLength(str) && org.springframework.util.StringUtils.hasLength(removedEnd)) {
             return str.endsWith(removedEnd) ? str.substring(0, str.length() - removedEnd.length()) : str;
         } else {
@@ -41,7 +42,7 @@ public abstract class StringSugar {
         }
     }
 
-    public static final String trimAllStart(String text, String removedStart) {
+    public static String trimAllStart(String text, String removedStart) {
         String result = text;
         while (result.startsWith(removedStart)) {
             result = StringSugar.trimStart(result, removedStart);
@@ -50,7 +51,7 @@ public abstract class StringSugar {
     }
 
 
-    public static final String trimAllEnd(String text, String removedEnd) {
+    public static String trimAllEnd(String text, String removedEnd) {
         String result = text;
         while (result.endsWith(removedEnd)) {
             result = StringSugar.trimEnd(result, removedEnd);
@@ -58,15 +59,15 @@ public abstract class StringSugar {
         return result;
     }
 
-    public static final String toString(Object obj) {
+    public static String toString(Object obj) {
         return obj == null ? "" : obj.toString();
     }
 
-//    public static final <T> T getDefaultIfNull(T source, T def) {
+//    public static <T> T getDefaultIfNull(T source, T def) {
 //        return source != null ? source : def;
 //    }
 
-    public static final String changeFirstCharacterCase(String str, boolean toUpperCase) {
+    public static String changeFirstCharacterCase(String str, boolean toUpperCase) {
         if (!StringUtils.hasLength(str)) {
             return str;
         }
@@ -88,7 +89,7 @@ public abstract class StringSugar {
         return new String(chars, 0, chars.length);
     }
 
-//    public static final Boolean containUpperCase(String text) {
+//    public static Boolean containUpperCase(String text) {
 //        for (char c : text.toCharArray()) {
 //            if (Character.isUpperCase(c))
 //                return true;
@@ -96,7 +97,7 @@ public abstract class StringSugar {
 //        return false;
 //    }
 
-    public static final String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
+    public static String replaceEach(final String text, final String[] searchList, final String[] replacementList) {
         return replaceEach(text, searchList, replacementList, false, 0);
     }
 
@@ -227,7 +228,7 @@ public abstract class StringSugar {
     }
 
 
-    public static final String repeat(char ch, int repeat) {
+    public static String repeat(char ch, int repeat) {
         if (repeat <= 0) {
             return "";
         } else {
@@ -242,7 +243,7 @@ public abstract class StringSugar {
     }
 
 
-    public static final String leftPad(int no, int length) {
+    public static String leftPad(int no, int length) {
         /*
          * 0 指前面补充零
          * formatLength 字符总长度为 formatLength
@@ -252,7 +253,7 @@ public abstract class StringSugar {
         return newString;
     }
 
-    public static final String rightPad(String str, int length, char padChar) {
+    public static String rightPad(String str, int length, char padChar) {
         if (str == null) {
             return null;
         } else {
@@ -265,34 +266,34 @@ public abstract class StringSugar {
         }
     }
 
-    public static final String unwrap(String input, String boundary) {
+    public static String unwrap(String input, String boundary) {
         String s = trimStart(input, boundary);
         s = trimEnd(s, boundary);
         return s;
     }
 
-    public static final String unwrapAll(String input, String boundary) {
+    public static String unwrapAll(String input, String boundary) {
         String s = trimAllStart(input, boundary);
         s = trimAllEnd(s, boundary);
         return s;
     }
 
-    public static final String wrap(String input, String boundary) {
+    public static String wrap(String input, String boundary) {
         String s = MessageFormat.format("{1}{0}{1}", input, boundary);
         return s;
     }
 
-    public static final String wrapStartIfNotExists(String input, String boundary) {
+    public static String wrapStartIfNotExists(String input, String boundary) {
         String s = input.startsWith(boundary) ? input : MessageFormat.format("{1}{0}", input, boundary);
         return s;
     }
 
-    public static final String wrapEndIfNotExists(String input, String boundary) {
+    public static String wrapEndIfNotExists(String input, String boundary) {
         String s = input.endsWith(boundary) ? input : MessageFormat.format("{0}{1}", input, boundary);
         return s;
     }
 
-    private static final String rightPad(String str, int size, String padStr) {
+    private static String rightPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {
@@ -324,7 +325,7 @@ public abstract class StringSugar {
         }
     }
 
-    public static final String leftPad(String str, int size, char padChar) {
+    public static String leftPad(String str, int size, char padChar) {
         if (str == null) {
             return null;
         } else {
@@ -337,7 +338,7 @@ public abstract class StringSugar {
         }
     }
 
-    public static final String leftPad(String str, int size, String padStr) {
+    public static String leftPad(String str, int size, String padStr) {
         if (str == null) {
             return null;
         } else {
@@ -369,21 +370,21 @@ public abstract class StringSugar {
         }
     }
 
-    public static final int length(CharSequence cs) {
+    public static int length(CharSequence cs) {
         return cs == null ? 0 : cs.length();
     }
 
-    public static final boolean containUpperCase(String name) {
+    public static boolean containUpperCase(String name) {
         String regex=".*[A-Z]+.*";
         return Pattern.compile(regex).matcher(name).matches();
     }
 
-    public static final boolean containLowerCase(String name) {
+    public static boolean containLowerCase(String name) {
         String regex=".*[a-z]+.*";
         return Pattern.compile(regex).matcher(name).matches();
     }
 
-    public static final boolean containChar(String name, char c) {
+    public static boolean containChar(String name, char c) {
         String regex=".*" + c +"+.*";
         return Pattern.compile(regex).matcher(name).matches();
     }
@@ -401,29 +402,29 @@ public abstract class StringSugar {
         return RegexSugar.replace(input, PLACE_HOLDER, replacement);
     }
 
-    public static final String paint(String content, ColorEnum... colors) {
+    public static String paint(String content, ColorEnum... colors) {
         return ColorEnum.print(content, colors);
     }
 
-    public static final boolean isCapitalize(String word) {
+    public static boolean isCapitalize(String word) {
         char first = word.charAt(0);
         boolean isUpperCase = Character.isUpperCase(first);
         return isUpperCase;
     }
 
-    public static final String getLastWord(String text, String interval) {
+    public static String getLastWord(String text, String interval) {
         int local = text.lastIndexOf(interval) + 1;
         String part = text.substring(local);
         return part;
     }
 
-    public static final String getFirstWord(String text, String interval) {
+    public static String getFirstWord(String text, String interval) {
         int local = text.indexOf(interval);
         String part = text.substring(0, local);
         return part;
     }
 
-    public static final String getFirstHasText(String otherwise, String... str) {
+    public static String getFirstHasText(String otherwise, String... str) {
         for (String s : str) {
             if (StringUtils.hasText(s))
                 return s;
@@ -431,7 +432,7 @@ public abstract class StringSugar {
         return otherwise;
     }
 
-    public static final String getFirstHasLength(String otherwise, String... str) {
+    public static String getFirstHasLength(String otherwise, String... str) {
         for (String s : str) {
             if (StringUtils.hasLength(s))
                 return s;
@@ -439,9 +440,9 @@ public abstract class StringSugar {
         return otherwise;
     }
 
-    public static final String getFirstIsEmpty(String otherwise, String... str) {
+    public static String getFirstIsEmpty(String otherwise, String... str) {
         for (String s : str) {
-            if (StringUtils.isEmpty(s))
+            if (ObjectUtils.isEmpty(s))
                 return s;
         }
         return otherwise;

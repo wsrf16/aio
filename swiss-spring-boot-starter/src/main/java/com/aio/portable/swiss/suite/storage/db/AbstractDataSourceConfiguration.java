@@ -13,14 +13,14 @@ public abstract class AbstractDataSourceConfiguration {
         return new DataSourceProperties();
     }
 
-    protected static final <T extends DataSource> T createDataSource(DataSourceProperties properties, Class<T> clazz) {
+    protected static <T extends DataSource> T createDataSource(DataSourceProperties properties, Class<T> clazz) {
         return properties
                 .initializeDataSourceBuilder()
                 .type(clazz)
                 .build();
     }
 
-    protected static final DataSource createDataSource(DataSourceProperties properties) {
+    protected static DataSource createDataSource(DataSourceProperties properties) {
         return properties
                 .initializeDataSourceBuilder()
                 .build();

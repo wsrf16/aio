@@ -21,10 +21,10 @@ import java.util.stream.Stream;
  * Created by York on 2017/11/23.
  */
 public class ConsoleLogPrinter implements LogPrinter {
-    public static String SECTION_SEPARATOR = ConsoleConstant.SECTION_SEPARATOR;
-    public static String LINE_SEPARATOR = ConsoleConstant.LINE_SEPARATOR;
-    public static String TIME_FORMAT = ConsoleConstant.TIME_FORMAT;
-    public static int EMPTY_LINES = ConsoleConstant.EMPTY_LINES;
+    public static final String SECTION_SEPARATOR = ConsoleConstant.SECTION_SEPARATOR;
+    public static final String LINE_SEPARATOR = ConsoleConstant.LINE_SEPARATOR;
+    public static final String TIME_FORMAT = ConsoleConstant.TIME_FORMAT;
+    public static final int EMPTY_LINES = ConsoleConstant.EMPTY_LINES;
 
 
     private String emptyLines = String.join(Constant.EMPTY, Stream.of(Constant.LINE_SEPARATOR).limit(EMPTY_LINES).collect(Collectors.toList()));
@@ -82,8 +82,8 @@ public class ConsoleLogPrinter implements LogPrinter {
      */
     @Override
     public void println(Object record, LevelEnum level) {
-        String line = getSmartSerializerAdapter(level).serialize(record);
-        if (properties.getEnabled()) {
+        if (properties == null || properties.getEnabledOrDefault()) {
+            String line = getSmartSerializerAdapter(level).serialize(record);
             String coloredLevel;
             switch (level) {
                 case VERB: {
@@ -137,7 +137,7 @@ public class ConsoleLogPrinter implements LogPrinter {
     }
 
     private static String[] propertyNameArray;
-    private static final synchronized String[] getPropertyNameArray() {
+    private static synchronized String[] getPropertyNameArray() {
         if (propertyNameArray == null) {
             propertyNameArray = ClassSugar.PropertyDescriptors.getAllPropertyNames(StandardLogRecordItem.class);
             for (int i = 0; i < propertyNameArray.length; i++) {
@@ -157,7 +157,7 @@ public class ConsoleLogPrinter implements LogPrinter {
         return item;
     }
 
-    private static final void println(String output) {
+    private static void println(String output) {
         System.out.println(output);
     }
 

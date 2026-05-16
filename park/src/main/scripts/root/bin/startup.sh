@@ -1,8 +1,8 @@
 #!/bin/bash
 
 dir_absolute_path=$(cd $(dirname $0); pwd)
-jar_file_path=${dir_absolute_path%/*}/${project.build.finalName}.jar
-jarsh_file_path=${dir_absolute_path%/*}/${project.build.finalName}.jar.sh
+jar_file_path=${dir_absolute_path%/*}/${project.artifactId}.jar
+jarsh_file_path=${dir_absolute_path%/*}/${project.artifactId}.jar.sh
 sh_file_path=$dir_absolute_path/launch.sh
 
 check_period=2

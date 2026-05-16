@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic.annotation.sign;
 
-import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.ResponseStatuses;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.interceptor.AnnotationInterceptor;
 import com.aio.portable.swiss.sugar.location.URLSugar;
@@ -51,10 +51,10 @@ public class HamletSignatureAnnotationInterceptor extends AnnotationInterceptor 
 
     private void verify(String computed, String sign) {
         if (!Objects.equals(computed, sign))
-            throw new BizException(BaseBizStatusEnum.staticUnauthorized().getCode(), "请求无效！");
+            throw new BizException(ResponseStatuses.staticUnauthorized().getCode(), "请求无效！");
     }
 
-    private final String validAndSign(HttpServletRequest request) {
+    private String validAndSign(HttpServletRequest request) {
         String queryString = request.getQueryString();
         ServletInputStream inputStream = getServletInputStream(request);
         String body = IOSugar.Streams.toString(inputStream);
@@ -82,7 +82,7 @@ public class HamletSignatureAnnotationInterceptor extends AnnotationInterceptor 
             }
         }
         if (!hasTimestamp)
-            throw new BizException(BaseBizStatusEnum.staticUnauthorized().getCode(), "请求无效！");
+            throw new BizException(ResponseStatuses.staticUnauthorized().getCode(), "请求无效！");
 
         String s = sb.toString();
         String sha1 = encode(s);
@@ -99,10 +99,10 @@ public class HamletSignatureAnnotationInterceptor extends AnnotationInterceptor 
         LocalDateTime end = DateTimeSugar.LocalDateTimeUtils.now();
         Duration duration = DateTimeSugar.LocalDateTimeUtils.between(start, end);
         if (duration.toMinutes() > expiredMinutes())
-            throw new BizException(BaseBizStatusEnum.staticUnauthorized().getCode(), "请求过期失效！");
+            throw new BizException(ResponseStatuses.staticUnauthorized().getCode(), "请求过期失效！");
     }
 
-    private static final ServletInputStream getServletInputStream(HttpServletRequest request) {
+    private static ServletInputStream getServletInputStream(HttpServletRequest request) {
         try {
             ServletInputStream inputStream = request.getInputStream();
             return inputStream;

@@ -81,7 +81,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws IOException
      */
-    public static final boolean isPresent(String className, ClassLoader classLoader) {
+    public static boolean isPresent(String className, ClassLoader classLoader) {
         String resource = ClassSugar.convertClassNameToResourcePath(className);
         return ResourceSugar.existClassLoaderResource(resource, classLoader);
     }
@@ -93,7 +93,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws IOException
      */
-    public static final boolean isPresent(String className) {
+    public static boolean isPresent(String className) {
         String resource = ClassSugar.convertClassNameToResourcePath(className);
         return ResourceSugar.existClassLoaderResource(resource);
     }
@@ -104,7 +104,7 @@ public abstract class ClassLoaderSugar {
      * @param classLoader
      * @return
      */
-    public static final Class<?> findLoadedClass(String className, ClassLoader classLoader) {
+    public static Class<?> findLoadedClass(String className, ClassLoader classLoader) {
         try {
             Method method = ClassLoader.class.getDeclaredMethod("findLoadedClass", new Class[]{String.class});
             ReflectionUtils.makeAccessible(method);
@@ -115,7 +115,7 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final Class<?> findLoadedClass(String className) {
+    public static Class<?> findLoadedClass(String className) {
         return findLoadedClass(className, ClassLoaderSugar.getDefaultClassLoader());
     }
 
@@ -125,7 +125,7 @@ public abstract class ClassLoaderSugar {
      * @param classLoader
      * @return
      */
-    public static final boolean hasLoaded(String className, ClassLoader classLoader) {
+    public static boolean hasLoaded(String className, ClassLoader classLoader) {
         boolean hasLoaded = findLoadedClass(className, classLoader) != null ? true : false;
         return hasLoaded;
     }
@@ -135,26 +135,26 @@ public abstract class ClassLoaderSugar {
      * @param className
      * @return
      */
-    public static final boolean hasLoaded(String className) {
+    public static boolean hasLoaded(String className) {
         boolean hasLoaded = findLoadedClass(className) != null ? true : false;
         return hasLoaded;
     }
 
-    public static final URLClassLoader toURLClassLoader(URL[] urls) {
+    public static URLClassLoader toURLClassLoader(URL[] urls) {
         return new URLClassLoader(urls);
     }
 
-    public static final URLClassLoader toURLClassLoader(List<URL> urlList) {
+    public static URLClassLoader toURLClassLoader(List<URL> urlList) {
         URL[] urls = urlList.toArray(new URL[urlList.size()]);
         return new URLClassLoader(urls);
     }
 
-    public static final URLClassLoader toURLClassLoader(URL url) {
+    public static URLClassLoader toURLClassLoader(URL url) {
         URL[] urls = {url};
         return new URLClassLoader(urls);
     }
 
-    public static final URLClassLoader toURLClassLoader(File file) {
+    public static URLClassLoader toURLClassLoader(File file) {
         URL[] urls = {URLSugar.toURL(file)};
         return new URLClassLoader(urls);
     }
@@ -165,7 +165,7 @@ public abstract class ClassLoaderSugar {
      * @param urls ["jar:file:/D:/a.jar", "file:D:/classes/"]
      * @return
      */
-    public static final Class<?> loadClass(String className, URL[] urls) {
+    public static Class<?> loadClass(String className, URL[] urls) {
             URLClassLoader classLoader = new URLClassLoader(urls);
             return loadClass(className, classLoader);
     }
@@ -176,7 +176,7 @@ public abstract class ClassLoaderSugar {
      * @param urlList ["jar:file:/D:/a.jar", "file:D:/classes/"]
      * @return
      */
-    public static final Class<?> loadClass(String className, List<URL> urlList) {
+    public static Class<?> loadClass(String className, List<URL> urlList) {
         URL[] urls = urlList.toArray(new URL[urlList.size()]);
         return loadClass(className, urls);
     }
@@ -188,7 +188,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(String className, URL url) {
+    public static Class<?> loadClass(String className, URL url) {
         URL[] urls = {url};
         return loadClass(className, urls);
     }
@@ -200,7 +200,7 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(String className, File file) {
+    public static Class<?> loadClass(String className, File file) {
         URL[] urls = {URLSugar.toURL(file)};
         return loadClass(className, urls);
     }
@@ -211,18 +211,18 @@ public abstract class ClassLoaderSugar {
      * @return
      * @throws ClassNotFoundException
      */
-    public static final Class<?> loadClass(URL classURL) {
+    public static Class<?> loadClass(URL classURL) {
         String className = ResourceSugar.convertJarURLToClassName(classURL.toString());
         String classPath = StringSugar.trimStart(classURL.toExternalForm().split("!")[0], "jar:");
         URL jarURL = URLSugar.toURL(classPath);
         return loadClass(className, jarURL);
     }
 
-    public static final <T> Class<T> loadClass(String className, ClassLoader classLoader, boolean link) {
+    public static <T> Class<T> loadClass(String className, ClassLoader classLoader, boolean link) {
         return ClassSugar.Methods.invoke(classLoader, ClassLoader.class, "loadClass", new Class[]{String.class, boolean.class}, new Object[]{className, link});
     }
 
-    public static final <T> Class<T> loadClass(String className, ClassLoader classLoader) {
+    public static <T> Class<T> loadClass(String className, ClassLoader classLoader) {
         try {
             return (Class<T>) classLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -230,7 +230,7 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final <T> Class<T> loadClass(String className) {
+    public static <T> Class<T> loadClass(String className) {
         try {
             return (Class<T>) getDefaultClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -238,7 +238,7 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final <T> Class<T> forName(String className, ClassLoader classLoader, boolean initialize) {
+    public static <T> Class<T> forName(String className, ClassLoader classLoader, boolean initialize) {
         try {
             return (Class<T>) Class.forName(className, initialize, classLoader);
         } catch (ClassNotFoundException e) {
@@ -246,7 +246,7 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final <T> Class<T> forName(String className, ClassLoader classLoader) {
+    public static <T> Class<T> forName(String className, ClassLoader classLoader) {
         return forName(className, classLoader, true);
     }
 
@@ -255,7 +255,7 @@ public abstract class ClassLoaderSugar {
      * @param className
      * @return
      */
-    public static final <T> Class<T> forName(String className) {
+    public static <T> Class<T> forName(String className) {
         return forName(className, ClassLoaderSugar.getDefaultClassLoader(), true);
     }
 
@@ -281,12 +281,12 @@ public abstract class ClassLoaderSugar {
         return classLoader;
     }
 
-    public static final void addURL(URLClassLoader urlClassLoader, String path) {
+    public static void addURL(URLClassLoader urlClassLoader, String path) {
         File file = new File(path);
         addURL(urlClassLoader, file);
     }
 
-    public static final void addURL(URLClassLoader urlClassLoader, File file) {
+    public static void addURL(URLClassLoader urlClassLoader, File file) {
         try {
             URL url = file.toURI().toURL();
             addURL(urlClassLoader, url);
@@ -295,11 +295,11 @@ public abstract class ClassLoaderSugar {
         }
     }
 
-    public static final void addURL(URLClassLoader urlClassLoader, URL url) {
+    public static void addURL(URLClassLoader urlClassLoader, URL url) {
         ClassSugar.Methods.invoke(urlClassLoader, URLClassLoader.class, "addURL", url);
     }
 
-    public static final void clear(ClassLoader classLoader, Class<?> clazz) {
+    public static void clear(ClassLoader classLoader, Class<?> clazz) {
         // 解除类与ClassLoader的关联
         ClassSugar.Methods.invoke(classLoader, ClassLoader.class, "clearAssertionStatus");
         Vector<Class<?>> classes = ClassSugar.Fields.getDeclaredFieldValue(classLoader, "classes");
@@ -317,7 +317,7 @@ public abstract class ClassLoaderSugar {
 //        classes.remove(clazz);
     }
 
-//    public static final void removeURL(URLClassLoader urlClassLoader, URL url) {
+//    public static void removeURL(URLClassLoader urlClassLoader, URL url) {
 //        ClassSugar.invoke(urlClassLoader, "removeURL", url);
 //    }
 }

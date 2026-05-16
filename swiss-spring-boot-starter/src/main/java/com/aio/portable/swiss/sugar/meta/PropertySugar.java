@@ -20,19 +20,19 @@ import java.util.List;
 import java.util.Properties;
 
 public abstract class PropertySugar {
-    public static final Properties getProperties(Resource... resources) {
+    public static Properties getProperties(Resource... resources) {
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
         yaml.setResources(resources);
         return yaml.getObject();
     }
 
-//    public static final Properties getProperties(ClassPathResource resource) {
+//    public static Properties getProperties(ClassPathResource resource) {
 //        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
 //        yaml.setResources(resource);
 //        return yaml.getObject();
 //    }
 //
-//    public static final Properties getProperties(FileSystemResource resource) {
+//    public static Properties getProperties(FileSystemResource resource) {
 //        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
 //        yaml.setResources(resource);
 //        return yaml.getObject();
@@ -47,7 +47,7 @@ public abstract class PropertySugar {
      * @param <T>
      * @return
      */
-    public static final <T> T getPropertyBean(Environment environment, String name, Class<T> clazz) {
+    public static <T> T getPropertyBean(Environment environment, String name, Class<T> clazz) {
         BindResult<T> bind = Binder.get(environment).bind(name, clazz);
         T t = bind != null && bind.isBound() ? bind.get() : null;
         return t;
@@ -61,7 +61,7 @@ public abstract class PropertySugar {
      * @param <T>
      * @return
      */
-    public static final <T> T getPropertyBean(String name, Class<T> clazz) {
+    public static <T> T getPropertyBean(String name, Class<T> clazz) {
         Environment environment = SpringContextHolder.getStandardServletEnvironment();
         return getPropertyBean(environment, name, clazz);
     }
@@ -74,7 +74,7 @@ public abstract class PropertySugar {
      * @param <T>
      * @return
      */
-    public static final <T> T getPropertyBean(Class<T> clazz) {
+    public static <T> T getPropertyBean(Class<T> clazz) {
         boolean present = clazz.isAnnotationPresent(ConfigurationProperties.class);
         if (!present)
             throw new AnnotationConfigurationException("Miss '@ConfigurationProperties' on " + clazz.getName() + ".");
@@ -92,7 +92,7 @@ public abstract class PropertySugar {
      * getPropertySourceList
      * @return
      */
-    public static final List<PropertySource<?>> getPropertySourceList() {
+    public static List<PropertySource<?>> getPropertySourceList() {
         return CollectionSugar.toList(SpringContextHolder.getStandardServletEnvironment().getPropertySources().iterator());
     }
 
@@ -101,7 +101,7 @@ public abstract class PropertySugar {
      * @param placeholder
      * @return
      */
-    public static final String resolvePlaceholders(String placeholder) {
+    public static String resolvePlaceholders(String placeholder) {
         String value = SpringContextHolder.getStandardServletEnvironment().resolvePlaceholders(placeholder);
         return value;
     }
@@ -112,7 +112,7 @@ public abstract class PropertySugar {
      * @param name
      * @return
      */
-    public static final ConfigurationProperty buildPropertySourceOrigin(PropertySource<?> propertySource, String name) {
+    public static ConfigurationProperty buildPropertySourceOrigin(PropertySource<?> propertySource, String name) {
         ConfigurationPropertyName propertyName = ConfigurationPropertyName.of(name);
         Object value = propertySource.getProperty(name);
         Origin origin = PropertySourceOrigin.get(propertySource, name);
@@ -126,7 +126,7 @@ public abstract class PropertySugar {
      * @param origin
      * @return
      */
-    public static final ConfigurationProperty buildPropertySourceOrigin(String name, Object value, Origin origin) {
+    public static ConfigurationProperty buildPropertySourceOrigin(String name, Object value, Origin origin) {
         ConfigurationPropertyName propertyName = ConfigurationPropertyName.of(name);
         return new ConfigurationProperty(propertyName, value, origin);
     }

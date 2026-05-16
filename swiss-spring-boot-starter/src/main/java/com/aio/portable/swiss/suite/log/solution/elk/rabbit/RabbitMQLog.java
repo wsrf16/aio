@@ -2,12 +2,10 @@ package com.aio.portable.swiss.suite.log.solution.elk.rabbit;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
-import com.aio.portable.swiss.sugar.type.StringSugar;
-import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.facade.LogPrinter;
+import com.aio.portable.swiss.suite.log.facade.LogSingle;
 import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecordItem;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
-import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
 import org.springframework.util.StringUtils;
@@ -28,21 +26,22 @@ public class RabbitMQLog extends LogSingle {
     }
 
 
-    public RabbitMQLog(String name) {
+    public RabbitMQLog(String name, RabbitMQLogProperties properties) {
         super(name);
+        this.properties = properties;
     }
 
-    public RabbitMQLog(Class<?> clazz) {
-        this(clazz.toString());
+    public RabbitMQLog(Class<?> clazz, RabbitMQLogProperties properties) {
+        this(clazz.toString(), properties);
     }
 
-    public RabbitMQLog() {
-        this(StackTraceSugar.Previous.getClassName());
+    public RabbitMQLog(RabbitMQLogProperties properties) {
+        this(StackTraceSugar.Previous.getClassName(), properties);
     }
 
     @Override
     protected LogPrinter buildPrinter() {
-        this.properties = this.properties == null ? RabbitMQLogProperties.getSingleton() : this.properties;
+//        this.properties = this.properties == null ? RabbitMQLogProperties.getSingleton() : this.properties;
         return RabbitMQLogPrinter.instance(this.getName(), this.properties);
     }
 

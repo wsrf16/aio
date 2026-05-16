@@ -22,8 +22,8 @@ public class KafkaLogPrinter implements LogPrinter {
     public KafkaLogPrinter(String logName, KafkaLogProperties properties) {
         this.logName = logName;
         this.properties = properties;
-        this.properties.getProducer().setValueSerializer(org.apache.kafka.common.serialization.StringSerializer.class);
-        this.properties.getProducer().setValueSerializer(org.springframework.kafka.support.serializer.JsonSerializer.class);
+//        this.properties.getProducer().setKeySerializer(org.apache.kafka.common.serialization.StringSerializer.class);
+//        this.properties.getProducer().setValueSerializer(org.springframework.kafka.support.serializer.JsonSerializer.class);
 
         this.kafkaTemplate = KafkaBuilder.buildTemplate(properties);
     }
@@ -36,7 +36,7 @@ public class KafkaLogPrinter implements LogPrinter {
      *
      * @param logName
      */
-    public static final synchronized KafkaLogPrinter instance(String logName, KafkaLogProperties properties) {
+    public static synchronized KafkaLogPrinter instance(String logName, KafkaLogProperties properties) {
         String section = String.join(Constant.EMPTY, logName);
         {
             if (instanceMaps.keySet().contains(section))
@@ -52,7 +52,7 @@ public class KafkaLogPrinter implements LogPrinter {
 
     @Override
     public void println(Object record, LevelEnum level) {
-        if (properties.getEnabled()) {
+        if (properties.getEnabledOrDefault()) {
             properties.getBindingList().forEach(c -> {
                 try {
                     kafkaTemplate.send(c.getTopic(), Thread.currentThread().getName(), record);

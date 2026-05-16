@@ -1,21 +1,15 @@
 package com.aio.portable.park.endpoint.http;
 
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
 import com.aio.portable.swiss.spring.SpringController;
-import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 @Controller
 @ApiIgnore

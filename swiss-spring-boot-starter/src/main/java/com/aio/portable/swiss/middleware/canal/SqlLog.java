@@ -17,7 +17,7 @@ public class SqlLog {
         this.entryList = entryList;
     }
 
-    public static final SqlLog convert(List<Entry> entryList) {
+    public static SqlLog convert(List<Entry> entryList) {
         return new SqlLog(entryList);
     }
 

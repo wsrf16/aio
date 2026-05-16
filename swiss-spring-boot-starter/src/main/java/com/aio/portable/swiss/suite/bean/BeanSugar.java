@@ -1,19 +1,17 @@
 package com.aio.portable.swiss.suite.bean;
 
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
-import com.aio.portable.swiss.sugar.meta.function.LambdaSupplier;
+import com.aio.portable.swiss.sugar.meta.function.InstanceGetter;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class BeanSugar {
 
-    public static final <T, U> boolean match(T source, U match) {
+    public static <T, U> boolean match(T source, U match) {
         if (match == null)
             return true;
         Map<String, Object> sourceMap = ClassSugar.PropertyDescriptors.toNameValueMap(source);
@@ -21,20 +19,20 @@ public abstract class BeanSugar {
         return match(sourceMap, matchMap);
     }
 
-    public static final <U> boolean match(Map<String, Object> source, U match) {
+    public static <U> boolean match(Map<String, Object> source, U match) {
         if (match == null)
             return true;
         Map<String, Object> matchMap = ClassSugar.PropertyDescriptors.toNameValueMap(match);
         return mapMatch(source, matchMap);
     }
 
-    public static final <T> boolean match(T source, LambdaSupplier<?>... condition) {
+    public static <T> boolean match(T source, InstanceGetter<?>... condition) {
         Map<String, Object> sourceMap = ClassSugar.PropertyDescriptors.toNameValueMap(source);
         return match(sourceMap, condition);
     }
 
-    public static final boolean match(Map<String, Object> source, LambdaSupplier<?>... condition) {
-        Stream<LambdaSupplier<?>> fnStream = Arrays.stream(condition);
+    public static boolean match(Map<String, Object> source, InstanceGetter<?>... condition) {
+        Stream<InstanceGetter<?>> fnStream = Arrays.stream(condition);
         boolean match = fnStream
                 .filter(fn -> {
                     String propertyName = ClassSugar.PropertyDescriptors.getPropertyNameOf(fn);
@@ -51,7 +49,7 @@ public abstract class BeanSugar {
         return match;
     }
 
-//    public static final <T> Boolean match(T bean, T match) {
+//    public static <T> Boolean match(T bean, T match) {
 //        if (match == null)
 //            return true;
 //        else {
@@ -67,7 +65,7 @@ public abstract class BeanSugar {
 //        }
 //    }
 
-    private static final boolean mapMatch(Map<String, Object> source, Map<String, Object> matchMap) {
+    private static boolean mapMatch(Map<String, Object> source, Map<String, Object> matchMap) {
         if (matchMap == null)
             return true;
         boolean matched = matchMap.entrySet().stream()
@@ -105,7 +103,7 @@ public abstract class BeanSugar {
      * @param <T>
      * @return
      */
-    public static final <T> boolean anyMatch(Collection<T> source, Collection<T> matchList) {
+    public static <T> boolean anyMatch(Collection<T> source, Collection<T> matchList) {
         boolean equal = matchList.stream().anyMatch(c -> BeanSugar.match(source, c));
         return equal;
 
@@ -127,7 +125,7 @@ public abstract class BeanSugar {
      * @param <T>
      * @return
      */
-    public static final <T> boolean allMatch(Collection<T> source, Collection<T> matchList) {
+    public static <T> boolean allMatch(Collection<T> source, Collection<T> matchList) {
         boolean equal = matchList.stream().allMatch(c -> BeanSugar.match(source, c));
         return equal;
 
@@ -149,7 +147,7 @@ public abstract class BeanSugar {
      * @param <T>
      * @return
      */
-    public static final <T> boolean noneMatch(Collection<T> source, Collection<T> matchList) {
+    public static <T> boolean noneMatch(Collection<T> source, Collection<T> matchList) {
         boolean equal = matchList.stream().noneMatch(c -> BeanSugar.match(source, c));
         return equal;
 

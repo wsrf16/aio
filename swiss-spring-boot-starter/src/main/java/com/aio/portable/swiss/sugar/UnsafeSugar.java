@@ -11,7 +11,7 @@ public abstract class UnsafeSugar {
 
     private volatile static Unsafe unsafe = getUnsafe();
 
-    public static final Unsafe getUnsafe() {
+    public static Unsafe getUnsafe() {
         try {
             // Although the class and all methods are public, use of this class is limited because only trusted code can obtain instances of it.
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
@@ -28,7 +28,7 @@ public abstract class UnsafeSugar {
         public Object object;
     }
 
-    public static final Long getDeclaredFieldOffset(Object object, String fieldName) {
+    public static Long getDeclaredFieldOffset(Object object, String fieldName) {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -39,7 +39,7 @@ public abstract class UnsafeSugar {
         }
     }
 
-    public static final Long getObjectOffset(Object object) {
+    public static Long getObjectOffset(Object object) {
         ObjectAddressHolder objectAddressHolder = new ObjectAddressHolder();
         objectAddressHolder.object = object;
         try {
@@ -53,7 +53,7 @@ public abstract class UnsafeSugar {
         }
     }
 
-    public static final Long getMarkWordAddress(Object o) {
+    public static Long getMarkWordAddress(Object o) {
         try {
             return unsafe.getLong(o, 0L);
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public abstract class UnsafeSugar {
         }
     }
 
-    public static final Long getClassMetaDataAddress(Object o) {
+    public static Long getClassMetaDataAddress(Object o) {
         try {
             return unsafe.getLong(o, 8L);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public abstract class UnsafeSugar {
         }
     }
 
-    public static final void releaseClassLoader(URLClassLoader urlClassLoader) {
+    public static void releaseClassLoader(URLClassLoader urlClassLoader) {
         sun.misc.ClassLoaderUtil.releaseLoader(urlClassLoader, (List)null);
         try {
             urlClassLoader.close();

@@ -24,7 +24,7 @@ public interface LogVerbose {
         verb(summary, message);
     }
 
-    <T> void verb(String summary, T t);
+    <T> void verb(String message, T t);
 
     <T> void verb(String summary, String message, T t);
 
@@ -48,8 +48,8 @@ public interface LogVerbose {
         verb(summary, message, arguments);
     }
 
-    default <T> void v(String summary, T t) {
-        verb(summary, t);
+    default <T> void v(String message, T t) {
+        verb(message, t);
     }
 
     default <T> void v(String summary, String message, T t) {

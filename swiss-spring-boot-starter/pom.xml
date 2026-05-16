@@ -5,7 +5,7 @@
 
     <groupId>com.aio.portable</groupId>
     <artifactId>swiss-spring-boot-starter</artifactId>
-    <version>1.1.27-SNAPSHOT</version>
+    <version>1.1.28-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>swiss-spring-boot-starter</name>
@@ -37,16 +37,19 @@
         <cron-utils.version>7.0.6</cron-utils.version>
         <druid.version>1.1.18</druid.version>
         <mybatis.version>2.2.2</mybatis.version>
-        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
-        <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
         <curator-recipes.version>5.1.0</curator-recipes.version>
-        <java-jwt.version>3.15.0</java-jwt.version>
+        <java-jwt.version>3.19.4</java-jwt.version>
         <nginxparser.version>0.9.6</nginxparser.version>
-        <netty-all.version>4.1.44.Final</netty-all.version>
+        <netty-all.version>4.2.1.Final</netty-all.version>
         <spring-plugin.version>2.0.0.RELEASE</spring-plugin.version>
-        <canal.version>1.1.5</canal.version>
+        <canal.version>1.1.8</canal.version>
         <guava.version>[24.1.1,)</guava.version>
-        <redisson.version>3.16.6</redisson.version>
+        <redisson.version>3.46.0</redisson.version>
+        <bouncycastle.version>1.82</bouncycastle.version>
+
+        <spring-security-oauth2-client.version>6.4.3</spring-security-oauth2-client.version>
 
 <!--        <xxl-job-core.version>2.3.0</xxl-job-core.version>-->
 <!--        <zookeeper.version>3.6.2</zookeeper.version>-->
@@ -62,7 +65,9 @@
         <logback.version>1.2.10</logback.version>
 <!--        <jackson.version>2.9.9</jackson.version>-->
 <!--        <gson.version>2.8.5</gson.version>-->
-        <shiro.version>1.7.1</shiro.version>
+        <shiro.version>1.13.0</shiro.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
+        <apache.groovy.version>4.0.28</apache.groovy.version>
     </properties>
 
     <dependencies>
@@ -120,11 +125,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.fasterxml.jackson</groupId>
+            <artifactId>jackson-bom</artifactId>
+            <version>${jackson-bom.version}</version>
+            <type>pom</type>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <optional>true</optional>
         </dependency>
-
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -188,7 +200,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-<!--            <version>2.2.6.RELEASE</version>-->
             <optional>true</optional>
         </dependency>
 
@@ -218,6 +229,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-jsqlparser-4.9 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
             <version>${mybatis-plus.version}</version>
             <optional>true</optional>
         </dependency>
@@ -294,8 +312,6 @@
             </exclusions>
         </dependency>
 
-
-
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 <!--        <dependency>-->
 <!--            <groupId>commons-codec</groupId>-->
@@ -345,26 +361,26 @@
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper-spring-boot-starter.version}</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mybatis.spring.boot</groupId>
-                    <artifactId>mybatis-spring-boot-starter</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-autoconfigure</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.pagehelper</groupId>-->
+<!--            <artifactId>pagehelper-spring-boot-starter</artifactId>-->
+<!--            <version>${pagehelper-spring-boot-starter.version}</version>-->
+<!--            <optional>true</optional>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.mybatis.spring.boot</groupId>-->
+<!--                    <artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>org.apache.zookeeper</groupId>-->
@@ -474,18 +490,29 @@
 <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-oauth2</artifactId>-->
+<!--            <version>2.2.5.RELEASE</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
-            <version>2.2.5.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
             <optional>true</optional>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-oauth2-authorization-server</artifactId>-->
+<!--            <version>1.4.2</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client -->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.security</groupId>-->
 <!--            <artifactId>spring-security-oauth2-client</artifactId>-->
-<!--            <version>5.4.6</version>-->
+<!--&lt;!&ndash;            <version>${spring-security-oauth2-client.version}</version>&ndash;&gt;-->
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
@@ -529,19 +556,48 @@
 <!--        </dependency>-->
 
 
+        <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring-boot-starter -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
             <version>${shiro.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.shiro</groupId>
+                    <artifactId>shiro-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.shiro</groupId>
+                    <artifactId>shiro-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-cas</artifactId>
+            <artifactId>shiro-core</artifactId>
             <version>${shiro.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>${shiro.version}</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.shiro</groupId>
+                    <artifactId>shiro-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.shiro</groupId>-->
+<!--            <artifactId>shiro-cas</artifactId>-->
+<!--            <version>${shiro.version}</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
 
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
@@ -561,7 +617,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.21</version>
+            <version>${commons-compress.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -622,6 +678,28 @@
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${apache.groovy.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>4.5.0</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 
@@ -799,15 +877,22 @@
 
 
         <!-- ladder-repository -->
-        <repository>
-            <id>nexus-releases</id>
-            <name>user release resp</name>
-            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>user release resp</name>-->
+<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/releases</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <name>user snapshot resp</name>-->
+<!--            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
+
         <snapshotRepository>
-            <id>nexus-snapshots</id>
+            <id>tianti-maven-snapshot-local</id>
             <name>user snapshot resp</name>
-            <url>http://10.124.128.3:8081/nexus/content/repositories/snapshots</url>
+<!--            <url>http://10.127.128.87/artifactory/10.124.128.3-cBSS2_public-local</url>-->
+            <url>http://10.127.128.87/artifactory/tianti-maven-snapshot-local</url>
         </snapshotRepository>
 <!--        <repository>-->
 <!--            <id>sky-releases</id>-->

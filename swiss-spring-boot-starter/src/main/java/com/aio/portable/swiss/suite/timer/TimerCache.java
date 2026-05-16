@@ -43,13 +43,13 @@ public class TimerCache<T> {
         this.refresh = refresh;
     }
 
-    public static final <T> TimerCache<T> build(ThreadPoolTaskScheduler scheduler, Callable<T> refresh) {
+    public static <T> TimerCache<T> build(ThreadPoolTaskScheduler scheduler, Callable<T> refresh) {
         TimerCache<T> instance = new TimerCache<>(scheduler, refresh);
 //        instance.setInterval(expire);
         return instance;
     }
 
-//    public static final <T> TimerCache<T> build(Duration expire, Supplier<T> refresh) {
+//    public static <T> TimerCache<T> build(Duration expire, Supplier<T> refresh) {
 //        TimerCache<T> instance = new TimerCache<>(refresh);
 //        instance.setInterval(expire);
 //        return instance;
@@ -65,7 +65,7 @@ public class TimerCache<T> {
     }
 
 
-//    public static final <T> Runnable toRunnable(Callable<T> refresh, Consumer<T> storage) {
+//    public static <T> Runnable toRunnable(Callable<T> refresh, Consumer<T> storage) {
 //        return () -> {
 //            try {
 //                T t = refresh.call();
@@ -76,7 +76,6 @@ public class TimerCache<T> {
 //        };
 //    }
 
-    // ？？？？？
     public synchronized void start(String cron, boolean runAtOnce) {
         this.setLoop(true);
         if (!isAlive()) {

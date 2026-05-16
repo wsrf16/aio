@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public abstract class URLSugar {
 //    UriComponentsBuilder.fromHttpUrl()
 
-    public static final String appendQueries(String uri, Object bean) {
+    public static String appendQueries(String uri, Object bean) {
         if (bean == null)
             return uri;
 
@@ -32,13 +32,13 @@ public abstract class URLSugar {
         return match ? MessageFormat.format("{0}&{1}", uri, queryParams) : MessageFormat.format("{0}?{1}", uri, queryParams);
     }
 
-    public static final String convertBeanToQueries(Object bean) {
+    public static String convertBeanToQueries(Object bean) {
         Map<String, Object> map = ClassSugar.PropertyDescriptors.toNameValueMap(bean);
         String queryParams = map.entrySet().stream().map(c -> MessageFormat.format("{0}={1}", c.getKey(), c.getValue() == null ? "" : c.getValue().toString())).collect(Collectors.joining("&"));
         return queryParams;
     }
 
-    public static final Map<String, Object> convertQueryStringToMap(String queryString) {
+    public static Map<String, Object> convertQueryStringToMap(String queryString) {
         String[] split = queryString.split("&");
         Map<String, Object> map = new HashMap<>();
         Arrays.stream(split).forEach(c -> {
@@ -48,13 +48,13 @@ public abstract class URLSugar {
         return map;
     }
 
-    public static final <T> T convertQueryStringToBean(String queryString, Class<T> clazz) {
+    public static <T> T convertQueryStringToBean(String queryString, Class<T> clazz) {
         Map<String, Object> map = convertQueryStringToMap(queryString);
         T t = DeepCloneSugar.Json.clone(map, clazz);
         return t;
     }
 
-    public static final String concat(String first, String... urls) {
+    public static String concat(String first, String... urls) {
         String reduce = Arrays.stream(urls).reduce(first, (sum, element) -> {
             String left = StringSugar.trimAllEnd(sum, "/");
             String right = StringSugar.trimAllStart(element, "/");
@@ -70,7 +70,7 @@ public abstract class URLSugar {
         return reduce;
     }
 
-    public static final URL toURL(File file) {
+    public static URL toURL(File file) {
         try {
             return file.toURI().toURL();
         } catch (MalformedURLException e) {
@@ -78,7 +78,7 @@ public abstract class URLSugar {
         }
     }
 
-    public static final URL toURL(String path) {
+    public static URL toURL(String path) {
 //        return toURL(new File(path));
         try {
             return new URL(path);
@@ -87,11 +87,11 @@ public abstract class URLSugar {
         }
     }
 
-    public static final URL toFileURL(String path) {
+    public static URL toFileURL(String path) {
         return toURL(new File(path));
     }
 
-//    public static final URL toString(URL url) {
+//    public static URL toString(URL url) {
 //        url.toString()
 //    }
 

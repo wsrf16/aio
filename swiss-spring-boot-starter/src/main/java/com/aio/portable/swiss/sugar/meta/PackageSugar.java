@@ -20,12 +20,12 @@ public abstract class PackageSugar {
      * @param clazz
      * @return
      */
-    public static final String getImplementationVersion(Class<?> clazz){
+    public static String getImplementationVersion(Class<?> clazz){
         String ver = clazz.getPackage().getImplementationVersion();
         return ver;
     }
 
-//    public static final String getImplementationVersion(){
+//    public static String getImplementationVersion(){
 //        String ver = Package.getPackage("java.lang").getImplementationVersion();
 //        return ver;
 //    }
@@ -37,7 +37,7 @@ public abstract class PackageSugar {
      * @return com.aio.portable.swiss.sandbox.CountDownLatchCase/com.aio.portable.swiss.sandbox.Food/com.aio.portable.swiss.sandbox.Sample$SingletonProviderBlah
      * @throws IOException
      */
-    public static final List<String> getClassNameList(String packageName) {
+    public static List<String> getClassNameList(String packageName) {
         String packagePath = packageName.replace(".", "/");
         List<URL> urlList = ResourceSugar.getClassLoaderResourceList(packagePath);
         List<String> classList = urlList.stream().flatMap(url -> {
@@ -74,7 +74,7 @@ public abstract class PackageSugar {
      * @param packagePath : "/E:/Users/PPC/IdeaProjects/swiss/target/classes/com/aio/portable/swiss/ciphering"
      * @return List<String>
      */
-    public static final List<String> getClassNameByPath(String packagePath) {
+    public static List<String> getClassNameByPath(String packagePath) {
         List<String> classList = new ArrayList<>();
         File file = new File(packagePath);
         File[] childFiles = file.listFiles();
@@ -111,7 +111,7 @@ public abstract class PackageSugar {
      * @return
      * @throws IOException
      */
-    public static final List<String> getClassNameByJar(String packageURLInJar) {
+    public static List<String> getClassNameByJar(String packageURLInJar) {
         try {
             String[] jarInfo = packageURLInJar.split("!");
             String jarPath = jarInfo[0].substring(jarInfo[0].indexOf("/"));
@@ -143,7 +143,7 @@ public abstract class PackageSugar {
      * @param annotations
      * @return
      */
-    public static final List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
+    public static List<Class> scan(String[] basePackages, Class<? extends Annotation>... annotations) {
         return ClassScanner.scan(basePackages, annotations);
     }
 
@@ -153,7 +153,7 @@ public abstract class PackageSugar {
      * @param annotations
      * @return
      */
-    public static final List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
+    public static List<Class> scan(String basePackages, Class<? extends Annotation>... annotations) {
         return ClassScanner.scan(basePackages, annotations);
     }
 

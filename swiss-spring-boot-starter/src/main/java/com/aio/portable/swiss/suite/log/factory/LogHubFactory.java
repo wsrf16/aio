@@ -1,21 +1,23 @@
 package com.aio.portable.swiss.suite.log.factory;
 
 import com.aio.portable.swiss.sugar.StackTraceSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
-import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
-import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
-import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
-import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
-import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.log.solution.console.ConsoleLog;
+import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLog;
+import com.aio.portable.swiss.suite.log.solution.elk.kafka.KafkaLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLog;
+import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLog;
+import com.aio.portable.swiss.suite.log.solution.slf4j.Slf4JLogProperties;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
+import com.aio.portable.swiss.suite.log.support.LogHubProperties;
 import com.aio.portable.swiss.suite.log.support.LogHubUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class LogHubFactory {
     class Type {
@@ -35,15 +37,26 @@ public abstract class LogHubFactory {
 //
 //    }
 
-    public static final LogHubFactory defaultLogHubFactory() {
+    protected static final ConcurrentHashMap<String, LogHub> POOL = new ConcurrentHashMap<>();
+
+
+    public static LogHubFactory defaultLogHubFactory() {
         return new LogHubFactory(){};
     }
 
-    static  {
-        singleton = defaultLogHubFactory();
-    }
-
     protected static LogHubFactory singleton; // = defaultLogHubFactory();;
+
+//    static  {
+//        if (singleton == null) {
+//            Class<LogHubFactory> son = StackTraceSugar.Current.getSonClass();
+//            if (son != null) {
+//                singleton = ClassSugar.newInstance(son);
+//            } else {
+//                singleton = defaultLogHubFactory();
+//            }
+//        }
+//    }
+
     protected static boolean initialized;
     boolean enabled = true;
     protected LevelEnum level = LevelEnum.ALL;
@@ -70,91 +83,123 @@ public abstract class LogHubFactory {
 
 
 
-    protected LogHubFactory() {
-        setSingleton(this);
-    }
+//    protected LogHubFactory() {
+//        setSingleton(this);
+//    }
 
-    public static final void setSingleton(LogHubFactory singleton) {
-        synchronized (LogHubFactory.class) {
-            LogHubFactory.singleton = singleton;
-            initialized = true;
+//    public static void setSingleton(LogHubFactory singleton) {
+//        synchronized (LogHubFactory.class) {
+//            LogHubFactory.singleton = singleton;
+//            initialized = true;
+//        }
+//    }
+
+    public static LogHubFactory getSingleton() {
+//        return LogHubFactory.singleton;
+        if (singleton == null) {
+            synchronized (LogHubFactory.class) {
+                if (singleton == null) {
+                    Class<LogHubFactory> son = StackTraceSugar.Current.getSonClass(1, 3);
+                    if (son != null) {
+                        singleton = ClassSugar.newInstance(son);
+                        initialized = true;
+                    }
+                }
+            }
         }
-    }
-
-    public static final LogHubFactory getSingleton() {
-        return LogHubFactory.singleton;
+        return singleton == null ? defaultLogHubFactory() : singleton;
     }
 
     public LogHub build(String name) {
         return detectAndBuild(name);
     }
 
-    public final LogHub build(Class clazz) {
+    public LogHub build(Class<?> clazz) {
         String className = clazz.getTypeName();
         return build(className);
     }
 
-    public final LogHub build() {
+    public LogHub build() {
         String className = StackTraceSugar.Previous.getClassName();
         return build(className);
     }
 
-    public final LogHub build(int previous) {
+    public LogHub build(int previous) {
         String className = StackTraceSugar.Previous.getClassName(previous);
         return build(className);
     }
 
-    public static final LogHub staticBuild(String name) {
-        return singleton.build(name);
+    public static LogHub staticBuild(String name) {
+        return LogHubFactory.getSingleton().build(name);
     }
 
-    public static final LogHub staticBuild(Class clazz) {
+    public static LogHub staticBuild(Class<?> clazz) {
         String className = clazz.getTypeName();
-        return singleton.build(className);
+        return LogHubFactory.getSingleton().build(className);
     }
 
-    public static final LogHub staticBuild() {
+    public static LogHub staticBuild() {
         String className = StackTraceSugar.Previous.getClassName();
-        return singleton.build(className);
+        return LogHubFactory.getSingleton().build(className);
     }
 
-    public static final LogHub staticBuild(int previous) {
+    public static LogHub staticBuild(int previous) {
         String className = StackTraceSugar.Previous.getClassName(previous);
-        return singleton.build(className);
+        return LogHubFactory.getSingleton().build(className);
     }
 
-    private static LogHub detectAndBuild(String name) {
+    protected synchronized LogHub detectAndBuild(String name) {
+        LogHub current = POOL.get(name);
+        if (current != null) {
+            return current;
+        }
+
         ArrayList<LogSingle> list = new ArrayList<>(127);
         LogHub log = LogHub.build(list);
 
-        if (LogHubProperties.isInitialized()) {
+        if (LogHubProperties.exist()) {
             if (LogHubUtils.Spring.existDependency()) {
-                if (ConsoleLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
+                if (!ConsoleLogProperties.exist() && !Slf4JLogProperties.exist()) {
                     list.add(new ConsoleLog(name));
+                } else {
+                    if (ConsoleLogProperties.exist() &&
+                            ConsoleLogProperties.getSingleton().getEnabledOrDefault()) {
+                        list.add(new ConsoleLog(name, ConsoleLogProperties.getSingleton()));
+                    }
+                    if (LogHubUtils.SLF4J.existDependency() &&
+                            Slf4JLogProperties.exist() &&
+                            Slf4JLogProperties.getSingleton().getEnabledOrDefault()
+//                            &&
+//                            !Slf4JLog.rewriteLoggerFactory()
+                    ) {
+                        list.add(new Slf4JLog(name, Slf4JLogProperties.getSingleton()));
+                    }
                 }
-                if (LogHubUtils.SLF4J.existDependency() && Slf4JLogProperties.getSingleton().getDefaultEnabledIfAbsent() && !Slf4JLog.rewriteLoggerFactory()) {
-                    list.add(new Slf4JLog(name));
-                }
-                if (LogHubUtils.RabbitMQ.existDependency() && RabbitMQLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
+                if (LogHubUtils.RabbitMQ.existDependency() &&
+                        RabbitMQLogProperties.exist() &&
+                        RabbitMQLogProperties.getSingleton().getEnabledOrDefault()) {
                     if (RabbitMQLogProperties.getSingleton().getEsIndex() != null)
-                        list.add(new RabbitMQLog(name));
+                        list.add(new RabbitMQLog(name, RabbitMQLogProperties.getSingleton()));
                 }
-                if (LogHubUtils.Kafka.existDependency() && KafkaLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
+                if (LogHubUtils.Kafka.existDependency() &&
+                        KafkaLogProperties.exist() &&
+                        KafkaLogProperties.getSingleton().getEnabledOrDefault()) {
                     if (KafkaLogProperties.getSingleton().getEsIndex() != null)
-                        list.add(new KafkaLog(name));
+                        list.add(new KafkaLog(name, KafkaLogProperties.getSingleton()));
                 }
 
             }
             LogHubProperties properties = LogHubProperties.getSingleton();
-            log.setEnabled(properties.getDefaultEnabledIfAbsent());
-            log.setSamplerRate(properties.getDefaultSamplerRateIfAbsent());
-            log.setAsync(properties.getDefaultAsyncIfAbsent());
-            log.setLevel(properties.getDefaultLevelIfAbsent());
+            log.setEnabled(properties.getEnabledOrDefault());
+            log.setSamplerRate(properties.getSamplerRateOrDefault());
+            log.setAsync(properties.getAsyncOrDefault());
+            log.setLevel(properties.getLevelOrDefault());
         } else {
-            if (ConsoleLogProperties.getSingleton().getDefaultEnabledIfAbsent()) {
-                list.add(new ConsoleLog(name));
-            }
+            list.add(new ConsoleLog(name));
+//            if (ConsoleLogProperties.getSingleton().getEnabledOrDefault()) {
+//            }
         }
+        POOL.put(name, log);
         return log;
     }
 

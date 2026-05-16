@@ -98,7 +98,7 @@ public class StandardLogRecordItem implements LogRecordItem {
         this.threadName = threadName;
     }
 
-//    public static final synchronized String[] getPropertyNameArray() {
+//    public static synchronized String[] getPropertyNameArray() {
 //        if (propertyNameArray == null) {
 //            propertyNameArray = BeanSugar.PropertyDescriptors.getAllPropertyNames(StandardLogRecord.class);
 //        }

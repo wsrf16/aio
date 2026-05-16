@@ -91,7 +91,7 @@ public abstract class ThrowableSugar {
 //        };
 //    }
 
-    public static final String getStackTraceAsString(Throwable throwable) {
+    public static String getStackTraceAsString(Throwable throwable) {
         if (throwable == null)
             return null;
         StringWriter stringWriter = new StringWriter();
@@ -99,7 +99,7 @@ public abstract class ThrowableSugar {
         return stringWriter.toString();
     }
 
-    public static final <R> R runIfCatch(Supplier<R> supplier, Function<Throwable, R> failHandler) {
+    public static <R> R runIfCatch(Supplier<R> supplier, Function<Throwable, R> failHandler) {
         try {
             R r = supplier.get();
             return r;
@@ -109,7 +109,7 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static final <R> R runThrowRuntimeExceptionIfCatch(Supplier<R> supplier) {
+    public static <R> R runThrowRuntimeExceptionIfCatch(Supplier<R> supplier) {
         try {
             R r = supplier.get();
             return r;
@@ -118,7 +118,7 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static final void runIfCatch(Runnable runnable, Consumer<Throwable> failHandler) {
+    public static void runIfCatch(Runnable runnable, Consumer<Throwable> failHandler) {
         try {
             runnable.run();
         } catch (Throwable e) {
@@ -126,13 +126,13 @@ public abstract class ThrowableSugar {
         }
     }
 
-    public static final void runThrowRuntimeExceptionIfCatch(Runnable runnable) {
+    public static void runThrowRuntimeExceptionIfCatch(Runnable runnable) {
         runIfCatch(runnable, e -> {
             throw new RuntimeException(e);
         });
     }
 
-    public static final void runIfCatch(Runnable runnable, boolean printStackTrace) {
+    public static void runIfCatch(Runnable runnable, boolean printStackTrace) {
         runIfCatch(runnable, e -> {
             if (printStackTrace)
                 e.printStackTrace();

@@ -82,7 +82,7 @@ import org.springframework.core.Ordered;
 //
 //    private static Object textEncryptor;
 //
-//    public static final void setTextEncryptor(Object textEncryptor) {
+//    public static void setTextEncryptor(Object textEncryptor) {
 //        RegisterTextEncryptorListener.textEncryptor = textEncryptor;
 //    }
 //

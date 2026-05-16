@@ -16,15 +16,15 @@ import java.util.function.Function;
 public class Actor<T, R> implements BaseActor {
     Lock lock = new ReentrantLock();
 
-    private static ExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
+    private static final ExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
 
     private String name = "actor-" + IDS.uuid();
 
     Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction;
 
-    private Queue<Message<T>> mailBox = new LinkedList<>();
+    private final Queue<Message<T>> mailBox = new LinkedList<>();
 
-    private Queue<ReturnMessage<R>> feedBackMailBox = new LinkedList<>();
+    private final Queue<ReturnMessage<R>> feedBackMailBox = new LinkedList<>();
 
     private ActorStatus status = ActorStatus.INIT;
 
@@ -99,7 +99,7 @@ public class Actor<T, R> implements BaseActor {
         this.actorBehaviorFunction = actorBehaviorFunction;
     }
 
-    public static final <T, R> Actor<T, R> build(Function<T, R> handler) {
+    public static <T, R> Actor<T, R> build(Function<T, R> handler) {
         Function<Message<T>, ReturnMessage<R>> actorBehaviorFunction = message -> {
             T data = message.getData();
             R rData = handler.apply(data);

@@ -1,11 +1,11 @@
 package com.aio.portable.swiss.hamlet.interceptor;
 
-import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
+import com.aio.portable.swiss.hamlet.bean.ResponseStatuses;
 import com.aio.portable.swiss.hamlet.exception.BizException;
+import com.aio.portable.swiss.hamlet.interceptor.classic.annotation.jwt.RequiredJWTAuth;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTSugar;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
-import com.aio.portable.swiss.hamlet.interceptor.classic.annotation.jwt.RequiredJWTAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -24,10 +24,10 @@ public abstract class JWTAuthenticationAnnotationInterceptor extends AnnotationI
     private JWTTemplate jwtTemplate;
 
     @Autowired(required = false)
-    BaseBizStatusEnum baseBizStatusEnum;
+    ResponseStatuses responseStatuses;
 
-    public BaseBizStatusEnum getBizStatusEnum() {
-        return baseBizStatusEnum == null ? BaseBizStatusEnum.getSingleton() : baseBizStatusEnum;
+    public ResponseStatuses getBizStatusEnum() {
+        return responseStatuses == null ? ResponseStatuses.getSingleton() : responseStatuses;
     }
 
     @Override

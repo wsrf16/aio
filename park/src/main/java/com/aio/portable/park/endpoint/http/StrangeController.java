@@ -3,8 +3,6 @@ package com.aio.portable.park.endpoint.http;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.LogRecord;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +12,7 @@ import java.io.PrintWriter;
 
 
 @Component("strange2/api")
-@LogRecord(ignore = false)
+@LogRecord(enabled = false)
 public class StrangeController implements HttpRequestHandler {
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

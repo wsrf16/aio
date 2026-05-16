@@ -32,7 +32,7 @@ public class WatchClassLoader extends WatchServiceThread {
         watchServiceThread.listen();
     }
 
-    public final Class<?> loadClass(String name) {
+    public Class<?> loadClass(String name) {
         Class<?> clazz = folderClassLoader.loadClass(name);
         loadedClass.put(name, clazz);
         return clazz;

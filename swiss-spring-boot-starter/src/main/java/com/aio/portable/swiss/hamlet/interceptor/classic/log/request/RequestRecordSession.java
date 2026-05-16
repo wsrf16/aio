@@ -1,5 +1,9 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic.log.request;
 
+import org.aspectj.lang.JoinPoint;
+
+import javax.servlet.http.HttpServletRequest;
+
 public abstract class RequestRecordSession {
     static class RequestSession {
         private RequestRecord requestRecord;
@@ -33,15 +37,21 @@ public abstract class RequestRecordSession {
 
     private static final ThreadLocal<RequestSession> CURRENT_THREAD_LOCAL = new ThreadLocal<>();
 
-    public static final String getSpanId() {
-        synchronized (Thread.currentThread()) {
-            if (CURRENT_THREAD_LOCAL.get() == null)
-                CURRENT_THREAD_LOCAL.set(new RequestSession());
-            return CURRENT_THREAD_LOCAL.get().getRequestRecord().getSpanId();
-        }
+    public static synchronized String getSpanId() {
+        return RequestRecordSession.getRequestRecord().getSpanId();
     }
 
-    public static final synchronized void setRequestRecord(RequestRecord requestRecord) {
+    public static synchronized String getTraceId() {
+        return RequestRecordSession.getRequestRecord().getTraceId();
+    }
+
+    public static synchronized RequestRecord injectRequestRecord(HttpServletRequest request, JoinPoint joinPoint) {
+        RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
+        RequestRecordSession.setRequestRecord(requestRecord);
+        return requestRecord;
+    }
+
+    public static synchronized void setRequestRecord(RequestRecord requestRecord) {
         synchronized(Thread.currentThread()) {
             if (CURRENT_THREAD_LOCAL.get() == null)
                 CURRENT_THREAD_LOCAL.set(new RequestSession());
@@ -49,16 +59,14 @@ public abstract class RequestRecordSession {
         }
     }
 
-    public static final synchronized RequestRecord getRequestRecord() {
-        synchronized(Thread.currentThread()) {
-            if (CURRENT_THREAD_LOCAL.get() == null)
-                CURRENT_THREAD_LOCAL.set(new RequestSession());
-            return CURRENT_THREAD_LOCAL.get().getRequestRecord();
-        }
+    public static synchronized RequestRecord getRequestRecord() {
+        if (CURRENT_THREAD_LOCAL.get() == null)
+            CURRENT_THREAD_LOCAL.set(new RequestSession());
+        return CURRENT_THREAD_LOCAL.get().getRequestRecord();
     }
 
 
-    public static final synchronized void setException(Exception e) {
+    public static synchronized void setException(Exception e) {
         synchronized(Thread.currentThread()) {
             if (CURRENT_THREAD_LOCAL.get() == null)
                 CURRENT_THREAD_LOCAL.set(new RequestSession());
@@ -66,7 +74,7 @@ public abstract class RequestRecordSession {
         }
     }
 
-    public static final synchronized Exception getException() {
+    public static synchronized Exception getException() {
         synchronized(Thread.currentThread()) {
             if (CURRENT_THREAD_LOCAL.get() == null)
                 CURRENT_THREAD_LOCAL.set(new RequestSession());
@@ -74,7 +82,7 @@ public abstract class RequestRecordSession {
         }
     }
 
-//    public static final synchronized void setWeblogHasPrinted(boolean weblogHasPrinted) {
+//    public static synchronized void setWeblogHasPrinted(boolean weblogHasPrinted) {
 //        synchronized(Thread.currentThread()) {
 //            if (threadLocal.get() == null)
 //                threadLocal.set(new RequestSession());
@@ -82,14 +90,14 @@ public abstract class RequestRecordSession {
 //        }
 //    }
 //
-//    public static final synchronized Boolean getWeblogHasPrinted() {
+//    public static synchronized Boolean getWeblogHasPrinted() {
 //        synchronized(Thread.currentThread()) {
 //            if (threadLocal.get() == null)
 //                threadLocal.set(new RequestSession());
 //            return threadLocal.get().getWeblogHasPrinted();
 //        }
 //    }
-    public static final void remove() {
+    public static void remove() {
         CURRENT_THREAD_LOCAL.remove();
     }
 
@@ -100,46 +108,46 @@ public abstract class RequestRecordSession {
 //
 //
 //
-//    public static final synchronized String getSpanId() {
+//    public static synchronized String getSpanId() {
 //        if (SpanIdThreadLocal.get() == null)
 //            SpanIdThreadLocal.set(IDS.uuid());
 //        return SpanIdThreadLocal.get();
 //    }
 //
-//    public static final void removeSpanId() {
+//    public static void removeSpanId() {
 //        SpanIdThreadLocal.remove();
 //    }
 //
 //
-//    public static final synchronized void setRequestRecord(RequestRecord requestRecord) {
+//    public static synchronized void setRequestRecord(RequestRecord requestRecord) {
 //        if (RequestRecordThreadLocal.get() == null)
 //            RequestRecordThreadLocal.set(requestRecord);
 //    }
 //
-//    public static final synchronized RequestRecord getRequestRecord() {
+//    public static synchronized RequestRecord getRequestRecord() {
 //        return RequestRecordThreadLocal.get();
 //    }
 //
-//    public static final void removeRequestRecord() {
+//    public static void removeRequestRecord() {
 //        RequestRecordThreadLocal.remove();
 //    }
 //
 //
-//    public static final synchronized void setException(Exception e) {
+//    public static synchronized void setException(Exception e) {
 //        if (ExceptionThreadLocal.get() == null)
 //            ExceptionThreadLocal.set(e);
 //    }
 //
-//    public static final synchronized Exception getException() {
+//    public static synchronized Exception getException() {
 //        return ExceptionThreadLocal.get();
 //    }
 //
-//    public static final void removeException() {
+//    public static void removeException() {
 //        ExceptionThreadLocal.remove();
 //    }
 //
 //
-//    public static final void remove() {
+//    public static void remove() {
 //        SpanIdThreadLocal.remove();
 //        RequestRecordThreadLocal.remove();
 //        ExceptionThreadLocal.remove();

@@ -29,13 +29,13 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 public class HttpComponentsClientHttpRequestFactoryBuilder {
-    public static final HttpComponentsClientHttpRequestFactory build(HttpRequestFactoryConfig config) {
+    public static HttpComponentsClientHttpRequestFactory build(HttpRequestFactoryConfig config) {
         CloseableHttpClient httpClient = httpClient(config);
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
         return factory;
     }
 
-//    public static final HttpComponentsClientHttpRequestFactory buildProxyFactory(String host, int port, String username, String password) {
+//    public static HttpComponentsClientHttpRequestFactory buildProxyFactory(String host, int port, String username, String password) {
 //        HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
 //        config.setHost(host);
 //        config.setPort(port);
@@ -45,14 +45,14 @@ public class HttpComponentsClientHttpRequestFactoryBuilder {
 //        return build(config);
 //    }
 
-//    public static final HttpComponentsClientHttpRequestFactory buildSkipSSLFactory() {
+//    public static HttpComponentsClientHttpRequestFactory buildSkipSSLFactory() {
 //        HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
 //        config.setSkipSSL(true);
 //
 //        return build(config);
 //    }
 
-    private static final CloseableHttpClient httpClient(HttpRequestFactoryConfig config) {
+    private static CloseableHttpClient httpClient(HttpRequestFactoryConfig config) {
         HttpHost proxy = null;
         if (config.getProxyHost() != null && config.getProxyPort() != null) {
             String host = config.getProxyHost();
@@ -106,7 +106,7 @@ public class HttpComponentsClientHttpRequestFactoryBuilder {
         return httpClient;
     }
 
-    private static final RequestConfig createRequestConfig(Integer socketTimeout, Integer connectTimeout, Integer connectionRequestTimeout) {
+    private static RequestConfig createRequestConfig(Integer socketTimeout, Integer connectTimeout, Integer connectionRequestTimeout) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setSocketTimeout(socketTimeout)
                 .setConnectTimeout(connectTimeout)
@@ -115,7 +115,7 @@ public class HttpComponentsClientHttpRequestFactoryBuilder {
         return requestConfig;
     }
 
-    private static final SSLContext createSkipSSLContext() {
+    private static SSLContext createSkipSSLContext() {
         try {
             TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
             SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
@@ -125,7 +125,7 @@ public class HttpComponentsClientHttpRequestFactoryBuilder {
         }
     }
 
-    private static final SSLConnectionSocketFactory createSkipSSlConnectionSocketFactory() {
+    private static SSLConnectionSocketFactory createSkipSSlConnectionSocketFactory() {
         SSLContext sslContext = createSkipSSLContext();
         SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
         return connectionSocketFactory;

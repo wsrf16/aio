@@ -4,13 +4,11 @@ import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
-import com.aio.portable.swiss.suite.log.solution.console.ConsoleLogProperties;
 import com.aio.portable.swiss.suite.log.solution.elk.ESLogRecordItem;
-import com.aio.portable.swiss.suite.log.solution.elk.rabbit.RabbitMQLogProperties;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Map;
 
@@ -30,19 +28,24 @@ public class KafkaLog extends LogSingle {
         super(name);
     }
 
-    public KafkaLog(Class<?> clazz) {
-        this(clazz.toString());
+    public KafkaLog(String name, KafkaLogProperties properties) {
+        super(name);
+        this.properties = properties;
     }
 
-    public KafkaLog() {
-        this(StackTraceSugar.Previous.getClassName());
+    public KafkaLog(Class<?> clazz, KafkaLogProperties properties) {
+        this(clazz.toString(), properties);
+    }
+
+    public KafkaLog(KafkaLogProperties properties) {
+        this(StackTraceSugar.Previous.getClassName(), properties);
     }
 
 
 
     @Override
     protected LogPrinter buildPrinter() {
-        this.properties = this.properties == null ? KafkaLogProperties.getSingleton() : this.properties;
+//        this.properties = this.properties == null ? KafkaLogProperties.getSingleton() : this.properties;
         return KafkaLogPrinter.instance(this.getName(), this.properties);
     }
 
@@ -69,7 +72,7 @@ public class KafkaLog extends LogSingle {
     public ESLogRecordItem convert(LogRecordItem logRecordItem) {
         String ip = LogSingle.getLocalIp();
         String esIndex = properties.getEsIndex();
-        if (StringUtils.isEmpty(esIndex))
+        if (ObjectUtils.isEmpty(esIndex))
             log.warn(new IllegalArgumentException("es-index is empty."));
         return new ESLogRecordItem(logRecordItem, esIndex, ip);
     }

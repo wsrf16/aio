@@ -15,7 +15,7 @@
 //    RedissonClient redisson;
 //
 //    @Bean
-//    public final RedissonClient create() {
+//    public RedissonClient create() {
 //        String host = null;
 //        Integer port = null;
 //        String password = null;

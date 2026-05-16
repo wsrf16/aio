@@ -15,7 +15,7 @@ public class LogThrowable {
         setException(e);
     }
 
-    public static final LogThrowable build(Throwable e) {
+    public static LogThrowable build(Throwable e) {
         return e == null ? null : new LogThrowable(e);
     }
 

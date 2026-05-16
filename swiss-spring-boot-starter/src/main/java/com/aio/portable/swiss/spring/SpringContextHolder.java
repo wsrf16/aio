@@ -47,7 +47,7 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
         SpringContextHolder.mainApplicationClass = mainApplicationClass;
     }
 
-    public static final boolean hasLoaded() {
+    public static boolean hasLoaded() {
         return applicationContext != null;
     }
 
@@ -70,11 +70,11 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
         }
     }
 
-    public static final void clearContext() {
+    public static void clearContext() {
         SpringContextHolder.applicationContext = null;
     }
 
-    public static final void setSingletonApplicationContext(ApplicationContext applicationContext) {
+    public static void setSingletonApplicationContext(ApplicationContext applicationContext) {
         if (applicationContext != null
                 && SpringContextHolder.applicationContext == null)
             SpringContextHolder.applicationContext = applicationContext;
@@ -83,14 +83,14 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
     /**
      * close
      */
-    public static final void close() {
+    public static void close() {
         SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext().close();
     }
 
     /**
      * restart
      */
-    public synchronized static final void restart() {
+    public synchronized static void restart() {
         Thread thread = new Thread(() -> {
             final ConfigurableApplicationContext context = SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
             String[] args = getMainApplicationClassArgs();
@@ -106,37 +106,37 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
      *
      * @return
      */
-    public static final <T extends ApplicationContext> T getApplicationContext() {
+    public static <T extends ApplicationContext> T getApplicationContext() {
         return (T) applicationContext;
     }
 
-    public static final ConfigurableApplicationContext getConfigurableApplicationContext() {
+    public static ConfigurableApplicationContext getConfigurableApplicationContext() {
         return SpringContextHolder.<ConfigurableApplicationContext>getApplicationContext();
     }
 
-    public static final Binder getBinder() {
+    public static Binder getBinder() {
         return Binder.get(getConfigurableApplicationContext().getEnvironment());
     }
 
-    public static final <T extends org.springframework.beans.factory.BeanFactory> T getBeanFactory() {
+    public static <T extends org.springframework.beans.factory.BeanFactory> T getBeanFactory() {
         return (T) getConfigurableApplicationContext().getBeanFactory();
     }
 
-    public static final DefaultListableBeanFactory getDefaultListableBeanFactory() {
+    public static DefaultListableBeanFactory getDefaultListableBeanFactory() {
         return getBeanFactory();
     }
 
-    public static final ListableBeanFactory getListableBeanFactory() {
+    public static ListableBeanFactory getListableBeanFactory() {
         return getConfigurableApplicationContext().getBeanFactory();
     }
 
-    public static final ConfigurableApplicationContext doBeforeRunning(Class<?> primarySource, Consumer<SpringApplication> consumer, String[] args) {
+    public static ConfigurableApplicationContext doBeforeRunning(Class<?> primarySource, Consumer<SpringApplication> consumer, String[] args) {
         SpringApplication springApplication = new SpringApplication(primarySource);
         consumer.accept(springApplication);
         return springApplication.run(args);
     }
 
-    public static final Class<?> deduceMainApplicationClass() {
+    public static Class<?> deduceMainApplicationClass() {
         try {
             StackTraceElement[] stackTrace = StackTraceSugar.getStackTraceByException();
             for (StackTraceElement stackTraceElement : stackTrace) {
@@ -157,24 +157,24 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
 
     public static class BeanFactory {
 
-        public static final <T> T getBean(@Nullable String beanName) {
+        public static <T> T getBean(@Nullable String beanName) {
             return (T) getBeanFactory().getBean(beanName);
         }
 
-        public static final <T> T getBean(@Nullable Class<T> clazz) {
+        public static <T> T getBean(@Nullable Class<T> clazz) {
             return getBeanFactory().getBean(clazz);
         }
 
-        public static final void remove(@Nullable String beanName) {
+        public static void remove(@Nullable String beanName) {
             getDefaultListableBeanFactory().removeBeanDefinition(beanName);
         }
 
-        public static final void registry(@Nullable String beanName, @Nullable BeanDefinition beanDefinition) {
+        public static void registry(@Nullable String beanName, @Nullable BeanDefinition beanDefinition) {
             DefaultListableBeanFactory defaultListableBeanFactory = getDefaultListableBeanFactory();
             defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinition);
         }
 
-        public static final BeanDefinition getRawBeanDefinition(@Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
+        public static BeanDefinition getRawBeanDefinition(@Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
             for (Map.Entry<String, Object> stringObjectEntry : propertyValueMap.entrySet()) {
                 String name = stringObjectEntry.getKey();
@@ -184,7 +184,7 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
             return beanDefinitionBuilder.getRawBeanDefinition();
         }
 
-        public static final void registry(@Nullable String beanName, @Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
+        public static void registry(@Nullable String beanName, @Nullable Class<?> clazz, @Nullable Map<String, Object> propertyValueMap) {
             BeanDefinition rawBeanDefinition = getRawBeanDefinition(clazz, propertyValueMap);
             registry(beanName, rawBeanDefinition);
         }
@@ -198,7 +198,7 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static final <T> T getBean(@Nullable String name) {
+    public static <T> T getBean(@Nullable String name) {
         return (T) applicationContext.getBean(name);
     }
 
@@ -209,11 +209,11 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static final <T> T getBean(@Nullable Class<T> requiredType) {
+    public static <T> T getBean(@Nullable Class<T> requiredType) {
         return applicationContext.getBean(requiredType);
     }
 
-    public static final <T> Map<String, T> getBeansOfType(@Nullable Class<T> clazz) throws BeansException {
+    public static <T> Map<String, T> getBeansOfType(@Nullable Class<T> clazz) throws BeansException {
         return applicationContext.getBeansOfType(clazz);
     }
 
@@ -221,15 +221,15 @@ public abstract class SpringContextHolder implements ApplicationContextAware {
      * getEnvironment
      * @return
      */
-    public static final StandardServletEnvironment getStandardServletEnvironment() {
+    public static StandardServletEnvironment getStandardServletEnvironment() {
         return (StandardServletEnvironment) applicationContext.getEnvironment();
     }
 
-    public static final String getSpringVersion() {
+    public static String getSpringVersion() {
         return SpringVersion.getVersion();
     }
 
-    public static final String getSpringBootVersion() {
+    public static String getSpringBootVersion() {
         return SpringBootVersion.getVersion();
     }
 

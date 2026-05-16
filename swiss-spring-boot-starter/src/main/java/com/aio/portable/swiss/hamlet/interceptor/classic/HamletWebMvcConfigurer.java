@@ -2,7 +2,7 @@ package com.aio.portable.swiss.hamlet.interceptor.classic;
 
 import com.aio.portable.swiss.spring.SpringContextHolder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+//import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.AntPathMatcher;
@@ -93,7 +93,7 @@ public abstract class HamletWebMvcConfigurer implements WebMvcConfigurer {
     private static final String[] ORIGINS = new String[] { "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS" };
 
     @Override
-    @LoadBalanced
+//    @LoadBalanced
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowCredentials(true)

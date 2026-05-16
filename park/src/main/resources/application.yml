@@ -14,7 +14,7 @@ server:
 
 spring:
   application:
-    name: @project.deploy.finalName@
+    name: @project.artifactId@
 
   servlet:
     multipart:
@@ -121,3 +121,8 @@ proxy:
     host: 127.0.0.1
     port: 1080
 
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} ---------- %msg%n"
+  level:
+    root: INFO

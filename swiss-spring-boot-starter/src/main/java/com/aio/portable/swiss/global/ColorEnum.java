@@ -44,16 +44,16 @@ public enum ColorEnum {
         this.code = code;
     }
 
-    private static final String begin(ColorEnum... colors) {
+    private static String begin(ColorEnum... colors) {
         List<String> collect = Arrays.stream(colors).map(c -> c.getCode()).collect(Collectors.toList());
         return MessageFormat.format("{0}{1}{2}", ESC_START.getCode(), CollectionSugar.join(collect, ";"), ESC_END.getCode());
     }
 
-    private static final String end() {
+    private static String end() {
         return MessageFormat.format("{0}0{1}", ESC_START.getCode(), ESC_END.getCode());
     }
 
-    public static final String print(String content, ColorEnum... colors) {
+    public static String print(String content, ColorEnum... colors) {
 //        System.out.format("\33[%d;%dm%s%n", foreground, n, content);
         return MessageFormat.format("{0}{1}{2}", ColorEnum.begin(colors), content, ColorEnum.end());
     }

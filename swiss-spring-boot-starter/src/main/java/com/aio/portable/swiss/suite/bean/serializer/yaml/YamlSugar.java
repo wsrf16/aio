@@ -2,28 +2,27 @@ package com.aio.portable.swiss.suite.bean.serializer.yaml;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
 public class YamlSugar {
-    static {
-        Representer representer = new Representer();
-        representer.getPropertyUtils().setSkipMissingProperties(true);
-        YAML = new Yaml(new Constructor(), representer);
-    }
-
-    private static final Yaml YAML;
+    private static final Yaml YAML = new Yaml();
 
     public static <T> T resource2T(ClassLoader classLoader, String resource, Class<T> clazz) {
         InputStream inputStream = classLoader.getResourceAsStream(resource);
@@ -45,7 +44,7 @@ public class YamlSugar {
         }
     }
 
-    public static final <T> T file2T(String path, Class<T> clazz) {
+    public static <T> T file2T(String path, Class<T> clazz) {
         File file = new File(path);
         if (!file.exists())
             throw new RuntimeException(path);
@@ -80,7 +79,7 @@ public class YamlSugar {
 
 
 
-    public static final void yml2Properties(String path) {
+    public static void yml2Properties(String path) {
         String DOT = ".";
         List<String> lines = new LinkedList<>();
         try {
@@ -130,7 +129,7 @@ public class YamlSugar {
         }
     }
 
-    public static final void properties2Yaml(String path) {
+    public static void properties2Yaml(String path) {
         JsonParser parser = null;
         JavaPropsFactory factory = new JavaPropsFactory();
         try {

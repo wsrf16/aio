@@ -19,11 +19,26 @@ public class DateTimeTest {
 
 
         Calendar calendar = Calendar.getInstance();
+        Calendar qs = DateTimeSugar.CalendarUtils.getFirstDayOfQuarter(calendar);
+        Calendar qe = DateTimeSugar.CalendarUtils.getLastDayOfQuarter(calendar);
+
         calendar.add(Calendar.MONTH, -3);
         Date first = DateTimeSugar.CalendarUtils.getFirstDayOfMonth(calendar).getTime();
         Date last = DateTimeSugar.CalendarUtils.getLastDayOfMonth(calendar).getTime();
 
         DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 00:00:00", first);
         DateTimeSugar.Format.convertDate2Text("yyyy-MM-dd 23:59:59", last);
+
+        Calendar now = DateTimeSugar.CalendarUtils.now();
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+        now.add(Calendar.DAY_OF_WEEK, 1);
+
+        Calendar one = DateTimeSugar.CalendarUtils.getFirstDayOfWeek(now);
+
     }
 }

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericSugar {
-    public static final List<Type> parseParameterizedTypeOfSuperClass(Class<?> child) {
+    public static List<Type> parseParameterizedTypeOfSuperClass(Class<?> child) {
         Class<?> parameterizedTypeReferenceSubclass = findTypeArgumentsReferenceSubclass(child);
         // 获取父类的泛型类 ParameterizedTypeReference<具体类型>
         Type type = parameterizedTypeReferenceSubclass.getGenericSuperclass();
@@ -20,7 +20,7 @@ public abstract class GenericSugar {
         return Arrays.asList(actualTypeArguments);
     }
 
-    private static final Class<?> findTypeArgumentsReferenceSubclass(Class<?> child) {
+    private static Class<?> findTypeArgumentsReferenceSubclass(Class<?> child) {
         Class<?> parent = child.getSuperclass();
         if (Object.class == parent) {
             throw new IllegalStateException("Expected ParameterizedTypeReference superclass");
@@ -31,7 +31,7 @@ public abstract class GenericSugar {
         }
     }
 
-    public static final List<Type> parseTypeArgumentsOfField(Class<?> clazz, String fieldName) {
+    public static List<Type> parseTypeArgumentsOfField(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             List<Type> typeList = parseTypeArgumentsOfField(field);
@@ -41,7 +41,7 @@ public abstract class GenericSugar {
         }
     }
 
-    public static final List<Type> parseTypeArgumentsOfField(Field field) {
+    public static List<Type> parseTypeArgumentsOfField(Field field) {
         Type genericType = field.getGenericType();
         ParameterizedType type = (ParameterizedType) genericType;
         Type[] typeArguments = type.getActualTypeArguments();

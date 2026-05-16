@@ -55,7 +55,7 @@ class PropertyItem {
 
 
 
-    public static final Map<String, PropertyItem> getNamePropertyItemMap(Object bean) {
+    public static Map<String, PropertyItem> getNamePropertyItemMap(Object bean) {
         Class<?> clazz = bean.getClass();
         Map<String, PropertyItem> map = Arrays.stream(org.springframework.beans.BeanUtils.getPropertyDescriptors(clazz))
                 .filter(c -> !c.getName().equals("class"))
@@ -63,13 +63,7 @@ class PropertyItem {
                 .collect(HashMap::new, (_map, _property) -> {
                     String name = _property.getName();
                     Object value = ClassSugar.PropertyDescriptors.getValue(bean, _property);
-                    Field field = null;
-                    try {
-                        field = ClassSugar.Fields.getDeclaredFieldIncludeParents(clazz, name);
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
+                    Field field = ClassSugar.Fields.getDeclaredFieldIncludeParents(clazz, name);
                     PropertyItem propertyItem = new PropertyItem();
                     propertyItem.setName(name);
                     propertyItem.setValue(value);

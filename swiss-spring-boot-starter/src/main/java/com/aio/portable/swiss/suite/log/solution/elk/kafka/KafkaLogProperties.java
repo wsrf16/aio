@@ -19,9 +19,9 @@ public class KafkaLogProperties extends KafkaProperties implements LogProperties
     public static final String PREFIX = "spring.log.kafka";
     private static final boolean DEFAULT_ENABLED = true;
 
-    private static KafkaLogProperties instance = new KafkaLogProperties();
+    private static KafkaLogProperties instance;
 
-    private Boolean enabled = true;
+    private Boolean enabled;
     private List<KafkaBindingProperty> bindingList = new ArrayList<>();
     private String esIndex;
 
@@ -33,12 +33,16 @@ public class KafkaLogProperties extends KafkaProperties implements LogProperties
         this.esIndex = esIndex;
     }
 
-    public final Boolean getDefaultEnabledIfAbsent() {
+    public final Boolean getEnabledOrDefault() {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
     }
 
     public synchronized static KafkaLogProperties getSingleton() {
         return instance;
+    }
+
+    public synchronized static boolean exist() {
+        return instance != null;
     }
 
     private static boolean initialized = false;
@@ -48,7 +52,6 @@ public class KafkaLogProperties extends KafkaProperties implements LogProperties
     }
 
     public KafkaLogProperties() {
-//        instance = this;
     }
 
     @Override
@@ -56,13 +59,12 @@ public class KafkaLogProperties extends KafkaProperties implements LogProperties
         initialSingletonInstance(this);
     }
 
-    public static final void initialSingletonInstance(KafkaLogProperties kafkaLogHubProperties) {
+    public static void initialSingletonInstance(KafkaLogProperties kafkaLogHubProperties) {
         instance = kafkaLogHubProperties;
         log.debug("KafkaLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
-
     }
 
-    public static final void initialSingletonInstance(Binder binder) {
+    public static void initialSingletonInstance(Binder binder) {
         BindResult<KafkaLogProperties> bindResult = binder.bind(KafkaLogProperties.PREFIX, KafkaLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             KafkaLogProperties.initialSingletonInstance(bindResult.get());

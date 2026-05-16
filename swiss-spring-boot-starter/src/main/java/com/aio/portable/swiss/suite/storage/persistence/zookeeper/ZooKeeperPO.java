@@ -29,11 +29,11 @@ public class ZooKeeperPO implements NodePersistence {
 
     private static ZooKeeperPO instance;
 
-//    public static final ZooKeeperPO getSingleton(ZooKeeper zooKeeper) {
+//    public static ZooKeeperPO getSingleton(ZooKeeper zooKeeper) {
 //        return instance = instance == null ? new ZooKeeperPO(zooKeeper) : instance;
 //    }
 
-    public static final ZooKeeperPO getSingleton(ZooKeeper zooKeeper, String database) {
+    public static ZooKeeperPO getSingleton(ZooKeeper zooKeeper, String database) {
         return instance = instance == null ? new ZooKeeperPO(zooKeeper, database) : instance;
     }
 

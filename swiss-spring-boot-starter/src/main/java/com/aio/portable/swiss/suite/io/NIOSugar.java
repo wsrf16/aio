@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 
 public abstract class NIOSugar {
     public static class Files {
-        public static final void write(String path, String content, Charset charset, OpenOption... options) {
+        public static void write(String path, String content, Charset charset, OpenOption... options) {
             write(Paths.get(path), content, charset, options);
         }
 
-        public static final void write(Path path, String content, Charset charset, OpenOption... options) {
+        public static void write(Path path, String content, Charset charset, OpenOption... options) {
             try (BufferedWriter writer = java.nio.file.Files.newBufferedWriter(path, charset, options)) {
                 writer.write(content);
             } catch (IOException e) {
@@ -31,15 +31,15 @@ public abstract class NIOSugar {
             }
         }
 
-        public static final String read(String path, Charset charset) {
+        public static String read(String path, Charset charset) {
             return read(Paths.get(path), charset);
         }
 
-        public static final String read(String path) {
+        public static String read(String path) {
             return read(Paths.get(path), Charset.defaultCharset());
         }
 
-        public static final String read(Path path, Charset charset) {
+        public static String read(Path path, Charset charset) {
             try {
                 return new String(java.nio.file.Files.readAllBytes(path), charset);
             } catch (IOException e) {
@@ -47,13 +47,13 @@ public abstract class NIOSugar {
             }
         }
 
-        public static final String read(Path path) {
+        public static String read(Path path) {
             return read(path, Charset.defaultCharset());
         }
 
 //        Files.newBufferedReader()
 
-//    public static final void write(Path path, String content, OpenOption... options) {
+//    public static void write(Path path, String content, OpenOption... options) {
 //        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
 //            writer.write(content);
 //        } catch (IOException e) {
@@ -62,11 +62,11 @@ public abstract class NIOSugar {
 //        }
 //    }
 
-        public static final List<Path> listFileNames(String path) {
+        public static List<Path> listFileNames(String path) {
             return listFileNames(Paths.get(path));
         }
 
-        public static final List<Path> listFileNames(Path path) {
+        public static List<Path> listFileNames(Path path) {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.getFileName()).collect(Collectors.toList());
             } catch (IOException e) {
@@ -75,11 +75,11 @@ public abstract class NIOSugar {
             }
         }
 
-        public static final List<Path> listFileAbsolutePath(String path) {
+        public static List<Path> listFileAbsolutePath(String path) {
             return listFileAbsolutePath(Paths.get(path));
         }
 
-        public static final List<Path> listFileAbsolutePath(Path path) {
+        public static List<Path> listFileAbsolutePath(Path path) {
             try (DirectoryStream<Path> stream = java.nio.file.Files.newDirectoryStream(path)) {
                 return CollectionSugar.toList(stream.iterator()).stream().map(e -> e.toAbsolutePath()).collect(Collectors.toList());
             } catch (IOException e) {
@@ -88,11 +88,11 @@ public abstract class NIOSugar {
             }
         }
 
-        public static final Path createDirectories(String path, FileAttribute<?>... attrs) {
+        public static Path createDirectories(String path, FileAttribute<?>... attrs) {
             return createDirectories(Paths.get(path), attrs);
         }
 
-        public static final Path createDirectories(Path path, FileAttribute<?>... attrs) {
+        public static Path createDirectories(Path path, FileAttribute<?>... attrs) {
             try {
                 return java.nio.file.Files.createDirectories(path, attrs);
             } catch (IOException e) {
@@ -101,19 +101,19 @@ public abstract class NIOSugar {
             }
         }
 
-        public static final Path createParentDirectories(String path) {
+        public static Path createParentDirectories(String path) {
             return createParentDirectories(Paths.get(path));
         }
 
-        public static final Path createParentDirectories(Path path) {
+        public static Path createParentDirectories(Path path) {
             return createDirectories(path.getParent());
         }
 
-        public static final void deleteIfExists(String path) {
+        public static void deleteIfExists(String path) {
             deleteIfExists(Paths.get(path));
         }
 
-        public static final void deleteIfExists(Path path) {
+        public static void deleteIfExists(Path path) {
             try {
                 if (new File(path.toString()).isFile())
                     java.nio.file.Files.deleteIfExists(path);
@@ -126,11 +126,11 @@ public abstract class NIOSugar {
             }
         }
 
-        private static final void deleteDirectories(String path) {
+        private static void deleteDirectories(String path) {
             deleteDirectories(Paths.get(path));
         }
 
-        private static final void deleteDirectories(Path path) {
+        private static void deleteDirectories(Path path) {
             try {
                 if (new File(path.toString()).exists()) {
                     java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -154,11 +154,11 @@ public abstract class NIOSugar {
         }
 
 
-        public static final List<Path> listChildrenFilePath(String path) {
+        public static List<Path> listChildrenFilePath(String path) {
             return listChildrenFilePath(Paths.get(path));
         }
 
-        public static final List<Path> listChildrenFilePath(Path path) {
+        public static List<Path> listChildrenFilePath(Path path) {
             final List<Path> paths = new ArrayList<>();
             try {
                 java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -178,11 +178,11 @@ public abstract class NIOSugar {
         }
 
 
-//    public static final <T> List<Path> listChildrenFilePath(String path, Predicate<T> predicate, T t) {
+//    public static <T> List<Path> listChildrenFilePath(String path, Predicate<T> predicate, T t) {
 //        return listChildrenFilePath(Paths.get(path), predicate, t);
 //    }
 
-        private static final List<Path> listChildrenFilePath(Path path, BiFunction<Path, List<String>, Boolean> biFunction, List<String> condition) {
+        private static List<Path> listChildrenFilePath(Path path, BiFunction<Path, List<String>, Boolean> biFunction, List<String> condition) {
             final List<Path> paths = new ArrayList<>();
             try {
                 java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -203,17 +203,17 @@ public abstract class NIOSugar {
         }
 
 
-        public static final List<Path> listChildrenFilePath(Path path, String endsWith) {
+        public static List<Path> listChildrenFilePath(Path path, String endsWith) {
             List<String> anyEndsWithList = new ArrayList<>();
             anyEndsWithList.add(endsWith);
             return listChildrenFilePath(path, anyEndsWithList);
         }
 
-        public static final List<Path> listChildrenFilePath(String path, String endsWith) {
+        public static List<Path> listChildrenFilePath(String path, String endsWith) {
             return listChildrenFilePath(Paths.get(path), endsWith);
         }
 
-        public static final List<Path> listChildrenFilePath(Path path, List<String> anyEndsWithList) {
+        public static List<Path> listChildrenFilePath(Path path, List<String> anyEndsWithList) {
             return listChildrenFilePath(path, new BiFunction<Path, List<String>, Boolean>() {
                 @Override
                 public Boolean apply(Path path, List<String> condition) {
@@ -222,7 +222,7 @@ public abstract class NIOSugar {
             }, anyEndsWithList);
         }
 
-        public static final List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
+        public static List<Path> listChildrenFilePath(String path, List<String> anyEndsWithList) {
             return listChildrenFilePath(Paths.get(path), anyEndsWithList);
         }
     }

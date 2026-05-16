@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis;
 
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
-import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
+import com.aio.portable.swiss.sugar.meta.function.ClassGetter;
 import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
-    static <T> String getPropertySnakeNameOf(LambdaFunction<T, ?> propertyName) {
+    static <T> String getPropertySnakeNameOf(ClassGetter<T, ?> propertyName) {
         String propertyNameOf = ClassSugar.PropertyDescriptors.getPropertyNameOf(propertyName);
         String propertyNameSnake = NamingStrategySugar.snake(propertyNameOf);
         return propertyNameSnake;
@@ -156,14 +156,14 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         return resultList.stream().reduce(0, (x, y) -> x + y);
     }
 
-    default int increase(LambdaFunction<S, ?> propertyName, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
+    default int increase(ClassGetter<S, ?> propertyName, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
         String propertyNameSnake = getPropertySnakeNameOf(propertyName);
         String sql = MessageFormat.format("{0} = {0} + 1", propertyNameSnake);
 
         return this.update(sql, predicateExpression);
     }
 
-    default int decrease(LambdaFunction<S, ?> propertyName, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
+    default int decrease(ClassGetter<S, ?> propertyName, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {
         String propertyNameSnake = getPropertySnakeNameOf(propertyName);
         String sql = MessageFormat.format("{0} = {0} - 1", propertyNameSnake);
 

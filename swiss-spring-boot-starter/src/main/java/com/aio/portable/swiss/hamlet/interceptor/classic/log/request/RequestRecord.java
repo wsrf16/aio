@@ -1,7 +1,7 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic.log.request;
 
 import com.aio.portable.swiss.global.Constant;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
 import com.aio.portable.swiss.sugar.ThrowableSugar;
 import com.aio.portable.swiss.suite.algorithm.identity.IDS;
 import org.aspectj.lang.JoinPoint;
@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -23,6 +24,21 @@ public class RequestRecord {
 
     public void setSpanId(String spanId) {
         this.spanId = spanId;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
+
+    public String getGlobalId() {
+        String globalId = StringUtils.isEmpty(this.getTraceId()) ?
+                MessageFormat.format("{0}", this.getSpanId()) :
+                MessageFormat.format("{0}-{1}", this.getTraceId(), this.getSpanId());
+        return globalId;
     }
 
     public String getRequestURL() {
@@ -73,12 +89,22 @@ public class RequestRecord {
         this.requestHeaders = requestHeaders;
     }
 
-    public void fillSpanIdIntoResponse(HttpServletResponse response) {
-        if (response != null && !response.containsHeader(ResponseWrapper.SPAN_ID_HEADER))
-            response.addHeader(ResponseWrapper.SPAN_ID_HEADER, this.getSpanId());
+    public static void fillSpanId(HttpServletResponse response, String spanId) {
+        if (response != null && !response.containsHeader(ResponseBean.SPAN_ID_HEADER))
+            response.addHeader(ResponseBean.SPAN_ID_HEADER, spanId);
+    }
+
+    public static void addHeader(HttpServletResponse response, RequestRecord requestRecord) {
+        if (response != null && !response.containsHeader(ResponseBean.SPAN_ID_HEADER)) {
+            if (requestRecord.getSpanId() != null)
+                response.addHeader(ResponseBean.SPAN_ID_HEADER, requestRecord.getSpanId());
+            if (requestRecord.getTraceId() != null)
+                response.addHeader(ResponseBean.SPAN_ID_HEADER, requestRecord.getTraceId());
+        }
     }
 
     private String spanId;
+    private String traceId;
     private String requestURL;
     private String requestMethod;
     private String remoteAddress;
@@ -86,7 +112,7 @@ public class RequestRecord {
     private Object[] arguments;
     private Map<String, String> requestHeaders;
 
-    private static final String generateUniqueId() {
+    private static String generateUniqueId() {
         return IDS.uuid();
     }
 
@@ -102,6 +128,7 @@ public class RequestRecord {
                 requestRecord.setRequestURL(url);
                 requestRecord.setRequestMethod(request.getMethod());
                 requestRecord.setRequestHeaders(parseHeader(request));
+                requestRecord.setTraceId(request.getHeader(ResponseBean.TRACE_ID_HEADER));
             }
             if (joinPoint != null) {
                 requestRecord.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "::" + joinPoint.getSignature().getName());

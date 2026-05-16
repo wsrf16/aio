@@ -5,8 +5,11 @@ import com.aio.portable.swiss.global.ProtocolType;
 import com.aio.portable.swiss.sugar.location.URLSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.io.IOSugar;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -37,12 +40,13 @@ public abstract class ResourceSugar {
 
     /**
      * spellJarResourceURL 从Jar中根据资源路径拼出URL
-     * @param path              eg. "/com/art/Book.class"
-     * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
+     *
+     * @param path    eg. "/com/art/Book.class"
+     * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      * @throws MalformedURLException
      */
-    public static final URL spellResourceURLInJar(final String path, final String jarPath) {
+    public static URL spellResourceURLInJar(final String path, final String jarPath) {
         URL jarURL = URLSugar.toFileURL(jarPath);
 //            String resourceInJarChanged = resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath;
         String resourceInJarChanged = StringSugar.wrapStartIfNotExists(path, "/");
@@ -53,11 +57,12 @@ public abstract class ResourceSugar {
 
     /**
      * getResourceURLInJar 从Jar中获得资源
-     * @param path              eg. "/com/art/Book.class"
-     * @param jarPath           eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
+     *
+     * @param path    eg. "/com/art/Book.class"
+     * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
      */
-    public static final URL getJarResource(final String path, final String jarPath) {
+    public static URL getJarResource(final String path, final String jarPath) {
         URL url = getJarResourceList(jarPath).stream().filter(c -> c.getPath().endsWith(path)).findFirst().get();
         return url;
     }
@@ -68,26 +73,28 @@ public abstract class ResourceSugar {
 //     * @param resourcePath      eg. "/com/art/Book.class"
 //     * @return "jar:file:/D:/Project/art/art-1.0-SNAPSHOT.jar!/com/art/Book.class"
 //     */
-//    public static final InputStream getResourceInJarAsStream(final String jarPath, final String resourcePath) throws IOException {
+//    public static InputStream getResourceInJarAsStream(final String jarPath, final String resourcePath) throws IOException {
 //        return spellJarResourceURL(jarPath, resourcePath).openStream();
 //    }
 
     /**
      * getJarResourceList 从Jar中获得所有资源集合
+     *
      * @param jarPath eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return
      */
-    public static final List<URL> getJarResourceList(final String jarPath) {
+    public static List<URL> getJarResourceList(final String jarPath) {
         JarFile jarFile = toJarFile(jarPath);
         return getJarResourceList(jarFile);
     }
 
     /**
      * getJarResourceList 从Jar中获得所有资源集合
+     *
      * @param jarFile eg. "D:/Project/art/art-1.0-SNAPSHOT.jar";
      * @return
      */
-    public static final List<URL> getJarResourceList(final JarFile jarFile) {
+    public static List<URL> getJarResourceList(final JarFile jarFile) {
         List<JarEntry> jarEntryList = jarFile.stream().collect(Collectors.toList());
         String jarSelfURL = URLSugar.toFileURL(jarFile.getName()).toExternalForm();
         List<URL> urlList = jarEntryList.stream().map(c -> {
@@ -114,7 +121,7 @@ public abstract class ResourceSugar {
      * @param classLoader          eg. Thread.currentThread().getContextClassLoader()
      * @return eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/sandbox/console/Book.class"
      */
-    public static final List<URL> getClassLoaderResourceList(String path, ClassLoader classLoader) {
+    public static List<URL> getClassLoaderResourceList(String path, ClassLoader classLoader) {
         try {
             Enumeration<URL> urlEnumeration = classLoader.getResources(path);
             List<URL> urlList = Collections.list(urlEnumeration);
@@ -130,37 +137,40 @@ public abstract class ResourceSugar {
      * @param path             eg. "com/art/Book.class"
      * @return                 eg. "file:/D:/Project/swiss/target/classes/com/aio/portable/swiss/sandbox/Wood.class | jar:file:/D:/Project/swiss/target/lib/console-1.0-SNAPSHOT.jar!/com/aio/portable/swiss/sandbox/Wood.class"
      */
-    public static final List<URL> getClassLoaderResourceList(String path) {
+    public static List<URL> getClassLoaderResourceList(String path) {
         ClassLoader classLoader = ClassLoaderSugar.getDefaultClassLoader();
         return getClassLoaderResourceList(path, classLoader);
     }
 
     /**
      * getClassLoaderResourceListByClass
+     *
      * @param clazz eg. Book
      * @return
      */
-    public static final List<URL> getClassLoaderResourceListByClass(final Class<?> clazz) {
+    public static List<URL> getClassLoaderResourceListByClass(final Class<?> clazz) {
         return getClassLoaderResourceListByClassName(clazz.getTypeName());
     }
 
     /**
      * getClassLoaderResourceListByClassName
+     *
      * @param className eg. com.art.Book
      * @return
      */
-    public static final List<URL> getClassLoaderResourceListByClassName(final String className) {
+    public static List<URL> getClassLoaderResourceListByClassName(final String className) {
         String resourceRelationPath = ClassSugar.convertClassNameToResourcePath(className);
         return getClassLoaderResourceList(resourceRelationPath);
     }
 
     /**
      * existClassLoaderResource
-     * @param path eg. "com/art/Book.class"
+     *
+     * @param path        eg. "com/art/Book.class"
      * @param classLoader
      * @return
      */
-    public static final boolean existClassLoaderResource(String path, ClassLoader classLoader) {
+    public static boolean existClassLoaderResource(String path, ClassLoader classLoader) {
         List<URL> urlList = getClassLoaderResourceList(path, classLoader);
         boolean exist = urlList != null && urlList.size() > 0;
         return exist;
@@ -168,10 +178,11 @@ public abstract class ResourceSugar {
 
     /**
      * existClassLoaderResource
+     *
      * @param path eg. "com/art/Book.class"
      * @return
      */
-    public static final boolean existClassLoaderResource(String path) {
+    public static boolean existClassLoaderResource(String path) {
         List<URL> urlList = getClassLoaderResourceList(path);
         boolean exist = urlList != null && urlList.size() > 0;
         return exist;
@@ -179,98 +190,138 @@ public abstract class ResourceSugar {
 
     /**
      * getResourceAsStream
+     *
      * @param path
      * @param jarFile
      * @return
      */
-    public static final InputStream getResourceAsStream(String path, String jarFile) {
+    public static InputStream getResourceAsStream(String path, String jarFile) {
         ClassLoader classLoader = new URLClassLoader(new URL[]{URLSugar.toFileURL(jarFile)});
         return ResourceSugar.getResourceAsStream(path, classLoader);
     }
 
     /**
      * getResourceAsStream
+     *
      * @param path
      * @param jarFile
      * @return
      */
-    public static final InputStream getResourceAsStream(String path, File jarFile) {
+    public static InputStream getResourceAsStream(String path, File jarFile) {
         ClassLoader classLoader = new URLClassLoader(new URL[]{URLSugar.toURL(jarFile)});
         return ResourceSugar.getResourceAsStream(path, classLoader);
     }
 
     /**
      * getResourceAsStream
+     *
      * @param path
      * @param classLoader
      * @return
      */
-    public static final InputStream getResourceAsStream(String path, ClassLoader classLoader) {
+    public static InputStream getResourceAsStream(String path, ClassLoader classLoader) {
         return classLoader.getResourceAsStream(path);
     }
 
     /**
      * getResourceAsStream
+     *
      * @param path
      * @return
      */
-    public static final InputStream getResourceAsStream(String path) {
+    public static InputStream getResourceAsStream(String path) {
         return getResourceAsStream(path, Thread.currentThread().getContextClassLoader());
     }
 
     /**
+     * getResourceAsStreamByClasspath
+     * @param classpath
+     * @return
+     */
+    public static InputStream getResourceAsStreamByClasspath(String classpath) {
+        InputStream inputStream = null;
+        try {
+            File file = ResourceUtils.getFile(classpath);
+            inputStream = new FileInputStream(file);
+            return inputStream;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * getResourceAsString
+     *
      * @param path
      * @param jarFile
      * @return
      */
-    public static final String getResourceAsString(String path, String jarFile) {
+    public static String getResourceAsString(String path, String jarFile) {
         ClassLoader classLoader = new URLClassLoader(new URL[]{URLSugar.toFileURL(jarFile)});
         return ResourceSugar.getResourceAsString(path, classLoader);
     }
 
     /**
      * getResourceAsString
+     *
      * @param path
      * @param jarFile
      * @return
      */
-    public static final String getResourceAsString(String path, File jarFile) {
+    public static String getResourceAsString(String path, File jarFile) {
         ClassLoader classLoader = new URLClassLoader(new URL[]{URLSugar.toURL(jarFile)});
         return ResourceSugar.getResourceAsString(path, classLoader);
     }
 
     /**
      * getResourceAsString
+     *
      * @param path
      * @param classLoader
      * @return
      */
-    public static final String getResourceAsString(String path, ClassLoader classLoader) {
+    public static String getResourceAsString(String path, ClassLoader classLoader) {
         InputStream inputStream = classLoader.getResourceAsStream(path);
         return IOSugar.Streams.toString(inputStream);
     }
 
     /**
      * getResourceAsString
+     *
      * @param path
      * @return
      */
-    public static final String getResourceAsString(String path) {
+    public static String getResourceAsString(String path) {
         InputStream inputStream = getResourceAsStream(path, Thread.currentThread().getContextClassLoader());
         return IOSugar.Streams.toString(inputStream);
     }
 
+    /**
+     * getResourceAsStringByClasspath
+     * @param classpath
+     * @return
+     */
+    public static InputStream getResourceAsStringByClasspath(String classpath) {
+        InputStream inputStream = null;
+        try {
+            File file = ResourceUtils.getFile(classpath);
+            inputStream = new FileInputStream(file);
+            return inputStream;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static final String[] delimiters = new String[]{"//", "/"};
     private static final String delimiter = "/";
 
     /**
      * concat 连接多个资源路径
+     *
      * @param paths
      * @return
      */
-    public static final String concat(String... paths) {
+    public static String concat(String... paths) {
         Stream<String> fixPartStream = Arrays.stream(paths).map(c -> StringSugar.replaceEach(c, delimiters, new String[]{delimiter, delimiter}));
         List<String> fixPartList = fixPartStream.collect(Collectors.toList());
         String[] fixParts = fixPartList.stream().map(c -> StringSugar.trim(c, delimiter)).toArray(String[]::new);
@@ -280,17 +331,18 @@ public abstract class ResourceSugar {
         return MessageFormat.format("{0}{1}{2}", start, combined, end);
     }
 
-//    public static final void ff() throws FileNotFoundException {
+//    public static void ff() throws FileNotFoundException {
 //        org.springframework.util.ResourceUtils.getFile(
 //                org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX + "static/excel/userTemplate.xlsx");
 //    }
 
     /**
      * convertPathToClassName
+     *
      * @param path className/packageName eg. com/company/biz | com/company/biz/Book.class
      * @return com.company.biz | com.company.biz.Book
      */
-    public static final String convertResourcePathToClassName(String path) {
+    public static String convertResourcePathToClassName(String path) {
         String temp = StringSugar.trim(path, "/", ".class");
         temp = temp.replace("/", ".");
         return temp;
@@ -298,10 +350,11 @@ public abstract class ResourceSugar {
 
     /**
      * convertURLToClassName
+     *
      * @param url jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
      * @return
      */
-    public static final String convertJarURLToClassName(String url) {
+    public static String convertJarURLToClassName(String url) {
         // jar:file:/D:/all-in-one/park/target/ppppark.jar!/BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
         // ->
         // /BOOT-INF/classes/com/aio/portable/park/config/BeanConfig.class
@@ -313,7 +366,7 @@ public abstract class ResourceSugar {
         return className;
     }
 
-//    public static final URL getURL(String resourcePath) {
+//    public static URL getURL(String resourcePath) {
 ////        new File(ResourceUtils.getURL("classpath:\\WorkFlow.txt").getPath())
 //        try {
 //            return ResourceUtils.getURL(resourcePath);

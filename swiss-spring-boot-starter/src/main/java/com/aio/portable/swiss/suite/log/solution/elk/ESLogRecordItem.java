@@ -2,7 +2,6 @@ package com.aio.portable.swiss.suite.log.solution.elk;
 
 import com.aio.portable.swiss.sugar.naming.NamingStrategySugar;
 import com.aio.portable.swiss.sugar.type.DateTimeSugar;
-import com.aio.portable.swiss.sugar.type.NumberSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.bean.DeepCloneSugar;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
@@ -61,7 +60,7 @@ public class ESLogRecordItem extends StandardLogRecordItem {
             this.setData(logRecordItem.getData().toString());
     }
 
-    public static final String formatIndex(String name) {
+    public static String formatIndex(String name) {
         String result = name;
         if (StringSugar.containUpperCase(result))
             result = NamingStrategySugar.kebab(name);

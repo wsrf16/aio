@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -78,6 +79,11 @@ public class DatabaseController {
         }
 
         if (userMasterBaseService != null) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("age", 10);
+            List<User> universal = userMasterBaseService.universal(map);
+            System.out.println(universal);
+
             Page<User> userPage = userMasterBaseService.selectPage(2, 2, new User());
 
             List<User> all = userMasterBaseService.selectList();

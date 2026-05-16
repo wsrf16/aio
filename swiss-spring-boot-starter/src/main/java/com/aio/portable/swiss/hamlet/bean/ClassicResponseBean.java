@@ -7,14 +7,17 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 //@ApiModel("返回实体")
-public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
+public class ClassicResponseBean<T> implements ResponseBean<T> {
 //    protected static ResponseWrapper singleton = new ResponseWrapper();
 
     /**
      * 作为一次请求的唯一标识，用于问题定位（不需手动赋值）
      */
-    @ApiModelProperty("唯一id")
+    @ApiModelProperty("spanId")
     private String spanId;
+
+    @ApiModelProperty("traceId")
+    private String traceId;
 
     /**
      * 返回状态码
@@ -45,20 +48,22 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
     private Long timestamp;
 
 
-    public ClassicResponseWrapper() {
+    public ClassicResponseBean() {
         this.spanId = IDS.uuid();
         Date date = new Date();
         this.accessTime = date;
         this.timestamp = date.getTime();
     }
 
-    public ClassicResponseWrapper(int code, String message, T data) {
+    public ClassicResponseBean(int code, String message, T data) {
         this.spanId = IDS.uuid();
         this.code = code;
         this.message = message;
         this.data = data;
-        this.accessTime = new Date();
-        this.timestamp = System.currentTimeMillis();
+
+        Date date = new Date();
+        this.accessTime = date;
+        this.timestamp = date.getTime();
     }
 
     /**
@@ -67,7 +72,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
      * @param message
      * @return
      */
-    public ClassicResponseWrapper<T> set(int statusCode, String message) {
+    public ClassicResponseBean<T> set(int statusCode, String message) {
         return this.setCode(statusCode)
                 .setMessage(message);
     }
@@ -78,7 +83,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
      * @param data
      * @return
      */
-    public ClassicResponseWrapper<T> set(int statusCode, T data) {
+    public ClassicResponseBean<T> set(int statusCode, T data) {
         return this.setCode(statusCode)
                 .setData(data);
     }
@@ -90,7 +95,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
      * @param data
      * @return
      */
-    public ClassicResponseWrapper<T> set(int statusCode, String message, T data) {
+    public ClassicResponseBean<T> set(int statusCode, String message, T data) {
         return this.setCode(statusCode)
                 .setMessage(message)
                 .setData(data);
@@ -101,8 +106,18 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return spanId;
     }
 
-    public ResponseWrapper<T> setSpanId(String spanId) {
+    public ResponseBean<T> setSpanId(String spanId) {
         this.spanId = spanId;
+        return this;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    @Override
+    public ClassicResponseBean<T> setTraceId(String traceId) {
+        this.traceId = traceId;
         return this;
     }
 
@@ -110,7 +125,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return code;
     }
 
-    public ClassicResponseWrapper<T> setCode(int code) {
+    public ClassicResponseBean<T> setCode(int code) {
         this.code = code;
         return this;
     }
@@ -119,7 +134,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return message;
     }
 
-    public ClassicResponseWrapper<T> setMessage(String message) {
+    public ClassicResponseBean<T> setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -128,7 +143,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return data;
     }
 
-    public ClassicResponseWrapper<T> setData(T data) {
+    public ClassicResponseBean<T> setData(T data) {
         this.data = data;
         return this;
     }
@@ -137,7 +152,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return accessTime;
     }
 
-    public ClassicResponseWrapper<T> setAccessTime(Date accessTime) {
+    public ClassicResponseBean<T> setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
         return this;
     }
@@ -146,7 +161,7 @@ public class ClassicResponseWrapper<T> implements ResponseWrapper<T> {
         return timestamp;
     }
 
-    public ClassicResponseWrapper<T> setTimestamp(Long timestamp) {
+    public ClassicResponseBean<T> setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
         return this;
     }

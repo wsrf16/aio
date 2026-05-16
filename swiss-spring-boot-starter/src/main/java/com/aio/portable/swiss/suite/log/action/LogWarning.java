@@ -16,7 +16,7 @@ public interface LogWarning {
 
     void warn(Throwable e);
 
-    void warn(String summary, Throwable e);
+    void warn(String message, Throwable e);
 
     void warn(String summary, String message);
 
@@ -28,9 +28,9 @@ public interface LogWarning {
 
     void warn(String summary, String message, Throwable e);
 
-    <T> void warn(String summary, T t);
+    <T> void warn(String message, T t);
 
-    <T> void warn(String summary, T t, Throwable e);
+    <T> void warn(String message, T t, Throwable e);
 
     <T> void warn(String summary, String message, T t, Throwable e);
 
@@ -46,8 +46,8 @@ public interface LogWarning {
         warn(e);
     }
 
-    default void w(String summary, Throwable e) {
-        warn(summary, e);
+    default void w(String message, Throwable e) {
+        warn(message, e);
     }
 
     default void w(String summary, String message) {
@@ -62,12 +62,12 @@ public interface LogWarning {
         warn(summary, message, e);
     }
 
-    default <T> void w(String summary, T t) {
-        warn(summary, t);
+    default <T> void w(String message, T t) {
+        warn(message, t);
     }
 
-    default <T> void w(String summary, T t, Throwable e) {
-        warn(summary, t, e);
+    default <T> void w(String message, T t, Throwable e) {
+        warn(message, t, e);
     }
 
     default <T> void w(String summary, String message, T t, Throwable e) {

@@ -6,7 +6,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
 public abstract class Watcher {
-    public static final StopWatch watch(Runnable runnable) {
+    public static StopWatch watch(Runnable runnable) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         runnable.run();
@@ -17,7 +17,7 @@ public abstract class Watcher {
     /**
      * Get CPU time in nanoseconds.
      */
-    public static final long getCpuTime() {
+    public static long getCpuTime() {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
         return bean.isCurrentThreadCpuTimeSupported() ? bean.getCurrentThreadCpuTime() : 0L;
     }
@@ -25,7 +25,7 @@ public abstract class Watcher {
     /**
      * Get user time in nanoseconds.
      */
-    public static final long getUserTime() {
+    public static long getUserTime() {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean();
         return bean.isCurrentThreadCpuTimeSupported() ? bean
                 .getCurrentThreadUserTime() : 0L;

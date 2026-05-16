@@ -1,52 +1,58 @@
 package com.aio.portable.swiss.suite.bean.serializer;
 
-import com.aio.portable.swiss.suite.bean.serializer.json.adapter.*;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.ByteSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.JacksonSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.LongJacksonSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.ShortJacksonSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.SilentJacksonSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.SilentLongJacksonSerializerAdapterImpl;
+import com.aio.portable.swiss.suite.bean.serializer.json.adapter.SilentShortJacksonSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.bean.serializer.xml.adapter.JackXmlSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.bean.serializer.xml.adapter.ShortJackXmlSerializerAdapterImpl;
 import com.aio.portable.swiss.suite.bean.serializer.yaml.adapter.YamlSerializerAdapterImpl;
 
 public abstract class SerializerAdapterFactory {
-    public static final YamlSerializerAdapterImpl buildJacksonYaml() {
+    public static YamlSerializerAdapterImpl buildJacksonYaml() {
         return new YamlSerializerAdapterImpl();
     }
 
-    public static final JackXmlSerializerAdapterImpl buildJacksonXml() {
+    public static JackXmlSerializerAdapterImpl buildJacksonXml() {
         return new JackXmlSerializerAdapterImpl();
     }
 
-    public static final ShortJackXmlSerializerAdapterImpl buildShortJacksonXml() {
+    public static ShortJackXmlSerializerAdapterImpl buildShortJacksonXml() {
         return new ShortJackXmlSerializerAdapterImpl();
     }
 
-    public static final ByteSerializerAdapterImpl buildGson() {
+    public static ByteSerializerAdapterImpl buildGson() {
         return new ByteSerializerAdapterImpl();
     }
 
-    public static final JacksonSerializerAdapterImpl buildJackson() {
+    public static JacksonSerializerAdapterImpl buildJackson() {
         return new JacksonSerializerAdapterImpl();
     }
 
-    public static final LongJacksonSerializerAdapterImpl buildLongJackson() {
+    public static LongJacksonSerializerAdapterImpl buildLongJackson() {
         return new LongJacksonSerializerAdapterImpl();
     }
 
-    public static final ShortJacksonSerializerAdapterImpl buildShortJackson() {
+    public static ShortJacksonSerializerAdapterImpl buildShortJackson() {
         return new ShortJacksonSerializerAdapterImpl();
     }
 
-    public static final SilentJacksonSerializerAdapterImpl buildSilentJackson() {
+    public static SilentJacksonSerializerAdapterImpl buildSilentJackson() {
         return new SilentJacksonSerializerAdapterImpl();
     }
 
-    public static final SilentLongJacksonSerializerAdapterImpl buildSilentLongJackson() {
+    public static SilentLongJacksonSerializerAdapterImpl buildSilentLongJackson() {
         return new SilentLongJacksonSerializerAdapterImpl();
     }
 
-    public static final SilentShortJacksonSerializerAdapterImpl buildSilentShortJackson() {
+    public static SilentShortJacksonSerializerAdapterImpl buildSilentShortJackson() {
         return new SilentShortJacksonSerializerAdapterImpl();
     }
 
-    public static final ByteSerializerAdapterImpl buildByte() {
+    public static ByteSerializerAdapterImpl buildByte() {
         return new ByteSerializerAdapterImpl();
     }
 

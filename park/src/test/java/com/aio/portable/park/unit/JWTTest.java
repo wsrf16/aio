@@ -1,6 +1,6 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.suite.security.authorization.jwt.JWTTemplate;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class JWTTest {
     @Test
     public void foobar() {
         Map<String, Object> map = new HashMap<String, Object>() {{
-            put("response", ResponseWrappers.build(123, "操作完成"));
+            put("response", ResponseBeans.build(123, "操作完成"));
         }};
         String token = jwtTemplate.sign(map);
         DecodedJWT parse = jwtTemplate.parse(token);

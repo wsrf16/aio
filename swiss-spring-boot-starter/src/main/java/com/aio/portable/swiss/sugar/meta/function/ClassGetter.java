@@ -4,5 +4,5 @@ import java.io.Serializable;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface LambdaFunction<T, R> extends Function<T, R>, Serializable {
+public interface ClassGetter<T, R> extends Function<T, R>, Serializable {
 }

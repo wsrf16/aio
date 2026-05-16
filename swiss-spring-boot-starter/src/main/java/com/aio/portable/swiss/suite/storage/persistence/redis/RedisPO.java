@@ -28,7 +28,7 @@ public class RedisPO implements NodePersistence {
     private static RedisPO instance;
 
 
-    public static final RedisPO getSingleton(RedisTemplate redisTemplate, String database) {
+    public static RedisPO getSingleton(RedisTemplate redisTemplate, String database) {
         return instance = instance == null ? new RedisPO(redisTemplate, database) : instance;
     }
 
@@ -38,7 +38,7 @@ public class RedisPO implements NodePersistence {
         this.database = database;
     }
 
-    private static final String getKeyName(String key) {
+    private static String getKeyName(String key) {
         return key.substring(key.lastIndexOf(":") + 1);
     }
 

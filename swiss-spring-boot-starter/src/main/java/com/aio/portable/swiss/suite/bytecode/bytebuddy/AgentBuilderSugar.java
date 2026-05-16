@@ -57,7 +57,7 @@ public abstract class AgentBuilderSugar {
      * @param list
      * @return
      */
-    public static final AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> list) {
+    public static AgentBuilder attachInterceptor(AgentBuilder agentBuilder, Collection<TypeInterceptorPoint> list) {
         for (TypeInterceptorPoint item : list) {
             agentBuilder = agentBuilder.type(item.getTypeMatcher()).transform(item.getTransformer());
         }
@@ -71,7 +71,7 @@ public abstract class AgentBuilderSugar {
      * @param list
      * @return
      */
-    public static final AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> list) {
+    public static AgentBuilder.Transformer buildTransformer(Collection<MethodInterceptorPoint> list) {
         AgentBuilder.Transformer transformer = new AgentBuilder.Transformer() {
             @Override
             public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder,
@@ -98,7 +98,7 @@ public abstract class AgentBuilderSugar {
      * @param inst
      * @param elementMatcherCollection
      */
-    public static final void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
+    public static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, Collection<? extends ElementMatcher<? super TypeDescription>> elementMatcherCollection) {
         Collection<MethodInterceptorPoint> methodInterceptorPointCollection = new ArrayList<>();
         methodInterceptorPointCollection.add(new MethodInterceptorPoint(ElementMatchers.<MethodDescription>any(), implementation));
 
@@ -120,7 +120,7 @@ public abstract class AgentBuilderSugar {
      * @param inst
      * @param elementMatchers
      */
-    public static final void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatchers) {
+    public static void interceptorToAnyMethod(Implementation implementation, Instrumentation inst, ElementMatcher<? super TypeDescription>... elementMatchers) {
         Collection<ElementMatcher<? super TypeDescription>> elementMatcherCollection = Arrays.asList(elementMatchers);
         interceptorToAnyMethod(implementation, inst, elementMatcherCollection);
     }
@@ -130,7 +130,7 @@ public abstract class AgentBuilderSugar {
          * buildListener
          * @return
          */
-    public static final AgentBuilder.Listener buildListener() {
+    public static AgentBuilder.Listener buildListener() {
         AgentBuilder.Listener listener = new AgentBuilder.Listener() {
             @Override
             public void onDiscovery(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {

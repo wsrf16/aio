@@ -1,13 +1,9 @@
 package com.aio.portable.park.unit;
 
-import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEncoderFactories;
-import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
-import com.aio.portable.swiss.suite.algorithm.encode.SpringBase64Convert;
 import com.aio.portable.swiss.suite.algorithm.geo.GeoHash;
 import com.aio.portable.swiss.suite.algorithm.geo.GeoPoint;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @TestComponent
 public class Base64Test {

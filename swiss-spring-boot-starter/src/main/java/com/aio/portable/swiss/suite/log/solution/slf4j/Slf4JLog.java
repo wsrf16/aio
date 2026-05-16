@@ -3,8 +3,6 @@ package com.aio.portable.swiss.suite.log.solution.slf4j;
 import com.aio.portable.swiss.sugar.StackTraceSugar;
 import com.aio.portable.swiss.suite.log.facade.LogPrinter;
 import com.aio.portable.swiss.suite.log.facade.LogSingle;
-import com.aio.portable.swiss.suite.log.solution.slf4j.origin.CustomizeSlf4JFactory;
-import org.slf4j.LoggerFactory;
 
 public class Slf4JLog extends LogSingle {
 //    private org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -15,26 +13,27 @@ public class Slf4JLog extends LogSingle {
         return properties;
     }
 
-    public Slf4JLog(String name) {
+    public Slf4JLog(String name, Slf4JLogProperties properties) {
         super(name);
+        this.properties = properties;
     }
 
-    public Slf4JLog(Class<?> clazz) {
-        this(clazz.toString());
+    public Slf4JLog(Class<?> clazz, Slf4JLogProperties properties) {
+        this(clazz.toString(), properties);
     }
 
-    public Slf4JLog() {
-        this(StackTraceSugar.Previous.getClassName());
+    public Slf4JLog(Slf4JLogProperties properties) {
+        this(StackTraceSugar.Previous.getClassName(), properties);
     }
 
-    public static final boolean rewriteLoggerFactory() {
-        return CustomizeSlf4JFactory.class.isAssignableFrom(LoggerFactory.class);
-    }
+//    public static boolean rewriteLoggerFactory() {
+//        return Slf4JAdaptorFactory.class.isAssignableFrom(LoggerFactory.class);
+//    }
 
     @Override
     protected LogPrinter buildPrinter() {
-        this.properties = this.properties == null ? Slf4JLogProperties.getSingleton() : this.properties;
-        return new Slf4JLogPrinter(this.getName());
+//        this.properties = this.properties == null ? Slf4JLogProperties.getSingleton() : this.properties;
+        return new Slf4JLogPrinter(this.getName(), this.properties);
     }
 
 

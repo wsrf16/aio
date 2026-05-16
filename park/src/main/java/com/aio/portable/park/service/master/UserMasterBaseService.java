@@ -5,13 +5,14 @@ import com.aio.portable.park.dao.master.model.User;
 import com.aio.portable.park.dao.master.model.UserConditionDTO;
 import com.aio.portable.park.dao.master.model.UserDTO;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
-import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
+import com.aio.portable.swiss.sugar.meta.function.ClassGetter;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -26,6 +27,10 @@ public class UserMasterBaseService {
         return userMasterBaseMapper.selectById(id);
     }
 
+    public List<User> universal(Map<String, Object> conditions) {
+        return userMasterBaseMapper.universal(conditions);
+    }
+
     public UserDTO selectByIdToUserDTO(Integer id) {
         return userMasterBaseMapper.selectById(id, UserDTO.class);
     }
@@ -35,20 +40,20 @@ public class UserMasterBaseService {
     }
 
 
-    LambdaFunction<?, ?> func;
-    public <T> void setPropertyNameOf(LambdaFunction<T, ?> func) {
+    ClassGetter<?, ?> func;
+    public <T> void setPropertyNameOf(ClassGetter<T, ?> func) {
         this.func = func;
     }
 
-    public <T> LambdaFunction<T, ?> getPropertyNameOf() {
-        return (LambdaFunction<T, ?>)this.func;
+    public <T> ClassGetter<T, ?> getPropertyNameOf() {
+        return (ClassGetter<T, ?>)this.func;
     }
 
-    public int increase(LambdaFunction<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
+    public int increase(ClassGetter<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
         return userMasterBaseMapper.increase(propertyName, predicateExpression);
     }
 
-    public int decrease(LambdaFunction<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
+    public int decrease(ClassGetter<User, ?> propertyName, Function<LambdaUpdateWrapper<User>, LambdaUpdateWrapper<User>> predicateExpression) {
         return userMasterBaseMapper.decrease(propertyName, predicateExpression);
     }
 

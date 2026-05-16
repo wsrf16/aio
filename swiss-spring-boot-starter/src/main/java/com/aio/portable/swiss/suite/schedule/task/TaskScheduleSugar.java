@@ -32,13 +32,13 @@ public class TaskScheduleSugar {
     }
 
     // "00 00 00 * * ?"
-    public static final ScheduledFuture<?> schedule(ThreadPoolTaskScheduler scheduler, Runnable task, String cron, boolean atOnce) {
+    public static ScheduledFuture<?> schedule(ThreadPoolTaskScheduler scheduler, Runnable task, String cron, boolean atOnce) {
         if (atOnce)
             scheduler.submit(task);
         return scheduler.schedule(task, new CronTrigger(cron));
     }
 
-    public static final ScheduledFuture<?> schedule(ThreadPoolTaskScheduler scheduler, Runnable task, String cron, boolean atOnce, Consumer<Future<?>> futureHandler) {
+    public static ScheduledFuture<?> schedule(ThreadPoolTaskScheduler scheduler, Runnable task, String cron, boolean atOnce, Consumer<Future<?>> futureHandler) {
         if (atOnce) {
             Future<?> submit = scheduler.submit(task);
             futureHandler.accept(submit);
@@ -48,13 +48,13 @@ public class TaskScheduleSugar {
         return scheduledFuture;
     }
 
-    public static final ScheduledFuture<?> scheduleAtFixedRate(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce) {
+    public static ScheduledFuture<?> scheduleAtFixedRate(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce) {
         if (atOnce)
             scheduler.submit(task);
         return scheduler.scheduleAtFixedRate(task, period);
     }
 
-    public static final void scheduleAtFixedRate(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce, Consumer<Future<?>> futureHandler) {
+    public static void scheduleAtFixedRate(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce, Consumer<Future<?>> futureHandler) {
         if (atOnce) {
             Future<?> submit = scheduler.submit(task);
             futureHandler.accept(submit);
@@ -63,7 +63,7 @@ public class TaskScheduleSugar {
         futureHandler.accept(scheduledFuture);
     }
 
-//    public static final ScheduledFuture<?> scheduleWithFixedDelay(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce) {
+//    public static ScheduledFuture<?> scheduleWithFixedDelay(ThreadPoolTaskScheduler scheduler, Runnable task, Duration period, boolean atOnce) {
 //        if (atOnce)
 //            scheduler.submit(task);
 //        return scheduler.scheduleWithFixedDelay(task, period);

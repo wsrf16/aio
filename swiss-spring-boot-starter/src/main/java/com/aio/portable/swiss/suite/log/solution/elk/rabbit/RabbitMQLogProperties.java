@@ -18,7 +18,7 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements LogProp
 
     private static RabbitMQLogProperties instance = new RabbitMQLogProperties();
 
-    public final Boolean getDefaultEnabledIfAbsent() {
+    public final Boolean getEnabledOrDefault() {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
     }
 
@@ -36,6 +36,10 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements LogProp
         return instance;
     }
 
+    public synchronized static boolean exist() {
+        return instance != null;
+    }
+
     private static boolean initialized = false;
 
     public static boolean initialized() {
@@ -50,12 +54,12 @@ public class RabbitMQLogProperties extends RabbitMQProperties implements LogProp
         initialSingletonInstance(this);
     }
 
-    public static final void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
+    public static void initialSingletonInstance(RabbitMQLogProperties rabbitMQLogProperties) {
         instance = rabbitMQLogProperties;
         log.debug("RabbitMQLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
-    public static final void initialSingletonInstance(Binder binder) {
+    public static void initialSingletonInstance(Binder binder) {
         BindResult<RabbitMQLogProperties> bindResult = binder.bind(RabbitMQLogProperties.PREFIX, RabbitMQLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             RabbitMQLogProperties.initialSingletonInstance(bindResult.get());

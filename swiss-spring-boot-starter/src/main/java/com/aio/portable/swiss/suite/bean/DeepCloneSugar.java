@@ -1,5 +1,6 @@
 package com.aio.portable.swiss.suite.bean;
 
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.BeanUtils;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -24,8 +26,15 @@ public abstract class DeepCloneSugar {
          * @param <T>
          * @return
          */
-        public static final <S, T> T clone(S source, Class<T> targetClass) {
-            T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), targetClass);
+        public static <S, T> T clone(S source, Class<T> targetClass) {
+            String json = JacksonSugar.obj2Json(source);
+            T t = JacksonSugar.json2T(json, targetClass);
+            return t;
+        }
+
+        public static <S, T> T clone(S source, Class<T> targetClass, boolean throwException) {
+            String json = JacksonSugar.obj2Json(source, throwException);
+            T t = JacksonSugar.json2T(json, targetClass);
             return t;
         }
 
@@ -36,9 +45,15 @@ public abstract class DeepCloneSugar {
          * @param <T>
          * @return
          */
-        public static final <S, T> T clone(S source, TypeReference<T> valueTypeRef) {
-            T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), valueTypeRef);
-//            T t = DeepCloneSugar.Json.clone(source, valueTypeRef);
+        public static <S, T> T clone(S source, TypeReference<T> valueTypeRef) {
+            String json = JacksonSugar.obj2Json(source);
+            T t = JacksonSugar.json2T(json, valueTypeRef);
+            return t;
+        }
+
+        public static <S, T> T clone(S source, TypeReference<T> valueTypeRef, boolean throwException) {
+            String json = JacksonSugar.obj2Json(source, throwException);
+            T t = JacksonSugar.json2T(json, valueTypeRef);
             return t;
         }
 
@@ -48,38 +63,39 @@ public abstract class DeepCloneSugar {
          * @param <T>
          * @return
          */
-        public static final <T> T clone(T source) {
-            T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
+        public static <T> T clone(T source) {
+            String json = JacksonSugar.obj2Json(source);
+            T t = (T) JacksonSugar.json2T(json, source.getClass());
 //            T t = (T) DeepCloneSugar.Json.clone(source, source.getClass());
             return t;
         }
 
-        public static final <S, T> ArrayList<T> cloneList(Collection<S> source) {
+        public static <S, T> ArrayList<T> cloneList(Collection<S> source) {
             ArrayList<T> list = JacksonSugar.deepCopy(source, new TypeReference<ArrayList<T>>(){});
             return list;
         }
 
-        public static final HashMap<Object, Object> clone2ObjectMap(Object source) {
+        public static HashMap<Object, Object> clone2ObjectMap(Object source) {
             HashMap<Object, Object> map = JacksonSugar.deepCopy(source, new TypeReference<HashMap<Object, Object>>(){});
             return map;
         }
 
-        public static final HashMap<String, Object> clone2StringMap(Object source) {
+        public static HashMap<String, Object> clone2StringMap(Object source) {
             HashMap<String, Object> map = JacksonSugar.deepCopy(source, new TypeReference<HashMap<String, Object>>(){});
             return map;
         }
 
-//        public static final HashMap<Object, Object> json2ObjectMap(String jsonStr) {
+//        public static HashMap<Object, Object> json2ObjectMap(String jsonStr) {
 //            return JacksonSugar.json2ObjectMap(jsonStr);
 //        }
 //
-//        public static final HashMap<String, Object> json2StringMap(String jsonStr) {
+//        public static HashMap<String, Object> json2StringMap(String jsonStr) {
 //            return JacksonSugar.json2StringMap(jsonStr);
 //        }
     }
 
     public abstract static class Properties {
-        public static final <S> S clone(S source) {
+        public static <S> S clone(S source) {
             try {
                 S target = (S)source.getClass().getConstructor().newInstance();
                 clone(source, target);
@@ -89,11 +105,11 @@ public abstract class DeepCloneSugar {
             }
         }
 
-        public static final <S, T> void clone(S source, T target) {
+        public static <S, T> void clone(S source, T target) {
             BeanUtils.copyProperties(source, target);
         }
 
-        public static final <S, T> T clone(S source, Class<T> targetClazz) {
+        public static <S, T> T clone(S source, Class<T> targetClazz) {
             try {
                 T target = targetClazz.getConstructor().newInstance();
                 clone(source, target);
@@ -103,23 +119,27 @@ public abstract class DeepCloneSugar {
             }
         }
 
-        public static final <S, T> List<T> cloneList(Collection<S> source, Class<T> clazz) {
+        public static <S, T> List<T> cloneList(Collection<S> source, Class<T> clazz) {
             List<T> list = source.stream().map(c -> DeepCloneSugar.Properties.clone(c, clazz)).collect(Collectors.toList());
             return list;
         }
 
-        public static final <T> List<T> cloneList(Collection<T> source) {
+        public static <T> List<T> cloneList(Collection<T> source) {
             List<T> list = source.stream().map(c -> DeepCloneSugar.Properties.clone(c)).collect(Collectors.toList());
             return list;
         }
 
-        public static final <K, V> HashMap<K, V> clone2Map(HashMap<K, V> source) {
+        public static <K, V> HashMap<K, V> clone2Map(HashMap<K, V> source) {
             return new HashMap<>(source);
+        }
+
+        public static Map<String, Object> clone2Map(Object source) {
+            return ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(source);
         }
     }
 
     public abstract static class Cglib {
-        public static final <S> S clone(S source) {
+        public static <S> S clone(S source) {
             try {
                 S target = (S)source.getClass().getConstructor().newInstance();
                 clone(source, target);
@@ -129,12 +149,12 @@ public abstract class DeepCloneSugar {
             }
         }
 
-        public static final <S, T> void clone(S source, T target) {
+        public static <S, T> void clone(S source, T target) {
             BeanCopier copier = createCopier(source.getClass(), target.getClass());
             copier.copy(source, target, new BeanConverter());
         }
 
-        public static final <S, T> T clone(S source, Class<T> targetClazz) {
+        public static <S, T> T clone(S source, Class<T> targetClazz) {
             try {
                 T target = targetClazz.getConstructor().newInstance();
                 BeanCopier copier = createCopier(source.getClass(), targetClazz);

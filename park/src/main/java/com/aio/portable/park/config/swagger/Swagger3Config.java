@@ -1,26 +1,17 @@
 package com.aio.portable.park.config.swagger;
 
-import com.aio.portable.park.common.BizStatusEnum;
-import com.aio.portable.park.endpoint.http.PackageController;
-import com.aio.portable.park.endpoint.http.RootController;
+import com.aio.portable.park.common.BizResponseStatuses;
 import com.aio.portable.swiss.hamlet.swagger.Swagger3Builder;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger3Properties;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.util.StringUtils;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
-import springfox.documentation.RequestHandler;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
-
-import java.lang.annotation.Annotation;
-import java.util.function.Predicate;
 
 @Import(BeanValidatorPluginsConfiguration.class)
 @Configuration
@@ -39,7 +30,7 @@ public class Swagger3Config {
         return Swagger3Builder.buildProperties(
                 Swagger3Builder.Selector.withMethodAnnotation(),
 //                Swagger3Builder.Selector.withPackageName(PackageController.class.getPackage().getName()),
-                Swagger3Builder.buildResponseList(BizStatusEnum.values()));
+                Swagger3Builder.buildResponseList(BizResponseStatuses.values()));
     }
 
 

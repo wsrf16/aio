@@ -1,8 +1,6 @@
 package com.aio.portable.swiss.suite.algorithm.crypto.rsa;
 
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
-import sun.security.rsa.RSACore;
-import sun.security.rsa.RSAKeyFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -20,7 +18,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -31,7 +28,7 @@ public class RSASugar {
     private static final int MAX_DECRYPT_LENGTH = 128;
     private static final int MAX_ENCRYPT_LENGTH = 117;
 
-    public static final RSAKeyPair generateRSAKeyPair() {
+    public static RSAKeyPair generateRSAKeyPair() {
         try {
             KeyPair keyPair = KeyPairGenerator.getInstance(RSA).generateKeyPair();
             RSAPublicKey rsaPubKey = (RSAPublicKey) keyPair.getPublic();
@@ -53,7 +50,7 @@ public class RSASugar {
     public static final KeyFactory KEY_FACTORY = keyFactoryInstance();
 
 
-    private static final KeyFactory keyFactoryInstance() {
+    private static KeyFactory keyFactoryInstance() {
         try {
             return KeyFactory.getInstance(RSA);
         } catch (NoSuchAlgorithmException e) {
@@ -62,7 +59,7 @@ public class RSASugar {
         }
     }
 
-//    private static final CertificateFactory certificateFactoryInstance() {
+//    private static CertificateFactory certificateFactoryInstance() {
 //        try {
 //            return CertificateFactory.getInstance(X509);
 //        } catch (CertificateException e) {
@@ -72,7 +69,7 @@ public class RSASugar {
 //    }
 
 
-    public static final PrivateKey getPrivateKey(byte[] privateKeyBytes) {
+    public static PrivateKey getPrivateKey(byte[] privateKeyBytes) {
         try {
             return KEY_FACTORY.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
         } catch (InvalidKeySpecException e) {
@@ -81,12 +78,12 @@ public class RSASugar {
         }
     }
 
-    public static final PrivateKey getPrivateKey(String privateKey) {
+    public static PrivateKey getPrivateKey(String privateKey) {
         byte[] keyBytes = JDKBase64Convert.decode(privateKey);
         return getPrivateKey(keyBytes);
     }
 
-    public static final PublicKey getPublicKey(byte[] publicKeyBytes) {
+    public static PublicKey getPublicKey(byte[] publicKeyBytes) {
         try {
             return KEY_FACTORY.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
         } catch (InvalidKeySpecException e) {
@@ -95,7 +92,7 @@ public class RSASugar {
         }
     }
 
-//    public static final PublicKey getPublicKey1(byte[] publicKeyBytes) {
+//    public static PublicKey getPublicKey1(byte[] publicKeyBytes) {
 //        try (InputStream in = new ByteArrayInputStream(publicKeyBytes)) {
 //            PublicKey publicKey = CERTIFICATE_FACTORY
 //                    .generateCertificate(in)
@@ -107,30 +104,30 @@ public class RSASugar {
 //        }
 //    }
 
-    public static final PublicKey getPublicKey(String publicKey) {
+    public static PublicKey getPublicKey(String publicKey) {
         byte[] keyBytes = JDKBase64Convert.decode(publicKey.getBytes());
         return getPublicKey(keyBytes);
     }
 
-    public static final byte[] encrypt(byte[] bytes, Key key) {
+    public static byte[] encrypt(byte[] bytes, Key key) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Cipher cipher = Cipher.getInstance(RSA);
             cipher.init(Cipher.ENCRYPT_MODE, key);
-//            return cipher.doFinal(bytes);
+            return cipher.doFinal(bytes);
 
-            int length = bytes.length;
-            int offset = 0;
-            byte[] cache;
-            while (length - offset > 0) {
-                if (length - offset > MAX_ENCRYPT_LENGTH) {
-                    cache = cipher.doFinal(bytes, offset, MAX_ENCRYPT_LENGTH);
-                } else {
-                    cache = cipher.doFinal(bytes, offset, length - offset);
-                }
-                out.write(cache, 0, cache.length);
-                offset = offset + MAX_ENCRYPT_LENGTH;
-            }
-            return out.toByteArray();
+//            int length = bytes.length;
+//            int offset = 0;
+//            byte[] cache;
+//            while (length - offset > 0) {
+//                if (length - offset > MAX_ENCRYPT_LENGTH) {
+//                    cache = cipher.doFinal(bytes, offset, MAX_ENCRYPT_LENGTH);
+//                } else {
+//                    cache = cipher.doFinal(bytes, offset, length - offset);
+//                }
+//                out.write(cache, 0, cache.length);
+//                offset = offset + MAX_ENCRYPT_LENGTH;
+//            }
+//            return out.toByteArray();
         } catch (NoSuchAlgorithmException
                 | InvalidKeyException
                 | NoSuchPaddingException
@@ -142,82 +139,98 @@ public class RSASugar {
         }
     }
 
-    public static final byte[] encrypt(byte[] bytes, byte[] publicKeyBytes) {
+    public static byte[] encrypt(byte[] bytes, byte[] publicKeyBytes) {
         PublicKey publicKey = getPublicKey(publicKeyBytes);
         return encrypt(bytes, publicKey);
     }
 
-//    public static final String encrypt(String text, Key key) {
+//    public static String encrypt(String text, Key key) {
 //        byte[] bytes = text.getBytes();
 //        byte[] encrypt = encrypt(bytes, key);
 //        return JDKBase64Convert.encodeToString(encrypt);
 //    }
 
-    public static final String encrypt(String text, String publicKey) {
+    public static String encrypt(String text, String publicKey) {
         byte[] bytes = text.getBytes();
         byte[] publicKeyBytes = JDKBase64Convert.decode(publicKey);
         byte[] encrypt = encrypt(bytes, publicKeyBytes);
         return JDKBase64Convert.encodeToString(encrypt);
     }
 
-    private static final int getMaxDecryptLength(Key key) {
+//    private static int getMaxDecryptLength(Key key) {
+//        try {
+//            RSAKey rsaKey = RSAKeyFactory.toRSAKey(key);
+//            int byteLength = RSACore.getByteLength(rsaKey.getModulus());
+//            return byteLength;
+//        } catch (InvalidKeyException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+//    public static byte[] decrypt(byte[] bytes, Key key) {
+//        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+//            Cipher cipher = Cipher.getInstance(RSA);
+//            cipher.init(Cipher.DECRYPT_MODE, key);
+////            return cipher.doFinal(bytes);
+//
+//            int length = bytes.length;
+//            int offset = 0;
+//            byte[] cache;
+//            int maxDecryptLength = getMaxDecryptLength(key);
+//            while (length - offset > 0) {
+//                // javax.crypto.BadPaddingException: Decryption error
+//                // >256 or > 128: Data must not be longer than 256/128 bytes
+//                if (length - offset > maxDecryptLength) {
+//                    cache = cipher.doFinal(bytes, offset, maxDecryptLength);
+//                } else {
+//                    cache = cipher.doFinal(bytes, offset, length - offset);
+//                }
+//                out.write(cache, 0, cache.length);
+//                offset = offset + maxDecryptLength;
+//            }
+//            return out.toByteArray();
+//        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | IOException e
+//        ) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    public static byte[] decrypt(byte[] bytes, Key key) {
+        Cipher cipher = null;
         try {
-            RSAKey rsaKey = RSAKeyFactory.toRSAKey(key);
-            int byteLength = RSACore.getByteLength(rsaKey.getModulus());
-            return byteLength;
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static final byte[] decrypt(byte[] bytes, Key key) {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Cipher cipher = Cipher.getInstance(RSA);
+            cipher = Cipher.getInstance(RSA);
+            // 初始化Cipher对象
             cipher.init(Cipher.DECRYPT_MODE, key);
-//            return cipher.doFinal(bytes);
-
-            int length = bytes.length;
-            int offset = 0;
-            byte[] cache;
-            int maxDecryptLength = getMaxDecryptLength(key);
-            while (length - offset > 0) {
-                // javax.crypto.BadPaddingException: Decryption error
-                // >256 or > 128: Data must not be longer than 256/128 bytes
-                if (length - offset > maxDecryptLength) {
-                    cache = cipher.doFinal(bytes, offset, maxDecryptLength);
-                } else {
-                    cache = cipher.doFinal(bytes, offset, length - offset);
-                }
-                out.write(cache, 0, cache.length);
-                offset = offset + maxDecryptLength;
-            }
-            return out.toByteArray();
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | IOException e
-        ) {
+            // 解密
+            byte[] out = cipher.doFinal(bytes);
+            // 返回明文
+            return out;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException|IllegalBlockSizeException|BadPaddingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static final byte[] decrypt(byte[] bytes, byte[] privateKeyBytes) {
+    public static byte[] decrypt(byte[] bytes, byte[] privateKeyBytes) {
         PrivateKey privateKey = getPrivateKey(privateKeyBytes);
         return decrypt(bytes, privateKey);
     }
 
-//    public static final String decrypt(String text, Key key) {
+//    public static String decrypt(String text, Key key) {
 //        byte[] bytes = JDKBase64Convert.decode(text);
 //        byte[] decrypt = decrypt(bytes, key);
 //        return new String(decrypt);
 //    }
 
-    public static final String decrypt(String text, String privateKey) {
-
+    public static String decrypt(String text, String privateKey) {
         byte[] bytes = JDKBase64Convert.decode(text);
         byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] decrypt = decrypt(bytes, privateKeyBytes);
         return new String(decrypt);
     }
 
-    public static final byte[] sign(byte[] bytes, PrivateKey key) {
+    public static byte[] sign(byte[] bytes, PrivateKey key) {
         try {
             Signature signature = Signature.getInstance(SHA1WithRSA);
             signature.initSign(key);
@@ -229,12 +242,12 @@ public class RSASugar {
         }
     }
 
-    public static final byte[] sign(byte[] bytes, byte[] privateKeyBytes) {
+    public static byte[] sign(byte[] bytes, byte[] privateKeyBytes) {
         PrivateKey privateKey = getPrivateKey(privateKeyBytes);
         return sign(bytes, privateKey);
     }
 
-    public static final String sign(String text, String privateKey) {
+    public static String sign(String text, String privateKey) {
         byte[] privateKeyBytes = JDKBase64Convert.decode(privateKey);
         byte[] bytes = text.getBytes();
         byte[] sign = sign(bytes, privateKeyBytes);

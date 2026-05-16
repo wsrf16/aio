@@ -6,10 +6,10 @@ import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import com.aio.portable.swiss.sugar.meta.PackageSugar;
 import com.aio.portable.swiss.sugar.meta.ResourceSugar;
-import com.aio.portable.swiss.sugar.meta.function.LambdaBiConsumer;
-import com.aio.portable.swiss.sugar.meta.function.LambdaConsumer;
-import com.aio.portable.swiss.sugar.meta.function.LambdaFunction;
-import com.aio.portable.swiss.sugar.meta.function.LambdaSupplier;
+import com.aio.portable.swiss.sugar.meta.function.ClassSetter;
+import com.aio.portable.swiss.sugar.meta.function.InstanceSetter;
+import com.aio.portable.swiss.sugar.meta.function.ClassGetter;
+import com.aio.portable.swiss.sugar.meta.function.InstanceGetter;
 import com.aio.portable.swiss.suite.bean.serializer.json.GsonSugar;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.bean.structure.KeyValuePair;
@@ -23,7 +23,7 @@ import java.util.List;
 @TestComponent
 public class ClassTest {
     @Test
-    private static void foobar() throws IOException {
+    public void foobar() throws IOException {
         boolean b1 = ClassLoaderSugar.isPresent("Wood");
         boolean b2 = ClassLoaderSugar.isPresent("Wood");
 
@@ -44,12 +44,12 @@ public class ClassTest {
         String fieldName1 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::getNextId);
         String fieldName2 = ClassSugar.PropertyDescriptors.getPropertyNameOf(new UserInfoEntity()::setNextId);
         String fieldName3 = ClassSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::getNextId);
-//        String fieldName4 = BeanSugar.PropertyDescriptors.getMethodPropertyName(UserInfoEntity::setNextId);
+//        String fieldName4 = ClassSugar.PropertyDescriptors.getPropertyNameOf(UserInfoEntity::setNextId);
 
-        LambdaSupplier<Integer> getNextId = new UserInfoEntity()::getNextId;
-        LambdaConsumer<Integer> setNextId = new UserInfoEntity()::setNextId;
-        LambdaFunction<UserInfoEntity, Integer> staticGetNextId = UserInfoEntity::getNextId;
-        LambdaBiConsumer<UserInfoEntity, Integer> staticSetNextId = UserInfoEntity::setNextId;
+        InstanceGetter<Integer> getNextId = new UserInfoEntity()::getNextId;
+        InstanceSetter<Integer> setNextId = new UserInfoEntity()::setNextId;
+        ClassGetter<UserInfoEntity, Integer> staticGetNextId = UserInfoEntity::getNextId;
+        ClassSetter<UserInfoEntity, Integer> staticSetNextId = UserInfoEntity::setNextId;
 
         String fieldName1_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(getNextId);
         String fieldName2_ = ClassSugar.PropertyDescriptors.getPropertyNameOf(setNextId);
@@ -66,12 +66,12 @@ public class ClassTest {
         System.out.println();
     }
 
-    @Test
+
     public static boolean existJackson() {
         return ClassLoaderSugar.isPresent(("com.fasterxml.jackson.databind.JsonSerializer"));
     }
 
-    @Test
+
     public static boolean existGson() {
         return ClassLoaderSugar.isPresent(("com.google.gson.Gson"));
     }

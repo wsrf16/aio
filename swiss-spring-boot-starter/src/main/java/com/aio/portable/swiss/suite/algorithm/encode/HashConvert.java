@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 public abstract class HashConvert {
     public static abstract class MD5 {
 
-        public static final byte[] encode(byte[] bytes) {
+        public static byte[] encode(byte[] bytes) {
             try {
                 return MessageDigest.getInstance("MD5").digest(bytes);
             } catch (NoSuchAlgorithmException e) {
@@ -15,7 +15,7 @@ public abstract class HashConvert {
             }
         }
 
-        public static final String encodeToHex(String text) {
+        public static String encodeToHex(String text) {
             try {
                 byte[] input = text.getBytes(StandardCharsets.UTF_8);
                 byte[] bytes = encode(input);
@@ -25,7 +25,7 @@ public abstract class HashConvert {
             }
         }
 
-        public static final String encodeToBase64(String text) {
+        public static String encodeToBase64(String text) {
             byte[] input = text.getBytes(StandardCharsets.UTF_8);
             byte[] bytes = encode(input);
             return java.util.Base64.getEncoder().encodeToString(bytes);
@@ -34,7 +34,7 @@ public abstract class HashConvert {
 
 
     public static abstract class SHA1 {
-        public static final byte[] encode(byte[] bytes) {
+        public static byte[] encode(byte[] bytes) {
             try {
                 return MessageDigest.getInstance("SHA-1").digest(bytes);
             } catch (NoSuchAlgorithmException e) {
@@ -43,7 +43,7 @@ public abstract class HashConvert {
             }
         }
 
-        public static final String encodeToHex(String text) {
+        public static String encodeToHex(String text) {
             try {
                 byte[] input = text.getBytes(StandardCharsets.UTF_8);
                 byte[] bytes = encode(input);
@@ -54,7 +54,7 @@ public abstract class HashConvert {
             }
         }
 
-        public static final String encodeToBase64(String text) {
+        public static String encodeToBase64(String text) {
             byte[] input = text.getBytes(StandardCharsets.UTF_8);
             byte[] bytes = encode(input);
             return java.util.Base64.getEncoder().encodeToString(bytes);

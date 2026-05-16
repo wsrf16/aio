@@ -26,16 +26,16 @@ public abstract class PathSugar {
 
     static final String SEPARATOR = File.separator;
 
-    public static final String path(String first, String... more) {
+    public static String path(String first, String... more) {
         return Paths.get(first, more).toString();
     }
 
 
-    public static final String concatByOS(String... parts) {
+    public static String concatByOS(String... parts) {
         return concatBy(SEPARATOR, parts);
     }
 
-    public static final String concatBy(String separator, String... parts) {
+    public static String concatBy(String separator, String... parts) {
         if (CollectionSugar.isEmpty(parts))
             return Constant.EMPTY;
 
@@ -55,7 +55,7 @@ public abstract class PathSugar {
 
     static final String DELIMITER_CHAR = "/";
 
-    public static final String getPathByResourceUtils(String path) throws FileNotFoundException {
+    public static String getPathByResourceUtils(String path) throws FileNotFoundException {
         String urlPath = ResourceUtils.getURL(path).getPath();
         if (OSInfo.isWindows()) {
             urlPath = StringSugar.trimStart(urlPath, DELIMITER_CHAR);
@@ -63,24 +63,24 @@ public abstract class PathSugar {
         return urlPath;
     }
 
-    public static final String getAbsolutePathByFile(String path) {
+    public static String getAbsolutePathByFile(String path) {
         return new File(path).getAbsolutePath();
     }
 
-    public static final String getCanonicalPathByFile(String path) throws IOException {
+    public static String getCanonicalPathByFile(String path) throws IOException {
         return new File(path).getCanonicalPath();
     }
     //Relative
 
-    public static final Path getJarDirectoryPath(Class<?> sourceClass) {
+    public static Path getJarDirectoryPath(Class<?> sourceClass) {
         return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
     }
 
-    public static final Path getClassesDirectoryPath(Class<?> sourceClass) {
+    public static Path getClassesDirectoryPath(Class<?> sourceClass) {
         return new ApplicationHome(sourceClass).getSource().getParentFile().toPath();
     }
 
-    public static final Path getPath(URL url) {
+    public static Path getPath(URL url) {
         try {
             return Paths.get(url.toURI());
         } catch (URISyntaxException e) {

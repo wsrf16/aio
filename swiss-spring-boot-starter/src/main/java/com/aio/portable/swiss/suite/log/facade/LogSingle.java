@@ -68,7 +68,7 @@ public abstract class LogSingle implements LogAction {
     public LogSingle(String name) {
         setName(name);
 //        clearPrefix();
-        this.printer = buildPrinter();
+//        this.printer = buildPrinter();
     }
 
     protected abstract LogPrinter buildPrinter();
@@ -84,6 +84,12 @@ public abstract class LogSingle implements LogAction {
 
     protected <T> void output(T record, LevelEnum level) {
         try {
+            if (this.printer == null) {
+                synchronized (this) {
+                    if (this.printer == null)
+                        this.printer = buildPrinter();
+                }
+            }
             if (async) {
                 executor.execute(() ->
                         printer.println(record, level)
@@ -174,17 +180,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * verbose
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void verb(String summary, T t) {
+    public <T> void verb(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.VERB);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -283,17 +289,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * trace
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void trace(String summary, T t) {
+    public <T> void trace(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.TRACE);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -392,17 +398,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * info
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void info(String summary, T t) {
+    public <T> void info(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.INFO);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -501,17 +507,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * debug
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void debug(String summary, T t) {
+    public <T> void debug(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.DEBUG);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -609,16 +615,16 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * warn
-     * @param summary
+     * @param message
      * @param e
      */
     @Override
-    public void warn(String summary, Throwable e) {
+    public void warn(String message, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.WARN);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setException(LogThrowable.build(e));
         }
         output(record);
@@ -645,17 +651,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * warn
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void warn(String summary, T t) {
+    public <T> void warn(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.WARN);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -663,18 +669,18 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * warn
-     * @param summary
+     * @param message
      * @param t
      * @param e
      * @param <T>
      */
     @Override
-    public <T> void warn(String summary, T t, Throwable e) {
+    public <T> void warn(String message, T t, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.WARN);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
             record.setException(LogThrowable.build(e));
         }
@@ -775,16 +781,16 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * error
-     * @param summary
+     * @param message
      * @param e
      */
     @Override
-    public void error(String summary, Throwable e) {
+    public void error(String message, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.ERROR);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setException(LogThrowable.build(e));
         }
         output(record);
@@ -811,17 +817,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * error
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void error(String summary, T t) {
+    public <T> void error(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.ERROR);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -829,18 +835,18 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * error
-     * @param summary
+     * @param message
      * @param t
      * @param e
      * @param <T>
      */
     @Override
-    public <T> void error(String summary, T t, Throwable e) {
+    public <T> void error(String message, T t, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.ERROR);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
             record.setException(LogThrowable.build(e));
         }
@@ -912,16 +918,16 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * fatal
-     * @param summary
+     * @param message
      * @param e
      */
     @Override
-    public void fatal(String summary, Throwable e) {
+    public void fatal(String message, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.FATAL);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setException(LogThrowable.build(e));
         }
         output(record);
@@ -977,17 +983,17 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * fatal
-     * @param summary
+     * @param message
      * @param t
      * @param <T>
      */
     @Override
-    public <T> void fatal(String summary, T t) {
+    public <T> void fatal(String message, T t) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.FATAL);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
         }
         output(record);
@@ -1017,18 +1023,18 @@ public abstract class LogSingle implements LogAction {
 
     /**
      * fatal
-     * @param summary
+     * @param message
      * @param t
      * @param e
      * @param <T>
      */
     @Override
-    public <T> void fatal(String summary, T t, Throwable e) {
+    public <T> void fatal(String message, T t, Throwable e) {
         LogRecordItem record = new StandardLogRecordItem();
         attachTo(record);
         {
             record.setLevel(LevelEnum.FATAL);
-            record.setSummary(summary);
+            record.setMessage(message);
             record.setData(t);
             record.setException(LogThrowable.build(e));
         }

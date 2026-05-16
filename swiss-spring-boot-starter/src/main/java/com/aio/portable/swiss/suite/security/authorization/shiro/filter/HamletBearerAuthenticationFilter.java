@@ -5,7 +5,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletRequest;

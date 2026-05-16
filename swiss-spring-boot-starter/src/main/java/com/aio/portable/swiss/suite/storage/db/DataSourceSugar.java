@@ -38,7 +38,7 @@ public abstract class DataSourceSugar {
         return populator;
     }
 
-    private static final List<Resource> getScripts(String propertyName, List<String> resources, String fallback, String platform) {
+    private static List<Resource> getScripts(String propertyName, List<String> resources, String fallback, String platform) {
         if (resources != null) {
             return getResources(propertyName, resources, true);
         }
@@ -48,7 +48,7 @@ public abstract class DataSourceSugar {
         return getResources(propertyName, fallbackResources, false);
     }
 
-    private static final List<Resource> getResources(String propertyName, List<String> locations, boolean validate) {
+    private static List<Resource> getResources(String propertyName, List<String> locations, boolean validate) {
         List<Resource> resources = new ArrayList<>();
         for (String location : locations) {
             for (Resource resource : doGetResources(location)) {
@@ -64,7 +64,7 @@ public abstract class DataSourceSugar {
         return resources;
     }
 
-    private static final Resource[] doGetResources(String location) {
+    private static Resource[] doGetResources(String location) {
         try {
             DefaultResourceLoader defaultResourceLoader = new DefaultResourceLoader();
             DefaultResourceLoader resourceLoader = defaultResourceLoader;

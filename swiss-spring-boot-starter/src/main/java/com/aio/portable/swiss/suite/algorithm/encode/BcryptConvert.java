@@ -1,20 +1,20 @@
 package com.aio.portable.swiss.suite.algorithm.encode;
 
-import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEncoderFactories;
+import com.aio.portable.swiss.suite.algorithm.crypto.passwordencoder.PasswordEncoderFactoriesSugar;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public abstract class BcryptConvert {
-        private static final PasswordEncoder bcrypt = PasswordEncoderFactories.createPasswordEncoder("bcrypt");
+    private static final PasswordEncoder bcrypt = PasswordEncoderFactoriesSugar.createPasswordEncoder("bcrypt");
 
-    public static final String encode(CharSequence rawPassword) {
+    public static String encode(CharSequence rawPassword) {
         return bcrypt.encode(rawPassword);
     }
 
-    public final boolean matches(CharSequence rawPassword, String encodedPassword) {
+    public static boolean matches(CharSequence rawPassword, String encodedPassword) {
         return bcrypt.matches(rawPassword, encodedPassword);
     }
 
-    public final boolean upgradeEncoding(String encodedPassword) {
+    public static boolean upgradeEncoding(String encodedPassword) {
         return bcrypt.upgradeEncoding(encodedPassword);
     }
 

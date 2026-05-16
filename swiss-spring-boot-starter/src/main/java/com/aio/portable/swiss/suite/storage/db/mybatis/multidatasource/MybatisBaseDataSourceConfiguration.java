@@ -1,13 +1,6 @@
 package com.aio.portable.swiss.suite.storage.db.mybatis.multidatasource;
 
 import com.aio.portable.swiss.suite.storage.db.AbstractDataSourceConfiguration;
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -31,10 +24,6 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
         return new MybatisProperties();
     }
 
-    public MybatisPlusProperties mybatisPlusProperties() {
-        return new MybatisPlusProperties();
-    }
-
 //    @PostConstruct
 //    public void checkConfigFileExists() {
 //        if (properties.isCheckConfigLocation() && StringUtils.hasText(properties.getConfigLocation())) {
@@ -44,18 +33,18 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
 //        }
 //    }
 
-    public MybatisPlusInterceptor mysqlInterceptor() {
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setOptimizeJoin(false);
-        paginationInnerInterceptor.setDbType(DbType.MYSQL);
-        paginationInnerInterceptor.setOverflow(true);
-        OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor = new OptimisticLockerInnerInterceptor();
-
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor);
-        return interceptor;
-    }
+//    public MybatisPlusInterceptor mysqlInterceptor() {
+//        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+//        paginationInnerInterceptor.setOptimizeJoin(false);
+//        paginationInnerInterceptor.setDbType(DbType.MYSQL);
+//        paginationInnerInterceptor.setOverflow(true);
+//        OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor = new OptimisticLockerInnerInterceptor();
+//
+//        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+//        interceptor.addInnerInterceptor(paginationInnerInterceptor);
+//        interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor);
+//        return interceptor;
+//    }
 
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisProperties properties, Consumer<SqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
@@ -104,61 +93,7 @@ public abstract class MybatisBaseDataSourceConfiguration extends AbstractDataSou
         }
     }
 
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, MybatisPlusProperties properties, Consumer<MybatisSqlSessionFactoryBean> sqlSessionFactoryBeanInterceptor) {
-        MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
-//        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(dataSource);
-        factoryBean.setVfs(SpringBootVFS.class);
-        String configLocation = properties.getConfigLocation();
-        if (StringUtils.hasText(configLocation)) {
-            factoryBean.setConfigLocation(new ClassPathResource(configLocation));
-        }
-        MybatisConfiguration configuration = properties.getConfiguration();
-        if (configuration == null && !StringUtils.hasText(configLocation)) {
-            configuration = new MybatisConfiguration();
-        }
-//        if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
-//            for (ConfigurationCustomizer customizer : this.configurationCustomizers) {
-//                customizer.customize(configuration);
-//            }
-//        }
-        factoryBean.setConfiguration(configuration);
-        if (properties.getConfigurationProperties() != null) {
-            factoryBean.setConfigurationProperties(properties.getConfigurationProperties());
-        }
-//        if (!ObjectUtils.isEmpty(this.interceptors)) {
-//            factory.setPlugins(this.interceptors);
-//        }
-//        if (this.databaseIdProvider != null) {
-//            factory.setDatabaseIdProvider(this.databaseIdProvider);
-//        }
-        if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
-            factoryBean.setTypeAliasesPackage(properties.getTypeAliasesPackage());
-        }
-        if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
-            factoryBean.setTypeHandlersPackage(properties.getTypeHandlersPackage());
-        }
-        if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
-            factoryBean.setMapperLocations(properties.resolveMapperLocations());
-        }
-
-        if (sqlSessionFactoryBeanInterceptor != null)
-            sqlSessionFactoryBeanInterceptor.accept(factoryBean);
-
-        try {
-            return factoryBean.getObject();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisProperties properties) {
-        ExecutorType executorType = properties.getExecutorType();
-        return executorType == null ?
-                new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);
-    }
-
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory, MybatisPlusProperties properties) {
         ExecutorType executorType = properties.getExecutorType();
         return executorType == null ?
                 new SqlSessionTemplate(sqlSessionFactory) : new SqlSessionTemplate(sqlSessionFactory, executorType);

@@ -7,7 +7,7 @@ import com.auth0.jwt.JWTCreator;
 import org.springframework.beans.BeanUtils;
 
 public class JWTConfig extends JWTProperties {
-    public static final JWTConfig build(JWTProperties properties) {
+    public static JWTConfig build(JWTProperties properties) {
         JWTConfig config = new JWTConfig();
         BeanUtils.copyProperties(properties, config);
         return config;

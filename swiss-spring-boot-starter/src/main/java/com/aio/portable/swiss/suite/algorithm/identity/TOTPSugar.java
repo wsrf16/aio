@@ -27,15 +27,15 @@ public abstract class TOTPSugar {
 //        TOTPSugar.hash = hash;
 //    }
 //
-//    public static final String build(String secret) {
+//    public static String build(String secret) {
 //        return build(secret, 30);
 //    }
 //
-//    public static final String build(String secret, int period) {
+//    public static String build(String secret, int period) {
 //        return build(secret, period, 6);
 //    }
 //
-//    private static final String build(String secret, int period, int digits) {
+//    private static String build(String secret, int period, int digits) {
 //        Pattern pattern = Pattern.compile("\\d");
 //        String key = secret;
 //
@@ -45,12 +45,12 @@ public abstract class TOTPSugar {
 //        return result;
 //    }
 //
-//    private static final String hash(String text) {
+//    private static String hash(String text) {
 ////        return JDKBase64Convert.encodeToString(text);
 //        return hash.apply(text);
 //    }
 //
-//    private static final String afterHash(String TOTP, int digits) {
+//    private static String afterHash(String TOTP, int digits) {
 //        String result = TOTP.replaceAll("\\D", "");
 //        if (result.length() > digits)
 //            result = result.substring(result.length() - digits);

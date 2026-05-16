@@ -24,12 +24,12 @@ public class LogHubPool {
     private LogHubPool() {
     }
 
-    public static final LogHubPool buildLogHubPool() {
+    public static LogHubPool buildLogHubPool() {
         LogHubPool pool = LogHubPool.buildLogHubPool(LogHubFactory.getSingleton());
         return pool;
     }
 
-    public static final LogHubPool buildLogHubPool(LogHubFactory logHubFactory) {
+    public static LogHubPool buildLogHubPool(LogHubFactory logHubFactory) {
         if (instance.getLogHubFactory() == null)
             synchronized (LogHubPool.class) {
                 if (instance.getLogHubFactory() == null) {

@@ -4,8 +4,6 @@ import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.Message;
 import com.alibaba.otter.canal.protocol.exception.CanalClientException;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 import java.util.function.Consumer;
 

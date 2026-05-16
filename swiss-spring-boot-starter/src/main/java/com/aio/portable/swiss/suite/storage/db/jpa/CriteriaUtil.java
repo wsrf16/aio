@@ -3,17 +3,24 @@ package com.aio.portable.swiss.suite.storage.db.jpa;
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
 import com.aio.portable.swiss.sugar.type.StringSugar;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.IgnoreSQL;
-import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.*;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Between;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Equal;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.GreaterThan;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.GreaterThanOrEqualTo;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.In;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.LessThan;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.LessThanOrEqualTo;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Like;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotEqual;
+import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotLike;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 abstract class CriteriaUtil {
@@ -198,7 +205,7 @@ abstract class CriteriaUtil {
         }
     }
 
-//    private static final <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
+//    private static <T> void fillPredicate(Function<Expression<T>, CriteriaBuilder.In<T>> biFunction, Root<?> root, String name, PropertyItem property, List<Predicate> predicateList) {
 //        if (property.getValue() instanceof Collection<?>) {
 //            Collection<T> value = (Collection<T>) property.getValue();
 //            if (!CollectionSugar.isEmpty(value)) {

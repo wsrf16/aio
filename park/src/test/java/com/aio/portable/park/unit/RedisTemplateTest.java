@@ -3,7 +3,14 @@ package com.aio.portable.park.unit;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.Set;
@@ -12,6 +19,9 @@ import java.util.Set;
 public class RedisTemplateTest {
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @Test
     public void foobar() {
@@ -42,6 +52,15 @@ public class RedisTemplateTest {
             return null;
         });
     }
+
+//    public List<String> string() {
+//        List<String> userList = new ArrayList<>();
+//        Cursor<String> cursor = stringRedisTemplate.opsForValue().scan(ScanOptions.scanOptions().match(prefix + "*").build());
+//        while (cursor.hasNext()) {
+//            userList.add(cursor.next());
+//        }
+//        return userList;
+//    }
 
     public void zset() {
         long delayTime = 86400;

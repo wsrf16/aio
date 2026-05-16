@@ -71,8 +71,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void trace(String format, Object arg) {
-            super.trace(format, StringSugar.toString(arg));
+        public void trace(String message, Object arg) {
+            super.trace(message, StringSugar.toString(arg));
         }
 
         @Override
@@ -131,8 +131,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void debug(String format, Object arg) {
-            super.debug(format, StringSugar.toString(arg));
+        public void debug(String message, Object arg) {
+            super.debug(message, StringSugar.toString(arg));
         }
 
         @Override
@@ -191,8 +191,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void info(String format, Object arg) {
-            super.info(format, StringSugar.toString(arg));
+        public void info(String message, Object arg) {
+            super.info(message, StringSugar.toString(arg));
         }
 
         @Override
@@ -251,8 +251,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void warn(String format, Object arg) {
-            super.warn(format, StringSugar.toString(arg));
+        public void warn(String message, Object arg) {
+            super.warn(message, StringSugar.toString(arg));
         }
 
         @Override
@@ -266,8 +266,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void warn(String msg, Throwable t) {
-            super.warn(msg, ThrowableSugar.getStackTraceAsString(t));
+        public void warn(String message, Throwable t) {
+            super.warn(message, ThrowableSugar.getStackTraceAsString(t));
         }
 
         @Override
@@ -311,8 +311,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void error(String format, Object arg) {
-            super.error(format, StringSugar.toString(arg));
+        public void error(String message, Object arg) {
+            super.error(message, StringSugar.toString(arg));
         }
 
         @Override
@@ -326,8 +326,8 @@ public class StaticLoggerBinderSample implements LoggerFactoryBinder {
         }
 
         @Override
-        public void error(String msg, Throwable t) {
-            super.error(msg, ThrowableSugar.getStackTraceAsString(t));
+        public void error(String message, Throwable t) {
+            super.error(message, ThrowableSugar.getStackTraceAsString(t));
         }
 
         @Override

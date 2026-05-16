@@ -6,7 +6,7 @@
 //import java.net.Proxy;
 //
 //public class SimpleClientHttpRequestFactoryBuilder {
-//    public static final SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
+//    public static SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
 //        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 //
 //        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
@@ -15,7 +15,7 @@
 //        return factory;
 //    }
 //
-//    public static final SkipSSLSimpleClientHttpRequestFactory buildSkipSSLClientHttpRequestFactory() {
+//    public static SkipSSLSimpleClientHttpRequestFactory buildSkipSSLClientHttpRequestFactory() {
 //        SkipSSLSimpleClientHttpRequestFactory factory = new SkipSSLSimpleClientHttpRequestFactory();
 //        factory.setReadTimeout(5000);
 //        factory.setConnectTimeout(10000);

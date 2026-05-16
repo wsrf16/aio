@@ -1,7 +1,7 @@
 package com.aio.portable.park.endpoint.http;
 
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.spring.SpringController;
 import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class DynamicController {
     }
 
     @ResponseBody
-    public ResponseWrapper<String> test() throws Exception {
-        return ResponseWrappers.succeed("testtttttt");
+    public ResponseBean<String> test() throws Exception {
+        return ResponseBeans.succeed("testtttttt");
     }
 
 }

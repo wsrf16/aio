@@ -3,7 +3,7 @@ package com.aio.portable.park.test.leet;
 import java.util.HashMap;
 
 public class MergeTest {
-    public static final void sort() {
+    public static void sort() {
         Integer[] a = {1,3,5,7,8};
         Integer[] b = {2,3,6,9,11};
 

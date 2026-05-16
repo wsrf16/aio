@@ -1,11 +1,6 @@
 package com.aio.portable.swiss.global;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
 import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class Constant {
     public class StorageUnit {

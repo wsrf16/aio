@@ -3,6 +3,7 @@ package com.aio.portable.park.unit;
 import com.aio.portable.swiss.suite.algorithm.crypto.aes.AESSugar;
 import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSAKeyPair;
 import com.aio.portable.swiss.suite.algorithm.crypto.rsa.RSASugar;
+import com.aio.portable.swiss.suite.algorithm.crypto.sm.SM2Sugar;
 import com.aio.portable.swiss.suite.algorithm.encode.JDKBase64Convert;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
@@ -26,8 +27,8 @@ public class CryptoTest {
         String pri;
         String pub;
 
-        pri = JDKBase64Convert.encodeToString(privateKey.getEncoded());
-        pub = JDKBase64Convert.encodeToString(publicKey.getEncoded());
+        pri = rsaKeyPair.getPrivateKeyString();
+        pub = rsaKeyPair.getPublicKeyString();
 
         pri = PRI;
         pub = PUB;
@@ -58,5 +59,47 @@ public class CryptoTest {
         String secret = "kkkkkkkkkkkkkkkka";
         String cipher = AESSugar.encrypt("abcdefghijklmnopqrstuvwxyz0987654321", secret);
         String plain = AESSugar.decrypt(cipher, secret);
+    }
+
+
+    @Test
+    public void sm2() {
+        RSAKeyPair sm2KeyPair = SM2Sugar.generateSM2KeyPair();
+        PrivateKey privateKey = sm2KeyPair.getPrivateKey();
+        PublicKey publicKey = sm2KeyPair.getPublicKey();
+        String pri = sm2KeyPair.getPrivateKeyString();
+        String pub = sm2KeyPair.getPublicKeyString();
+
+        {
+            String cipher = SM2Sugar.encrypt("somesomething", pub);
+            String plain = SM2Sugar.decrypt(cipher, pri);
+            System.out.println();
+        }
+        {
+//                String cipher = SM2Sugar.encrypt("somesomething", pri);
+//                String plain = SM2Sugar.decrypt(cipher, pub);
+
+//            byte[] cipher1 = SM2Sugar.encrypt("somesomething".getBytes(), SM2Sugar.getPrivateKey(pri));
+//            byte[] plain1 = SM2Sugar.decrypt(cipher1, SM2Sugar.getPublicKey(pub));
+
+//            String cipher2 = JDKBase64Convert.encodeToString(SM2Sugar.encrypt("somesomething".getBytes(), SM2Sugar.getPrivateKey(pri)));
+//            String plain2 = new String(SM2Sugar.decrypt(JDKBase64Convert.decode(cipher2), SM2Sugar.getPublicKey(pub)));
+
+
+
+            RSAKeyPair rsaKeyPair = SM2Sugar.generateSM2KeyPair();
+            String encryptText = "abcdefg";
+            String encrypt = SM2Sugar.encrypt(encryptText, rsaKeyPair.getPublicKeyString());
+            String decrypted = SM2Sugar.decrypt(encrypt, rsaKeyPair.getPrivateKeyString());
+
+            String signText = "abcdef";
+            String sign = SM2Sugar.sign(signText, rsaKeyPair.getPrivateKeyString());
+            boolean verify = SM2Sugar.verify(signText, sign, rsaKeyPair.getPublicKeyString());
+
+            System.out.println();
+        }
+
+        String sign = SM2Sugar.sign("somesomething", pri);
+        boolean verify = SM2Sugar.verify("somesomething", sign, pub);
     }
 }

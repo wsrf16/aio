@@ -1,7 +1,11 @@
 package com.aio.portable.swiss.suite.security.authorization.shiro.credential;
 
 import com.aio.portable.swiss.sugar.type.CollectionSugar;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.BearerToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.util.ByteSource;
 

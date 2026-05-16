@@ -38,7 +38,7 @@ public class JPASugar {
      * @param bean
      * @return
      */
-    public static final <R> Specification<R> buildSpecification(Object bean) {
+    public static <R> Specification<R> buildSpecification(Object bean) {
         Specification<R> specification = (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicateList = JPASugar.buildPredicate(bean, root, criteriaBuilder);
             Predicate predicate;
@@ -56,7 +56,7 @@ public class JPASugar {
         return specification;
     }
 
-    public static final <T, ID> T convertToSavedOne(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
+    public static <T, ID> T convertToSavedOne(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
         Specification<T> specification = JPASugar.<T>buildSpecification(t);
         Optional<T> optional = specificationRepository.findOne(specification);
         T target;
@@ -71,7 +71,7 @@ public class JPASugar {
         return target;
     }
 
-    public static final <T, ID> T saveIgnoreNullProperties(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
+    public static <T, ID> T saveIgnoreNullProperties(JpaRepositoryImplementation<T, ID> specificationRepository, T t) {
         T target = convertToSavedOne(specificationRepository, t);
         specificationRepository.save(target);
         return target;
@@ -85,13 +85,13 @@ public class JPASugar {
      * @param criteriaBuilder
      * @return
      */
-    private static final <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
+    private static <R> List<Predicate> buildPredicate(Object bean, Root<R> root, CriteriaBuilder criteriaBuilder) {
         Map<String, PropertyItem> properties = PropertyItem.getNamePropertyItemMap(bean);
         List<Predicate> predicateList = buildPredicateList(properties, root, criteriaBuilder);
         return predicateList;
     }
 
-    public static final Sort buildSort(Class<?> clazz) {
+    public static Sort buildSort(Class<?> clazz) {
         List<Field> fieldList = ClassSugar.Fields.getDeclaredFieldIncludeParents(clazz).stream().filter(c -> c.isAnnotationPresent(OrderBy.class)).collect(Collectors.toList());
         fieldList.stream().sorted(Comparator.comparing((Field c) -> c.getAnnotation(OrderBy.class).priority()));
         List<Sort.Order> orderList = fieldList.stream().map(c -> {
@@ -107,7 +107,7 @@ public class JPASugar {
     }
 
 
-    private static final List<Predicate> buildPredicateList(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder) {
+    private static List<Predicate> buildPredicateList(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicateList = ((Supplier<ArrayList>) ArrayList::new).get();
         fillPredicateWithAllCriteria(properties, root, criteriaBuilder, predicateList);
         return predicateList;
@@ -121,7 +121,7 @@ public class JPASugar {
      * @param root
      * @param predicateList
      */
-    private static final void fillPredicateWithAllCriteria(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicateList) {
+    private static void fillPredicateWithAllCriteria(Map<String, PropertyItem> properties, Root<?> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicateList) {
         properties.entrySet().stream().forEach(c -> {
             PropertyItem property = c.getValue();
             Field field = property.getField();

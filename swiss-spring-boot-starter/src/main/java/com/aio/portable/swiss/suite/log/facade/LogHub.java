@@ -1,7 +1,6 @@
 package com.aio.portable.swiss.suite.log.facade;
 
 import com.aio.portable.swiss.sugar.DynamicProxySugar;
-import com.aio.portable.swiss.suite.bean.serializer.StringSerializerAdapter;
 import com.aio.portable.swiss.suite.log.solution.local.LocalLog;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import org.springframework.cglib.proxy.MethodInterceptor;
@@ -11,8 +10,11 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.function.BiFunction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by York on 2017/11/23.
@@ -40,17 +42,21 @@ public class LogHub extends LogBundle implements LogBase {
 
 
 
-    private static final void throwEmptyList() {
+    private static void throwEmptyList() {
         try {
-            throw new IllegalArgumentException(MessageFormat.format("{0} is Empty.Please register and try again!", LogHub.class.getTypeName()));
+            throw new IllegalArgumentException(MessageFormat.format("{0} is Empty.Please register one log component at least!", LogHub.class.getTypeName()));
         } catch (IllegalArgumentException e) {
 //            System.out.println(MessageFormat.format("{0}{1}{2}", ColorEnum.begin(ColorEnum.FG_YELLOW), e.getMessage(), ColorEnum.end()));
             log.warn(e.getMessage(), e);
         }
     }
 
+    private boolean hasLogList() {
+        return getLogList() != null && !getLogList().isEmpty();
+    }
+
     private void validate() {
-        boolean b = getLogList() != null && getLogList().size() > 0;
+        boolean b = hasLogList() ;
         if (!b)
             throwEmptyList();
     }
@@ -69,19 +75,20 @@ public class LogHub extends LogBundle implements LogBase {
         return f <= samplerRate;
     }
 
-    public static final LogHub build(List<LogSingle> logSingleList) {
+    public static LogHub build(List<LogSingle> logSingleList) {
         LogHub logHub = new LogHub(logSingleList);
-        LogHub proxy = Proxy.toProxy(logHub);
-        return proxy;
+        return logSingleList.isEmpty() ? logHub : Proxy.toProxy(logHub);
+//        LogHub proxy = Proxy.toProxy(logHub);
+//        return proxy;
     }
 
-    public static final LogHub build(LogSingle... logSingles) {
+    public static LogHub build(LogSingle... logSingles) {
         List<LogSingle> logSingleList = logSingles == null ? Collections.emptyList() : new ArrayList<>(Arrays.asList(logSingles));
         LogHub logHub = build(logSingleList);
         return logHub;
     }
 
-    public static final LogHub buildSync(List<LogSingle> logSingleList){
+    public static LogHub buildSync(List<LogSingle> logSingleList){
         LogHub logHub = build(logSingleList);
         logHub.setAsync(false);
         return logHub;
@@ -146,9 +153,8 @@ public class LogHub extends LogBundle implements LogBase {
 //    }
 
     static class Proxy {
-        private final static InterceptMethod INTERCEPT_METHOD = (logHub, _proxy, _method, _args) -> {
-            LogHub hub = logHub;
-            hub.validate();
+        private final static InterceptMethod INTERCEPT_METHOD = (hub, _proxy, _method, _args) -> {
+//            hub.validate();
             Object invoke = null;
 
             switch (_method.getName().toLowerCase()) {

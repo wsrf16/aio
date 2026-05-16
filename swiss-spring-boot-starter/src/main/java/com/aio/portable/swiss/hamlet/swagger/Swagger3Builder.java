@@ -1,13 +1,11 @@
 package com.aio.portable.swiss.hamlet.swagger;
 
-import com.aio.portable.swiss.hamlet.bean.BizStatus;
+import com.aio.portable.swiss.hamlet.bean.ResponseStatus;
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.Swagger3Properties;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.StringUtils;
 import springfox.documentation.RequestHandler;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.builders.ResponseBuilder;
@@ -25,10 +23,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Swagger3Builder {
-    public static List<Response> buildResponseList(List<BizStatus> bizStatusList) {
+    public static List<Response> buildResponseList(List<ResponseStatus> bizStatusList) {
         List<Response> codes = new ArrayList<>();
         ResponseBuilder builder = new ResponseBuilder();
-        for (BizStatus status : bizStatusList) {
+        for (ResponseStatus status : bizStatusList) {
             codes.add(builder
                     .code(String.valueOf(status.getCode()))
                     .description(status.getMessage())
@@ -97,23 +95,23 @@ public class Swagger3Builder {
     }
 
     public static class Selector {
-        public static final Predicate<RequestHandler> withPackageName(String packageName) {
+        public static Predicate<RequestHandler> withPackageName(String packageName) {
             return RequestHandlerSelectors.basePackage(packageName);
         }
 
-        public static final Predicate<RequestHandler> withMethodAnnotation() {
+        public static Predicate<RequestHandler> withMethodAnnotation() {
             return RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class);
         }
 
-        public static final Predicate<RequestHandler> withClassAnnotation() {
+        public static Predicate<RequestHandler> withClassAnnotation() {
             return RequestHandlerSelectors.withClassAnnotation(ApiOperation.class);
         }
 
-        public static final Predicate<RequestHandler> withMethodAnnotation(final Class<? extends Annotation> annotation) {
+        public static Predicate<RequestHandler> withMethodAnnotation(final Class<? extends Annotation> annotation) {
             return RequestHandlerSelectors.withMethodAnnotation(annotation);
         }
 
-        public static final Predicate<RequestHandler> withClassAnnotation(final Class<? extends Annotation> annotation) {
+        public static Predicate<RequestHandler> withClassAnnotation(final Class<? extends Annotation> annotation) {
             return RequestHandlerSelectors.withClassAnnotation(annotation);
         }
     }

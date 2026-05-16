@@ -1,14 +1,24 @@
 package com.aio.portable.swiss.suite.net.tcp.netty;
 
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import com.aio.portable.swiss.sugar.meta.ClassSugar;
+import com.aio.portable.swiss.sugar.type.StreamSugar;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.AttributeKey;
+import io.netty.util.DefaultAttributeMap;
 
+import java.lang.reflect.Array;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NettySugar {
 
@@ -19,7 +29,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public static final ServerBootstrap newServerBootstrap(Class<? extends ServerChannel> channelClass, ChannelHandler... childHandlerArrays) {
+    public static ServerBootstrap newServerBootstrap(Class<? extends ServerChannel> channelClass, ChannelHandler... childHandlerArrays) {
         EventLoopGroup acceptGroup = new NioEventLoopGroup();
         EventLoopGroup transferGroup = new NioEventLoopGroup();
 
@@ -43,7 +53,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public static final void bindNewServerBootstrap(SocketAddress localAddress, ChannelHandler... childHandlerArrays) throws InterruptedException {
+    public static void bindNewServerBootstrap(SocketAddress localAddress, ChannelHandler... childHandlerArrays) throws InterruptedException {
         ServerBootstrap server = newServerBootstrap(NioServerSocketChannel.class, childHandlerArrays);
         ChannelFuture channelFuture = null;
         try {
@@ -62,7 +72,7 @@ public class NettySugar {
      * @param childHandlerArrays
      * @return
      */
-    public static final Bootstrap newClientBootstrap(Class<? extends Channel> channelClass, ChannelHandler... childHandlerArrays) {
+    public static Bootstrap newClientBootstrap(Class<? extends Channel> channelClass, ChannelHandler... childHandlerArrays) {
         EventLoopGroup group = new NioEventLoopGroup();
 
         Bootstrap client = new Bootstrap()
@@ -74,5 +84,30 @@ public class NettySugar {
             Arrays.stream(handlers).forEach(handler -> client.handler(handler));
         });
         return client;
+    }
+
+    private static Class<?> defaultAttributeClazz;
+
+    private synchronized static Class<?> getDefaultAttributeClazz() {
+        return defaultAttributeClazz == null ? ClassLoaderSugar.forName("io.netty.util.DefaultAttributeMap$DefaultAttribute") : defaultAttributeClazz;
+    }
+
+    public static <T> HashMap<String, Object> extractedKeyValue(Channel channel) {
+        Object attributes = ClassSugar.Fields.getDeclaredFieldValue(channel, DefaultAttributeMap.class, "attributes");
+        int length = Array.getLength(attributes);
+        List<Object> list = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            Object attribute = Array.get(attributes, i);
+            list.add(attribute);
+        }
+
+        HashMap<String, Object> channelDict = StreamSugar.toMap(list.stream(),
+                c -> {
+                    AttributeKey<T> attributeKey = ClassSugar.Fields.getDeclaredFieldValue(c, getDefaultAttributeClazz(), "key");
+                    return attributeKey.name();
+                },
+                c -> ClassSugar.Fields.getDeclaredFieldValue(c, AtomicReference.class, "value"));
+
+        return channelDict;
     }
 }

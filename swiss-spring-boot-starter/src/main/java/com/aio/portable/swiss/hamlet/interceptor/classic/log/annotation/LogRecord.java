@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogRecord {
-    boolean ignore() default true;
+    boolean enabled() default true;
 }

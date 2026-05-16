@@ -70,7 +70,7 @@ public class PagePocket<T> {
             return cutLeft.subList(0, pageSize);
     }
 
-    public static final <T> PagePocket<T> paging(List<T> list, int size, int index) {
+    public static <T> PagePocket<T> paging(List<T> list, int size, int index) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
         instance.pageSize = size;
@@ -84,7 +84,7 @@ public class PagePocket<T> {
         return instance;
     }
 
-    public static final <T> PagePocket<T> paging(List<T> list, int size) {
+    public static <T> PagePocket<T> paging(List<T> list, int size) {
         PagePocket<T> instance = new PagePocket<>();
         instance.totalItems = list;
         instance.pageSize = size;

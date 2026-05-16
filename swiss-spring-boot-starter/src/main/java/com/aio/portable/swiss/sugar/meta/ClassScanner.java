@@ -49,7 +49,7 @@ class ClassScanner implements ResourceLoaderAware {
         return ClassScanner.scan(StringUtils.tokenizeToStringArray(basePackages, ",; \t\n"), annotations);
     }
 
-    public final ResourceLoader getResourceLoader() {
+    public ResourceLoader getResourceLoader() {
         return this.resourcePatternResolver;
     }
 

@@ -1,5 +1,8 @@
 package com.aio.portable.swiss.sugar;
 
+import com.aio.portable.swiss.sugar.meta.ClassLoaderSugar;
+import org.slf4j.spi.LoggerFactoryBinder;
+
 public abstract class StackTraceSugar {
     private static final int CURRENT_STACK_DEPTH_THREAD = 3;
     private static final int CURRENT_STACK_DEPTH_EXCEPTION = 2;
@@ -29,6 +32,11 @@ public abstract class StackTraceSugar {
 
     public static int getLineNumber(StackTraceElement stackTraceElement) {
         return stackTraceElement.getLineNumber();
+    }
+
+    public static Class<?> getSonClass(StackTraceElement stackTraceElement) {
+        Class<LoggerFactoryBinder> son = ClassLoaderSugar.forName(stackTraceElement.getClassName());
+        return son;
     }
 
     public static class Current {
@@ -78,6 +86,33 @@ public abstract class StackTraceSugar {
 
         public static int getLineNumber(int previous) {
             return StackTraceSugar.getLineNumber(getStackTraceElementByThread(previous));
+        }
+
+        public static <T> Class<T> getSonClass() {
+            Class<T> son = ClassLoaderSugar.forName(getStackTraceElementByThread(1).getClassName());
+            Class<T> parent = ClassLoaderSugar.forName(getStackTraceElementByThread().getClassName());
+            return son != parent && parent.isAssignableFrom(son) ? son : null;
+        }
+
+        public static <T> Class<T> getSonClass(int previous) {
+            Class<T> son = ClassLoaderSugar.forName(getStackTraceElementByThread(1 + previous).getClassName());
+            Class<T> parent = ClassLoaderSugar.forName(getStackTraceElementByThread().getClassName());
+            return son != parent && parent.isAssignableFrom(son) ? son : null;
+        }
+
+        public static <T> Class<T> getSonClass(int previous, int step) {
+            for (int i = 0; i < step; i++) {
+                String sonName = getStackTraceElementByThread(previous + i).getClassName();
+                if (!RegexSugar.matcher("[a-zA-Z_0-9.]+", sonName).matches()) {
+                    continue;
+                }
+                Class<T> son = ClassLoaderSugar.forName(sonName);
+                Class<T> parent = ClassLoaderSugar.forName(getStackTraceElementByThread().getClassName());
+                if (son != parent && parent.isAssignableFrom(son)) {
+                    return son;
+                }
+            }
+            return null;
         }
     }
 

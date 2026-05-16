@@ -14,18 +14,22 @@ public class BlobToStringTypeHandler extends BaseTypeHandler<String> {
     @Override
     public String getNullableResult(ResultSet rs, String columnName) throws SQLException {
         Blob blob = rs.getBlob(columnName);
-        return new String(blob.getBytes(1, (int)blob.length()));
+        return getString(blob);
     }
 
     @Override
     public String getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         Blob blob = rs.getBlob(columnIndex);
-        return new String(blob.getBytes(1, (int)blob.length()));
+        return getString(blob);
     }
 
     @Override
     public String getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         Blob blob = cs.getBlob(columnIndex);
-        return new String(blob.getBytes(1, (int)blob.length()));
+        return getString(blob);
+    }
+
+    private static String getString(Blob blob) throws SQLException {
+        return new String(blob.getBytes(1, (int) blob.length()));
     }
 }

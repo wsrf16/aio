@@ -21,16 +21,16 @@ public class RabbitMQLogPrinter implements LogPrinter {
     private static final LocalLog log = LocalLog.getLog(RabbitMQLogPrinter.class);
 
     String logName;
-    RabbitMQLogProperties rabbitMQLogProperties;
+    RabbitMQLogProperties properties;
     private volatile static RabbitTemplate rabbitTemplate;
 
-    private RabbitMQLogPrinter(String logName, RabbitMQLogProperties rabbitMQLogProperties) {
+    private RabbitMQLogPrinter(String logName, RabbitMQLogProperties properties) {
         this.logName = logName;
-        this.rabbitMQLogProperties = rabbitMQLogProperties;
+        this.properties = properties;
         if (rabbitTemplate == null) {
             synchronized (RabbitMQLogPrinter.class) {
                 if (rabbitTemplate == null) {
-                    rabbitTemplate = RabbitBuilder.buildTemplate(rabbitMQLogProperties);
+                    rabbitTemplate = RabbitBuilder.buildTemplate(properties);
                 }
             }
         }
@@ -61,8 +61,8 @@ public class RabbitMQLogPrinter implements LogPrinter {
     @Override
     public void println(Object record, LevelEnum level) {
         String line = getSmartSerializerAdapter(level).serialize(record);
-        if (rabbitMQLogProperties.getEnabled()) {
-            rabbitMQLogProperties.getBindingList().forEach(c -> {
+        if (properties.getEnabledOrDefault()) {
+            properties.getBindingList().forEach(c -> {
                 Message msg = MessageBuilder
                         .withBody(line.getBytes())
                         .setContentType(MessageProperties.CONTENT_TYPE_JSON)

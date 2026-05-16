@@ -17,7 +17,7 @@ public class LinkedNodeSugar {
      * @param <T>
      * @return
      */
-    public static final <T> ReferenceLinkedNode<T> buildOfList(List<T> list) {
+    public static <T> ReferenceLinkedNode<T> buildOfList(List<T> list) {
         Class<ReferenceLinkedNode> returnClazz = ReferenceLinkedNode.class;
         ReferenceLinkedNode<T> first;
         if (list.size() > 0) {
@@ -52,19 +52,19 @@ public class LinkedNodeSugar {
      * @param <ID>
      * @return
      */
-    public static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list) {
+    public static <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list) {
         return buildOfRelationLinkedNode(list, IDEquals.OBJECTS_EQUALS);
     }
 
     /**
      * buildOfRelationLinkedNode
      * @param list
-     * @param IDEquals
+     * @param idEquals
      * @param <ID>
      * @return
      */
-    private static final <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list, IDEquals IDEquals) {
-        List<IDLinkedNode<ITEM, ID>> tails = Utils.getTailList(list, IDEquals);
+    private static <ITEM, ID> List<ReferenceLinkedNode<ITEM>> buildOfRelationLinkedNode(List<IDLinkedNode<ITEM, ID>> list, IDEquals idEquals) {
+        List<IDLinkedNode<ITEM, ID>> tails = Utils.getTailList(list, idEquals);
         List<LinkedList<ITEM>> resultOneStep = new ArrayList<>(tails.size());
 
         for (int i = 0; i < tails.size(); i++) {
@@ -75,7 +75,7 @@ public class LinkedNodeSugar {
 
             while (true) {
                 ID byNextId = current.getId();
-                IDLinkedNode<ITEM, ID> prev = Utils.findByNextId(list, byNextId, IDEquals);
+                IDLinkedNode<ITEM, ID> prev = Utils.findByNextId(list, byNextId, idEquals);
                 if (prev != null) {
                     linkedList.offerFirst(prev.getValue());
                     current = prev;
@@ -100,38 +100,38 @@ public class LinkedNodeSugar {
 
 
     private static class Utils {
-        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
+        private static <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list) {
             return getTailList(list, IDEquals.OBJECTS_EQUALS);
         }
 
-        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, IDEquals IDEquals) {
+        private static <T extends IDLinkedNode<?, ID>, ID> List<T> getTailList(List<T> list, IDEquals idEquals) {
             List<T> nullNextList = list.stream().filter(c -> c.tail()).collect(Collectors.toList());
             List<T> aloneNextList = list.stream()
                     .filter(c -> !c.tail())
-                    .filter(tail -> list.stream().noneMatch(head -> IDEquals.equals(tail.getNextId(), head.getId())))
+                    .filter(tail -> list.stream().noneMatch(head -> idEquals.equals(tail.getNextId(), head.getId())))
                     .collect(Collectors.toList());
             List<T> tailList = CollectionSugar.concat(aloneNextList, nullNextList);
             return tailList;
         }
 
-        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
+        private static <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list) {
             return getPreviousList(list, IDEquals.OBJECTS_EQUALS);
         }
 
-        private static final <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, IDEquals IDEquals) {
-            List<T> full = list.stream().collect(Collectors.toList());
+        private static <T extends IDLinkedNode<?, ID>, ID> List<T> getPreviousList(List<T> list, IDEquals idEquals) {
+            List<T> full = list;
             List<T> candidateTailList = list.stream().filter(c -> !c.tail()).collect(Collectors.toList());
-            List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> IDEquals.equals(tail.getNextId(), head.getId()))).collect(Collectors.toList());
+            List<T> headList = full.stream().filter(tail -> candidateTailList.stream().noneMatch(head -> idEquals.equals(tail.getNextId(), head.getId()))).collect(Collectors.toList());
             return headList;
         }
 
-        private static final <T extends IDLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final IDEquals IDEquals) {
-            T t = list.stream().filter(c -> IDEquals.equals(c.getId(), id)).findFirst().orElse(null);
+        private static <T extends IDLinkedNode<?, ID>, ID> T findByNodeId(List<T> list, ID id, final IDEquals idEquals) {
+            T t = list.stream().filter(c -> idEquals.equals(c.getId(), id)).findFirst().orElse(null);
             return t;
         }
 
-        private static final <T extends IDLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final IDEquals IDEquals) {
-            T t = list.stream().filter(c -> IDEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
+        private static <T extends IDLinkedNode<?, ID>, ID> T findByNextId(List<T> list, ID id, final IDEquals idEquals) {
+            T t = list.stream().filter(c -> idEquals.equals(c.getNextId(), id)).findFirst().orElse(null);
             return t;
         }
     }

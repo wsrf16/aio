@@ -9,7 +9,7 @@ public class ByteSugar {
      * @param obj
      * @return
      */
-    public static final byte[] toByteArray(Object obj) {
+    public static byte[] toByteArray(Object obj) {
         byte[] bytes;
         try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
@@ -30,7 +30,7 @@ public class ByteSugar {
      * @param bytes
      * @return
      */
-    public static final Object toObject(byte[] bytes) {
+    public static Object toObject(byte[] bytes) {
         Object obj;
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);

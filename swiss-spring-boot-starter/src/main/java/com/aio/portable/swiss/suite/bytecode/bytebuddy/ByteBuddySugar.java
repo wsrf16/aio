@@ -28,7 +28,7 @@ public abstract class ByteBuddySugar {
      * @param targetCompleteClassName "com.sandbox.console.Foo1"
      * @param <S>
      */
-    public static final <S> void redefineClass(String targetCompleteClassName, Class<S> sourceClazz) throws ClassNotFoundException {
+    public static <S> void redefineClass(String targetCompleteClassName, Class<S> sourceClazz) throws ClassNotFoundException {
         ClassReloadingStrategy fromInstalledAgent = ClassReloadingStrategy.fromInstalledAgent();
 
         DynamicType.Builder<S> builder = new ByteBuddy()
@@ -52,7 +52,7 @@ public abstract class ByteBuddySugar {
      * @param <S>
      * @param <T>
      */
-    public static final <S, T> void redefineClass(Class<T> targetClazz, Class<S> sourceClazz) throws ClassNotFoundException {
+    public static <S, T> void redefineClass(Class<T> targetClazz, Class<S> sourceClazz) throws ClassNotFoundException {
         redefineClass(targetClazz.getName(), sourceClazz);
     }
 
@@ -62,7 +62,7 @@ public abstract class ByteBuddySugar {
      * @param method ElementMatchers.named("toString")
      * @param implementation FixedValue.value("Hello World!")   MethodDelegation.to(Log4j.class)
      */
-    public static final void redefineMethod(Class<?> clazz, ElementMatcher<? super MethodDescription> method, Implementation implementation) {
+    public static void redefineMethod(Class<?> clazz, ElementMatcher<? super MethodDescription> method, Implementation implementation) {
         ClassReloadingStrategy fromInstalledAgent = ClassReloadingStrategy.fromInstalledAgent();
         Class<?> dynamicType = new ByteBuddy()
                 .redefine(clazz)

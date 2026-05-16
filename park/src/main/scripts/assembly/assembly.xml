@@ -77,7 +77,7 @@
         <file>
             <source>${project.build.scriptSourceDirectory}/dynamic/jav</source>
             <outputDirectory></outputDirectory>
-            <destName>${project.build.finalName}.jar.sh</destName>
+            <destName>${project.artifactId}.jar.sh</destName>
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </file>

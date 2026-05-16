@@ -15,7 +15,7 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
 
     private static final boolean DEFAULT_ENABLED = true;
 
-    private Boolean enabled = true;
+    private Boolean enabled;
 
     public Boolean getEnabled() {
         return enabled;
@@ -25,17 +25,28 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
         this.enabled = enabled;
     }
 
-    public final Boolean getDefaultEnabledIfAbsent() {
+    public final Boolean getEnabledOrDefault() {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
+    }
+
+    public Boolean getEnabledIsTrue() {
+        return enabled != null && enabled;
+    }
+
+    public Boolean getEnabledIsFalse() {
+        return enabled != null && !enabled;
     }
 
 
 
-
-    private static Slf4JLogProperties instance = new Slf4JLogProperties();
+    private static Slf4JLogProperties instance;
 
     public synchronized static Slf4JLogProperties getSingleton() {
         return instance;
+    }
+
+    public synchronized static boolean exist() {
+        return instance != null;
     }
 
     private static boolean initialized = false;
@@ -44,7 +55,7 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
         return initialized;
     }
 
-    protected Slf4JLogProperties() {
+    public Slf4JLogProperties() {
     }
 
     @Override
@@ -52,12 +63,12 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
         initialSingletonInstance(this);
     }
 
-    public static final void initialSingletonInstance(Slf4JLogProperties properties) {
+    public static void initialSingletonInstance(Slf4JLogProperties properties) {
         instance = properties;
         log.debug("Slf4jLogProperties InitialSingletonInstance", null, ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(instance));
     }
 
-    public static final void initialSingletonInstance(Binder binder) {
+    public static void initialSingletonInstance(Binder binder) {
         final BindResult<Slf4JLogProperties> bindResult = binder.bind(Slf4JLogProperties.PREFIX, Slf4JLogProperties.class);
         if (bindResult != null && bindResult.isBound()) {
             Slf4JLogProperties.initialSingletonInstance(bindResult.get());

@@ -37,7 +37,7 @@ public class JacksonSugar {
 
 //    private static final class Instance {
 //        private static final Instance singleton = new Instance();
-//        private static final Instance getInstance() {
+//        private static Instance getInstance() {
 //            return singleton;
 //        }
 //
@@ -50,7 +50,7 @@ public class JacksonSugar {
 
     private static DateFormat dateFormat = new SimpleDateFormat(DateTimeSugar.Format.FORMAT_NORMAL_LONG);
     private static TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
-    public static final synchronized void setDateFormat(DateFormat dateFormat) {
+    public static synchronized void setDateFormat(DateFormat dateFormat) {
         JacksonSugar.dateFormat = dateFormat;
     }
 
@@ -63,12 +63,12 @@ public class JacksonSugar {
          * @param dateFormat
          * @return
          */
-        public static final ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat, TimeZone timeZone) {
+        public static ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat, TimeZone timeZone) {
             ObjectMapper mapper = buildObjectMapper();
             return buildObjectMapper(mapper, indent, includeNullAndEmpty, strategy, dateFormat, timeZone);
         }
 
-        private static final ObjectMapper buildObjectMapper(ObjectMapper mapper, Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat, TimeZone timeZone) {
+        private static ObjectMapper buildObjectMapper(ObjectMapper mapper, Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy, DateFormat dateFormat, TimeZone timeZone) {
             mapper
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                     .disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
@@ -120,7 +120,7 @@ public class JacksonSugar {
          * @param strategy
          * @return
          */
-        public static final ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
+        public static ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty, PropertyNamingStrategy strategy) {
             return buildObjectMapper(indent, includeNullAndEmpty, strategy, dateFormat, timeZone);
         }
 
@@ -130,15 +130,15 @@ public class JacksonSugar {
          * @param includeNullAndEmpty
          * @return
          */
-        public static final ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty) {
+        public static ObjectMapper buildObjectMapper(Boolean indent, Boolean includeNullAndEmpty) {
             return buildObjectMapper(indent, includeNullAndEmpty, null, dateFormat, timeZone);
         }
 
-        public static final ObjectMapper buildShortObjectMapper() {
+        public static ObjectMapper buildShortObjectMapper() {
             return buildObjectMapper(false, false);
         }
 
-        public static final ObjectMapper buildObjectMapper() {
+        public static ObjectMapper buildObjectMapper() {
             boolean present = ClassLoaderSugar.isPresent("org.springframework.http.converter.json.Jackson2ObjectMapperBuilder");
             if (present) {
                 // log circular reference
@@ -148,18 +148,18 @@ public class JacksonSugar {
                 return buildObjectMapper(false, true);
         }
 
-        public static final ObjectMapper buildLongObjectMapper() {
+        public static ObjectMapper buildLongObjectMapper() {
             return buildObjectMapper(true, true);
         }
 
-        public static final ObjectMapper buildDumpObjectMapper() {
+        public static ObjectMapper buildDumpObjectMapper() {
             return new ObjectMapper()
                     .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
                     .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
 
-        private static final ObjectMapper buildSilenceObjectMapper() {
+        private static ObjectMapper buildSilenceObjectMapper() {
             return Builder.buildObjectMapper(false, true);
         }
 
@@ -170,7 +170,7 @@ public class JacksonSugar {
      * @param json
      * @return
      */
-    public static final JsonNode parse(String json) {
+    public static JsonNode parse(String json) {
         try {
             JsonNode jsonNode = NORMAL_OBJECT_MAPPER.readTree(json);
             return jsonNode;
@@ -184,7 +184,7 @@ public class JacksonSugar {
      * @param json
      * @return
      */
-    public static final boolean beJson(String json) {
+    public static boolean beJson(String json) {
         try {
             NORMAL_OBJECT_MAPPER.readTree(json);
             return true;
@@ -198,7 +198,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static final String obj2ShortJson(Object obj) {
+    public static String obj2ShortJson(Object obj) {
 //        return obj2Json(obj, false, false);
         ObjectMapper mapper = SHORT_OBJECT_MAPPER;
         String json;
@@ -223,14 +223,14 @@ public class JacksonSugar {
      * @param throwException
      * @return
      */
-    public static final String obj2ShortJson(Object obj, Boolean throwException) {
+    public static String obj2ShortJson(Object obj, boolean throwException) {
         if (throwException)
             return obj2ShortJson(obj);
         else {
             try {
                 return obj2ShortJson(obj);
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
                 return null;
             }
         }
@@ -242,7 +242,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static final String obj2LongJson(Object obj) {
+    public static String obj2LongJson(Object obj) {
 //        return obj2Json(obj, true, true);
         ObjectMapper mapper = LONG_OBJECT_MAPPER;
         String json;
@@ -267,13 +267,14 @@ public class JacksonSugar {
      * @param throwException
      * @return
      */
-    public static final String obj2LongJson(Object obj, Boolean throwException) {
+    public static String obj2LongJson(Object obj, boolean throwException) {
         if (throwException)
             return obj2LongJson(obj);
         else {
             try {
                 return obj2LongJson(obj);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }
@@ -285,7 +286,7 @@ public class JacksonSugar {
      * @param obj
      * @return
      */
-    public static final String obj2Json(Object obj) {
+    public static String obj2Json(Object obj) {
 //        return obj2Json(obj, false, true);
         ObjectMapper mapper = NORMAL_OBJECT_MAPPER;
         String json;
@@ -303,7 +304,7 @@ public class JacksonSugar {
         return json;
     }
 
-//    public static final String obj2Json(ObjectMapper objectMapper, Object obj) {
+//    public static String obj2Json(ObjectMapper objectMapper, Object obj) {
 //        try {
 //            return objectMapper.writeValueAsString(obj);
 //        } catch (JsonProcessingException e) {
@@ -311,35 +312,30 @@ public class JacksonSugar {
 //        }
 //    }
 
-    public static final String obj2Json(ObjectMapper objectMapper, Object obj, Boolean throwException) {
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            if (throwException)
-                throw new RuntimeException(e);
-            else
-                e.printStackTrace();
-                return null;
-        }
-    }
-
-
     /**
      * obj2Json
      * @param obj
      * @return
      */
-    public static final String obj2Json(Object obj, Boolean throwException) {
+    public static String obj2Json(Object obj, boolean throwException) {
         ObjectMapper mapper = SILENCE_OBJECT_MAPPER;
         return obj2Json(mapper, obj, throwException);
     }
 
 
-
-    public static final LinkedHashMap obj2Map(Object obj) {
-        String json = JacksonSugar.obj2Json(obj);
-        return JacksonSugar.json2T(json, LinkedHashMap.class);
+    public static String obj2Json(ObjectMapper objectMapper, Object obj, boolean throwException) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            if (throwException)
+                throw new RuntimeException(e);
+            else {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
+
 
     /**
      * obj2Json
@@ -364,133 +360,135 @@ public class JacksonSugar {
         return json;
     }
 
+    public static LinkedHashMap obj2Map(Object obj) {
+        String json = JacksonSugar.obj2Json(obj);
+        return JacksonSugar.json2T(json, LinkedHashMap.class);
+    }
+
     /**
      * json2T
-     * @param jsonStr   {"key" : "value"}
+     * @param json   {"key" : "value"}
      * @param clazz
      * @param <T>
      * @return
      */
-    public static final <T> T json2T(String jsonStr, Class<T> clazz) {
+    public static <T> T json2T(String json, Class<T> clazz) {
         ObjectMapper mapper = DUMP_OBJECT_MAPPER;
         try {
-            return jsonStr == null ? null : mapper.readValue(jsonStr, clazz);
-        } catch (IOException e) {
-//            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static final <T> T json2T(ObjectMapper objectMapper, String jsonStr, Class<T> clazz) {
-        try {
-            return jsonStr == null ? null : objectMapper.readValue(jsonStr, clazz);
+            return json == null ? null : mapper.readValue(json, clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static final HashMap<Object, Object> json2ObjectMap(String jsonStr) {
-        return json2T(jsonStr, new HashMap<Object, Object>().getClass());
+    public static <T> T json2T(ObjectMapper objectMapper, String json, Class<T> clazz) {
+        try {
+            return json == null ? null : objectMapper.readValue(json, clazz);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-    public static final HashMap<String, Object> json2StringMap(String jsonStr) {
-        return json2T(jsonStr, new HashMap<String, Object>().getClass());
+    public static HashMap<Object, Object> json2ObjectMap(String json) {
+        return json2T(json, new HashMap<Object, Object>().getClass());
+    }
+
+    public static HashMap<String, Object> json2StringMap(String json) {
+        return json2T(json, new HashMap<String, Object>().getClass());
     }
 
     /**
      * json2JsonNode
-     * @param jsonStr
+     * @param json
      * @return
      */
-    public static final JsonNode json2JsonNode(String jsonStr) {
+    public static JsonNode json2JsonNode(String json) {
         ObjectMapper mapper = DUMP_OBJECT_MAPPER;
         try {
-            return mapper.readTree(jsonStr);
+            return mapper.readTree(json);
         } catch (IOException e) {
-//            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * json2T
-     * @param jsonStr
-     * @param <T>
-     * @return
-     * @throws IOException
-     */
-    public static final <T> T json2T(String jsonStr) {
-        try {
-            ObjectMapper mapper = DUMP_OBJECT_MAPPER;
-            TypeReference<T> valueTypeRef = new TypeReference<T>() {
-            };
-            return mapper.readValue(jsonStr, valueTypeRef);
-        } catch (Exception e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
     /**
      * json2T
-     * @param jsonStr
+     * @param json
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static <T> T json2T(String json) {
+        try {
+            ObjectMapper mapper = DUMP_OBJECT_MAPPER;
+            TypeReference<T> valueTypeRef = new TypeReference<T>() {
+            };
+            return mapper.readValue(json, valueTypeRef);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * json2T
+     * @param json
      * @param valueTypeRef
      * @param <T>
      * @return
      * @throws IOException
      */
-    public static final <T> T json2T(String jsonStr, TypeReference<T> valueTypeRef) {
+    public static <T> T json2T(String json, TypeReference<T> valueTypeRef) {
         try {
             ObjectMapper mapper = DUMP_OBJECT_MAPPER;
-            return mapper.readValue(jsonStr, valueTypeRef);
+            return mapper.readValue(json, valueTypeRef);
         } catch (Exception e) {
-//            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
     /**
      * can2T
-     * @param jsonStr
+     * @param json
      * @param clazz
      * @param <T>
      * @return
      */
-    public static final <T> boolean can2T(String jsonStr, Class<T> clazz) {
-        boolean can = json2T(jsonStr, clazz) == null ? false : true;
+    public static <T> boolean can2T(String json, Class<T> clazz) {
+        boolean can = json2T(json, clazz) == null ? false : true;
         return can;
     }
 
     /**
      * can2T
-     * @param jsonStr
+     * @param json
      * @param valueTypeRef
      * @param <T>
      * @return
      * @throws IOException
      */
-    public static final <T> boolean can2T(String jsonStr, TypeReference<T> valueTypeRef) {
-        boolean can = json2T(jsonStr, valueTypeRef) == null ? false : true;
+    public static <T> boolean can2T(String json, TypeReference<T> valueTypeRef) {
+        boolean can = json2T(json, valueTypeRef) == null ? false : true;
         return can;
     }
 
     /**
      * json2JObj
      *
-     * @param jsonStr {"key" : "value"}
+     * @param json {"key" : "value"}
      * @return
      */
-//    public static final JSONObject json2JObj(String jsonStr) {
-//        return new JSONObject(jsonStr);
+//    public static JSONObject json2JObj(String json) {
+//        return new JSONObject(json);
 //    }
 
     /**
      * json2JArray
-     * @param jsonStr [{"key1" : "value1"}, {"key2" : "value2"}]
+     * @param json [{"key1" : "value1"}, {"key2" : "value2"}]
      * @return
      */
-//    public static final JSONArray json2JArray(String jsonStr) {
-//        return new JSONArray(jsonStr);
+//    public static JSONArray json2JArray(String json) {
+//        return new JSONArray(json);
 //    }
 
     /**
@@ -500,7 +498,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static final <T> T deepCopy(Object source, Class<T> targetClass) {
+    public static <T> T deepCopy(Object source, Class<T> targetClass) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), targetClass);
         return t;
     }
@@ -512,7 +510,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static final <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
+    public static <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), valueTypeRef);
         return t;
     }
@@ -523,7 +521,7 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static final <T> T deepCopy(T source) {
+    public static <T> T deepCopy(T source) {
         T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
         return t;
     }
@@ -533,7 +531,7 @@ public class JacksonSugar {
      * @param source
      * @return
      */
-    public static final String formatLong(String source) {
+    public static String formatLong(String source) {
         return JacksonSugar.obj2LongJson(JacksonSugar.json2T(source, Object.class));
     }
 
@@ -542,7 +540,7 @@ public class JacksonSugar {
      * @param source
      * @return
      */
-    public static final String formatShort(String source) {
+    public static String formatShort(String source) {
         return JacksonSugar.obj2ShortJson(JacksonSugar.json2T(source, Object.class));
     }
 
@@ -551,8 +549,23 @@ public class JacksonSugar {
      * @param source
      * @return
      */
-    public static final String format(String source) {
+    public static String format(String source) {
         return JacksonSugar.obj2Json(JacksonSugar.json2T(source, Object.class));
+    }
+
+    /**
+     * newInstance
+     * @param <T>
+     * @return
+     */
+    public static <T> T newInstance() {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()));
+        return t;
+    }
+
+    public static <T> T newInstance(Class<T> clazz) {
+        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), clazz);
+        return t;
     }
 
     /**
@@ -561,42 +574,27 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static final <T> T newInstance(TypeReference<T> valueTypeRef) {
+    public static <T> T newInstance(TypeReference<T> valueTypeRef) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), valueTypeRef);
         return t;
     }
 
-    public static final <T> T newInstance(Class<T> clazz) {
-        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), clazz);
-        return t;
-    }
-
-    /**
-     * newInstance
-     * @param <T>
-     * @return
-     */
-    public static final <T> T newInstance() {
-        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()));
-        return t;
-    }
-
-    public static final byte[] objToJsonBytes(Object obj){
+    public static byte[] objToJsonBytes(Object obj){
         String json = JacksonSugar.obj2Json(obj);
         return json.getBytes(StandardCharsets.UTF_8);
     }
 
-    public static final <T> T jsonBytesToObj(byte[] data, Class<T> clazz){
+    public static <T> T jsonBytesToObj(byte[] data, Class<T> clazz){
         String json = new String(data, StandardCharsets.UTF_8);
         return JacksonSugar.json2T(json, clazz);
     }
 
-    public static final String objToJsonBase64(Object obj){
+    public static String objToJsonBase64(Object obj){
         String json = JacksonSugar.obj2Json(obj);
         return JDKBase64Convert.encodeToString(json);
     }
 
-    public static final <T> T jsonBase64ToObj(String jsonBase64, Class<T> clazz){
+    public static <T> T jsonBase64ToObj(String jsonBase64, Class<T> clazz){
         String json = JDKBase64Convert.decodeToString(jsonBase64);
         return JacksonSugar.json2T(json, clazz);
     }

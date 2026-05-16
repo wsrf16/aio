@@ -1,8 +1,8 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic;
 
-import com.aio.portable.swiss.hamlet.bean.BaseBizStatusEnum;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrapper;
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBean;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
+import com.aio.portable.swiss.hamlet.bean.ResponseStatuses;
 import com.aio.portable.swiss.hamlet.exception.BizException;
 import com.aio.portable.swiss.hamlet.exception.BusinessException;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecord;
@@ -13,7 +13,6 @@ import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.text.MessageFormat;
 
@@ -25,10 +24,10 @@ public abstract class HamletExceptionAdvice {
     protected final LogHub log;
 
     @Autowired(required = false)
-    BaseBizStatusEnum baseBizStatusEnum;
+    ResponseStatuses responseStatuses;
 
-    public BaseBizStatusEnum getBizStatusEnum() {
-        return baseBizStatusEnum == null ? BaseBizStatusEnum.getSingleton() : baseBizStatusEnum;
+    public ResponseStatuses getBizStatusEnum() {
+        return responseStatuses != null ? responseStatuses : ResponseStatuses.getSingleton();
     }
 
     public void setLogEnabled(boolean enabled) {
@@ -55,9 +54,7 @@ public abstract class HamletExceptionAdvice {
     }
 
     @ExceptionHandler(value = {Exception.class})
-    public ResponseWrapper handleBizException(Exception input) {
-        ResponseWrapper responseWrapper;
-
+    public ResponseBean<?> handleBizException(Exception input) {
 //        if (input instanceof HandOverException) {
 //            responseWrapper = buildResponseWrapper(input.getCause());
 //            HandOverException instance = (HandOverException) input;
@@ -72,43 +69,40 @@ public abstract class HamletExceptionAdvice {
 //            responseWrapper = buildResponseWrapper(input);
 //            log.e(GLOBAL_BUSINESS_EXCEPTION, input);
 //        }
-        String spanId = RequestRecordSession.getSpanId();
+
 
         Throwable e = ThrowableSugar.getRootCause(input);
         RequestRecord requestRecord = RequestRecordSession.getRequestRecord();
-        if (beBusinessException(e)) {
-            responseWrapper = buildResponseWrapper(e);
-            responseWrapper.setSpanId(spanId);
-            if (RequestRecordSession.getException() == null)
-                log.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, spanId), requestRecord, e);
-        } else if (e instanceof NoHandlerFoundException) {
-            responseWrapper = buildResponseWrapper(e);
-            responseWrapper.setSpanId(spanId);
-            if (RequestRecordSession.getException() == null)
-                log.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, spanId), requestRecord, e);
-        } else {
-            responseWrapper = buildResponseWrapper(e);
-            responseWrapper.setSpanId(spanId);
-            if (RequestRecordSession.getException() == null)
-                log.e(MessageFormat.format("{0}({1})", GLOBAL_SYSTEM_EXCEPTION, spanId), requestRecord, e);
-        }
-        RequestRecordSession.remove();
 
-        return responseWrapper;
+        ResponseBean<?> responseBean = requestRecord != null ? buildResponseWrapper(e, requestRecord.getSpanId()) : buildResponseWrapper(e);
+
+//        String spanId = responseBean.getSpanId();
+        String globalId = requestRecord.getGlobalId();
+        log.e(MessageFormat.format("{0}({1})", GLOBAL_BUSINESS_EXCEPTION, globalId), requestRecord, e);
+
+        RequestRecordSession.remove();
+        return responseBean;
     }
 
-    private ResponseWrapper buildResponseWrapper(Throwable input) {
-        ResponseWrapper responseWrapper;
+    private ResponseBean<?> buildResponseWrapper(Throwable input) {
+        ResponseBean<?> responseBean;
         if (beBusinessException(input)) {
             BusinessException e = (BusinessException) input;
-            responseWrapper = ResponseWrappers.build(e.getCode(), e.getMessage());
+            responseBean = ResponseBeans.build(e.getCode(), e.getMessage());
         } else if (input instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException e = (MethodArgumentNotValidException) input;
-            responseWrapper = ResponseWrappers.build(getBizStatusEnum().staticInvalid().getCode(), e.getBindingResult().getAllErrors());
+            responseBean = ResponseBeans.build(getBizStatusEnum().staticInvalid().getCode(), e.getBindingResult().getAllErrors());
         } else {
-            responseWrapper = ResponseWrappers.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
+            responseBean = ResponseBeans.build(getBizStatusEnum().staticException().getCode(), getBizStatusEnum().staticException().getMessage());
         }
-        return responseWrapper;
+        return responseBean;
+    }
+
+    private ResponseBean<?> buildResponseWrapper(Throwable input, String spanId) {
+        ResponseBean<?> responseBean = buildResponseWrapper(input);
+        if (spanId != null)
+            responseBean.setSpanId(spanId);
+        return responseBean;
     }
 
 

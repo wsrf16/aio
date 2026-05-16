@@ -2,8 +2,8 @@ package com.aio.portable.swiss.hamlet.bean;
 
 import com.aio.portable.swiss.hamlet.exception.BizException;
 
-public class BizStatus {
-    public BizStatus(int code, String message) {
+public class ResponseStatus {
+    public ResponseStatus(int code, String message) {
         this.code = code;
         this.message = message;
     }

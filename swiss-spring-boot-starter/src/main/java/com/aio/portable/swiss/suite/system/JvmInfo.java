@@ -15,7 +15,7 @@ public abstract class JvmInfo {
      * getMemoryMXBean
      * @return
      */
-    public static final MemoryMXBean getMemoryMXBean() {
+    public static MemoryMXBean getMemoryMXBean() {
         MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
         return memoryMXBean;
     }
@@ -24,12 +24,12 @@ public abstract class JvmInfo {
      * getGarbageCollectorMXBeans
      * @return
      */
-    public static final List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
+    public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
         List<GarbageCollectorMXBean> garbageCollectorMXBeanList = ManagementFactory.getGarbageCollectorMXBeans();
         return garbageCollectorMXBeanList;
     }
 
-    public static final void printMemoryInfo() {
+    public static void printMemoryInfo() {
         MemoryMXBean memory = ManagementFactory.getMemoryMXBean();
         MemoryUsage headMemory = memory.getHeapMemoryUsage();
 
@@ -56,7 +56,7 @@ public abstract class JvmInfo {
 
     }
 
-    public static final void printGCInfo() {
+    public static void printGCInfo() {
         List<GarbageCollectorMXBean> garbages = ManagementFactory.getGarbageCollectorMXBeans();
         for (GarbageCollectorMXBean garbage : garbages) {
             String info = String.format("name: %s\t count:%s\t took:%s\t pool name:%s",
@@ -68,15 +68,15 @@ public abstract class JvmInfo {
         }
     }
 
-    public static final int availableProcessors() {
+    public static int availableProcessors() {
         return Runtime.getRuntime().availableProcessors();
     }
 
-//    public static final ClassLayout parseClass(Class<?> clazz ) {
+//    public static ClassLayout parseClass(Class<?> clazz ) {
 //        return ClassLayout.parseClass(clazz);
 //    }
 //
-//    public static final ClassLayout parseInstance(Object clazz) {
+//    public static ClassLayout parseInstance(Object clazz) {
 //        return ClassLayout.parseInstance(clazz);
 //    }
 }

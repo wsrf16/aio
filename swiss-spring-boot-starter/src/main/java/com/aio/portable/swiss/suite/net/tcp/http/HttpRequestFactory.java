@@ -17,7 +17,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 public class HttpRequestFactory {
-    public static final SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
+    public static SimpleClientHttpRequestFactory buildProxySimpleClientHttpRequestFactory(String host, int port) {
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
@@ -26,7 +26,7 @@ public class HttpRequestFactory {
         return factory;
     }
 
-    public static final SkipSSLSimpleClientHttpRequestFactory buildSkipSSLSimpleClientHttpRequestFactory() {
+    public static SkipSSLSimpleClientHttpRequestFactory buildSkipSSLSimpleClientHttpRequestFactory() {
         SkipSSLSimpleClientHttpRequestFactory factory = new SkipSSLSimpleClientHttpRequestFactory();
         factory.setReadTimeout(5000);
         factory.setConnectTimeout(10000);
@@ -37,7 +37,7 @@ public class HttpRequestFactory {
 
 
     // http://www.it1352.com/215149.html
-    public static final HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
+    public static HttpComponentsClientHttpRequestFactory buildProxyHttpComponentsClientHttpRequestFactory(String host, int port, String username, String password) {
         HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
         config.setHost(host);
         config.setPort(port);
@@ -48,14 +48,14 @@ public class HttpRequestFactory {
         return factory;
     }
 
-    public static final HttpComponentsClientHttpRequestFactory buildHttpComponentsClientHttpRequestFactory() {
+    public static HttpComponentsClientHttpRequestFactory buildHttpComponentsClientHttpRequestFactory() {
         HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
 
         HttpComponentsClientHttpRequestFactory factory = HttpComponentsClientHttpRequestFactoryBuilder.build(config);
         return factory;
     }
 
-    public static final HttpComponentsClientHttpRequestFactory buildSkipSSLHttpComponentsClientHttpRequestFactory() {
+    public static HttpComponentsClientHttpRequestFactory buildSkipSSLHttpComponentsClientHttpRequestFactory() {
         HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
         config.setSkipSSL(true);
 
@@ -63,7 +63,7 @@ public class HttpRequestFactory {
         return factory;
     }
 
-    public static final HttpComponentsClientHttpRequestFactory buildHttpComponentsClientHttpRequestFactory(boolean skipSSL, String host, int port, String username, String password) {
+    public static HttpComponentsClientHttpRequestFactory buildHttpComponentsClientHttpRequestFactory(boolean skipSSL, String host, int port, String username, String password) {
         HttpRequestFactoryConfig config = new HttpRequestFactoryConfig();
         config.setHost(host);
         config.setPort(port);

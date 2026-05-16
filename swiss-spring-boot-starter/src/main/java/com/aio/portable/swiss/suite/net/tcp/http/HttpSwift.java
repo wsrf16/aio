@@ -36,28 +36,28 @@ public class HttpSwift {
             .setRedirectsEnabled(true)
             .build();
 
-//    public static final HttpClientBuilder buildHttpClient() {
+//    public static HttpClientBuilder buildHttpClient() {
 //        HttpClientBuilder factory = HttpClients.custom();
 //        return factory;
 //    }
 //
-//    public static final HttpClientBuilder setCookieStore(HttpClientBuilder factory, CookieStore cookieStore) {
+//    public static HttpClientBuilder setCookieStore(HttpClientBuilder factory, CookieStore cookieStore) {
 //        factory = factory.setDefaultCookieStore(cookieStore);
 //        return factory;
 //    }
 //
-//    public static final HttpClientBuilder setProxy(HttpClientBuilder factory, HttpHost httpHost) {
+//    public static HttpClientBuilder setProxy(HttpClientBuilder factory, HttpHost httpHost) {
 //        factory = factory.setProxy(httpHost);
 //        return factory;
 //    }
 //
-//    public static final HttpClientBuilder setProxy(HttpClientBuilder factory, String hostname, int port, String scheme) {
+//    public static HttpClientBuilder setProxy(HttpClientBuilder factory, String hostname, int port, String scheme) {
 //        HttpHost httpHost = new HttpHost(hostname, port, scheme);
 //        factory = factory.setProxy(httpHost);
 //        return factory;
 //    }
 //
-//    public static final HttpHost buildHostProxy(String hostname, int port, String scheme) {
+//    public static HttpHost buildHostProxy(String hostname, int port, String scheme) {
 //        HttpHost proxy = new HttpHost(hostname, port, scheme);
 //        return proxy;
 //    }
@@ -65,11 +65,11 @@ public class HttpSwift {
 
     protected static StringSerializerAdapter stringSerializerAdapter;
 
-    public static final StringSerializerAdapter getSerializerAdapter() {
+    public static StringSerializerAdapter getSerializerAdapter() {
         return stringSerializerAdapter;
     }
 
-    public static final void setSerializerAdapter(StringSerializerAdapter stringSerializerAdapter) {
+    public static void setSerializerAdapter(StringSerializerAdapter stringSerializerAdapter) {
         HttpSwift.stringSerializerAdapter = stringSerializerAdapter;
     }
 
@@ -78,30 +78,30 @@ public class HttpSwift {
         stringSerializerAdapter = SerializerAdapterFactory.buildJackson();
     }
 
-    public static final UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
+    public static UrlEncodedFormEntity buildUrlEncodedFormEntity(List<BasicNameValuePair> list, String charset) throws UnsupportedEncodingException {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);
         return entity;
     }
 
-    public static final StringEntity buildJsonEntity(String json, Charset charset) {
+    public static StringEntity buildJsonEntity(String json, Charset charset) {
         StringEntity entity = new StringEntity(json, charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public static final StringEntity buildJsonObjectEntity(Object body, Charset charset) {
+    public static StringEntity buildJsonObjectEntity(Object body, Charset charset) {
         StringEntity entity = new StringEntity(stringSerializerAdapter.serialize(body), charset);
         entity.setContentType("application/json");
         return entity;
     }
 
-    public static final StringEntity buildStringEntity(String body, Charset charset) {
+    public static StringEntity buildStringEntity(String body, Charset charset) {
         StringEntity entity = new StringEntity(body, charset);
         // entity.setContentEncoding("UTF-8");
         return entity;
     }
 
-    public static final HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity) {
+    public static HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity) {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(config);
         if (entity != null)
@@ -109,7 +109,7 @@ public class HttpSwift {
         return httpPost;
     }
 
-    public static final HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity, Header[] headers) {
+    public static HttpPost buildPost(String url, RequestConfig config, AbstractHttpEntity entity, Header[] headers) {
         HttpPost httpPost = new HttpPost(url);
         if (config != null)
             httpPost.setConfig(config);
@@ -120,18 +120,18 @@ public class HttpSwift {
         return httpPost;
     }
 
-    public static final HttpGet buildGet(String url) throws URISyntaxException {
+    public static HttpGet buildGet(String url) throws URISyntaxException {
         HttpGet httpGet = new HttpGet(url);
         return httpGet;
     }
 
-    public static final HttpGet buildGet(String url, RequestConfig config) throws URISyntaxException {
+    public static HttpGet buildGet(String url, RequestConfig config) throws URISyntaxException {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setConfig(config);
         return httpGet;
     }
 
-    public static final HttpGet buildGet(String url, RequestConfig config, List<BasicNameValuePair> params, String charset) throws URISyntaxException {
+    public static HttpGet buildGet(String url, RequestConfig config, List<BasicNameValuePair> params, String charset) throws URISyntaxException {
         String query = URLEncodedUtils.format(params, charset);
         url = MessageFormat.format("{0}?{1}", url, query);
         URI uri = new URI(url);
@@ -140,7 +140,7 @@ public class HttpSwift {
         return httpGet;
     }
 
-    public static final String getResult(HttpResponse response, Charset charset) throws IOException {
+    public static String getResult(HttpResponse response, Charset charset) throws IOException {
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(entity, charset);
@@ -149,7 +149,7 @@ public class HttpSwift {
         }
     }
 
-    public static final String getResult(HttpResponse response) throws IOException {
+    public static String getResult(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return EntityUtils.toString(entity);

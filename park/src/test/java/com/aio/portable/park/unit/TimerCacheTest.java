@@ -34,7 +34,7 @@ public class TimerCacheTest {
         System.out.println();
     }
 
-    public static final void longTimeWork() {
+    public static void longTimeWork() {
         try {
             Thread.sleep(5 * 1000);
         } catch (InterruptedException e) {

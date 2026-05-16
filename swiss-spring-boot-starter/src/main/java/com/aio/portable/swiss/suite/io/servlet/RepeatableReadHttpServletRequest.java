@@ -8,9 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Function;
 
@@ -33,7 +31,7 @@ public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper 
         this(request, b -> b);
     }
 
-    public static final RepeatableReadHttpServletRequest repeatable(HttpServletRequest servletRequest) {
+    public static RepeatableReadHttpServletRequest repeatable(HttpServletRequest servletRequest) {
         return new RepeatableReadHttpServletRequest(servletRequest);
     }
 

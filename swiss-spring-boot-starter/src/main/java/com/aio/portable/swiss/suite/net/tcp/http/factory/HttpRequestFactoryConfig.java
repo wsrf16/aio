@@ -12,12 +12,14 @@ public class HttpRequestFactoryConfig {
     private Integer socketTimeout = 30000;
     private Integer connectTimeout = 10000;
     private Integer connectionRequestTimeout = 300;
+    private Integer responseTimeout = 300;
 
     private Boolean skipSSL = false;
     private Integer maxTotal = 300;
     private Integer defaultMaxPerRoute = 50;
 
     private Integer retryCount = 3;
+    private Integer retryIntervalSeconds = 1;
 
 
     public String getHost() {
@@ -92,6 +94,14 @@ public class HttpRequestFactoryConfig {
         this.connectionRequestTimeout = connectionRequestTimeout;
     }
 
+    public Integer getResponseTimeout() {
+        return responseTimeout;
+    }
+
+    public void setResponseTimeout(Integer responseTimeout) {
+        this.responseTimeout = responseTimeout;
+    }
+
     public Boolean getSkipSSL() {
         return skipSSL;
     }
@@ -123,4 +133,13 @@ public class HttpRequestFactoryConfig {
     public void setRetryCount(Integer retryCount) {
         this.retryCount = retryCount;
     }
+
+    public Integer getRetryIntervalSeconds() {
+        return retryIntervalSeconds;
+    }
+
+    public void setRetryIntervalSeconds(Integer retryIntervalSeconds) {
+        this.retryIntervalSeconds = retryIntervalSeconds;
+    }
+
 }

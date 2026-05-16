@@ -1,6 +1,7 @@
 package com.aio.portable.swiss.suite.io;
 
 import com.aio.portable.swiss.sugar.meta.ResourceSugar;
+import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import org.springframework.util.FileCopyUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class IOSugar {
     public static class Files {
 
-        public static final File getDirectoryOfFile(File file) {
+        public static File getDirectoryOfFile(File file) {
             File dir;
             if (file.isFile()) {
                 dir = file.getParentFile();
@@ -44,23 +45,23 @@ public abstract class IOSugar {
             }
         }
 
-        public static final File getDirectoryOfFile(String path) {
+        public static File getDirectoryOfFile(String path) {
             File file = new File(path);
             return getDirectoryOfFile(file);
         }
 
-//        public static final void createDirectoryIfNotExists(Path path) throws IOException {
+//        public static void createDirectoryIfNotExists(Path path) throws IOException {
 //            if (Files.notExists(path))
 //                Files.createDirectory(path);
 //        }
 //
-//        public static final void createDirectoryIfNotExists(File directory) throws IOException {
+//        public static void createDirectoryIfNotExists(File directory) throws IOException {
 //            Path path = directory.toPath();
 //            if (Files.notExists(path))
 //                Files.createDirectory(path);
 //        }
 
-        public static final String readFileForText(String path) {
+        public static String readFileForText(String path) {
             String text;
             try {
                 File f = new File(path);
@@ -78,7 +79,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final byte[] readFileForByte(String path) {
+        public static byte[] readFileForByte(String path) {
             try {
                 FileInputStream fis = null;
                 fis = new FileInputStream(path);
@@ -92,7 +93,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final void writeFile(String path, String content) {
+        public static void writeFile(String path, String content) {
             try {
                 File f = new File(path);
                 if (!f.exists()) {
@@ -110,7 +111,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final void writeFile(String path, byte[] bytes) {
+        public static void writeFile(String path, byte[] bytes) {
             try {
                 File file = new File(path);
                 if (!file.exists()) {
@@ -125,12 +126,24 @@ public abstract class IOSugar {
             }
         }
 
-        public static final boolean delete(String path) {
+        public static void writeJsonFile(String path, Object content) {
+            IOSugar.Files.writeFile(path, JacksonSugar.obj2Json(content));
+        }
+
+        public static void writeLongJsonFile(String path, Object content) {
+            IOSugar.Files.writeFile(path, JacksonSugar.obj2LongJson(content));
+        }
+
+        public static void writeShortJsonFile(String path, Object content) {
+            IOSugar.Files.writeFile(path, JacksonSugar.obj2ShortJson(content));
+        }
+
+        public static boolean delete(String path) {
             File file = new File(path);
             return delete(file);
         }
 
-        public static final boolean delete(File path) {
+        public static boolean delete(File path) {
             boolean hasDeleted = false;
             if (path.exists()) {
                 if (path.isDirectory()) {
@@ -145,24 +158,24 @@ public abstract class IOSugar {
             return hasDeleted;
         }
 
-        public static final File createParentDirectories(File path) {
+        public static File createParentDirectories(File path) {
             File dir = path.getParentFile();
             return createDirectories(dir);
         }
 
-        public static final File createDirectories(File dir) {
+        public static File createDirectories(File dir) {
             if (null != dir && !dir.exists()) {
                 dir.mkdirs();
             }
             return dir;
         }
 
-        public static final File createParentDirectories(String path) {
+        public static File createParentDirectories(String path) {
             File dir = new File(path);
             return createParentDirectories(dir);
         }
 
-        public static final File createDirectories(String path) {
+        public static File createDirectories(String path) {
             File dir = new File(path);
             return createDirectories(dir);
         }
@@ -234,7 +247,7 @@ public abstract class IOSugar {
     }
 
     public static class Streams {
-        public static final String toString(String path) {
+        public static String toString(String path) {
             try (FileInputStream inputStream = new FileInputStream(path)) {
                 return toString(inputStream, StandardCharsets.UTF_8);
             } catch (Exception e) {
@@ -242,7 +255,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final String toString(String path, Charset charset) {
+        public static String toString(String path, Charset charset) {
             try (FileInputStream inputStream = new FileInputStream(path)) {
                 return toString(inputStream, charset);
             } catch (Exception e) {
@@ -250,7 +263,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final String toString(File file) {
+        public static String toString(File file) {
             try (FileInputStream inputStream = new FileInputStream(file)) {
                 return toString(inputStream, StandardCharsets.UTF_8);
             } catch (Exception e) {
@@ -258,7 +271,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final String toString(File file, Charset charset) {
+        public static String toString(File file, Charset charset) {
             try (FileInputStream inputStream = new FileInputStream(file)) {
                 return toString(inputStream, charset);
             } catch (Exception e) {
@@ -266,11 +279,11 @@ public abstract class IOSugar {
             }
         }
 
-        public static final String toString(InputStream inputStream) {
+        public static String toString(InputStream inputStream) {
             return toString(inputStream, StandardCharsets.UTF_8);
         }
 
-        public static final String toString(Reader reader) {
+        public static String toString(Reader reader) {
             try {
                 return FileCopyUtils.copyToString(reader);
             } catch (IOException e) {
@@ -278,7 +291,7 @@ public abstract class IOSugar {
             }
         }
 
-        public static final String toString(InputStream inputStream, Charset charset) {
+        public static String toString(InputStream inputStream, Charset charset) {
 //            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
 //                byte[] buffer = new byte[1024];
 //                int length;
@@ -301,7 +314,7 @@ public abstract class IOSugar {
         }
 
 
-//        private static final FileInputStream newFileInputStream(File file) {
+//        private static FileInputStream newFileInputStream(File file) {
 //            try(FileInputStream fileInputStream = new FileInputStream(file)) {
 //                return fileInputStream;
 //            } catch (IOException e) {

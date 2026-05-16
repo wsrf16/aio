@@ -2,7 +2,7 @@ package com.aio.portable.swiss.spring.factories.autoconfigure;
 
 import com.aio.portable.swiss.spring.factories.autoconfigure.properties.RestTemplateProperties;
 import com.aio.portable.swiss.suite.net.tcp.http.HttpRequestFactory;
-import com.aio.portable.swiss.suite.net.tcp.http.RestTemplater;
+import org.apache.http.client.HttpClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,7 +18,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class})
+@ConditionalOnClass({RestTemplate.class, RestTemplateBuilder.class, HttpClient.class})
 //@EnableConfigurationProperties(RestTemplateProperties.class)
 @ConditionalOnMissingBean({RestTemplate.class})
 @AutoConfigureAfter(org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration.class)

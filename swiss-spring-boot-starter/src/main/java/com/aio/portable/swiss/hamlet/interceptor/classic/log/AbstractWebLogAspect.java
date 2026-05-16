@@ -1,6 +1,6 @@
 package com.aio.portable.swiss.hamlet.interceptor.classic.log;
 
-import com.aio.portable.swiss.hamlet.bean.ResponseWrappers;
+import com.aio.portable.swiss.hamlet.bean.ResponseBeans;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.request.RequestRecord;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.LogRecord;
 import com.aio.portable.swiss.spring.RequestContextHolderSugar;
@@ -27,16 +27,16 @@ class AbstractWebLogAspect {
     }
 
     protected static LogHubPool logHubPool;
-    protected static String SUMMARY_REQUEST = "Input Parameters";
-    protected static String SUMMARY_RESPONSE = "Output Parameters";
-    protected static String SUMMARY_EXCEPTION = "Exception Information";
+    protected static String REQUEST_SUMMARY = "Input Parameters";
+    protected static String RESPONSE_SUMMARY = "Output Parameters";
+    protected static String EXCEPTION_SUMMARY = "Exception Information";
 
-    protected static final String POINTCUT_CONTROLLER = "" +
+    protected static final String POINTCUT_CONTROLLER =
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.PostMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.RequestMapping)";
 
-    protected static final String POINTCUT_MAPPING = "" +
+    protected static final String POINTCUT_MAPPING =
             "@annotation(org.springframework.web.bind.annotation.GetMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.PostMapping)" +
             " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)" +
@@ -50,7 +50,7 @@ class AbstractWebLogAspect {
     // LogRecordIgnore.class.getName();
     protected static final String LOG_MARKER_EXCEPT_TYPENAME = "com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.LogRecordIgnore";
 
-    protected static final String POINTCUT_SPECIAL_MAPPING = "" +
+    protected static final String POINTCUT_SPECIAL_MAPPING =
             "(@within(" + LOG_MARKER_TYPENAME + ")"
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")"
             + " && (" + POINTCUT_MAPPING + ")"
@@ -58,7 +58,7 @@ class AbstractWebLogAspect {
             + " || @annotation("+ LOG_MARKER_TYPENAME +")";
 
 
-    protected static final String POINTCUT_SPECIAL = "" +
+    protected static final String POINTCUT_SPECIAL =
             "(@within(" + LOG_MARKER_TYPENAME + ")"
             + " && !@annotation(" + LOG_MARKER_EXCEPT_TYPENAME + ")"
             + ")"
@@ -83,7 +83,7 @@ class AbstractWebLogAspect {
 //    }
 
     public boolean enableAroundLog() {
-        return false;
+        return true;
     }
 
     public boolean enableThrowingLog() {
@@ -100,51 +100,63 @@ class AbstractWebLogAspect {
 //            }
 //        }
 
+        HttpServletRequest request = RequestContextHolderSugar.getRequest();
+        HttpServletResponse response = RequestContextHolderSugar.getResponse();
+
+        RequestRecord requestRecord = RequestRecordSession.injectRequestRecord(request, joinPoint);
+//        String spanId = requestRecord.getSpanId();
+
+        LogHub log = logHubPool.get(joinPoint.getSignature().getDeclaringTypeName());
+        RequestRecord.addHeader(response, requestRecord);
 
         Signature signature = joinPoint.getSignature();
         if (signature instanceof MethodSignature) {
             Method method = ((MethodSignature) signature).getMethod();
             if (method.isAnnotationPresent(LogRecord.class)) {
                 LogRecord annotation = method.getAnnotation(LogRecord.class);
-                if (annotation.ignore() == false)
-                    return joinPoint.proceed();
+                if (!annotation.enabled()) {
+//                    return joinPoint.proceed();
+                    Object responseEntity = joinPoint.proceed();
+                    ResponseBeans.fillHeader(responseEntity, requestRecord);
+                    return responseEntity;
+                }
             }
         }
 
         Class<?> clazz = signature.getDeclaringType();
         if (clazz.isAnnotationPresent(LogRecord.class)) {
             LogRecord annotation = clazz.getAnnotation(LogRecord.class);
-            if (annotation.ignore() == false)
-                return joinPoint.proceed();
+            if (!annotation.enabled()) {
+//                return joinPoint.proceed();
+                Object responseEntity = joinPoint.proceed();
+                ResponseBeans.fillHeader(responseEntity, requestRecord);
+                return responseEntity;
+            }
         }
 
-        HttpServletRequest request = RequestContextHolderSugar.getRequest();
-        HttpServletResponse response = RequestContextHolderSugar.getResponse();
-
-        RequestRecord requestRecord = RequestRecord.newInstance(request, joinPoint);
-        RequestRecordSession.setRequestRecord(requestRecord);
-
-        LogHub log = logHubPool.get(joinPoint.getSignature().getDeclaringTypeName());
-        requestRecord.fillSpanIdIntoResponse(response);
-
-        String spanId = requestRecord.getSpanId();
         try {
+            String globalId = requestRecord.getGlobalId();
+            String requestSummary = MessageFormat.format("{0}({1})", REQUEST_SUMMARY, globalId);
+            String responseSummary = MessageFormat.format("{0}({1})", RESPONSE_SUMMARY, globalId);
+
             if (log != null && enableAroundLog()) {
-                log.i(MessageFormat.format("{0}({1})", SUMMARY_REQUEST, spanId), requestRecord);
+                log.i(requestSummary, requestRecord);
             }
 
             Object responseEntity = joinPoint.proceed();
-            ResponseWrappers.fillSpanIdIntoResponseEntity(responseEntity, spanId);
+            ResponseBeans.fillHeader(responseEntity, requestRecord);
 
             if (log != null && enableAroundLog()) {
-                log.i(MessageFormat.format("{0}({1})", SUMMARY_RESPONSE, spanId), responseEntity);
+                log.i(responseSummary, responseEntity);
             }
 
             return responseEntity;
         } catch (Exception e) {
             RequestRecordSession.setException(e);
             if (log != null && enableThrowingLog()) {
-                log.e(MessageFormat.format("{0}({1})", SUMMARY_EXCEPTION, spanId), requestRecord, e);
+                String globalId = requestRecord.getGlobalId();
+                String summary = MessageFormat.format("{0}({1})", EXCEPTION_SUMMARY, globalId);
+                log.e(summary, requestRecord, e);
             }
             throw e;
         }

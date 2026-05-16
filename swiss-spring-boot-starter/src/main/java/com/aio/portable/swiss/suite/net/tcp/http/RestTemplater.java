@@ -13,7 +13,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,13 +40,13 @@ public class RestTemplater<T, R> {
     private T body;
     private LogBase log;
 
-    public static final RestTemplater create(RestTemplate restTemplate) {
+    public static RestTemplater create(RestTemplate restTemplate) {
         RestTemplater restTemplater = new RestTemplater();
         restTemplater.restTemplate = restTemplate;
         return restTemplater;
     }
 
-    public static final RestTemplater create(RestTemplate restTemplate, LogBase log) {
+    public static RestTemplater create(RestTemplate restTemplate, LogBase log) {
         RestTemplater restTemplater = new RestTemplater();
         restTemplater.restTemplate = restTemplate;
         restTemplater.log = log;
@@ -227,7 +227,7 @@ public class RestTemplater<T, R> {
         int serverPort = request.getServerPort();
         HttpMethod httpMethod = RestTemplater.getHttpMethodFrom(request);
         HttpHeaders httpHeaders = RestTemplater.getRequestHeadersFrom(request);
-        String queryString = StringUtils.isEmpty(request.getQueryString()) ? "" : "?" + request.getQueryString();
+        String queryString = ObjectUtils.isEmpty(request.getQueryString()) ? "" : "?" + request.getQueryString();
         shimPath = getString(shimPath);
         String requestURI = StringSugar.trimStart(request.getServletPath(), shimPath);
 
@@ -265,8 +265,8 @@ public class RestTemplater<T, R> {
         return this.forward(request, shimContextPath, clazz);
     }
 
-    private static final String getString(String slimPath) {
-        if (StringUtils.isEmpty(slimPath))
+    private static String getString(String slimPath) {
+        if (ObjectUtils.isEmpty(slimPath))
             return "";
         slimPath = "/" + StringSugar.trim(slimPath, "/") + "/";
         return slimPath;
@@ -333,17 +333,17 @@ public class RestTemplater<T, R> {
         }
     }
 
-//    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
+//    public static void setProxyRequestFactory(RestTemplate restTemplate, String host, int port) {
 //        SimpleClientHttpRequestFactory factory = HttpRequestFactory.buildProxySimpleClientHttpRequestFactory(host, port);
 //        restTemplate.setRequestFactory(factory);
 //    }
 //
-//    public static final void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
+//    public static void setProxyRequestFactory(RestTemplate restTemplate, String host, int port, String username, String password) {
 //        HttpComponentsClientHttpRequestFactory factory = HttpRequestFactory.buildProxyHttpComponentsClientHttpRequestFactory(host, port, username, password);
 //        restTemplate.setRequestFactory(factory);
 //    }
 
-    public static final boolean setHttpProxy(RestTemplate restTemplate, Proxy proxy) {
+    public static boolean setHttpProxy(RestTemplate restTemplate, Proxy proxy) {
         if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
             ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setProxy(proxy);
             return true;
@@ -351,7 +351,7 @@ public class RestTemplater<T, R> {
         return false;
     }
 
-    public static final boolean setHttpProxy(RestTemplate restTemplate, String host, int port) {
+    public static boolean setHttpProxy(RestTemplate restTemplate, String host, int port) {
         if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
             ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setProxy(proxy);
@@ -360,12 +360,12 @@ public class RestTemplater<T, R> {
         return false;
     }
 
-//    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate) {
+//    public static void setSkipSSLRequestFactory(RestTemplate restTemplate) {
 //        SkipSSLHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLHttpRequestFactory();
 //        restTemplate.setRequestFactory(factory);
 //    }
 //
-//    public static final void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
+//    public static void setSkipSSLRequestFactory(RestTemplate restTemplate, String host, int port) {
 //        SkipSSLHttpRequestFactory factory = HttpRequestFactory.buildSkipSSLHttpRequestFactory(host, port);
 //        restTemplate.setRequestFactory(factory);
 //    }
@@ -439,7 +439,7 @@ public class RestTemplater<T, R> {
         return responseEntity;
     }
 
-    public final static RetryTemplate newRetryTemplate(int maxAttempts) {
+    public static RetryTemplate newRetryTemplate(int maxAttempts) {
         RetryTemplate retryTemplate = new RetryTemplate();
         retryTemplate.setBackOffPolicy(new ExponentialBackOffPolicy());
 
@@ -488,39 +488,39 @@ public class RestTemplater<T, R> {
 
 
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
 //        return responseEntity;
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
 //        return responseEntity;
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body , Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body , Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, HttpHeaders headers, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
@@ -532,7 +532,7 @@ public class RestTemplater<T, R> {
 //
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, body, responseClazz, uriVariables);
@@ -540,7 +540,7 @@ public class RestTemplater<T, R> {
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP> ResponseEntity<RESP> exchangeJsonUTF8(RestTemplate restTemplate, String url, HttpMethod method, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        ResponseEntity<RESP> responseEntity = exchange(restTemplate, url, method, headers, responseClazz, uriVariables);
@@ -548,14 +548,14 @@ public class RestTemplater<T, R> {
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP> ResponseEntity<RESP> getJsonUTF8(RestTemplate restTemplate, String url, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return get(restTemplate, url, headers, responseClazz, uriVariables);
@@ -563,14 +563,14 @@ public class RestTemplater<T, R> {
 //
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, Class<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);
 //    }
 //
 //    @Deprecated
-//    public static final <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
+//    public static <RESP, REQ> ResponseEntity<RESP> postJsonUTF8(RestTemplate restTemplate, String url, REQ body, ParameterizedTypeReference<RESP> responseClazz, Map<String, ?> uriVariables) {
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 //        return post(restTemplate, url, headers, body, responseClazz, uriVariables);

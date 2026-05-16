@@ -21,31 +21,33 @@ public class SpringController {
 
     private static Class<?> registryClazz = ClassLoaderSugar.loadClass("org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry");
 
-    public static final MultiValueMap<String, Object> urlLookup(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
+    public static MultiValueMap<String, Object> urlLookup(AbstractHandlerMethodMapping abstractHandlerMethodMapping) {
         Object mappingRegistry = ClassSugar.Methods.invoke(abstractHandlerMethodMapping, mappingClazz, "getMappingRegistry");
 
         MultiValueMap<String, Object> urlLookup = ClassSugar.Fields.getDeclaredFieldValue(mappingRegistry, registryClazz, "urlLookup");
         return urlLookup;
     }
 
-    public static final void registerMapping(AbstractHandlerMethodMapping mappingHandlerMapping, Object controllerInstance, Method method, RequestMethod requestMethod, String pattern) {
-        RequestMappingInfo info = new RequestMappingInfo(
-                new PatternsRequestCondition(pattern),
-                new RequestMethodsRequestCondition(requestMethod),
-                null, null, null, null, null);
+    public static void registerMapping(AbstractHandlerMethodMapping mappingHandlerMapping, Object controllerInstance, Method method, RequestMethod requestMethod, String... paths) {
+//        RequestMappingInfo info = new RequestMappingInfo(
+//                new PatternsRequestCondition(pattern),
+//                new RequestMethodsRequestCondition(requestMethod),
+//                null, null, null, null, null);
+        RequestMappingInfo info = RequestMappingInfo.paths(paths)
+                .methods(requestMethod).build();
         mappingHandlerMapping.registerMapping(info, controllerInstance, method);
     }
 
-    public static final void registerMapping(AbstractHandlerMethodMapping mappingHandlerMapping, Object controllerInstance, Method method, RequestMappingInfo requestMappingInfo) {
+    public static void registerMapping(AbstractHandlerMethodMapping mappingHandlerMapping, Object controllerInstance, Method method, RequestMappingInfo requestMappingInfo) {
         mappingHandlerMapping.registerMapping(requestMappingInfo, controllerInstance, method);
     }
 
-    public static final ResponseEntity<Object> forward(HttpServletRequest request, String shimContextPath, RestTemplate restTemplate) {
+    public static ResponseEntity<Object> forward(HttpServletRequest request, String shimContextPath, RestTemplate restTemplate) {
 //        String contextPath = request.getContextPath();
-//        if (!StringUtils.isEmpty(contextPath))
+//        if (!ObjectUtils.isEmpty(contextPath))
 //            contextPath = UrlSugar.concat(contextPath, shimContextPath);
 //
-//        contextPath = StringUtils.isEmpty(contextPath) ? shimContextPath : UrlSugar.concat(contextPath, shimContextPath);
+//        contextPath = ObjectUtils.isEmpty(contextPath) ? shimContextPath : UrlSugar.concat(contextPath, shimContextPath);
 
         ResponseEntity<Object> responseEntity = RestTemplater.create(restTemplate)
                 .forward(request, shimContextPath, Object.class);

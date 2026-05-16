@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Bean;
 
 public class LogHubAutoConfiguration {
     @Bean
-//    @ConditionalOnProperty("spring.log.kafka.bootstrap-servers")
     @ConfigurationProperties(prefix = LogHubProperties.PREFIX)
-//    @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public LogHubProperties logHubProperties() {
+        LogHubProperties.initialSingletonInstance(new LogHubProperties());
         return LogHubProperties.getSingleton();
     }
 
@@ -24,6 +23,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = RabbitMQLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.springframework.amqp.rabbit.core.RabbitTemplate", "com.rabbitmq.client.Channel"})
     public RabbitMQLogProperties rabbitMQLogProperties() {
+        RabbitMQLogProperties.initialSingletonInstance(new RabbitMQLogProperties());
         return RabbitMQLogProperties.getSingleton();
     }
 
@@ -33,6 +33,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = KafkaLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.springframework.kafka.core.KafkaTemplate"})
     public KafkaLogProperties kafkaLogProperties() {
+        KafkaLogProperties.initialSingletonInstance(new KafkaLogProperties());
         return KafkaLogProperties.getSingleton();
     }
 
@@ -41,6 +42,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = ConsoleLogProperties.PREFIX)
     @ConditionalOnClass(name = {"com.aio.portable.swiss.suite.log.solution.console.ConsoleLog"})
     public ConsoleLogProperties consoleLogProperties() {
+        ConsoleLogProperties.initialSingletonInstance(new ConsoleLogProperties());
         return ConsoleLogProperties.getSingleton();
     }
 
@@ -49,6 +51,7 @@ public class LogHubAutoConfiguration {
     @ConfigurationProperties(prefix = Slf4JLogProperties.PREFIX)
     @ConditionalOnClass(name = {"org.slf4j.LoggerFactory"})
     public Slf4JLogProperties slf4JLogProperties() {
+        Slf4JLogProperties.initialSingletonInstance(new Slf4JLogProperties());
         return Slf4JLogProperties.getSingleton();
     }
 

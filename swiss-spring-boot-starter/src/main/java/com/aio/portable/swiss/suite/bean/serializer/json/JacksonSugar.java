@@ -419,16 +419,16 @@ public class JacksonSugar {
      * @return
      * @throws IOException
      */
-    public static <T> T json2T(String json) {
-        try {
-            ObjectMapper mapper = DUMP_OBJECT_MAPPER;
-            TypeReference<T> valueTypeRef = new TypeReference<T>() {
-            };
-            return mapper.readValue(json, valueTypeRef);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static <T> T json2T(String json) {
+//        try {
+//            ObjectMapper mapper = DUMP_OBJECT_MAPPER;
+//            TypeReference<T> valueTypeRef = new TypeReference<T>() {
+//            };
+//            return mapper.readValue(json, valueTypeRef);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     /**
      * json2T
@@ -558,10 +558,10 @@ public class JacksonSugar {
      * @param <T>
      * @return
      */
-    public static <T> T newInstance() {
-        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()));
-        return t;
-    }
+//    public static <T> T newInstance() {
+//        T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()));
+//        return t;
+//    }
 
     public static <T> T newInstance(Class<T> clazz) {
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(new Object()), clazz);

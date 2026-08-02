@@ -3,7 +3,6 @@ package com.aio.portable.park.unit;
 import com.aio.portable.swiss.suite.bean.serializer.SerializerAdapterFactory;
 import com.aio.portable.swiss.suite.bean.serializer.json.JacksonSugar;
 import com.aio.portable.swiss.suite.log.support.LevelEnum;
-import lombok.Data;
 import org.junit.Test;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -28,7 +27,7 @@ public class JacksonTest {
     }
 
     @Test
-    private void foobar() throws IOException {
+    public void foobar() throws IOException {
         HashMap<Object, Object> map1 = new HashMap<>();
         map1.put("a", LevelEnum.DEBUG);
         String s = JacksonSugar.obj2Json(map1);
@@ -44,18 +43,21 @@ public class JacksonTest {
         map.put(1, a);
 
         a = JacksonSugar.json2T(JacksonSugar.obj2Json(a), JsonModel.class);
+//        a = JacksonSugar.json2T(JacksonSugar.obj2Json(a));
         {
             JsonModel _model;
             _model= JacksonSugar.json2T(JacksonSugar.obj2Json(""), JsonModel.class);
             _model = JacksonSugar.json2T(JacksonSugar.obj2Json(null), JsonModel.class);
         }
-        list = JacksonSugar.json2T(JacksonSugar.obj2Json(list));
-        map = JacksonSugar.json2T(JacksonSugar.obj2Json(map));
+//        list = JacksonSugar.json2T(JacksonSugar.obj2Json(list));
+//        map = JacksonSugar.json2T(JacksonSugar.obj2Json(map));
 
         String listjson = SerializerAdapterFactory.buildJackson().serialize(list);
     }
 
-    class JsonModel {
+    public static class JsonModel {
+        public JsonModel() {}
+
         public int getNo() {
             return no;
         }

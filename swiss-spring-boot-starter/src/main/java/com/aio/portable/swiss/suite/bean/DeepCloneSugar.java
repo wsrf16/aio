@@ -65,8 +65,8 @@ public abstract class DeepCloneSugar {
          */
         public static <T> T clone(T source) {
             String json = JacksonSugar.obj2Json(source);
-            T t = (T) JacksonSugar.json2T(json, source.getClass());
-//            T t = (T) DeepCloneSugar.Json.clone(source, source.getClass());
+            T t = JacksonSugar.json2T(json, new TypeReference<T>() {
+            });
             return t;
         }
 

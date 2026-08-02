@@ -29,13 +29,13 @@ public class Slf4JLogProperties implements LogProperties, InitializingBean {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
     }
 
-    public Boolean getEnabledIsTrue() {
-        return enabled != null && enabled;
-    }
-
-    public Boolean getEnabledIsFalse() {
-        return enabled != null && !enabled;
-    }
+//    public Boolean getEnabledIsTrue() {
+//        return enabled != null && enabled;
+//    }
+//
+//    public Boolean getEnabledIsFalse() {
+//        return enabled != null && !enabled;
+//    }
 
 
 

@@ -261,6 +261,30 @@ public abstract class CollectionSugar {
         return anyMatch;
     }
 
+    public static boolean anyMatch(InstanceGetter<Boolean>... fn) {
+        return Arrays.asList(fn).stream().anyMatch(InstanceGetter<Boolean>::get);
+    }
+
+    public static boolean anyMatch(Boolean... items) {
+        return Arrays.asList(items).stream().anyMatch(Boolean::booleanValue);
+    }
+
+    public static boolean allMatch(InstanceGetter<Boolean>... fn) {
+        return Arrays.asList(fn).stream().allMatch(InstanceGetter<Boolean>::get);
+    }
+
+    public static boolean allMatch(Boolean... items) {
+        return Arrays.asList(items).stream().allMatch(Boolean::booleanValue);
+    }
+
+    public static boolean noneMatch(InstanceGetter<Boolean>... fn) {
+        return Arrays.asList(fn).stream().noneMatch(InstanceGetter<Boolean>::get);
+    }
+
+    public static boolean noneMatch(Boolean... items) {
+        return Arrays.asList(items).stream().noneMatch(Boolean::booleanValue);
+    }
+
     /**
      * containsAll
      * @param source

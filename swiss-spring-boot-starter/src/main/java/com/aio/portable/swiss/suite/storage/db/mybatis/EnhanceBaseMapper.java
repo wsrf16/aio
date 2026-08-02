@@ -62,7 +62,33 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
         try {
             Map<String, ?> nameValueMap = ClassSugar.PropertyDescriptors.toNameValueMapExceptNull(dto);
             nameValueMap.forEach((k, v) -> {
-                if (k.endsWith("Like")) {
+                if (k.endsWith("Equal")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "Equal");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.eq(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("NotEqual")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotEqual");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.ne(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("GreatThan")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "GreatThan");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.gt(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("GreatEqual")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "GreatEqual");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.ge(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("LessThan")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LessThan");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.lt(v != null, lambdaSFunction, v);
+                } else if (k.endsWith("LessEqual")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "LessEqual");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.ge(v != null, lambdaSFunction, v);
+                }
+
+                else if (k.endsWith("Like")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "Like");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
                     wrapper.like(v != null, lambdaSFunction, v);
@@ -90,7 +116,19 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
                     if (v instanceof Collection<?>) {
                         wrapper.notIn(v != null, lambdaSFunction, (Collection<?>)v);
                     }
-                } else if (k.endsWith("OrderByASC")) {
+                }
+
+                else if (k.endsWith("IsNull")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "IsNull");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.isNull(v != null, lambdaSFunction);
+                } else if (k.endsWith("LessEqual")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "IsNotNull");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    wrapper.isNotNull(v != null, lambdaSFunction);
+                }
+
+                else if (k.endsWith("OrderByASC")) {
                     String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "OrderByASC");
                     LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
                     if (v instanceof Boolean) {
@@ -102,7 +140,18 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
                     if (v instanceof Boolean) {
                         wrapper.orderByDesc(Objects.equals(v, true), lambdaSFunction);
                     }
+                } else if (k.endsWith("GroupBy")) {
+                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "GroupBy");
+                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+                    if (v instanceof Boolean) {
+                        wrapper.groupBy(Objects.equals(v, true), lambdaSFunction);
+                    }
                 }
+//                else if (k.endsWith("Having")) {
+//                    String methodName = "get" + StringSugar.trimEnd(NamingStrategySugar.pascal(k), "NotLike");
+////                    LambdaSFunction lambdaSFunction = new LambdaSFunction(methodName, dto.getClass());
+//                    wrapper.having(v != null, lambdaSFunction, v);
+//                }
             });
         } catch (Exception e) {
             e.printStackTrace();

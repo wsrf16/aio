@@ -4,6 +4,8 @@ import com.aio.portable.park.common.AppLogHubFactory;
 import com.aio.portable.swiss.hamlet.bean.ResponseStatus;
 import com.aio.portable.swiss.hamlet.bean.ResponseStatuses;
 import com.aio.portable.swiss.hamlet.interceptor.classic.log.annotation.NetworkProxy;
+import com.aio.portable.swiss.sugar.meta.ResourceSugar;
+import com.aio.portable.swiss.sugar.meta.SourceCodeClassLoader;
 import com.aio.portable.swiss.suite.log.facade.LogHub;
 import com.aio.portable.swiss.suite.log.factory.LogHubFactory;
 import com.aio.portable.swiss.suite.net.tcp.proxy.NetworkProxySugar;
@@ -51,6 +53,8 @@ public class ParkApplication {
 
     public static void main(String[] args) throws URISyntaxException, InterruptedException, MalformedURLException {
         System.out.println();
+        String resourceAsString = ResourceSugar.getResourceAsString("StaticLoggerBinder.source");
+        Class aClass = new SourceCodeClassLoader().parseClass(resourceAsString);
 
         // \u000d System.out.println("coder Hydra");
         NetworkProxySugar.SystemProxies.setUseSystemProxies(true);

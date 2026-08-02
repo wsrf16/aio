@@ -10,11 +10,11 @@ public class Book {
     }
 
     public String getName() {
-        return name;
+        return nameeeee;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.nameeeee = name;
     }
 
     public String getNameLike() {
@@ -42,7 +42,7 @@ public class Book {
     }
 
     private Integer id;
-    private String name;
+    private String nameeeee;
     private String nameLike;
     private String author;
     private String description;

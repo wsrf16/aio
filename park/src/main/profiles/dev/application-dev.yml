@@ -106,10 +106,10 @@ spring:
 #        - 127.0.0.1: 6379
 
   log:
-#    enabled: false
-#    async: false
-#    samplerRate: 0.5
-#    level: debug
+    enabled: true
+    async: false
+    samplerRate: 0.5
+    level: info
 #    rabbitmq:
 #      enabled: false
 #      host: mecs.com
@@ -130,14 +130,18 @@ spring:
     kafka:
       enabled: false
       esIndex: @project.artifactId@-@profiles.active@-log
-      bootstrap-servers: 192.168.0.133:9092
+      bootstrap-servers: 192.168.133.133:9092
 #      template:
 #        defaultTopic: application-log
+#      此处映射为KafkaProperties.Producer，优先级较高
 #      producer:
 #        bootstrap-servers: mecs.com:9092
 #        bootstrap-servers: 192.168.133.133:9092
+#        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       binding-list:
         - topic: application-log
+      # 此处映射为KafkaProperties.properties（HashMap），被会producer下的key-serializer、value-serializer覆盖
       properties:
         linger-ms: 100
         max-block-ms: 3000
@@ -145,6 +149,8 @@ spring:
         transaction-timeout-ms: 1000
         compression-type: gzip
         acks: 1
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
     console:
       enabled: true
     slf4j:

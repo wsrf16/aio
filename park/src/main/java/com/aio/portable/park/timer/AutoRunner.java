@@ -70,7 +70,7 @@ public class AutoRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         LogHub log1 = AppLogHubFactory.staticBuild().setAsync(false);
-        log.setAsync(false).info("a-{}-b-{}", new Object[]{1, 2, 3});
+//        log.setAsync(false).info("a-{}-b-{}", new Object[]{1, 2, 3});
 
 
         for (int i = 0; i < 10; i++) {
@@ -86,8 +86,8 @@ public class AutoRunner implements ApplicationRunner {
 
 
 //        log.info("ss{}ss", new Object[]{1, 2, 3});
-//        logger.info("bb{}bb", 1111111111);
-//        logger.info("abc", "AB1234567890");
+        logger.info("bb{}bb", 1111111111);
+        logger.info("abc", "AB1234567890");
 //        RabbitListenerErrorHandler rabbitListenerErrorHandler = (a, b, c) -> {
 //            return c;
 //        };

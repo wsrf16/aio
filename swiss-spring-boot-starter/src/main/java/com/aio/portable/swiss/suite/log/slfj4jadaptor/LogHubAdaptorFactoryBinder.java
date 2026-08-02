@@ -5,9 +5,8 @@ import com.aio.portable.swiss.sugar.meta.ClassSugar;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
-public abstract class LogHubFactoryAdaptorBinder implements LoggerFactoryBinder {
+public abstract class LogHubAdaptorFactoryBinder implements LoggerFactoryBinder {
     protected static LoggerFactoryBinder singleton;
-//    public static final String REQUESTED_API_VERSION = "1.7.36"; // 兼容版本
 
     public static ILoggerFactory defaultLoggerFactory() {
         return new Slf4JAdaptorLoggerFactory(){};
@@ -36,7 +35,7 @@ public abstract class LogHubFactoryAdaptorBinder implements LoggerFactoryBinder 
 
     @Override
     public String getLoggerFactoryClassStr() {
-        return loggerFactory.getClass().getName();
+        return getLoggerFactory().getClass().getName();
     }
 
 }

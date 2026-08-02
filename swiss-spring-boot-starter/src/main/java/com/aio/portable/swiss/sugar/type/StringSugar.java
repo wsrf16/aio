@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 
 public abstract class StringSugar {
     public static String emptyIfNull(String str) {
-        return str == null ? Constant.EMPTY : str;
+        return ObjectSugar.getNotEmptyValue(str, Constant.EMPTY);
+//        return str == null ? Constant.EMPTY : str;
     }
 
     public static String trim(String str, String removed) {
@@ -448,6 +449,13 @@ public abstract class StringSugar {
         return otherwise;
     }
 
+    public static String getNotEmptyValue(String value, String ifEmpty) {
+        return ObjectUtils.isEmpty(value) ? ifEmpty : value;
+    }
+
+    public static String getNotNullValue(String value, String ifNull) {
+        return value == null ? ifNull : value;
+    }
 
 
 }

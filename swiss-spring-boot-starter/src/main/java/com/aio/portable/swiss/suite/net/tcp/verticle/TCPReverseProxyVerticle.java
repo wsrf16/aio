@@ -6,10 +6,15 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.NetSocket;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TCPReverseProxyVerticle extends AbstractVerticle {
     private LogHub log = LogHubFactory.staticBuild();
@@ -17,11 +22,11 @@ public class TCPReverseProxyVerticle extends AbstractVerticle {
     private int proxyPort;
     private String actualHost;
     private int actualPort;
-    private NetServer netServer;
+    private NetServer netProxyServer;
     private NetClient netClient;
-    private ProxyConnection proxyConnection;
+//    private ProxyConnection proxyConnection;
 //    private static final Vertx VERTX = Vertx.vertx();
-
+    private final Set<ProxyConnection> activeConnectionPool = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public TCPReverseProxyVerticle(int proxyPort, String actualHost, int actualPort) {
         this.proxyPort = proxyPort;
@@ -30,48 +35,85 @@ public class TCPReverseProxyVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void start() {
-        netServer = this.getVertx().createNetServer(); // 创建代理服务器
-        netClient = this.getVertx().createNetClient(); // 创建连接 MySQL 的客户端
+    public void start(Promise<Void> startPromise) {
+        netProxyServer = this.getVertx().createNetServer();
+        netClient = this.getVertx().createNetClient();
 
-        // 监听来自客户端的连接请求
-        netServer.connectHandler(clientSocket -> {
-            // 收到客户端请求后，代理服务器向真实服务器发起连接
-            netClient.connect(actualPort, actualHost, result -> {
-                if (result.succeeded()) {
-                    NetSocket serverSocket = result.result();
-                    // 连接成功，开始双向转发数据
-                    proxyConnection = new ProxyConnection(clientSocket, serverSocket);
+        // listen receive event
+        netProxyServer.connectHandler(clientSocket -> {
+            // send to actualServer
+            netClient.connect(actualPort, actualHost, ar -> {
+                if (ar.succeeded()) {
+                    NetSocket actualServerSocket = ar.result();
+                    // Connection established, starting bidirectional data forwarding.
+                    ProxyConnection proxyConnection = new ProxyConnection(clientSocket, actualServerSocket);
+
+                    activeConnectionPool.add(proxyConnection);
                     proxyConnection.start();
                 } else {
-                    log.error("连接目标端失败", result.cause());
+                    log.error("Failed to connect to the target.", ar.cause());
                     clientSocket.close();
                 }
             });
         }).listen(proxyPort, result -> {
             if (result.succeeded()) {
-                log.info("代理端已启动，监听端口: " + proxyPort);
+                log.info("Proxy started, listening on port: " + proxyPort);
+                startPromise.complete();
             } else {
-                log.error("代理端启动失败", result.cause());
+                log.error("Failed to start proxy.", result.cause());
+                startPromise.fail(result.cause());
             }
         });
     }
 
-    public void stop() {
-        if (this.proxyConnection != null) {
-            this.proxyConnection.close();
+    public void stop(Promise<Void> stopPromise) {
+        for (ProxyConnection conn : activeConnectionPool) {
+            conn.close();
+        }
+        activeConnectionPool.clear();
+
+//        if (this.proxyConnection != null) {
+//            this.proxyConnection.close();
+//        }
+
+        Future<Void> netProxyServerClose = netProxyServer != null ? netProxyServer.close() : Future.succeededFuture();
+        Future<Void> netClientClose = netClient != null ? netClient.close() : Future.succeededFuture();
+
+        netProxyServerClose.compose(v -> netClientClose)
+                .onComplete(ar -> {
+                    if (ar.succeeded()) {
+                        log.info("TCP Reverse Proxy stopped cleanly.");
+                        stopPromise.complete();
+                    } else {
+                        log.error("Error during proxy shutdown", ar.cause());
+                        stopPromise.fail(ar.cause());
+                    }
+                });
+
+
+    }
+
+//    public void close() {
+//        this.stop();
+//        if (this.netProxyServer != null) {
+//            netProxyServer.close();
+//        }
+//        if (this.netClient != null) {
+//            netClient.close();
+//        }
+//    }
+
+    public void undeploy(Handler<AsyncResult<Void>> handler) {
+        String deploymentID = this.deploymentID();
+        if (deploymentID != null) {
+            this.getVertx().undeploy(deploymentID, handler);
         }
     }
 
-    public void close() {
-        this.stop();
-        if (this.netServer != null) {
-            netServer.close();
-//            netServer = null;
-        }
-        if (this.netClient != null) {
-            netClient.close();
-//            netClient = null;
+    public void undeploy() {
+        String deploymentID = this.deploymentID();
+        if (deploymentID != null) {
+            this.getVertx().undeploy(deploymentID);
         }
     }
 
@@ -136,8 +178,6 @@ public class TCPReverseProxyVerticle extends AbstractVerticle {
     }
 
     public static void undeploy(TCPReverseProxyVerticle verticle, Handler<AsyncResult<Void>> handler) {
-        verticle.close();
-
         String deploymentID = verticle.deploymentID();
         if (deploymentID != null) {
             verticle.getVertx().undeploy(deploymentID, handler);
@@ -145,7 +185,10 @@ public class TCPReverseProxyVerticle extends AbstractVerticle {
     }
 
     public static void undeploy(TCPReverseProxyVerticle verticle) {
-        undeploy(verticle, null);
+        String deploymentID = verticle.deploymentID();
+        if (deploymentID != null) {
+            verticle.getVertx().undeploy(deploymentID);
+        }
     }
 }
 

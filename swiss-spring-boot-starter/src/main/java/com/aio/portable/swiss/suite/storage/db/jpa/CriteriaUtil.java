@@ -13,6 +13,7 @@ import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.LessThanOrEq
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.Like;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotEqual;
 import com.aio.portable.swiss.suite.storage.db.jpa.annotation.where.NotLike;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -38,6 +39,7 @@ abstract class CriteriaUtil {
         String name = property.getName();
         String value = (String) property.getValue();
         String fixName;
+        AnnotationUtils.findAnnotation(field, Like.class);
         if (field.isAnnotationPresent(IgnoreSQL.class)) {
             return;
         } else if (field.isAnnotationPresent(Like.class)

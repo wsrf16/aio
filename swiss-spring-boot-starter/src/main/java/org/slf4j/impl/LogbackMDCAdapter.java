@@ -2,7 +2,9 @@ package org.slf4j.impl;
 
 import org.slf4j.spi.MDCAdapter;
 
+import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +26,7 @@ public class LogbackMDCAdapter implements MDCAdapter {
     // reference the same map. However, as soon as a thread invokes the put()
     // method, the maps diverge as they should.
     final ThreadLocal<Map<String, String>> copyOnThreadLocal = new ThreadLocal<Map<String, String>>();
+    final ThreadLocal<Map<String, Deque<String>>> dequeThreadLocal = new ThreadLocal<>();
 
     private static final int WRITE_OPERATION = 1;
     private static final int MAP_COPY_OPERATION = 2;
@@ -169,6 +172,65 @@ public class LogbackMDCAdapter implements MDCAdapter {
 
         // the newMap replaces the old one for serialisation's sake
         copyOnThreadLocal.set(newMap);
+    }
+
+    public void pushByKey(String key, String value) {
+        if (key == null) {
+            throw new IllegalArgumentException("key cannot be null");
+        }
+        Map<String, Deque<String>> dequeMap = dequeThreadLocal.get();
+        if (dequeMap == null) {
+            dequeMap = Collections.synchronizedMap(new HashMap<>());
+            dequeThreadLocal.set(dequeMap);
+        }
+        Deque<String> deque = dequeMap.computeIfAbsent(key, k -> new ArrayDeque<>());
+        deque.push(value);
+    }
+
+    public String popByKey(String key) {
+        if (key == null) {
+            return null;
+        }
+        Map<String, Deque<String>> dequeMap = dequeThreadLocal.get();
+        if (dequeMap == null) {
+            return null;
+        }
+        Deque<String> deque = dequeMap.get(key);
+        if (deque == null || deque.isEmpty()) {
+            return null;
+        }
+        String value = deque.pop();
+        // 如果栈已空，清理该 key 以避免内存泄漏
+        if (deque.isEmpty()) {
+            dequeMap.remove(key);
+        }
+        return value;
+    }
+
+    public Deque<String> getCopyOfDequeByKey(String key) {
+        if (key == null) {
+            return null;
+        }
+        Map<String, Deque<String>> dequeMap = dequeThreadLocal.get();
+        if (dequeMap == null) {
+            return null;
+        }
+        Deque<String> deque = dequeMap.get(key);
+        if (deque == null) {
+            return null;
+        }
+        // 返回副本，防止外部修改内部状态
+        return new ArrayDeque<>(deque);
+    }
+
+    public void clearDequeByKey(String key) {
+        if (key == null) {
+            return;
+        }
+        Map<String, Deque<String>> dequeMap = dequeThreadLocal.get();
+        if (dequeMap != null) {
+            dequeMap.remove(key);
+        }
     }
 }
 

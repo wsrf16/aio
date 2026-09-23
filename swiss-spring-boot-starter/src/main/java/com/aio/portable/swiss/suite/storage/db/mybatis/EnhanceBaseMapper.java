@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,12 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
     default int insertBatch(Collection<S> list) {
         List<Integer> resultList = list.stream().map(c -> this.insert(c)).collect(Collectors.toList());
         return resultList.stream().reduce(0, (x, y) -> x + y);
+    }
+
+    default int insertBatch(S... s) {
+        List<S> list = Arrays.asList(s);
+//        List<S> list = Arrays.stream(s).collect(Collectors.toList());
+        return this.insertBatch(list);
     }
 
     default int delete(S predicate) {
@@ -203,6 +210,13 @@ public interface EnhanceBaseMapper<S> extends BaseMapper<S> {
     default int updateBatchById(Collection<S> assignmentList) {
         List<Integer> resultList = assignmentList.stream().map(c -> this.updateById(c)).collect(Collectors.toList());
         return resultList.stream().reduce(0, (x, y) -> x + y);
+    }
+
+    default int upsert(S assignment, S predicateExpression) {
+        if (this.exists(predicateExpression))
+            return this.update(assignment, predicateExpression);
+        else
+            return this.insertBatch(assignment);
     }
 
     default int increase(ClassGetter<S, ?> propertyName, Function<LambdaUpdateWrapper<S>, LambdaUpdateWrapper<S>> predicateExpression) {

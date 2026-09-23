@@ -75,6 +75,10 @@ public class ConsoleLogPrinter implements LogPrinter {
         return MessageFormat.format("{0} {1}", nowTime(), Thread.currentThread());
     }
 
+    private String paint(String content, ColorEnum... colors) {
+        return content == null ? null : this.properties == null ? content : this.properties.getColorfulOrDefault() ? StringSugar.paint(content, colors) : content;
+    }
+
     /**
      * 记录一行文字
      *
@@ -87,31 +91,31 @@ public class ConsoleLogPrinter implements LogPrinter {
             String coloredLevel;
             switch (level) {
                 case VERB: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
                 }
                 break;
                 case TRACE: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_DEFAULT);
                 }
                 break;
                 case DEBUG: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_GREEN);
                 }
                 break;
                 case INFO: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_BLUE);
                 }
                 break;
                 case WARN: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_RED);
                 }
                 break;
                 case ERROR: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.BOLD);
                 }
                 break;
                 case FATAL: {
-                    coloredLevel = StringSugar.paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH);
+                    coloredLevel = paint(level.getName().toUpperCase(), ColorEnum.FG_RED, ColorEnum.STRIKETHROUGH);
                 }
                 break;
                 default: {
@@ -120,7 +124,7 @@ public class ConsoleLogPrinter implements LogPrinter {
                 }
                 break;
             }
-            String thread = StringSugar.paint(Thread.currentThread().toString(), ColorEnum.FG_YELLOW);
+            String thread = paint(Thread.currentThread().toString(), ColorEnum.FG_YELLOW);
             String output = MessageFormat.format("{1}{0}{2}{0}{3}{0}{4}", LINE_SEPARATOR, nowTime(), thread, coloredLevel, line);
 //            output = output
 //                    .replace("\"name\"", "\"" + StringSugar.paint("name", ColorEnum.UNDERLINE) + "\"")
@@ -152,7 +156,7 @@ public class ConsoleLogPrinter implements LogPrinter {
     private String formatOutput(String output, String... texts) {
         String item = output;
         for (String text : texts) {
-            item = item.replaceAll(text + "(?=:)", StringSugar.paint(text, ColorEnum.UNDERLINE));
+            item = item.replaceAll(text + "(?=:)", paint(text, ColorEnum.UNDERLINE));
         }
         return item;
     }

@@ -29,7 +29,7 @@ public class LocalLog extends ConsoleLog {
 //        SystemLog.properties = properties;
 //    }
 
-    public static boolean DEFAULT_ENABLED = false;
+    public static boolean DEFAULT_ENABLED = true;
 
     private static ConsoleLogProperties getDisabledConsoleLogProperties() {
         ConsoleLogProperties props = new ConsoleLogProperties();

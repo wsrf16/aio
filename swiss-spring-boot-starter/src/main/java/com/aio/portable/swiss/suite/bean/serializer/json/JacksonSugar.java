@@ -172,11 +172,28 @@ public class JacksonSugar {
      */
     public static JsonNode parse(String json) {
         try {
-            JsonNode jsonNode = NORMAL_OBJECT_MAPPER.readTree(json);
-            return jsonNode;
+            return NORMAL_OBJECT_MAPPER.readTree(json);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * json2JsonNode
+     * @param json
+     * @return
+     */
+    public static JsonNode dumpParse(String json) {
+        try {
+            return DUMP_OBJECT_MAPPER.readTree(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static JsonNode parse(Object obj) {
+        ObjectMapper mapper = DUMP_OBJECT_MAPPER;
+        return mapper.valueToTree(obj);
     }
 
     /**
@@ -398,19 +415,6 @@ public class JacksonSugar {
         return json2T(json, new HashMap<String, Object>().getClass());
     }
 
-    /**
-     * json2JsonNode
-     * @param json
-     * @return
-     */
-    public static JsonNode json2JsonNode(String json) {
-        ObjectMapper mapper = DUMP_OBJECT_MAPPER;
-        try {
-            return mapper.readTree(json);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * json2T
@@ -499,6 +503,7 @@ public class JacksonSugar {
      * @return
      */
     public static <T> T deepCopy(Object source, Class<T> targetClass) {
+//        return DUMP_OBJECT_MAPPER.convertValue(source, targetClass);
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), targetClass);
         return t;
     }
@@ -511,6 +516,7 @@ public class JacksonSugar {
      * @return
      */
     public static <T> T deepCopy(Object source, TypeReference<T> valueTypeRef) {
+//        return DUMP_OBJECT_MAPPER.convertValue(source, valueTypeRef);
         T t = JacksonSugar.json2T(JacksonSugar.obj2Json(source), valueTypeRef);
         return t;
     }
@@ -522,6 +528,7 @@ public class JacksonSugar {
      * @return
      */
     public static <T> T deepCopy(T source) {
+//        return (T) DUMP_OBJECT_MAPPER.convertValue(source, source.getClass());
         T t = (T) JacksonSugar.json2T(JacksonSugar.obj2Json(source), source.getClass());
         return t;
     }

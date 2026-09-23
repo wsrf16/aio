@@ -7,10 +7,10 @@ import com.aio.portable.swiss.suite.log.support.LevelEnum;
 import com.aio.portable.swiss.suite.log.support.LogRecordItem;
 import com.aio.portable.swiss.suite.log.support.LogThrowable;
 import com.aio.portable.swiss.suite.log.support.StandardLogRecordItem;
+import com.aio.portable.swiss.suite.log.support.thread.LogHubThreadExecutor;
 import com.aio.portable.swiss.suite.system.HostInfo;
 
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 public abstract class LogSingle implements LogAction {
@@ -51,17 +51,7 @@ public abstract class LogSingle implements LogAction {
         this.async = async;
     }
 
-//    public static final ExecutorService executor = Executors.newFixedThreadPool(2, new LogSingleThreadFactory());
-    public static final ExecutorService executor = new ThreadPoolExecutor(
-        LogSingleThreadExecutor.CORE_POOL_SIZE,
-        LogSingleThreadExecutor.MAX_POOL_SIZE,
-        LogSingleThreadExecutor.KEEP_ALIVE_TIME,
-        TimeUnit.MILLISECONDS,
-        new ArrayBlockingQueue<>(LogSingleThreadExecutor.QUEUE_CAPACITY),
-        new LogSingleThreadFactory(),
-//        new ThreadPoolExecutor.AbortPolicy()
-        new ThreadPoolExecutor.DiscardOldestPolicy()
-    );
+    public static final ExecutorService executor = LogHubThreadExecutor.getExecutor();
 
     protected LogPrinter printer;
 
@@ -1061,38 +1051,4 @@ public abstract class LogSingle implements LogAction {
     }
 
 
-
-
-
-    static class LogSingleThreadExecutor {
-        private static final int QUEUE_CAPACITY = 1024 * 128;
-        private static final int CORE_POOL_SIZE = 10;
-        private static final int MAX_POOL_SIZE = 20;
-        private static final long KEEP_ALIVE_TIME = 1000 * 10;
-    }
-
-    static class LogSingleThreadFactory implements ThreadFactory {
-//        private static final AtomicInteger poolNumber = new AtomicInteger(1);
-        private final ThreadGroup group;
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final String namePrefix = "log-thread-pool-";
-
-        LogSingleThreadFactory() {
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() :
-                    Thread.currentThread().getThreadGroup();
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(group, r,
-                    namePrefix + threadNumber.getAndIncrement(),
-                    0);
-            if (t.isDaemon())
-                t.setDaemon(false);
-            if (t.getPriority() != Thread.NORM_PRIORITY)
-                t.setPriority(Thread.NORM_PRIORITY);
-            return t;
-        }
-    }
 }

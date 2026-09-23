@@ -12,7 +12,11 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
 
     private static final boolean DEFAULT_ENABLED = true;
 
+    private static final boolean DEFAULT_COLORFUL = false;
+
     private Boolean enabled;
+
+    private Boolean colorful;
 
     public Boolean getEnabled() {
         return enabled;
@@ -24,6 +28,18 @@ public class ConsoleLogProperties implements LogProperties, InitializingBean {
 
     public final Boolean getEnabledOrDefault() {
         return this.getEnabled() == null ? DEFAULT_ENABLED : this.getEnabled();
+    }
+
+    public Boolean getColorful() {
+        return colorful;
+    }
+
+    public void setColorful(Boolean colorful) {
+        this.colorful = colorful;
+    }
+
+    public final Boolean getColorfulOrDefault() {
+        return this.getColorful() == null ? DEFAULT_COLORFUL : this.getColorful();
     }
 
 //    public Boolean getEnabledIsTrue() {

@@ -155,7 +155,7 @@ public abstract class LogHubFactory {
         }
 
         ArrayList<LogSingle> list = new ArrayList<>(127);
-        LogHub log = LogHub.build(list);
+        LogHub log;
 
         if (LogHubProperties.exist()) {
             if (LogHubUtils.Spring.existDependency()) {
@@ -190,6 +190,8 @@ public abstract class LogHubFactory {
 
             }
             LogHubProperties properties = LogHubProperties.getSingleton();
+
+            log = LogHub.build(list);
             log.setEnabled(properties.getEnabledOrDefault());
             log.setSamplerRate(properties.getSamplerRateOrDefault());
             log.setAsync(properties.getAsyncOrDefault());
@@ -198,6 +200,7 @@ public abstract class LogHubFactory {
             list.add(new ConsoleLog(name));
 //            if (ConsoleLogProperties.getSingleton().getEnabledOrDefault()) {
 //            }
+            log = LogHub.build(list);
         }
         POOL.put(name, log);
         return log;

@@ -153,6 +153,7 @@ spring:
         value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
     console:
       enabled: true
+      colorful: true
     slf4j:
       enabled: false
 

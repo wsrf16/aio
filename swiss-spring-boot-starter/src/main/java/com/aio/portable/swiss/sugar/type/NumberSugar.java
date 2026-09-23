@@ -73,13 +73,13 @@ public abstract class NumberSugar {
     public static double format(double number, String pattern) {
         DecimalFormat df = new DecimalFormat(pattern);
         String s =  df.format(number);
-        return Double.valueOf(s);
+        return Double.parseDouble(s);
     }
 
     public static long format(long number, String pattern) {
         DecimalFormat df = new DecimalFormat(pattern);
         String s =  df.format(number);
-        return Long.valueOf(s);
+        return Long.parseLong(s);
     }
 
     public static String format(Object number, String pattern) {
